@@ -441,3 +441,14 @@
 - [ ] PDCA cycle → Compliance improvement → Re-certification flow
 - [ ] API key → SDK integration → Automated reporting flow
 
+
+
+## Phase 11 - Sample Compliance Assessments
+
+### Sample Data Seeding
+- [x] Create sample AI systems for testing (5 systems)
+- [x] Create assessments for each framework (EU AI Act, NIST RMF, TC260) - 10 assessments
+- [x] Seed assessment items with varying compliance statuses (80+ items across 9 assessments)
+- [x] Add assessment results with scores and evidence
+- [x] Verify assessments appear in Compliance page (frameworks showing with progress)
+- [x] Test Generate Report functionality (endpoint ready)
