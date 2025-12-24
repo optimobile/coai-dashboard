@@ -123,6 +123,8 @@ export default function KnowledgeBase() {
   
   const { data: incidentStats } = trpc.publicApi.getIncidentStats.useQuery();
   const { data: councilStats } = trpc.publicApi.getCouncilStats.useQuery();
+  const { data: rlmaiLearnings } = trpc.publicApi.getRLMAILearnings.useQuery();
+  const { data: incidentPatterns } = trpc.publicApi.getIncidentPatterns.useQuery();
   
   const filteredScenarios = SCENARIOS.filter(scenario => {
     const matchesSearch = searchQuery === '' || 

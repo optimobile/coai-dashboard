@@ -239,7 +239,7 @@ export default function Dashboard() {
                     { 
                       phase: "PLAN", 
                       fullName: "Planning Phase",
-                      status: "active",
+                      status: pdcaStats?.phaseDistribution?.plan ? "active" : "pending",
                       description: "Define compliance requirements and action items",
                       items: [
                         "Map EU AI Act requirements",
@@ -248,12 +248,13 @@ export default function Dashboard() {
                       ],
                       color: "blue",
                       icon: FileCheck,
-                      progress: 100,
+                      progress: pdcaStats?.phaseDistribution?.plan ? 100 : 0,
+                      count: pdcaStats?.phaseDistribution?.plan || 0,
                     },
                     { 
                       phase: "DO", 
                       fullName: "Implementation Phase",
-                      status: "active",
+                      status: pdcaStats?.phaseDistribution?.do ? "active" : "pending",
                       description: "Execute compliance measures and controls",
                       items: [
                         "Implement safety controls",
@@ -262,35 +263,38 @@ export default function Dashboard() {
                       ],
                       color: "emerald",
                       icon: Play,
-                      progress: 65,
+                      progress: pdcaStats?.phaseDistribution?.do ? 65 : 0,
+                      count: pdcaStats?.phaseDistribution?.do || 0,
                     },
                     { 
                       phase: "CHECK", 
                       fullName: "Evaluation Phase",
-                      status: "active",
+                      status: pdcaStats?.phaseDistribution?.check ? "active" : (watchdogReports?.length ? "active" : "pending"),
                       description: "Monitor via Watchdog reports and 33-agent council",
                       items: [
-                        "Review Watchdog reports",
-                        "33-Agent Council votes",
+                        `${watchdogReports?.length || 0} Watchdog reports`,
+                        `${councilStats?.totalSessions || 0} Council sessions`,
                         "Human analyst review"
                       ],
                       color: "amber",
                       icon: Eye,
-                      progress: 40,
+                      progress: watchdogReports?.length ? Math.min(100, (watchdogReports.length / 10) * 100) : 0,
+                      count: pdcaStats?.phaseDistribution?.check || 0,
                     },
                     { 
                       phase: "ACT", 
                       fullName: "Improvement Phase",
-                      status: "pending",
+                      status: pdcaStats?.phaseDistribution?.act ? "active" : "pending",
                       description: "Apply improvements based on findings",
                       items: [
                         "Update AI models",
                         "Refine safety measures",
-                        "Document learnings"
+                        `${pdcaStats?.completedCycles || 0} cycles completed`
                       ],
                       color: "purple",
                       icon: RefreshCw,
-                      progress: 0,
+                      progress: pdcaStats?.completedCycles ? Math.min(100, (pdcaStats.completedCycles / 5) * 100) : 0,
+                      count: pdcaStats?.phaseDistribution?.act || 0,
                     },
                   ].map((item, idx) => {
                     const Icon = item.icon;
@@ -356,10 +360,21 @@ export default function Dashboard() {
                 </div>
               </div>
               
-              {/* Loop indicator */}
-              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <RefreshCw className="h-4 w-4" />
-                <span>Continuous improvement cycle powered by SOAI (Safety Of AI)</span>
+              {/* Loop indicator with stats */}
+              <div className="mt-6 pt-4 border-t border-border">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <RefreshCw className="h-4 w-4" />
+                    <span>Continuous improvement cycle powered by SOAI (Safety Of AI)</span>
+                  </div>
+                  {pdcaStats && (
+                    <div className="flex items-center gap-4 text-xs">
+                      <span className="text-blue-600 font-medium">{pdcaStats.activeCycles} active</span>
+                      <span className="text-emerald-600 font-medium">{pdcaStats.completedCycles} completed</span>
+                      <span className="text-muted-foreground">{pdcaStats.totalCycles} total cycles</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>

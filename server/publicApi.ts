@@ -181,6 +181,108 @@ export const publicApiRouter = router({
     };
   }),
 
+  // Get RLMAI learning data from council decisions
+  getRLMAILearnings: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return null;
+
+    // Get council decisions with their reasoning
+    const decisions = await db
+      .select({
+        id: councilSessions.id,
+        finalDecision: councilSessions.finalDecision,
+        subjectTitle: councilSessions.subjectTitle,
+        subjectDescription: councilSessions.subjectDescription,
+        approveVotes: councilSessions.approveVotes,
+        rejectVotes: councilSessions.rejectVotes,
+        createdAt: councilSessions.createdAt,
+      })
+      .from(councilSessions)
+      .where(sql`${councilSessions.finalDecision} IS NOT NULL`)
+      .orderBy(desc(councilSessions.createdAt))
+      .limit(50);
+
+    // Get vote patterns by agent type
+    const votePatterns = await db
+      .select({
+        agentType: agentVotes.agentType,
+        vote: agentVotes.vote,
+        count: sql<number>`count(*)`,
+      })
+      .from(agentVotes)
+      .groupBy(agentVotes.agentType, agentVotes.vote);
+
+    // Calculate consensus metrics
+    const consensusMetrics = await db
+      .select({
+        sessionId: agentVotes.sessionId,
+        totalVotes: sql<number>`count(*)`,
+        approveVotes: sql<number>`SUM(CASE WHEN vote = 'approve' THEN 1 ELSE 0 END)`,
+        rejectVotes: sql<number>`SUM(CASE WHEN vote = 'reject' THEN 1 ELSE 0 END)`,
+      })
+      .from(agentVotes)
+      .groupBy(agentVotes.sessionId);
+
+    const avgConsensus = consensusMetrics.length > 0
+      ? consensusMetrics.reduce((sum, m) => {
+          const total = Number(m.totalVotes) || 1;
+          const majority = Math.max(Number(m.approveVotes) || 0, Number(m.rejectVotes) || 0);
+          return sum + (majority / total);
+        }, 0) / consensusMetrics.length
+      : 0;
+
+    return {
+      totalDecisions: decisions.length,
+      recentDecisions: decisions.slice(0, 10),
+      votePatterns,
+      consensusRate: Math.round(avgConsensus * 100),
+      lastUpdated: new Date().toISOString(),
+    };
+  }),
+
+  // Get incident patterns for knowledge base
+  getIncidentPatterns: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return null;
+
+    // Get incidents by incident type
+    const byCategory = await db
+      .select({
+        incidentType: watchdogReports.incidentType,
+        count: sql<number>`count(*)`,
+        avgSeverity: sql<string>`AVG(CASE 
+          WHEN severity = 'critical' THEN 4 
+          WHEN severity = 'high' THEN 3 
+          WHEN severity = 'medium' THEN 2 
+          ELSE 1 END)`,
+      })
+      .from(watchdogReports)
+      .where(eq(watchdogReports.isPublic, true))
+      .groupBy(watchdogReports.incidentType);
+
+    // Get resolution rates
+    const resolutionStats = await db
+      .select({
+        status: watchdogReports.status,
+        count: sql<number>`count(*)`,
+      })
+      .from(watchdogReports)
+      .where(eq(watchdogReports.isPublic, true))
+      .groupBy(watchdogReports.status);
+
+    const totalIncidents = resolutionStats.reduce((sum, s) => sum + Number(s.count), 0);
+    const resolvedCount = resolutionStats.find(s => s.status === 'resolved')?.count || 0;
+    const resolutionRate = totalIncidents > 0 ? Math.round((Number(resolvedCount) / totalIncidents) * 100) : 0;
+
+    return {
+      byCategory,
+      resolutionStats,
+      resolutionRate,
+      totalIncidents,
+      lastUpdated: new Date().toISOString(),
+    };
+  }),
+
   // Get public leaderboard (anonymized company compliance scores)
   getComplianceLeaderboard: publicProcedure
     .input(z.object({
