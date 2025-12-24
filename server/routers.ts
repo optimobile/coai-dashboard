@@ -32,6 +32,7 @@ import { eq, desc, sql, and } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 import { publicApiRouter } from "./publicApi";
+import { recommendationsRouter } from "./recommendations";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2766,6 +2767,7 @@ export const appRouter = router({
   stripe: stripeRouter,
   publicApi: publicApiRouter,
   regulator: regulatorRouter,
+  recommendations: recommendationsRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -34,6 +34,7 @@ import {
   Brain,
   Building2,
   Trophy,
+  Lightbulb,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,7 @@ const navItems = [
   { path: "/knowledge-base", label: "Knowledge Base", icon: Brain },
   { path: "/regulator", label: "Regulator View", icon: Building2 },
   { path: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { path: "/recommendations", label: "Recommendations", icon: Lightbulb },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {

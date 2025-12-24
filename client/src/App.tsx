@@ -36,6 +36,7 @@ import Pricing from "./pages/Pricing";
 import WatchdogLeaderboard from "./pages/WatchdogLeaderboard";
 import RegulatorDashboard from "./pages/RegulatorDashboard";
 import Blog from "./pages/Blog";
+import Recommendations from "./pages/Recommendations";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -73,6 +74,7 @@ function Router() {
       <Route path="/leaderboard" component={WatchdogLeaderboard} />
       <Route path="/regulator" component={RegulatorDashboard} />
       <Route path="/blog" component={Blog} />
+      <Route path="/recommendations" component={Recommendations} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
