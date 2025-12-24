@@ -451,3 +451,92 @@ export const apiKeys = mysqlTable("api_keys", {
 
 export type ApiKey = typeof apiKeys.$inferSelect;
 export type InsertApiKey = typeof apiKeys.$inferInsert;
+
+
+/**
+ * Recommendation interactions tracking
+ * Stores user interactions with RLMAI recommendations
+ */
+export const recommendationInteractions = mysqlTable("recommendation_interactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  recommendationId: varchar("recommendationId", { length: 100 }).notNull(),
+  recommendationType: varchar("recommendationType", { length: 50 }).notNull(), // e.g., "compliance_gap", "incident_prevention"
+  action: mysqlEnum("action", ["viewed", "implemented", "dismissed", "snoozed"]).notNull(),
+  feedback: mysqlEnum("feedback", ["helpful", "not_helpful", "irrelevant"]),
+  feedbackNote: text("feedbackNote"),
+  snoozeUntil: timestamp("snoozeUntil"),
+  aiSystemId: int("aiSystemId"), // Optional: which AI system this recommendation was for
+  frameworkId: int("frameworkId"), // Optional: which framework this relates to
+  metadata: json("metadata").$type<{
+    priority?: string;
+    category?: string;
+    title?: string;
+    basedOnType?: string;
+  }>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RecommendationInteraction = typeof recommendationInteractions.$inferSelect;
+export type InsertRecommendationInteraction = typeof recommendationInteractions.$inferInsert;
+
+/**
+ * User recommendation preferences
+ * Stores user preferences for recommendation generation
+ */
+export const recommendationPreferences = mysqlTable("recommendation_preferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  // Category preferences (0-100 weight, higher = more important)
+  complianceGapWeight: int("complianceGapWeight").default(100).notNull(),
+  incidentPreventionWeight: int("incidentPreventionWeight").default(80).notNull(),
+  governanceWeight: int("governanceWeight").default(70).notNull(),
+  riskMitigationWeight: int("riskMitigationWeight").default(90).notNull(),
+  bestPracticeWeight: int("bestPracticeWeight").default(50).notNull(),
+  regulatoryUpdateWeight: int("regulatoryUpdateWeight").default(85).notNull(),
+  // Notification preferences
+  emailDigestEnabled: boolean("emailDigestEnabled").default(false).notNull(),
+  emailDigestFrequency: mysqlEnum("emailDigestFrequency", ["daily", "weekly", "monthly"]).default("weekly").notNull(),
+  minPriorityForEmail: mysqlEnum("minPriorityForEmail", ["critical", "high", "medium", "low"]).default("high").notNull(),
+  // Display preferences
+  defaultLimit: int("defaultLimit").default(10).notNull(),
+  showDismissedAfterDays: int("showDismissedAfterDays").default(30).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RecommendationPreference = typeof recommendationPreferences.$inferSelect;
+export type InsertRecommendationPreference = typeof recommendationPreferences.$inferInsert;
+
+/**
+ * Recommendation analytics aggregates
+ * Stores aggregated stats for recommendation effectiveness
+ */
+export const recommendationAnalytics = mysqlTable("recommendation_analytics", {
+  id: int("id").autoincrement().primaryKey(),
+  period: varchar("period", { length: 20 }).notNull(), // e.g., "2024-01", "2024-W52"
+  periodType: mysqlEnum("periodType", ["daily", "weekly", "monthly"]).notNull(),
+  totalGenerated: int("totalGenerated").default(0).notNull(),
+  totalViewed: int("totalViewed").default(0).notNull(),
+  totalImplemented: int("totalImplemented").default(0).notNull(),
+  totalDismissed: int("totalDismissed").default(0).notNull(),
+  totalSnoozed: int("totalSnoozed").default(0).notNull(),
+  helpfulCount: int("helpfulCount").default(0).notNull(),
+  notHelpfulCount: int("notHelpfulCount").default(0).notNull(),
+  // By category breakdown (JSON for flexibility)
+  byCategory: json("byCategory").$type<Record<string, {
+    generated: number;
+    implemented: number;
+    dismissed: number;
+  }>>(),
+  // By priority breakdown
+  byPriority: json("byPriority").$type<Record<string, {
+    generated: number;
+    implemented: number;
+    dismissed: number;
+  }>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RecommendationAnalytic = typeof recommendationAnalytics.$inferSelect;

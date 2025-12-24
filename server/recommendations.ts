@@ -17,6 +17,9 @@ import {
   assessmentItems,
   frameworks,
   pdcaCycles,
+  recommendationInteractions,
+  recommendationPreferences,
+  recommendationAnalytics,
 } from "../drizzle/schema";
 import { eq, desc, sql, and, inArray, isNull, or } from "drizzle-orm";
 
@@ -218,10 +221,72 @@ export const recommendationsRouter = router({
         "regulatory_update"
       ]).optional(),
       priority: z.enum(["critical", "high", "medium", "low"]).optional(),
+      includeDismissed: z.boolean().default(false),
     }).optional())
     .query(async ({ ctx, input }) => {
       const db = await getDb();
-      const recommendations: Recommendation[] = [];
+      let recommendations: Recommendation[] = [];
+
+      // Get user's dismissed and snoozed recommendations for filtering
+      const dismissedInteractions = db ? await db
+        .select({ recommendationId: recommendationInteractions.recommendationId })
+        .from(recommendationInteractions)
+        .where(and(
+          eq(recommendationInteractions.userId, ctx.user.id),
+          eq(recommendationInteractions.action, "dismissed")
+        )) : [];
+      
+      const snoozedInteractions = db ? await db
+        .select({ 
+          recommendationId: recommendationInteractions.recommendationId,
+          snoozeUntil: recommendationInteractions.snoozeUntil,
+        })
+        .from(recommendationInteractions)
+        .where(and(
+          eq(recommendationInteractions.userId, ctx.user.id),
+          eq(recommendationInteractions.action, "snoozed")
+        )) : [];
+
+      const dismissedIds = new Set(dismissedInteractions.map(d => d.recommendationId));
+      const now = new Date();
+      const activeSnoozedIds = new Set(
+        snoozedInteractions
+          .filter(s => s.snoozeUntil && new Date(s.snoozeUntil) > now)
+          .map(s => s.recommendationId)
+      );
+
+      // Get user's preferences for category weighting
+      const userPrefs = db ? await db
+        .select()
+        .from(recommendationPreferences)
+        .where(eq(recommendationPreferences.userId, ctx.user.id))
+        .limit(1) : [];
+
+      const prefs = userPrefs[0] || {
+        complianceGapWeight: 100,
+        incidentPreventionWeight: 80,
+        governanceWeight: 70,
+        riskMitigationWeight: 90,
+        bestPracticeWeight: 50,
+        regulatoryUpdateWeight: 85,
+      };
+
+      // Get user's frequently dismissed categories to deprioritize
+      const dismissedByCategory = db ? await db
+        .select({
+          category: recommendationInteractions.recommendationType,
+          count: sql<number>`count(*)`,
+        })
+        .from(recommendationInteractions)
+        .where(and(
+          eq(recommendationInteractions.userId, ctx.user.id),
+          eq(recommendationInteractions.action, "dismissed")
+        ))
+        .groupBy(recommendationInteractions.recommendationType) : [];
+
+      const dismissedCategoryCounts = Object.fromEntries(
+        dismissedByCategory.map(d => [d.category, Number(d.count)])
+      );
       
       // Get user's AI systems
       const userSystems = db ? await db
@@ -448,8 +513,14 @@ export const recommendationsRouter = router({
         });
       }
 
-      // Filter and sort recommendations
+      // Filter out dismissed and snoozed recommendations (unless includeDismissed is true)
       let filteredRecs = recommendations;
+      
+      if (!input?.includeDismissed) {
+        filteredRecs = filteredRecs.filter(r => 
+          !dismissedIds.has(r.id) && !activeSnoozedIds.has(r.id)
+        );
+      }
       
       if (input?.aiSystemId) {
         filteredRecs = filteredRecs.filter(r => !r.aiSystemId || r.aiSystemId === input.aiSystemId);
@@ -463,9 +534,36 @@ export const recommendationsRouter = router({
         filteredRecs = filteredRecs.filter(r => r.priority === input.priority);
       }
 
-      // Sort by priority
+      // Calculate weight for each recommendation based on user preferences
+      const categoryWeights: Record<string, number> = {
+        compliance_gap: prefs.complianceGapWeight,
+        incident_prevention: prefs.incidentPreventionWeight,
+        governance_improvement: prefs.governanceWeight,
+        risk_mitigation: prefs.riskMitigationWeight,
+        best_practice: prefs.bestPracticeWeight,
+        regulatory_update: prefs.regulatoryUpdateWeight,
+      };
+
+      // Sort by priority first, then by category weight (adjusted by dismissal frequency)
       const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-      filteredRecs.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+      filteredRecs.sort((a, b) => {
+        // Primary sort: priority
+        const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+        if (priorityDiff !== 0) return priorityDiff;
+        
+        // Secondary sort: category weight (higher weight = more important)
+        const aWeight = categoryWeights[a.category] || 50;
+        const bWeight = categoryWeights[b.category] || 50;
+        
+        // Reduce weight for frequently dismissed categories
+        const aDismissedPenalty = (dismissedCategoryCounts[a.category] || 0) * 5;
+        const bDismissedPenalty = (dismissedCategoryCounts[b.category] || 0) * 5;
+        
+        const aAdjustedWeight = aWeight - aDismissedPenalty;
+        const bAdjustedWeight = bWeight - bDismissedPenalty;
+        
+        return bAdjustedWeight - aAdjustedWeight; // Higher weight first
+      });
 
       return {
         recommendations: filteredRecs.slice(0, input?.limit || 10),
@@ -476,6 +574,8 @@ export const recommendationsRouter = router({
           medium: filteredRecs.filter(r => r.priority === "medium").length,
           low: filteredRecs.filter(r => r.priority === "low").length,
         },
+        dismissedCount: dismissedIds.size,
+        snoozedCount: activeSnoozedIds.size,
         generatedAt: new Date().toISOString(),
       };
     }),
@@ -587,5 +687,297 @@ export const recommendationsRouter = router({
         recommendations,
         generatedAt: new Date().toISOString(),
       };
+    }),
+
+  // ============================================
+  // TRACKING ENDPOINTS
+  // ============================================
+
+  // Track a user interaction with a recommendation
+  trackInteraction: protectedProcedure
+    .input(z.object({
+      recommendationId: z.string(),
+      recommendationType: z.string(),
+      action: z.enum(["viewed", "implemented", "dismissed", "snoozed"]),
+      feedback: z.enum(["helpful", "not_helpful", "irrelevant"]).optional(),
+      feedbackNote: z.string().optional(),
+      snoozeDays: z.number().min(1).max(90).optional(),
+      aiSystemId: z.number().optional(),
+      frameworkId: z.number().optional(),
+      metadata: z.object({
+        priority: z.string().optional(),
+        category: z.string().optional(),
+        title: z.string().optional(),
+        basedOnType: z.string().optional(),
+      }).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const snoozeUntil = input.action === "snoozed" && input.snoozeDays
+        ? new Date(Date.now() + input.snoozeDays * 24 * 60 * 60 * 1000)
+        : null;
+
+      await db.insert(recommendationInteractions).values({
+        userId: ctx.user.id,
+        recommendationId: input.recommendationId,
+        recommendationType: input.recommendationType,
+        action: input.action,
+        feedback: input.feedback,
+        feedbackNote: input.feedbackNote,
+        snoozeUntil,
+        aiSystemId: input.aiSystemId,
+        frameworkId: input.frameworkId,
+        metadata: input.metadata,
+      });
+
+      // Update analytics
+      const now = new Date();
+      const period = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      
+      // Try to update existing analytics record, or create new one
+      const existingAnalytics = await db
+        .select()
+        .from(recommendationAnalytics)
+        .where(and(
+          eq(recommendationAnalytics.period, period),
+          eq(recommendationAnalytics.periodType, "monthly")
+        ))
+        .limit(1);
+
+      if (existingAnalytics.length > 0) {
+        const updates: Record<string, any> = {};
+        if (input.action === "viewed") updates.totalViewed = sql`${recommendationAnalytics.totalViewed} + 1`;
+        if (input.action === "implemented") updates.totalImplemented = sql`${recommendationAnalytics.totalImplemented} + 1`;
+        if (input.action === "dismissed") updates.totalDismissed = sql`${recommendationAnalytics.totalDismissed} + 1`;
+        if (input.action === "snoozed") updates.totalSnoozed = sql`${recommendationAnalytics.totalSnoozed} + 1`;
+        if (input.feedback === "helpful") updates.helpfulCount = sql`${recommendationAnalytics.helpfulCount} + 1`;
+        if (input.feedback === "not_helpful") updates.notHelpfulCount = sql`${recommendationAnalytics.notHelpfulCount} + 1`;
+
+        if (Object.keys(updates).length > 0) {
+          await db
+            .update(recommendationAnalytics)
+            .set(updates)
+            .where(eq(recommendationAnalytics.id, existingAnalytics[0].id));
+        }
+      } else {
+        await db.insert(recommendationAnalytics).values({
+          period,
+          periodType: "monthly",
+          totalViewed: input.action === "viewed" ? 1 : 0,
+          totalImplemented: input.action === "implemented" ? 1 : 0,
+          totalDismissed: input.action === "dismissed" ? 1 : 0,
+          totalSnoozed: input.action === "snoozed" ? 1 : 0,
+          helpfulCount: input.feedback === "helpful" ? 1 : 0,
+          notHelpfulCount: input.feedback === "not_helpful" ? 1 : 0,
+        });
+      }
+
+      return { success: true };
+    }),
+
+  // Get user's interaction history
+  getInteractionHistory: protectedProcedure
+    .input(z.object({
+      action: z.enum(["viewed", "implemented", "dismissed", "snoozed"]).optional(),
+      limit: z.number().min(1).max(100).default(50),
+    }).optional())
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      let query = db
+        .select()
+        .from(recommendationInteractions)
+        .where(eq(recommendationInteractions.userId, ctx.user.id))
+        .orderBy(desc(recommendationInteractions.createdAt))
+        .limit(input?.limit || 50);
+
+      const interactions = await query;
+
+      // Filter by action if specified
+      const filtered = input?.action
+        ? interactions.filter(i => i.action === input.action)
+        : interactions;
+
+      return filtered;
+    }),
+
+  // Get dismissed recommendation IDs (for filtering)
+  getDismissedIds: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return { dismissedIds: [], snoozedIds: [] };
+
+    const now = new Date();
+
+    // Get dismissed recommendations
+    const dismissed = await db
+      .select({ recommendationId: recommendationInteractions.recommendationId })
+      .from(recommendationInteractions)
+      .where(and(
+        eq(recommendationInteractions.userId, ctx.user.id),
+        eq(recommendationInteractions.action, "dismissed")
+      ));
+
+    // Get snoozed recommendations that are still active
+    const snoozed = await db
+      .select({ 
+        recommendationId: recommendationInteractions.recommendationId,
+        snoozeUntil: recommendationInteractions.snoozeUntil,
+      })
+      .from(recommendationInteractions)
+      .where(and(
+        eq(recommendationInteractions.userId, ctx.user.id),
+        eq(recommendationInteractions.action, "snoozed")
+      ));
+
+    const activeSnoozed = snoozed
+      .filter(s => s.snoozeUntil && new Date(s.snoozeUntil) > now)
+      .map(s => s.recommendationId);
+
+    return {
+      dismissedIds: dismissed.map(d => d.recommendationId),
+      snoozedIds: activeSnoozed,
+    };
+  }),
+
+  // Get recommendation statistics for the user
+  getStats: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    const interactions = await db
+      .select({
+        action: recommendationInteractions.action,
+        count: sql<number>`count(*)`,
+      })
+      .from(recommendationInteractions)
+      .where(eq(recommendationInteractions.userId, ctx.user.id))
+      .groupBy(recommendationInteractions.action);
+
+    const feedbackStats = await db
+      .select({
+        feedback: recommendationInteractions.feedback,
+        count: sql<number>`count(*)`,
+      })
+      .from(recommendationInteractions)
+      .where(and(
+        eq(recommendationInteractions.userId, ctx.user.id),
+        sql`${recommendationInteractions.feedback} IS NOT NULL`
+      ))
+      .groupBy(recommendationInteractions.feedback);
+
+    const byCategory = await db
+      .select({
+        category: recommendationInteractions.recommendationType,
+        action: recommendationInteractions.action,
+        count: sql<number>`count(*)`,
+      })
+      .from(recommendationInteractions)
+      .where(eq(recommendationInteractions.userId, ctx.user.id))
+      .groupBy(recommendationInteractions.recommendationType, recommendationInteractions.action);
+
+    return {
+      totalInteractions: interactions.reduce((sum, i) => sum + Number(i.count), 0),
+      byAction: Object.fromEntries(interactions.map(i => [i.action, Number(i.count)])),
+      byFeedback: Object.fromEntries(feedbackStats.map(f => [f.feedback, Number(f.count)])),
+      byCategory,
+      implementationRate: (() => {
+        const viewed = interactions.find(i => i.action === "viewed")?.count || 0;
+        const implemented = interactions.find(i => i.action === "implemented")?.count || 0;
+        return Number(viewed) > 0 ? Math.round((Number(implemented) / Number(viewed)) * 100) : 0;
+      })(),
+    };
+  }),
+
+  // Get/update user preferences
+  getPreferences: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    const prefs = await db
+      .select()
+      .from(recommendationPreferences)
+      .where(eq(recommendationPreferences.userId, ctx.user.id))
+      .limit(1);
+
+    if (prefs.length === 0) {
+      // Return defaults
+      return {
+        complianceGapWeight: 100,
+        incidentPreventionWeight: 80,
+        governanceWeight: 70,
+        riskMitigationWeight: 90,
+        bestPracticeWeight: 50,
+        regulatoryUpdateWeight: 85,
+        emailDigestEnabled: false,
+        emailDigestFrequency: "weekly" as const,
+        minPriorityForEmail: "high" as const,
+        defaultLimit: 10,
+        showDismissedAfterDays: 30,
+      };
+    }
+
+    return prefs[0];
+  }),
+
+  updatePreferences: protectedProcedure
+    .input(z.object({
+      complianceGapWeight: z.number().min(0).max(100).optional(),
+      incidentPreventionWeight: z.number().min(0).max(100).optional(),
+      governanceWeight: z.number().min(0).max(100).optional(),
+      riskMitigationWeight: z.number().min(0).max(100).optional(),
+      bestPracticeWeight: z.number().min(0).max(100).optional(),
+      regulatoryUpdateWeight: z.number().min(0).max(100).optional(),
+      emailDigestEnabled: z.boolean().optional(),
+      emailDigestFrequency: z.enum(["daily", "weekly", "monthly"]).optional(),
+      minPriorityForEmail: z.enum(["critical", "high", "medium", "low"]).optional(),
+      defaultLimit: z.number().min(5).max(50).optional(),
+      showDismissedAfterDays: z.number().min(7).max(365).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const existing = await db
+        .select()
+        .from(recommendationPreferences)
+        .where(eq(recommendationPreferences.userId, ctx.user.id))
+        .limit(1);
+
+      if (existing.length === 0) {
+        await db.insert(recommendationPreferences).values({
+          userId: ctx.user.id,
+          ...input,
+        });
+      } else {
+        await db
+          .update(recommendationPreferences)
+          .set(input)
+          .where(eq(recommendationPreferences.userId, ctx.user.id));
+      }
+
+      return { success: true };
+    }),
+
+  // Get analytics (admin only or for own data)
+  getAnalytics: protectedProcedure
+    .input(z.object({
+      periodType: z.enum(["daily", "weekly", "monthly"]).default("monthly"),
+      limit: z.number().min(1).max(12).default(6),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const analytics = await db
+        .select()
+        .from(recommendationAnalytics)
+        .where(eq(recommendationAnalytics.periodType, input?.periodType || "monthly"))
+        .orderBy(desc(recommendationAnalytics.period))
+        .limit(input?.limit || 6);
+
+      return analytics;
     }),
 });
