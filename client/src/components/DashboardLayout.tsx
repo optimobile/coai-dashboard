@@ -25,6 +25,8 @@ import {
   Moon,
   GraduationCap,
   Briefcase,
+  ShieldCheck,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -49,6 +51,8 @@ const navItems = [
   { path: "/reports", label: "Reports", icon: FileText },
   { path: "/training", label: "Training", icon: GraduationCap },
   { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
+  { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
+  { path: "/public", label: "Public Site", icon: Globe },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {

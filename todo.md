@@ -132,8 +132,45 @@
 - [x] Add "Are you worried about AI safety?" CTA
 
 ### Admin Features
+- [x] Admin dashboard for LOI management
+- [x] Approve/reject analyst applications
+- [x] View certification completions
+- [x] Manage council sessions
+
+
+## Master Website Build - TC260/PDCA Inspired
+
+### Research Phase
+- [x] Analyze TC260.org.cn website structure and features
+- [x] Analyze PDCA software websites for best practices
+- [x] Document key features to replicate/improve
+
+### Backend Gaps to Complete
+- [ ] Connect AI Systems page to real CRUD operations
+- [ ] Connect Compliance page to real assessment data
+- [ ] Connect Training page to real module progress
+- [ ] Connect Workbench to real case assignments
 - [ ] Admin dashboard for LOI management
 - [ ] Approve/reject analyst applications
 - [ ] View certification completions
 - [ ] Manage council sessions
+- [ ] Real-time 33-agent voting with actual LLM calls
+- [ ] Watchdog report detail view with council voting
+- [ ] Compliance assessment wizard
+- [ ] PDCA cycle management
+- [ ] Report generation
+- [ ] API documentation
+
+### Master Website Frontend
+- [x] Professional public homepage at /public
+- [x] About COAI section (hero)
+- [x] How it works section (SOAI-PDCA loop)
+- [x] Frameworks explained (EU AI Act, NIST, TC260)
+- [ ] Pricing/tiers section
+- [ ] Resources/documentation section
+- [ ] Blog/news section placeholder
+- [x] Contact/support section (footer)
+- [x] Footer with all links
+- [x] Mobile-responsive design
+- [ ] SEO optimization
 

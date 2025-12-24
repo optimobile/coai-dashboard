@@ -18,6 +18,8 @@ import WatchdogSignup from "./pages/WatchdogSignup";
 import Training from "./pages/Training";
 import Certification from "./pages/Certification";
 import Workbench from "./pages/Workbench";
+import PublicHome from "./pages/PublicHome";
+import Admin from "./pages/Admin";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -37,6 +39,8 @@ function Router() {
       <Route path="/training" component={Training} />
       <Route path="/certification" component={Certification} />
       <Route path="/workbench" component={Workbench} />
+      <Route path="/public" component={PublicHome} />
+      <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

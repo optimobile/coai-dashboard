@@ -1051,6 +1051,152 @@ async function updateAnalystPerformance(analystId: number) {
 }
 
 // ============================================
+// ADMIN ROUTER - LOI management and analyst approval
+// ============================================
+const adminRouter = router({
+  // Get all LOI applications (admin only)
+  getApplications: protectedProcedure
+    .input(z.object({
+      status: z.enum(["pending", "approved", "rejected", "all"]).default("all"),
+      limit: z.number().min(1).max(100).default(50),
+    }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      // Check admin role
+      if (ctx.user.role !== "admin") {
+        throw new Error("Unauthorized: Admin access required");
+      }
+
+      let query = db.select().from(watchdogApplications);
+      
+      if (input.status !== "all") {
+        query = query.where(eq(watchdogApplications.status, input.status)) as any;
+      }
+
+      return query.orderBy(desc(watchdogApplications.createdAt)).limit(input.limit);
+    }),
+
+  // Approve an application
+  approveApplication: protectedProcedure
+    .input(z.object({ applicationId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      if (ctx.user.role !== "admin") {
+        throw new Error("Unauthorized: Admin access required");
+      }
+
+      await db
+        .update(watchdogApplications)
+        .set({ status: "approved" })
+        .where(eq(watchdogApplications.id, input.applicationId));
+
+      return { success: true };
+    }),
+
+  // Reject an application
+  rejectApplication: protectedProcedure
+    .input(z.object({ applicationId: z.number(), reason: z.string().optional() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      if (ctx.user.role !== "admin") {
+        throw new Error("Unauthorized: Admin access required");
+      }
+
+      await db
+        .update(watchdogApplications)
+        .set({ status: "rejected" })
+        .where(eq(watchdogApplications.id, input.applicationId));
+
+      return { success: true };
+    }),
+
+  // Get all certified analysts
+  getCertifiedAnalysts: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    if (ctx.user.role !== "admin") {
+      throw new Error("Unauthorized: Admin access required");
+    }
+
+    return db
+      .select()
+      .from(userCertificates)
+      .orderBy(desc(userCertificates.issuedAt));
+  }),
+
+  // Get dashboard stats for admin
+  getAdminStats: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    if (ctx.user.role !== "admin") {
+      throw new Error("Unauthorized: Admin access required");
+    }
+
+    const [pendingApps] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(watchdogApplications)
+      .where(eq(watchdogApplications.status, "pending"));
+
+    const [totalApps] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(watchdogApplications);
+
+    const [certifiedAnalysts] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(userCertificates);
+
+    const [pendingReports] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(watchdogReports)
+      .where(eq(watchdogReports.status, "submitted"));
+
+    const [activeSessions] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(councilSessions)
+      .where(eq(councilSessions.status, "voting"));
+
+    return {
+      pendingApplications: pendingApps?.count || 0,
+      totalApplications: totalApps?.count || 0,
+      certifiedAnalysts: certifiedAnalysts?.count || 0,
+      pendingReports: pendingReports?.count || 0,
+      activeCouncilSessions: activeSessions?.count || 0,
+    };
+  }),
+
+  // Manage council sessions
+  getCouncilSessions: protectedProcedure
+    .input(z.object({ status: z.enum(["voting", "consensus_reached", "escalated_to_human", "completed", "all"]).default("all") }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      if (ctx.user.role !== "admin") {
+        throw new Error("Unauthorized: Admin access required");
+      }
+
+      if (input.status === "all") {
+        return db.select().from(councilSessions).orderBy(desc(councilSessions.createdAt)).limit(50);
+      }
+
+      return db
+        .select()
+        .from(councilSessions)
+        .where(eq(councilSessions.status, input.status as "voting" | "consensus_reached" | "escalated_to_human" | "completed"))
+        .orderBy(desc(councilSessions.createdAt))
+        .limit(50);
+    }),
+});
+
+// ============================================
 // CHAT ROUTER - LLM-powered compliance assistant
 // ============================================
 const chatRouter = router({
@@ -1130,6 +1276,7 @@ export const appRouter = router({
   certification: certificationRouter,
   workbench: workbenchRouter,
   chat: chatRouter,
+  admin: adminRouter,
 });
 
 export type AppRouter = typeof appRouter;
