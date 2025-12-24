@@ -24,6 +24,8 @@ import {
   AlertCircle,
   FileDown,
   Loader2,
+  Mail,
+  Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -104,6 +106,8 @@ export default function PDCACycles() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [cycleToDelete, setCycleToDelete] = useState<number | null>(null);
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
+  const [emailRecipient, setEmailRecipient] = useState("");
   
   // Form state for creating new cycle
   const [newCycleForm, setNewCycleForm] = useState({
@@ -224,6 +228,31 @@ export default function PDCACycles() {
       toast.error("Error generating report", { description: error.message });
     },
   });
+
+  const sendReportMutation = trpc.pdca.sendReport.useMutation({
+    onSuccess: (result) => {
+      setIsEmailDialogOpen(false);
+      setEmailRecipient("");
+      toast.success("Report sent!", { 
+        description: `The PDCA report has been emailed successfully.`,
+        action: result.previewUrl ? {
+          label: "Preview",
+          onClick: () => window.open(result.previewUrl, "_blank"),
+        } : undefined,
+      });
+    },
+    onError: (error) => {
+      toast.error("Failed to send report", { description: error.message });
+    },
+  });
+
+  const handleSendReport = () => {
+    if (!selectedCycleId || !emailRecipient) return;
+    sendReportMutation.mutate({
+      id: selectedCycleId,
+      email: emailRecipient,
+    });
+  };
 
   // Helper functions
   const getPhaseIndex = (phase: Phase) => PHASES.findIndex(p => p.id === phase);
@@ -499,7 +528,15 @@ export default function PDCACycles() {
                             ) : (
                               <FileDown className="h-4 w-4 mr-1" />
                             )}
-                            {generateReportMutation.isPending ? "Generating..." : "Download Report"}
+                            {generateReportMutation.isPending ? "Generating..." : "Download"}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsEmailDialogOpen(true)}
+                          >
+                            <Mail className="h-4 w-4 mr-1" />
+                            Email
                           </Button>
                           <Button
                             variant="ghost"
@@ -807,6 +844,62 @@ export default function PDCACycles() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Email Report Dialog */}
+        <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Send Report via Email
+              </DialogTitle>
+              <DialogDescription>
+                Enter the recipient's email address to send the PDCA cycle report as a PDF attachment.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Recipient Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="recipient@example.com"
+                  value={emailRecipient}
+                  onChange={(e) => setEmailRecipient(e.target.value)}
+                />
+              </div>
+              {selectedCycle && (
+                <div className="rounded-lg bg-muted p-3 text-sm">
+                  <p className="font-medium">Report Details:</p>
+                  <p className="text-muted-foreground mt-1">
+                    Cycle #{selectedCycle.cycleNumber} • {selectedCycle.aiSystemName}
+                  </p>
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsEmailDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSendReport}
+                disabled={sendReportMutation.isPending || !emailRecipient || !emailRecipient.includes("@")}
+              >
+                {sendReportMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 mr-2" />
+                    Send Report
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

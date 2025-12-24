@@ -1745,6 +1745,66 @@ const pdcaRouter = router({
       return { success: true };
     }),
 
+  // Send PDF report via email
+  sendReport: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      email: z.string().email("Please enter a valid email address"),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get the cycle with AI system details
+      const [cycle] = await db
+        .select({
+          id: pdcaCycles.id,
+          cycleNumber: pdcaCycles.cycleNumber,
+          phase: pdcaCycles.phase,
+          planSummary: pdcaCycles.planSummary,
+          doSummary: pdcaCycles.doSummary,
+          checkSummary: pdcaCycles.checkSummary,
+          actSummary: pdcaCycles.actSummary,
+          status: pdcaCycles.status,
+          startedAt: pdcaCycles.startedAt,
+          completedAt: pdcaCycles.completedAt,
+          aiSystemName: aiSystems.name,
+          aiSystemType: aiSystems.systemType,
+          aiSystemRiskLevel: aiSystems.riskLevel,
+        })
+        .from(pdcaCycles)
+        .leftJoin(aiSystems, eq(pdcaCycles.aiSystemId, aiSystems.id))
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      if (!cycle) {
+        throw new Error("PDCA cycle not found");
+      }
+
+      // Generate PDF
+      const { generatePDCACyclePDF } = await import("./pdfGenerator");
+      const pdfBuffer = await generatePDCACyclePDF(cycle as any);
+
+      // Send email
+      const { sendPDCAReport } = await import("./emailService");
+      const result = await sendPDCAReport(
+        input.email,
+        cycle.cycleNumber,
+        cycle.aiSystemName || "Unknown System",
+        pdfBuffer
+      );
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to send email");
+      }
+
+      return {
+        success: true,
+        messageId: result.messageId,
+        previewUrl: result.previewUrl, // For testing with ethereal
+      };
+    }),
+
   // Generate PDF report for a PDCA cycle
   generateReport: protectedProcedure
     .input(z.object({ id: z.number() }))

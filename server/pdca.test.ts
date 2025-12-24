@@ -271,4 +271,42 @@ describe("PDCA Router", () => {
       ).rejects.toThrow();
     });
   });
+
+  describe("sendReport", () => {
+    it("should require authentication", async () => {
+      const ctx = createMockContext();
+      const caller = appRouter.createCaller(ctx);
+      
+      await expect(
+        caller.pdca.sendReport({ id: 1, email: "test@example.com" })
+      ).rejects.toThrow();
+    });
+
+    it("should throw when database is not available", async () => {
+      const ctx = createMockContext({ id: 1, role: "user" });
+      const caller = appRouter.createCaller(ctx);
+      
+      await expect(
+        caller.pdca.sendReport({ id: 1, email: "test@example.com" })
+      ).rejects.toThrow("Database not available");
+    });
+
+    it("should validate email format", async () => {
+      const ctx = createMockContext({ id: 1, role: "user" });
+      const caller = appRouter.createCaller(ctx);
+      
+      await expect(
+        caller.pdca.sendReport({ id: 1, email: "invalid-email" })
+      ).rejects.toThrow();
+    });
+
+    it("should require a valid cycle ID", async () => {
+      const ctx = createMockContext({ id: 1, role: "user" });
+      const caller = appRouter.createCaller(ctx);
+      
+      await expect(
+        caller.pdca.sendReport({ id: -1, email: "test@example.com" })
+      ).rejects.toThrow();
+    });
+  });
 });

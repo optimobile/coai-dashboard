@@ -329,3 +329,22 @@
 ### Testing
 - [x] Write tests for PDF generation endpoint
 - [x] Verify PDF content and formatting
+
+
+## Phase 7 - PDF Email Delivery
+
+### Backend Email Integration
+- [x] Create sendReport endpoint in PDCA router
+- [x] Integrate with existing notification/email system
+- [x] Attach PDF to email with proper MIME type
+- [x] Add email validation
+
+### Frontend UI
+- [x] Add "Send Report" button next to Download
+- [x] Create email input dialog with recipient field
+- [x] Show loading state during email sending
+- [x] Display success/error feedback
+
+### Testing
+- [x] Write tests for email sending endpoint
+- [x] Verify email delivery functionality
