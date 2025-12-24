@@ -2511,6 +2511,231 @@ const stripeRouter = router({
 });
 
 // ============================================
+// REGULATOR ROUTER - Government/regulatory body access
+// ============================================
+const regulatorProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (ctx.user.role !== 'regulator' && ctx.user.role !== 'admin') {
+    throw new Error('Regulator access required');
+  }
+  return next({ ctx });
+});
+
+const regulatorRouter = router({
+  // Get aggregated compliance dashboard for all organizations
+  getComplianceDashboard: regulatorProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return null;
+
+    // Get all assessments with system and framework info
+    const allAssessments = await db
+      .select({
+        id: assessments.id,
+        status: assessments.status,
+        overallScore: assessments.overallScore,
+        frameworkCode: frameworks.code,
+        frameworkName: frameworks.name,
+        systemName: aiSystems.name,
+        systemType: aiSystems.systemType,
+        riskLevel: aiSystems.riskLevel,
+        completedAt: assessments.completedAt,
+      })
+      .from(assessments)
+      .leftJoin(frameworks, eq(assessments.frameworkId, frameworks.id))
+      .leftJoin(aiSystems, eq(assessments.aiSystemId, aiSystems.id))
+      .orderBy(desc(assessments.completedAt))
+      .limit(500);
+
+    // Calculate framework-level stats
+    const frameworkStats: Record<string, { total: number; compliant: number; avgScore: number }> = {};
+    for (const a of allAssessments) {
+      const code = a.frameworkCode || 'unknown';
+      if (!frameworkStats[code]) {
+        frameworkStats[code] = { total: 0, compliant: 0, avgScore: 0 };
+      }
+      frameworkStats[code].total++;
+      if (a.status === 'completed' && (Number(a.overallScore) || 0) >= 70) {
+        frameworkStats[code].compliant++;
+      }
+      frameworkStats[code].avgScore += Number(a.overallScore) || 0;
+    }
+
+    // Calculate averages
+    for (const code of Object.keys(frameworkStats)) {
+      if (frameworkStats[code].total > 0) {
+        frameworkStats[code].avgScore = Math.round(frameworkStats[code].avgScore / frameworkStats[code].total);
+      }
+    }
+
+    // Risk level distribution
+    const riskDistribution = {
+      minimal: allAssessments.filter(a => a.riskLevel === 'minimal').length,
+      limited: allAssessments.filter(a => a.riskLevel === 'limited').length,
+      high: allAssessments.filter(a => a.riskLevel === 'high').length,
+      unacceptable: allAssessments.filter(a => a.riskLevel === 'unacceptable').length,
+    };
+
+    // Get recent watchdog reports for regulatory attention
+    const recentReports = await db
+      .select()
+      .from(watchdogReports)
+      .where(eq(watchdogReports.severity, 'critical'))
+      .orderBy(desc(watchdogReports.createdAt))
+      .limit(10);
+
+    return {
+      totalAssessments: allAssessments.length,
+      frameworkStats,
+      riskDistribution,
+      recentCriticalReports: recentReports,
+      recentAssessments: allAssessments.slice(0, 20),
+    };
+  }),
+
+  // Get all AI systems across all organizations
+  getAllSystems: regulatorProcedure
+    .input(z.object({
+      riskLevel: z.enum(['all', 'minimal', 'limited', 'high', 'unacceptable']).optional(),
+      status: z.enum(['all', 'draft', 'active', 'under_review', 'compliant', 'non_compliant', 'archived']).optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      let query = db.select().from(aiSystems);
+
+      if (input?.riskLevel && input.riskLevel !== 'all') {
+        query = query.where(eq(aiSystems.riskLevel, input.riskLevel)) as any;
+      }
+
+      if (input?.status && input.status !== 'all') {
+        query = query.where(eq(aiSystems.status, input.status)) as any;
+      }
+
+      return query.orderBy(desc(aiSystems.createdAt)).limit(200);
+    }),
+
+  // Get all watchdog reports for regulatory review
+  getAllReports: regulatorProcedure
+    .input(z.object({
+      severity: z.enum(['all', 'low', 'medium', 'high', 'critical']).optional(),
+      status: z.enum(['all', 'submitted', 'under_review', 'investigating', 'resolved', 'dismissed']).optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      let query = db.select().from(watchdogReports);
+
+      if (input?.severity && input.severity !== 'all') {
+        query = query.where(eq(watchdogReports.severity, input.severity)) as any;
+      }
+
+      if (input?.status && input.status !== 'all') {
+        query = query.where(eq(watchdogReports.status, input.status)) as any;
+      }
+
+      return query.orderBy(desc(watchdogReports.createdAt)).limit(200);
+    }),
+
+  // Get compliance trends over time
+  getComplianceTrends: regulatorProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    // Get assessments from last 6 months grouped by month
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const assessmentData = await db
+      .select({
+        completedAt: assessments.completedAt,
+        overallScore: assessments.overallScore,
+        frameworkCode: frameworks.code,
+      })
+      .from(assessments)
+      .leftJoin(frameworks, eq(assessments.frameworkId, frameworks.id))
+      .where(sql`${assessments.completedAt} >= ${sixMonthsAgo}`)
+      .orderBy(assessments.completedAt);
+
+    // Group by month
+    const monthlyData: Record<string, { count: number; avgScore: number; scores: number[] }> = {};
+    for (const a of assessmentData) {
+      if (!a.completedAt) continue;
+      const month = a.completedAt.toISOString().slice(0, 7);
+      if (!monthlyData[month]) {
+        monthlyData[month] = { count: 0, avgScore: 0, scores: [] };
+      }
+      monthlyData[month].count++;
+      monthlyData[month].scores.push(Number(a.overallScore) || 0);
+    }
+
+    // Calculate averages
+    const trends = Object.entries(monthlyData).map(([month, data]) => ({
+      month,
+      assessmentCount: data.count,
+      avgScore: data.scores.length > 0 
+        ? Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length)
+        : 0,
+    }));
+
+    return trends.sort((a, b) => a.month.localeCompare(b.month));
+  }),
+
+  // Export compliance data for regulatory reporting
+  exportComplianceData: regulatorProcedure
+    .input(z.object({
+      frameworkCode: z.string().optional(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
+      let query = db
+        .select({
+          systemName: aiSystems.name,
+          systemType: aiSystems.systemType,
+          riskLevel: aiSystems.riskLevel,
+          frameworkCode: frameworks.code,
+          frameworkName: frameworks.name,
+          assessmentStatus: assessments.status,
+          overallScore: assessments.overallScore,
+          completedAt: assessments.completedAt,
+        })
+        .from(assessments)
+        .leftJoin(frameworks, eq(assessments.frameworkId, frameworks.id))
+        .leftJoin(aiSystems, eq(assessments.aiSystemId, aiSystems.id));
+
+      if (input.frameworkCode) {
+        query = query.where(eq(frameworks.code, input.frameworkCode)) as any;
+      }
+
+      const data = await query.orderBy(desc(assessments.completedAt));
+
+      // Generate CSV content
+      const headers = ['System Name', 'System Type', 'Risk Level', 'Framework', 'Status', 'Score', 'Completed At'];
+      const rows = data.map(d => [
+        d.systemName || '',
+        d.systemType || '',
+        d.riskLevel || '',
+        d.frameworkCode || '',
+        d.assessmentStatus || '',
+        String(d.overallScore || 0),
+        d.completedAt?.toISOString() || '',
+      ]);
+
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+
+      return {
+        filename: `compliance-export-${new Date().toISOString().slice(0, 10)}.csv`,
+        data: Buffer.from(csv).toString('base64'),
+        mimeType: 'text/csv',
+      };
+    }),
+});
+
+// ============================================
 // MAIN APP ROUTER
 // ============================================
 export const appRouter = router({
@@ -2540,6 +2765,7 @@ export const appRouter = router({
   pdca: pdcaRouter,
   stripe: stripeRouter,
   publicApi: publicApiRouter,
+  regulator: regulatorRouter,
 });
 
 export type AppRouter = typeof appRouter;

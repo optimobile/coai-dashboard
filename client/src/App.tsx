@@ -33,6 +33,9 @@ import ComplianceScorecard from "./pages/ComplianceScorecard";
 import KnowledgeBase from "./pages/KnowledgeBase";
 import EnterpriseOnboarding from "./pages/EnterpriseOnboarding";
 import Pricing from "./pages/Pricing";
+import WatchdogLeaderboard from "./pages/WatchdogLeaderboard";
+import RegulatorDashboard from "./pages/RegulatorDashboard";
+import Blog from "./pages/Blog";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -67,6 +70,9 @@ function Router() {
       <Route path="/knowledge-base" component={KnowledgeBase} />
       <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/leaderboard" component={WatchdogLeaderboard} />
+      <Route path="/regulator" component={RegulatorDashboard} />
+      <Route path="/blog" component={Blog} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

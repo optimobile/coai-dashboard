@@ -9,7 +9,7 @@ export const users = mysqlTable("users", {
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin", "watchdog_analyst"]).default("user").notNull(),
+  role: mysqlEnum("role", ["user", "admin", "watchdog_analyst", "regulator"]).default("user").notNull(),
   // Stripe integration fields
   stripeCustomerId: varchar("stripeCustomerId", { length: 255 }),
   stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }),

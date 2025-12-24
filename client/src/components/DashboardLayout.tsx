@@ -32,6 +32,8 @@ import {
   RefreshCw,
   CreditCard,
   Brain,
+  Building2,
+  Trophy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -63,6 +65,8 @@ const navItems = [
   { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
   { path: "/settings/billing", label: "Billing", icon: CreditCard },
   { path: "/knowledge-base", label: "Knowledge Base", icon: Brain },
+  { path: "/regulator", label: "Regulator View", icon: Building2 },
+  { path: "/leaderboard", label: "Leaderboard", icon: Trophy },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
