@@ -107,7 +107,7 @@ export default function Training() {
             </p>
           </div>
           <Button 
-            onClick={() => setLocation("/certification")}
+            onClick={() => setLocation("/certification/exam")}
             disabled={!allCompleted}
             className="gap-2"
           >

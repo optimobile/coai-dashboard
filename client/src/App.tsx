@@ -17,6 +17,9 @@ import Settings from "./pages/Settings";
 import WatchdogSignup from "./pages/WatchdogSignup";
 import Training from "./pages/Training";
 import Certification from "./pages/Certification";
+import CertificationExam from "./pages/CertificationExam";
+import CertificationResults from "./pages/CertificationResults";
+import MyCertificates from "./pages/MyCertificates";
 import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
@@ -40,6 +43,9 @@ function Router() {
       <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/training" component={Training} />
       <Route path="/certification" component={Certification} />
+      <Route path="/certification/exam" component={CertificationExam} />
+      <Route path="/certification/results" component={CertificationResults} />
+      <Route path="/certificates" component={MyCertificates} />
       <Route path="/workbench" component={Workbench} />
       <Route path="/public" component={PublicHome} />
       <Route path="/admin" component={Admin} />

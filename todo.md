@@ -235,3 +235,31 @@
 - [x] Create content script for page interaction
 - [x] Add README with installation instructions
 
+
+## Phase 3 - Certification Exam System
+
+### Question Bank & Exam Structure
+- [x] Design question categories (EU AI Act, NIST RMF, TC260, Ethics, Incident Analysis)
+- [x] Create 50+ multiple-choice questions with explanations
+- [x] Seed questions into database with difficulty levels
+- [x] Create certification test record in database
+
+### Exam Taking Interface
+- [x] Build exam start page with instructions
+- [x] Create timed exam interface with countdown
+- [x] Implement question navigation (next/previous/flag)
+- [x] Add progress indicator and question status
+- [x] Handle exam submission and timeout
+
+### Grading System
+- [x] Calculate score based on correct answers
+- [x] Determine pass/fail status (70% threshold)
+- [x] Store attempt results in database
+- [x] Display detailed results with correct answers
+
+### Certificate Generation
+- [x] Generate unique certificate numbers
+- [x] Create certificate display component
+- [x] Store certificates in database
+- [x] Add certificate to user profile
+
