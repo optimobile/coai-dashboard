@@ -23,7 +23,8 @@ import {
   analystDecisions,
   analystPerformance,
   users,
-  apiKeys
+  apiKeys,
+  pdcaCycles,
 } from "../drizzle/schema";
 import { eq, desc, sql, and } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
@@ -1398,6 +1399,400 @@ Be helpful, accurate, and cite specific articles/requirements when relevant. If 
 });
 
 // ============================================
+// PDCA ROUTER - Plan-Do-Check-Act cycle management
+// ============================================
+const pdcaRouter = router({
+  // List all PDCA cycles for the user or a specific AI system
+  list: protectedProcedure
+    .input(z.object({
+      aiSystemId: z.number().optional(),
+      status: z.enum(["active", "completed", "paused", "all"]).default("all"),
+    }).optional())
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      let query = db
+        .select({
+          id: pdcaCycles.id,
+          aiSystemId: pdcaCycles.aiSystemId,
+          cycleNumber: pdcaCycles.cycleNumber,
+          phase: pdcaCycles.phase,
+          planSummary: pdcaCycles.planSummary,
+          doSummary: pdcaCycles.doSummary,
+          checkSummary: pdcaCycles.checkSummary,
+          actSummary: pdcaCycles.actSummary,
+          status: pdcaCycles.status,
+          startedAt: pdcaCycles.startedAt,
+          completedAt: pdcaCycles.completedAt,
+          aiSystemName: aiSystems.name,
+        })
+        .from(pdcaCycles)
+        .leftJoin(aiSystems, eq(pdcaCycles.aiSystemId, aiSystems.id));
+
+      // Filter by AI system if provided
+      if (input?.aiSystemId) {
+        query = query.where(eq(pdcaCycles.aiSystemId, input.aiSystemId)) as any;
+      }
+
+      // Filter by status if not "all"
+      if (input?.status && input.status !== "all") {
+        query = query.where(eq(pdcaCycles.status, input.status)) as any;
+      }
+
+      return query.orderBy(desc(pdcaCycles.startedAt)).limit(50);
+    }),
+
+  // Get a single PDCA cycle with full details
+  getById: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const [cycle] = await db
+        .select({
+          id: pdcaCycles.id,
+          aiSystemId: pdcaCycles.aiSystemId,
+          cycleNumber: pdcaCycles.cycleNumber,
+          phase: pdcaCycles.phase,
+          planSummary: pdcaCycles.planSummary,
+          doSummary: pdcaCycles.doSummary,
+          checkSummary: pdcaCycles.checkSummary,
+          actSummary: pdcaCycles.actSummary,
+          status: pdcaCycles.status,
+          startedAt: pdcaCycles.startedAt,
+          completedAt: pdcaCycles.completedAt,
+          aiSystemName: aiSystems.name,
+          aiSystemType: aiSystems.systemType,
+          aiSystemRiskLevel: aiSystems.riskLevel,
+        })
+        .from(pdcaCycles)
+        .leftJoin(aiSystems, eq(pdcaCycles.aiSystemId, aiSystems.id))
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      return cycle || null;
+    }),
+
+  // Create a new PDCA cycle
+  create: protectedProcedure
+    .input(z.object({
+      aiSystemId: z.number(),
+      planSummary: z.string().min(10).max(2000),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify AI system exists and belongs to user
+      const [system] = await db
+        .select()
+        .from(aiSystems)
+        .where(eq(aiSystems.id, input.aiSystemId))
+        .limit(1);
+
+      if (!system || system.userId !== ctx.user.id) {
+        throw new Error("AI system not found or access denied");
+      }
+
+      // Get the next cycle number for this AI system
+      const existingCycles = await db
+        .select({ cycleNumber: pdcaCycles.cycleNumber })
+        .from(pdcaCycles)
+        .where(eq(pdcaCycles.aiSystemId, input.aiSystemId))
+        .orderBy(desc(pdcaCycles.cycleNumber))
+        .limit(1);
+
+      const nextCycleNumber = (existingCycles[0]?.cycleNumber || 0) + 1;
+
+      const result = await db.insert(pdcaCycles).values({
+        aiSystemId: input.aiSystemId,
+        cycleNumber: nextCycleNumber,
+        phase: "plan",
+        planSummary: input.planSummary,
+        status: "active",
+      });
+
+      return { id: Number((result as any)[0]?.insertId || 0), cycleNumber: nextCycleNumber };
+    }),
+
+  // Update phase summary (Plan, Do, Check, or Act)
+  updatePhase: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      phase: z.enum(["plan", "do", "check", "act"]),
+      summary: z.string().min(10).max(2000),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get the cycle and verify access
+      const [cycle] = await db
+        .select()
+        .from(pdcaCycles)
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      if (!cycle) {
+        throw new Error("PDCA cycle not found");
+      }
+
+      // Verify user owns the AI system
+      if (cycle.aiSystemId) {
+        const [system] = await db
+          .select()
+          .from(aiSystems)
+          .where(eq(aiSystems.id, cycle.aiSystemId))
+          .limit(1);
+
+        if (!system || system.userId !== ctx.user.id) {
+          throw new Error("Access denied");
+        }
+      }
+
+      // Update the appropriate summary field
+      const updateData: Record<string, string> = {};
+      switch (input.phase) {
+        case "plan":
+          updateData.planSummary = input.summary;
+          break;
+        case "do":
+          updateData.doSummary = input.summary;
+          break;
+        case "check":
+          updateData.checkSummary = input.summary;
+          break;
+        case "act":
+          updateData.actSummary = input.summary;
+          break;
+      }
+
+      await db
+        .update(pdcaCycles)
+        .set(updateData)
+        .where(eq(pdcaCycles.id, input.id));
+
+      return { success: true };
+    }),
+
+  // Advance to the next phase
+  advancePhase: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get the cycle
+      const [cycle] = await db
+        .select()
+        .from(pdcaCycles)
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      if (!cycle) {
+        throw new Error("PDCA cycle not found");
+      }
+
+      // Verify user owns the AI system
+      if (cycle.aiSystemId) {
+        const [system] = await db
+          .select()
+          .from(aiSystems)
+          .where(eq(aiSystems.id, cycle.aiSystemId))
+          .limit(1);
+
+        if (!system || system.userId !== ctx.user.id) {
+          throw new Error("Access denied");
+        }
+      }
+
+      // Determine next phase
+      const phaseOrder: ("plan" | "do" | "check" | "act")[] = ["plan", "do", "check", "act"];
+      const currentIndex = phaseOrder.indexOf(cycle.phase);
+      
+      if (currentIndex === 3) {
+        // Completing the Act phase - mark cycle as completed
+        await db
+          .update(pdcaCycles)
+          .set({ status: "completed", completedAt: new Date() })
+          .where(eq(pdcaCycles.id, input.id));
+
+        return { success: true, completed: true, nextPhase: null };
+      }
+
+      const nextPhase = phaseOrder[currentIndex + 1];
+
+      await db
+        .update(pdcaCycles)
+        .set({ phase: nextPhase })
+        .where(eq(pdcaCycles.id, input.id));
+
+      return { success: true, completed: false, nextPhase };
+    }),
+
+  // Pause a cycle
+  pause: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const [cycle] = await db
+        .select()
+        .from(pdcaCycles)
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      if (!cycle) {
+        throw new Error("PDCA cycle not found");
+      }
+
+      // Verify access
+      if (cycle.aiSystemId) {
+        const [system] = await db
+          .select()
+          .from(aiSystems)
+          .where(eq(aiSystems.id, cycle.aiSystemId))
+          .limit(1);
+
+        if (!system || system.userId !== ctx.user.id) {
+          throw new Error("Access denied");
+        }
+      }
+
+      await db
+        .update(pdcaCycles)
+        .set({ status: "paused" })
+        .where(eq(pdcaCycles.id, input.id));
+
+      return { success: true };
+    }),
+
+  // Resume a paused cycle
+  resume: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const [cycle] = await db
+        .select()
+        .from(pdcaCycles)
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      if (!cycle || cycle.status !== "paused") {
+        throw new Error("PDCA cycle not found or not paused");
+      }
+
+      // Verify access
+      if (cycle.aiSystemId) {
+        const [system] = await db
+          .select()
+          .from(aiSystems)
+          .where(eq(aiSystems.id, cycle.aiSystemId))
+          .limit(1);
+
+        if (!system || system.userId !== ctx.user.id) {
+          throw new Error("Access denied");
+        }
+      }
+
+      await db
+        .update(pdcaCycles)
+        .set({ status: "active" })
+        .where(eq(pdcaCycles.id, input.id));
+
+      return { success: true };
+    }),
+
+  // Delete a cycle
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const [cycle] = await db
+        .select()
+        .from(pdcaCycles)
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      if (!cycle) {
+        throw new Error("PDCA cycle not found");
+      }
+
+      // Verify access
+      if (cycle.aiSystemId) {
+        const [system] = await db
+          .select()
+          .from(aiSystems)
+          .where(eq(aiSystems.id, cycle.aiSystemId))
+          .limit(1);
+
+        if (!system || system.userId !== ctx.user.id) {
+          throw new Error("Access denied");
+        }
+      }
+
+      await db
+        .delete(pdcaCycles)
+        .where(eq(pdcaCycles.id, input.id));
+
+      return { success: true };
+    }),
+
+  // Get PDCA stats for dashboard
+  getStats: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    // Get user's AI systems
+    const userSystems = await db
+      .select({ id: aiSystems.id })
+      .from(aiSystems)
+      .where(eq(aiSystems.userId, ctx.user.id));
+
+    const systemIds = userSystems.map(s => s.id);
+
+    if (systemIds.length === 0) {
+      return {
+        totalCycles: 0,
+        activeCycles: 0,
+        completedCycles: 0,
+        pausedCycles: 0,
+        phaseDistribution: { plan: 0, do: 0, check: 0, act: 0 },
+      };
+    }
+
+    // Get all cycles for user's systems
+    const cycles = await db
+      .select()
+      .from(pdcaCycles)
+      .where(sql`${pdcaCycles.aiSystemId} IN (${sql.join(systemIds, sql`, `)})`);
+
+    const activeCycles = cycles.filter(c => c.status === "active");
+    const phaseDistribution = {
+      plan: activeCycles.filter(c => c.phase === "plan").length,
+      do: activeCycles.filter(c => c.phase === "do").length,
+      check: activeCycles.filter(c => c.phase === "check").length,
+      act: activeCycles.filter(c => c.phase === "act").length,
+    };
+
+    return {
+      totalCycles: cycles.length,
+      activeCycles: activeCycles.length,
+      completedCycles: cycles.filter(c => c.status === "completed").length,
+      pausedCycles: cycles.filter(c => c.status === "paused").length,
+      phaseDistribution,
+    };
+  }),
+});
+
+// ============================================
 // API KEYS ROUTER - Enterprise API key management
 // ============================================
 
@@ -1552,6 +1947,7 @@ export const appRouter = router({
   chat: chatRouter,
   admin: adminRouter,
   apiKeys: apiKeysRouter,
+  pdca: pdcaRouter,
 });
 
 export type AppRouter = typeof appRouter;

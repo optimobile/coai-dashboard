@@ -284,3 +284,29 @@
 - [x] Add review button to attempt history
 - [x] Write tests for review functionality
 
+
+## Phase 5 - PDCA Cycle Management
+
+### Backend CRUD Operations
+- [x] Review existing pdca_cycles table schema
+- [x] Create PDCA router with full CRUD operations
+- [x] Add getPDCACycles endpoint (list all for user/system)
+- [x] Add createPDCACycle endpoint
+- [x] Add updatePDCACycle endpoint (phase transitions)
+- [x] Add deletePDCACycle endpoint
+- [x] Add getPDCACycleDetails endpoint with phase data
+
+### PDCA UI Components
+- [x] Create PDCACycles page for cycle management
+- [x] Build cycle creation wizard
+- [x] Create phase detail cards (Plan, Do, Check, Act)
+- [x] Add phase transition buttons
+- [x] Show cycle progress visualization
+- [x] Connect to AI systems dropdown
+
+### Integration
+- [x] Link PDCA cycles to AI systems
+- [x] Show PDCA status on AI Systems page
+- [x] Add PDCA widget to Dashboard
+- [x] Write tests for PDCA endpoints
+

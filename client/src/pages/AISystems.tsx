@@ -26,6 +26,7 @@ import {
   BarChart3,
   MessageSquare,
   Boxes,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -374,6 +375,10 @@ export default function AISystems() {
                             <DropdownMenuItem onClick={() => toast.info("Assessment wizard coming soon")}>
                               <Shield className="h-4 w-4 mr-2" />
                               Run Assessment
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => window.location.href = `/pdca?system=${system.id}`}>
+                              <RefreshCw className="h-4 w-4 mr-2" />
+                              PDCA Cycles
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => handleEdit(system)}>

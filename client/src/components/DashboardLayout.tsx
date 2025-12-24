@@ -29,6 +29,7 @@ import {
   Globe,
   Key,
   Code,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -57,6 +58,7 @@ const navItems = [
   { path: "/public", label: "Public Site", icon: Globe },
   { path: "/api-docs", label: "API Docs", icon: Code },
   { path: "/api-keys", label: "API Keys", icon: Key },
+  { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {

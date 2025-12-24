@@ -53,6 +53,7 @@ export default function Dashboard() {
   const { data: councilStats, isLoading: councilLoading } = trpc.council.getStats.useQuery();
   const { data: dashboardStats, isLoading: statsLoading, refetch } = trpc.dashboard.getStats.useQuery();
   const { data: watchdogReports } = trpc.watchdog.list.useQuery();
+  const { data: pdcaStats } = trpc.pdca.getStats.useQuery();
 
   const isLoading = loiLoading || councilLoading || statsLoading;
 
@@ -477,11 +478,59 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
+        {/* PDCA Cycles Summary */}
+        {pdcaStats && pdcaStats.totalCycles > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.35 }}
+          >
+            <Card className="bg-card border-border">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-medium flex items-center gap-2">
+                    <RefreshCw className="h-4 w-4" />
+                    Active PDCA Cycles
+                  </CardTitle>
+                  <Button variant="ghost" size="sm" onClick={() => setLocation("/pdca")}>
+                    Manage Cycles
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center p-4 rounded-lg bg-blue-50 dark:bg-blue-950">
+                    <div className="text-2xl font-bold text-blue-600">{pdcaStats.phaseDistribution.plan}</div>
+                    <div className="text-xs text-muted-foreground">Plan Phase</div>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-green-50 dark:bg-green-950">
+                    <div className="text-2xl font-bold text-green-600">{pdcaStats.phaseDistribution.do}</div>
+                    <div className="text-xs text-muted-foreground">Do Phase</div>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-amber-50 dark:bg-amber-950">
+                    <div className="text-2xl font-bold text-amber-600">{pdcaStats.phaseDistribution.check}</div>
+                    <div className="text-xs text-muted-foreground">Check Phase</div>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-purple-50 dark:bg-purple-950">
+                    <div className="text-2xl font-bold text-purple-600">{pdcaStats.phaseDistribution.act}</div>
+                    <div className="text-xs text-muted-foreground">Act Phase</div>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                  <span>{pdcaStats.activeCycles} active cycles</span>
+                  <span>{pdcaStats.completedCycles} completed</span>
+                  <span>{pdcaStats.pausedCycles} paused</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         {/* LOI Banner */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, delay: 0.35 }}
+          transition={{ duration: 0.2, delay: 0.4 }}
         >
           <Card className="bg-gradient-to-r from-primary/10 to-purple-500/10 border-primary/20">
             <CardContent className="p-6">
