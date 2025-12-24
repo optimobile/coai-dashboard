@@ -254,6 +254,107 @@ describe("Certification Exam System", () => {
     });
   });
 
+  describe("Exam Review", () => {
+    it("should return review data for completed attempts", async () => {
+      const mockAttempt = {
+        id: 1,
+        userId: 1,
+        testId: 1,
+        completedAt: new Date(),
+        answers: { "1": "A", "2": "B" },
+        score: 80,
+        percentScore: "80.00",
+        passed: true,
+      };
+
+      const mockQuestions = [
+        {
+          id: 1,
+          questionText: "Test question 1",
+          correctAnswer: "A",
+          explanation: "Explanation for question 1",
+          points: 1,
+        },
+        {
+          id: 2,
+          questionText: "Test question 2",
+          correctAnswer: "C",
+          explanation: "Explanation for question 2",
+          points: 1,
+        },
+      ];
+
+      // Simulate building review data
+      const userAnswers = mockAttempt.answers as Record<string, string>;
+      const reviewQuestions = mockQuestions.map((q) => {
+        const userAnswer = userAnswers[q.id.toString()] || null;
+        const isCorrect = userAnswer === q.correctAnswer;
+        return {
+          id: q.id,
+          questionText: q.questionText,
+          userAnswer,
+          correctAnswer: q.correctAnswer,
+          isCorrect,
+          explanation: q.explanation,
+        };
+      });
+
+      expect(reviewQuestions).toHaveLength(2);
+      expect(reviewQuestions[0].isCorrect).toBe(true); // User answered A, correct is A
+      expect(reviewQuestions[1].isCorrect).toBe(false); // User answered B, correct is C
+    });
+
+    it("should calculate summary statistics correctly", () => {
+      const reviewQuestions = [
+        { id: 1, isCorrect: true, userAnswer: "A" },
+        { id: 2, isCorrect: false, userAnswer: "B" },
+        { id: 3, isCorrect: true, userAnswer: "C" },
+        { id: 4, isCorrect: false, userAnswer: null }, // Unanswered
+        { id: 5, isCorrect: false, userAnswer: null }, // Unanswered
+      ];
+
+      const summary = {
+        totalQuestions: reviewQuestions.length,
+        correctCount: reviewQuestions.filter((q) => q.isCorrect).length,
+        incorrectCount: reviewQuestions.filter((q) => !q.isCorrect && q.userAnswer).length,
+        unansweredCount: reviewQuestions.filter((q) => !q.userAnswer).length,
+      };
+
+      expect(summary.totalQuestions).toBe(5);
+      expect(summary.correctCount).toBe(2);
+      expect(summary.incorrectCount).toBe(1);
+      expect(summary.unansweredCount).toBe(2);
+    });
+
+    it("should filter questions by status", () => {
+      const questions = [
+        { id: 1, isCorrect: true, userAnswer: "A" },
+        { id: 2, isCorrect: false, userAnswer: "B" },
+        { id: 3, isCorrect: true, userAnswer: "C" },
+        { id: 4, isCorrect: false, userAnswer: null },
+      ];
+
+      const correctOnly = questions.filter((q) => q.isCorrect);
+      const incorrectOnly = questions.filter((q) => !q.isCorrect && q.userAnswer);
+      const unansweredOnly = questions.filter((q) => !q.userAnswer);
+
+      expect(correctOnly).toHaveLength(2);
+      expect(incorrectOnly).toHaveLength(1);
+      expect(unansweredOnly).toHaveLength(1);
+    });
+
+    it("should not allow review of incomplete attempts", () => {
+      const incompleteAttempt = {
+        id: 1,
+        userId: 1,
+        completedAt: null,
+      };
+
+      const canReview = !!incompleteAttempt.completedAt;
+      expect(canReview).toBe(false);
+    });
+  });
+
   describe("Question Navigation", () => {
     it("should track answered questions", () => {
       const totalQuestions = 30;

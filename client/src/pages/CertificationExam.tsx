@@ -212,7 +212,7 @@ export default function CertificationExam() {
       });
 
       // Navigate to results page with result data
-      navigate(`/certification/results?passed=${result.passed}&score=${result.percentScore}&certificate=${result.certificateNumber || ""}`);
+      navigate(`/certification/results?passed=${result.passed}&score=${result.percentScore}&certificate=${result.certificateNumber || ""}&attemptId=${result.attemptId}`);
     } catch (error) {
       console.error("Failed to submit exam:", error);
       setExamState((prev) => ({ ...prev, status: "in_progress" }));

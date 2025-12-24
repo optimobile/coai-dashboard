@@ -20,6 +20,7 @@ import Certification from "./pages/Certification";
 import CertificationExam from "./pages/CertificationExam";
 import CertificationResults from "./pages/CertificationResults";
 import MyCertificates from "./pages/MyCertificates";
+import ExamReview from "./pages/ExamReview";
 import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/certification/exam" component={CertificationExam} />
       <Route path="/certification/results" component={CertificationResults} />
       <Route path="/certificates" component={MyCertificates} />
+      <Route path="/certification/review" component={ExamReview} />
       <Route path="/workbench" component={Workbench} />
       <Route path="/public" component={PublicHome} />
       <Route path="/admin" component={Admin} />

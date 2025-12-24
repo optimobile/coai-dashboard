@@ -874,7 +874,8 @@ This analyst can now review AI safety cases in the Workbench. Your certified ana
         score: earnedPoints, 
         totalPoints, 
         percentScore: Math.round(percentScore),
-        certificateNumber: passed ? `COAI-WA-${Date.now()}-${ctx.user.id}` : null
+        certificateNumber: passed ? `COAI-WA-${Date.now()}-${ctx.user.id}` : null,
+        attemptId: input.attemptId,
       };
     }),
 
@@ -900,6 +901,89 @@ This analyst can now review AI safety cases in the Workbench. Your certified ana
       .where(eq(userTestAttempts.userId, ctx.user.id))
       .orderBy(desc(userTestAttempts.createdAt));
   }),
+
+  // Get attempt review with answers and explanations
+  getAttemptReview: protectedProcedure
+    .input(z.object({ attemptId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      // Get the attempt
+      const [attempt] = await db
+        .select()
+        .from(userTestAttempts)
+        .where(eq(userTestAttempts.id, input.attemptId))
+        .limit(1);
+
+      if (!attempt || attempt.userId !== ctx.user.id) {
+        throw new Error("Attempt not found or access denied");
+      }
+
+      // Only allow review of completed attempts
+      if (!attempt.completedAt) {
+        throw new Error("Cannot review an incomplete attempt");
+      }
+
+      // Get the test
+      const [test] = await db
+        .select()
+        .from(certificationTests)
+        .where(eq(certificationTests.id, attempt.testId))
+        .limit(1);
+
+      // Get all questions with correct answers and explanations
+      const questions = await db
+        .select()
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, attempt.testId));
+
+      // Parse user answers
+      const userAnswers = (attempt.answers as Record<string, string>) || {};
+
+      // Build review data with correct/incorrect status
+      const reviewQuestions = questions.map((q) => {
+        const userAnswer = userAnswers[q.id.toString()] || null;
+        const isCorrect = userAnswer === q.correctAnswer;
+
+        return {
+          id: q.id,
+          questionText: q.questionText,
+          questionType: q.questionType,
+          options: q.options,
+          points: q.points,
+          difficulty: q.difficulty,
+          userAnswer,
+          correctAnswer: q.correctAnswer,
+          isCorrect,
+          explanation: q.explanation,
+        };
+      });
+
+      return {
+        attempt: {
+          id: attempt.id,
+          score: attempt.score,
+          totalPoints: attempt.totalPoints,
+          percentScore: attempt.percentScore,
+          passed: attempt.passed,
+          startedAt: attempt.startedAt,
+          completedAt: attempt.completedAt,
+        },
+        test: {
+          id: test?.id,
+          title: test?.title,
+          passingScore: test?.passingScore,
+        },
+        questions: reviewQuestions,
+        summary: {
+          totalQuestions: questions.length,
+          correctCount: reviewQuestions.filter((q) => q.isCorrect).length,
+          incorrectCount: reviewQuestions.filter((q) => !q.isCorrect && q.userAnswer).length,
+          unansweredCount: reviewQuestions.filter((q) => !q.userAnswer).length,
+        },
+      };
+    }),
 });
 
 // ============================================

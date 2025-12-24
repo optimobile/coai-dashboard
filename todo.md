@@ -263,3 +263,24 @@
 - [x] Store certificates in database
 - [x] Add certificate to user profile
 
+
+## Phase 4 - Post-Exam Review Mode
+
+### Backend Endpoint
+- [x] Create getAttemptReview endpoint to return attempt with answers and explanations
+- [x] Include correct answers and explanations in response
+- [x] Verify user owns the attempt before returning data
+
+### Review Page UI
+- [x] Build ExamReview page component
+- [x] Display questions with user's answer vs correct answer
+- [x] Show correct/incorrect indicators
+- [x] Display detailed explanations for each question
+- [x] Add filter options (all/correct/incorrect)
+- [x] Add question navigation
+
+### Integration
+- [x] Link from results page to review page
+- [x] Add review button to attempt history
+- [x] Write tests for review functionality
+
