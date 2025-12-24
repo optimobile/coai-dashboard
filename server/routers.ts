@@ -25,6 +25,7 @@ import {
 } from "../drizzle/schema";
 import { eq, desc, sql, and } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
+import { notifyOwner } from "./_core/notification";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -134,6 +135,24 @@ const applicationsRouter = router({
         ...input,
         status: "pending",
       }).$returningId();
+
+      // Send notification to owner about new LOI signup
+      try {
+        await notifyOwner({
+          title: `🎯 New Watchdog Analyst Application: ${input.name}`,
+          content: `A new Letter of Intent has been submitted!
+
+**Applicant:** ${input.name}
+**Email:** ${input.email}
+**Country:** ${input.country || "Not specified"}
+**Motivation:** ${input.motivation.substring(0, 200)}${input.motivation.length > 200 ? "..." : ""}
+**Available Hours/Week:** ${input.availableHoursPerWeek || "Not specified"}
+
+This LOI adds to your market validation. Total applications can be viewed in the COAI Dashboard.`,
+        });
+      } catch (e) {
+        console.warn("Failed to send notification:", e);
+      }
 
       return { success: true, applicationId: application.id };
     }),
@@ -769,6 +788,23 @@ const certificationRouter = router({
           .update(users)
           .set({ role: "watchdog_analyst" })
           .where(eq(users.id, ctx.user.id));
+
+        // Send notification about new certified analyst
+        try {
+          await notifyOwner({
+            title: `🎉 New Certified Watchdog Analyst!`,
+            content: `A user has passed the certification exam and is now a certified COAI Watchdog Analyst!
+
+**User ID:** ${ctx.user.id}
+**Certificate Number:** ${certificateNumber}
+**Score:** ${Math.round(percentScore)}%
+**Passing Score:** ${test?.passingScore || 70}%
+
+This analyst can now review AI safety cases in the Workbench. Your certified analyst pool is growing!`,
+          });
+        } catch (e) {
+          console.warn("Failed to send certification notification:", e);
+        }
       }
 
       return { 
