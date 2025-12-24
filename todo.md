@@ -89,8 +89,8 @@
 - [x] Seed database with 51 certification test questions
 - [x] Add email notifications for LOI signups
 - [x] Add email notifications for certification completions
-- [ ] Push to GitHub as open source project
-- [ ] Create README with project vision and setup instructions
-- [ ] Add LICENSE file (MIT or Apache 2.0)
-- [ ] Create CONTRIBUTING.md for community guidelines
+- [x] Push to GitHub as open source project
+- [x] Create README with project vision and setup instructions
+- [x] Add LICENSE file (MIT)
+- [x] Create CONTRIBUTING.md for community guidelines
 - [ ] Set up LOI tracking dashboard for valuation metrics
