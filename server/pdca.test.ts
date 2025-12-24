@@ -244,4 +244,31 @@ describe("PDCA Router", () => {
       expect(result).toBeNull();
     });
   });
+
+  describe("generateReport", () => {
+    it("should require authentication", async () => {
+      const ctx = createMockContext();
+      const caller = appRouter.createCaller(ctx);
+      
+      await expect(caller.pdca.generateReport({ id: 1 })).rejects.toThrow();
+    });
+
+    it("should throw when database is not available", async () => {
+      const ctx = createMockContext({ id: 1, role: "user" });
+      const caller = appRouter.createCaller(ctx);
+      
+      await expect(
+        caller.pdca.generateReport({ id: 1 })
+      ).rejects.toThrow("Database not available");
+    });
+
+    it("should require a valid cycle ID", async () => {
+      const ctx = createMockContext({ id: 1, role: "user" });
+      const caller = appRouter.createCaller(ctx);
+      
+      await expect(
+        caller.pdca.generateReport({ id: -1 })
+      ).rejects.toThrow();
+    });
+  });
 });

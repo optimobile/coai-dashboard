@@ -310,3 +310,22 @@
 - [x] Add PDCA widget to Dashboard
 - [x] Write tests for PDCA endpoints
 
+
+## Phase 6 - PDCA PDF Report Generation
+
+### Backend PDF Generation
+- [x] Install PDF generation library (pdfkit or jspdf)
+- [x] Create PDF generation endpoint for PDCA cycles
+- [x] Build PDF template with COAI branding
+- [x] Include all phase summaries (Plan, Do, Check, Act)
+- [x] Add AI system details and risk level
+- [x] Include timeline and completion dates
+
+### Frontend Integration
+- [x] Add "Download Report" button to completed cycles
+- [x] Show loading state during PDF generation
+- [x] Handle download in browser
+
+### Testing
+- [x] Write tests for PDF generation endpoint
+- [x] Verify PDF content and formatting

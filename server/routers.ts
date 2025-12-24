@@ -1745,6 +1745,62 @@ const pdcaRouter = router({
       return { success: true };
     }),
 
+  // Generate PDF report for a PDCA cycle
+  generateReport: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get the cycle with AI system details
+      const [cycle] = await db
+        .select({
+          id: pdcaCycles.id,
+          cycleNumber: pdcaCycles.cycleNumber,
+          phase: pdcaCycles.phase,
+          planSummary: pdcaCycles.planSummary,
+          doSummary: pdcaCycles.doSummary,
+          checkSummary: pdcaCycles.checkSummary,
+          actSummary: pdcaCycles.actSummary,
+          status: pdcaCycles.status,
+          startedAt: pdcaCycles.startedAt,
+          completedAt: pdcaCycles.completedAt,
+          aiSystemName: aiSystems.name,
+          aiSystemType: aiSystems.systemType,
+          aiSystemRiskLevel: aiSystems.riskLevel,
+        })
+        .from(pdcaCycles)
+        .leftJoin(aiSystems, eq(pdcaCycles.aiSystemId, aiSystems.id))
+        .where(eq(pdcaCycles.id, input.id))
+        .limit(1);
+
+      if (!cycle) {
+        throw new Error("PDCA cycle not found");
+      }
+
+      // Verify user has access to this cycle
+      const [aiSystem] = await db
+        .select()
+        .from(aiSystems)
+        .where(eq(aiSystems.name, cycle.aiSystemName || ""))
+        .limit(1);
+
+      if (aiSystem && aiSystem.userId !== ctx.user.id) {
+        throw new Error("Access denied");
+      }
+
+      // Generate PDF
+      const { generatePDCACyclePDF } = await import("./pdfGenerator");
+      const pdfBuffer = await generatePDCACyclePDF(cycle as any);
+
+      // Return as base64 for client download
+      return {
+        filename: `PDCA-Cycle-${cycle.cycleNumber}-Report.pdf`,
+        data: pdfBuffer.toString("base64"),
+        mimeType: "application/pdf",
+      };
+    }),
+
   // Get PDCA stats for dashboard
   getStats: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();

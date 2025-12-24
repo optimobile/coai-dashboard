@@ -22,6 +22,8 @@ import {
   ChevronRight,
   Clock,
   AlertCircle,
+  FileDown,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -192,6 +194,34 @@ export default function PDCACycles() {
     },
     onError: (error) => {
       toast.error("Error", { description: error.message });
+    },
+  });
+
+  const generateReportMutation = trpc.pdca.generateReport.useMutation({
+    onSuccess: (result) => {
+      // Convert base64 to blob and download
+      const byteCharacters = atob(result.data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: result.mimeType });
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = result.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success("Report downloaded", { description: "Your PDCA cycle report has been generated." });
+    },
+    onError: (error) => {
+      toast.error("Error generating report", { description: error.message });
     },
   });
 
@@ -458,6 +488,19 @@ export default function PDCACycles() {
                               Resume
                             </Button>
                           )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => generateReportMutation.mutate({ id: selectedCycle.id })}
+                            disabled={generateReportMutation.isPending}
+                          >
+                            {generateReportMutation.isPending ? (
+                              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                            ) : (
+                              <FileDown className="h-4 w-4 mr-1" />
+                            )}
+                            {generateReportMutation.isPending ? "Generating..." : "Download Report"}
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
