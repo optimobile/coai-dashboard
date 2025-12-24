@@ -198,3 +198,25 @@ The COAI Team
     ],
   });
 }
+
+
+/**
+ * Send an email with attachments (generic version)
+ */
+export async function sendEmailWithAttachment(options: {
+  to: string;
+  subject: string;
+  html: string;
+  attachments: Array<{
+    filename: string;
+    content: Buffer;
+    contentType: string;
+  }>;
+}): Promise<EmailResult> {
+  return sendEmail({
+    to: options.to,
+    subject: options.subject,
+    html: options.html,
+    attachments: options.attachments,
+  });
+}

@@ -348,3 +348,27 @@
 ### Testing
 - [x] Write tests for email sending endpoint
 - [x] Verify email delivery functionality
+
+
+## Phase 8 - Compliance PDF Reports
+
+### PDF Generator
+- [x] Create compliancePdfGenerator.ts module
+- [x] Support multiple frameworks (EU AI Act, NIST RMF, TC260)
+- [x] Include executive summary with overall compliance score
+- [x] Add control status breakdown (compliant/partial/non-compliant)
+- [x] Include risk analysis section
+- [x] Add recommendations and action items
+
+### Backend Endpoints
+- [x] Create generateComplianceReport endpoint
+- [x] Create sendComplianceReport email endpoint
+- [x] Support filtering by AI system and framework
+
+### Frontend UI
+- [x] Add "Generate Report" button to Compliance page
+- [x] Create report configuration dialog (select framework, AI system)
+- [x] Add download and email options
+- [x] Show loading states during generationing
+- [x] Write tests for compliance report endpoints
+- [x] Verify PDF content and formatting

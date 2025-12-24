@@ -13,6 +13,8 @@ import {
   frameworks,
   aiSystems,
   assessments,
+  assessmentItems,
+  requirements,
   trainingModules,
   userTrainingProgress,
   certificationTests,
@@ -429,6 +431,199 @@ const complianceRouter = router({
       overallScore: 75 // Placeholder - would calculate from actual assessments
     };
   }),
+
+  // Get assessments for an AI system
+  getAssessments: protectedProcedure
+    .input(z.object({ aiSystemId: z.number().optional() }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      // Build conditions array
+      const conditions = [eq(aiSystems.userId, ctx.user.id)];
+      if (input.aiSystemId) {
+        conditions.push(eq(assessments.aiSystemId, input.aiSystemId));
+      }
+
+      return db
+        .select({
+          assessment: assessments,
+          framework: frameworks,
+          aiSystem: aiSystems,
+        })
+        .from(assessments)
+        .leftJoin(frameworks, eq(assessments.frameworkId, frameworks.id))
+        .leftJoin(aiSystems, eq(assessments.aiSystemId, aiSystems.id))
+        .where(and(...conditions));
+    }),
+
+  // Generate compliance report PDF
+  generateReport: protectedProcedure
+    .input(z.object({
+      assessmentId: z.number().positive(),
+      includeEvidence: z.boolean().default(true),
+      includeRecommendations: z.boolean().default(true),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get assessment with related data
+      const [assessmentData] = await db
+        .select({
+          assessment: assessments,
+          framework: frameworks,
+          aiSystem: aiSystems,
+        })
+        .from(assessments)
+        .leftJoin(frameworks, eq(assessments.frameworkId, frameworks.id))
+        .leftJoin(aiSystems, eq(assessments.aiSystemId, aiSystems.id))
+        .where(eq(assessments.id, input.assessmentId))
+        .limit(1);
+
+      if (!assessmentData || !assessmentData.aiSystem || assessmentData.aiSystem.userId !== ctx.user.id) {
+        throw new Error("Assessment not found or access denied");
+      }
+
+      // Get assessment items with requirements
+      const items = await db
+        .select({
+          item: assessmentItems,
+          requirement: requirements,
+        })
+        .from(assessmentItems)
+        .leftJoin(requirements, eq(assessmentItems.requirementId, requirements.id))
+        .where(eq(assessmentItems.assessmentId, input.assessmentId));
+
+      // Import PDF generator
+      const { generateComplianceReportPDF } = await import("./compliancePdfGenerator");
+
+      // Generate PDF
+      const pdfBuffer = await generateComplianceReportPDF(
+        {
+          aiSystem: assessmentData.aiSystem,
+          framework: assessmentData.framework!,
+          assessment: assessmentData.assessment,
+          items: items.map(i => ({
+            ...i.item,
+            requirement: i.requirement || undefined,
+          })),
+          generatedBy: ctx.user.name || "Unknown",
+        },
+        {
+          includeEvidence: input.includeEvidence,
+          includeRecommendations: input.includeRecommendations,
+        }
+      );
+
+      return {
+        success: true,
+        pdf: pdfBuffer.toString("base64"),
+        filename: `compliance-report-${assessmentData.framework?.code || "report"}-${assessmentData.aiSystem.name.replace(/\s+/g, "-")}.pdf`,
+      };
+    }),
+
+  // Send compliance report via email
+  sendReport: protectedProcedure
+    .input(z.object({
+      assessmentId: z.number().positive(),
+      email: z.string().email(),
+      includeEvidence: z.boolean().default(true),
+      includeRecommendations: z.boolean().default(true),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get assessment with related data
+      const [assessmentData] = await db
+        .select({
+          assessment: assessments,
+          framework: frameworks,
+          aiSystem: aiSystems,
+        })
+        .from(assessments)
+        .leftJoin(frameworks, eq(assessments.frameworkId, frameworks.id))
+        .leftJoin(aiSystems, eq(assessments.aiSystemId, aiSystems.id))
+        .where(eq(assessments.id, input.assessmentId))
+        .limit(1);
+
+      if (!assessmentData || !assessmentData.aiSystem || assessmentData.aiSystem.userId !== ctx.user.id) {
+        throw new Error("Assessment not found or access denied");
+      }
+
+      // Get assessment items with requirements
+      const items = await db
+        .select({
+          item: assessmentItems,
+          requirement: requirements,
+        })
+        .from(assessmentItems)
+        .leftJoin(requirements, eq(assessmentItems.requirementId, requirements.id))
+        .where(eq(assessmentItems.assessmentId, input.assessmentId));
+
+      // Import PDF generator and email service
+      const { generateComplianceReportPDF } = await import("./compliancePdfGenerator");
+      const { sendEmailWithAttachment } = await import("./emailService");
+
+      // Generate PDF
+      const pdfBuffer = await generateComplianceReportPDF(
+        {
+          aiSystem: assessmentData.aiSystem,
+          framework: assessmentData.framework!,
+          assessment: assessmentData.assessment,
+          items: items.map(i => ({
+            ...i.item,
+            requirement: i.requirement || undefined,
+          })),
+          generatedBy: ctx.user.name || "Unknown",
+        },
+        {
+          includeEvidence: input.includeEvidence,
+          includeRecommendations: input.includeRecommendations,
+        }
+      );
+
+      const filename = `compliance-report-${assessmentData.framework?.code || "report"}-${assessmentData.aiSystem.name.replace(/\s+/g, "-")}.pdf`;
+
+      // Send email
+      const result = await sendEmailWithAttachment({
+        to: input.email,
+        subject: `Compliance Report: ${assessmentData.aiSystem.name} - ${assessmentData.framework?.name}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background: #1a1a1a; color: white; padding: 20px; text-align: center;">
+              <h1 style="margin: 0;">COAI</h1>
+              <p style="margin: 5px 0 0 0; opacity: 0.8;">Council of AIs</p>
+            </div>
+            <div style="padding: 30px; background: #f9fafb;">
+              <h2 style="color: #1a1a1a; margin-top: 0;">Compliance Assessment Report</h2>
+              <p>Please find attached the compliance assessment report for:</p>
+              <div style="background: white; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 5px 0;"><strong>AI System:</strong> ${assessmentData.aiSystem.name}</p>
+                <p style="margin: 5px 0;"><strong>Framework:</strong> ${assessmentData.framework?.name}</p>
+                <p style="margin: 5px 0;"><strong>Score:</strong> ${assessmentData.assessment.overallScore || "N/A"}%</p>
+              </div>
+              <p style="color: #666; font-size: 14px;">This report was generated by COAI on ${new Date().toLocaleDateString()}.</p>
+            </div>
+            <div style="background: #e5e7eb; padding: 15px; text-align: center; font-size: 12px; color: #666;">
+              <p style="margin: 0;">COAI - AI Safety & Compliance Platform</p>
+            </div>
+          </div>
+        `,
+        attachments: [{
+          filename,
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        }],
+      });
+
+      return {
+        success: true,
+        messageId: result.messageId,
+        previewUrl: result.previewUrl,
+      };
+    }),
 });
 
 // ============================================

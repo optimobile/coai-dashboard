@@ -1,15 +1,18 @@
 /*
  * COAI Compliance Page
  * Multi-framework compliance status and gap analysis
- * Connected to real backend API
+ * Connected to real backend API with PDF report generation
  */
 
 import { motion } from "framer-motion";
-import { FileCheck, AlertCircle, CheckCircle2, Clock, ExternalLink, Loader2, PlayCircle } from "lucide-react";
+import { FileCheck, AlertCircle, CheckCircle2, Clock, Loader2, PlayCircle, FileDown, Mail, Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -72,13 +75,54 @@ const defaultFrameworks = [
 
 export default function Compliance() {
   const [assessmentDialogOpen, setAssessmentDialogOpen] = useState(false);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [selectedSystem, setSelectedSystem] = useState<string>("");
   const [selectedFramework, setSelectedFramework] = useState<string>("");
+  const [selectedAssessmentId, setSelectedAssessmentId] = useState<number | null>(null);
+  const [emailRecipient, setEmailRecipient] = useState("");
+  const [reportOptions, setReportOptions] = useState({
+    includeEvidence: true,
+    includeRecommendations: true,
+  });
 
   // Fetch frameworks from API
   const { data: apiFrameworks, isLoading: frameworksLoading } = trpc.compliance.getFrameworks.useQuery();
   const { data: summary } = trpc.compliance.getSummary.useQuery();
   const { data: aiSystems } = trpc.aiSystems.list.useQuery();
+  const { data: assessmentsData } = trpc.compliance.getAssessments.useQuery({});
+
+  // Generate report mutation
+  const generateReportMutation = trpc.compliance.generateReport.useMutation({
+    onSuccess: (data) => {
+      // Download the PDF
+      const link = document.createElement("a");
+      link.href = `data:application/pdf;base64,${data.pdf}`;
+      link.download = data.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success("Report downloaded successfully!");
+      setReportDialogOpen(false);
+    },
+    onError: (error) => {
+      toast.error("Failed to generate report", { description: error.message });
+    },
+  });
+
+  // Send report mutation
+  const sendReportMutation = trpc.compliance.sendReport.useMutation({
+    onSuccess: (data) => {
+      toast.success("Report sent successfully!", {
+        description: data.previewUrl ? "Check your email for the report." : "Email sent.",
+      });
+      setEmailDialogOpen(false);
+      setEmailRecipient("");
+    },
+    onError: (error) => {
+      toast.error("Failed to send report", { description: error.message });
+    },
+  });
 
   // Use API frameworks if available, otherwise fallback
   const frameworks = apiFrameworks && apiFrameworks.length > 0 
@@ -93,6 +137,16 @@ export default function Compliance() {
       }))
     : defaultFrameworks;
 
+  // Get assessments list for the dropdown
+  const assessments = assessmentsData?.map(a => ({
+    id: a.assessment.id,
+    aiSystemName: a.aiSystem?.name || "Unknown System",
+    frameworkName: a.framework?.name || "Unknown Framework",
+    frameworkCode: a.framework?.code || "",
+    score: a.assessment.overallScore,
+    status: a.assessment.status,
+  })) || [];
+
   const handleRunAssessment = () => {
     if (!selectedSystem || !selectedFramework) {
       toast.error("Please select an AI system and framework");
@@ -105,6 +159,29 @@ export default function Compliance() {
     setAssessmentDialogOpen(false);
     setSelectedSystem("");
     setSelectedFramework("");
+  };
+
+  const handleGenerateReport = () => {
+    if (!selectedAssessmentId) {
+      toast.error("Please select an assessment");
+      return;
+    }
+    generateReportMutation.mutate({
+      assessmentId: selectedAssessmentId,
+      ...reportOptions,
+    });
+  };
+
+  const handleSendReport = () => {
+    if (!selectedAssessmentId || !emailRecipient) {
+      toast.error("Please select an assessment and enter an email");
+      return;
+    }
+    sendReportMutation.mutate({
+      assessmentId: selectedAssessmentId,
+      email: emailRecipient,
+      ...reportOptions,
+    });
   };
 
   if (frameworksLoading) {
@@ -128,10 +205,16 @@ export default function Compliance() {
               Track compliance across multiple AI safety frameworks
             </p>
           </div>
-          <Button onClick={() => setAssessmentDialogOpen(true)} className="gap-2">
-            <PlayCircle className="h-4 w-4" />
-            Run Assessment
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setReportDialogOpen(true)} className="gap-2">
+              <FileDown className="h-4 w-4" />
+              Generate Report
+            </Button>
+            <Button onClick={() => setAssessmentDialogOpen(true)} className="gap-2">
+              <PlayCircle className="h-4 w-4" />
+              Run Assessment
+            </Button>
+          </div>
         </div>
 
         {/* Summary Cards */}
@@ -263,7 +346,7 @@ export default function Compliance() {
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">AI System</label>
+              <Label>AI System</Label>
               <Select value={selectedSystem} onValueChange={setSelectedSystem}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select an AI system" />
@@ -284,7 +367,7 @@ export default function Compliance() {
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">Framework</label>
+              <Label>Framework</Label>
               <Select value={selectedFramework} onValueChange={setSelectedFramework}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a framework" />
@@ -306,6 +389,179 @@ export default function Compliance() {
             </Button>
             <Button onClick={handleRunAssessment}>
               Run Assessment
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Generate Report Dialog */}
+      <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileDown className="h-5 w-5" />
+              Generate Compliance Report
+            </DialogTitle>
+            <DialogDescription>
+              Select an assessment and configure report options.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Assessment</Label>
+              <Select 
+                value={selectedAssessmentId?.toString() || ""} 
+                onValueChange={(v) => setSelectedAssessmentId(parseInt(v))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select an assessment" />
+                </SelectTrigger>
+                <SelectContent>
+                  {assessments.length > 0 ? (
+                    assessments.map((a) => (
+                      <SelectItem key={a.id} value={a.id.toString()}>
+                        {a.aiSystemName} - {a.frameworkName}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="none" disabled>
+                      No assessments available
+                    </SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-3">
+              <Label>Report Options</Label>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="includeEvidence"
+                  checked={reportOptions.includeEvidence}
+                  onCheckedChange={(checked) => 
+                    setReportOptions(prev => ({ ...prev, includeEvidence: !!checked }))
+                  }
+                />
+                <label htmlFor="includeEvidence" className="text-sm">
+                  Include evidence documentation
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="includeRecommendations"
+                  checked={reportOptions.includeRecommendations}
+                  onCheckedChange={(checked) => 
+                    setReportOptions(prev => ({ ...prev, includeRecommendations: !!checked }))
+                  }
+                />
+                <label htmlFor="includeRecommendations" className="text-sm">
+                  Include recommendations
+                </label>
+              </div>
+            </div>
+
+            {assessments.length === 0 && (
+              <div className="rounded-lg bg-muted p-3 text-sm text-muted-foreground">
+                No assessments found. Run an assessment first to generate a report.
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter className="flex gap-2">
+            <Button variant="outline" onClick={() => setReportDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => {
+                if (selectedAssessmentId) {
+                  setReportDialogOpen(false);
+                  setEmailDialogOpen(true);
+                } else {
+                  toast.error("Please select an assessment first");
+                }
+              }}
+              disabled={!selectedAssessmentId}
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              Email
+            </Button>
+            <Button 
+              onClick={handleGenerateReport}
+              disabled={generateReportMutation.isPending || !selectedAssessmentId}
+            >
+              {generateReportMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Download
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Email Report Dialog */}
+      <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5" />
+              Send Report via Email
+            </DialogTitle>
+            <DialogDescription>
+              Enter the recipient's email address to send the compliance report.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Recipient Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="recipient@example.com"
+                value={emailRecipient}
+                onChange={(e) => setEmailRecipient(e.target.value)}
+              />
+            </div>
+            
+            {selectedAssessmentId && (
+              <div className="rounded-lg bg-muted p-3 text-sm">
+                <p className="font-medium">Report Details:</p>
+                <p className="text-muted-foreground mt-1">
+                  {assessments.find(a => a.id === selectedAssessmentId)?.aiSystemName} - {" "}
+                  {assessments.find(a => a.id === selectedAssessmentId)?.frameworkName}
+                </p>
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEmailDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleSendReport}
+              disabled={sendReportMutation.isPending || !emailRecipient || !emailRecipient.includes("@")}
+            >
+              {sendReportMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Report
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
