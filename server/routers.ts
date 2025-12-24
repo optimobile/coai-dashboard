@@ -1,5 +1,6 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "../shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import crypto from "crypto";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
@@ -21,7 +22,8 @@ import {
   caseAssignments,
   analystDecisions,
   analystPerformance,
-  users
+  users,
+  apiKeys
 } from "../drizzle/schema";
 import { eq, desc, sql, and } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
@@ -1312,6 +1314,134 @@ Be helpful, accurate, and cite specific articles/requirements when relevant. If 
 });
 
 // ============================================
+// API KEYS ROUTER - Enterprise API key management
+// ============================================
+
+function generateApiKey(): { key: string; prefix: string; hash: string } {
+  const key = `coai_${crypto.randomBytes(32).toString('hex')}`;
+  const prefix = key.substring(0, 12);
+  const hash = crypto.createHash('sha256').update(key).digest('hex');
+  return { key, prefix, hash };
+}
+
+const apiKeysRouter = router({
+  // List user's API keys
+  list: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    return db
+      .select({
+        id: apiKeys.id,
+        name: apiKeys.name,
+        keyPrefix: apiKeys.keyPrefix,
+        tier: apiKeys.tier,
+        rateLimit: apiKeys.rateLimit,
+        lastUsedAt: apiKeys.lastUsedAt,
+        expiresAt: apiKeys.expiresAt,
+        isActive: apiKeys.isActive,
+        createdAt: apiKeys.createdAt,
+      })
+      .from(apiKeys)
+      .where(eq(apiKeys.userId, ctx.user.id))
+      .orderBy(desc(apiKeys.createdAt));
+  }),
+
+  // Create a new API key
+  create: protectedProcedure
+    .input(z.object({
+      name: z.string().min(1).max(255),
+      tier: z.enum(["free", "pro", "enterprise"]).default("free"),
+      expiresInDays: z.number().min(1).max(365).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const { key, prefix, hash } = generateApiKey();
+      
+      const expiresAt = input.expiresInDays 
+        ? new Date(Date.now() + input.expiresInDays * 24 * 60 * 60 * 1000)
+        : null;
+
+      const rateLimit = input.tier === "enterprise" ? 1000 
+        : input.tier === "pro" ? 500 
+        : 100;
+
+      const [result] = await db.insert(apiKeys).values({
+        userId: ctx.user.id,
+        name: input.name,
+        keyPrefix: prefix,
+        keyHash: hash,
+        tier: input.tier,
+        rateLimit,
+        expiresAt,
+      }).$returningId();
+
+      // Return the full key only once - it won't be retrievable later
+      return {
+        id: result.id,
+        key, // Full key - show to user only once!
+        name: input.name,
+        tier: input.tier,
+        rateLimit,
+        expiresAt,
+      };
+    }),
+
+  // Revoke an API key
+  revoke: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify ownership
+      const [existing] = await db
+        .select()
+        .from(apiKeys)
+        .where(eq(apiKeys.id, input.id))
+        .limit(1);
+
+      if (!existing || existing.userId !== ctx.user.id) {
+        throw new Error("API key not found or access denied");
+      }
+
+      await db
+        .update(apiKeys)
+        .set({ isActive: false })
+        .where(eq(apiKeys.id, input.id));
+
+      return { success: true };
+    }),
+
+  // Delete an API key permanently
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify ownership
+      const [existing] = await db
+        .select()
+        .from(apiKeys)
+        .where(eq(apiKeys.id, input.id))
+        .limit(1);
+
+      if (!existing || existing.userId !== ctx.user.id) {
+        throw new Error("API key not found or access denied");
+      }
+
+      await db
+        .delete(apiKeys)
+        .where(eq(apiKeys.id, input.id));
+
+      return { success: true };
+    }),
+});
+
+// ============================================
 // MAIN APP ROUTER
 // ============================================
 export const appRouter = router({
@@ -1337,6 +1467,7 @@ export const appRouter = router({
   workbench: workbenchRouter,
   chat: chatRouter,
   admin: adminRouter,
+  apiKeys: apiKeysRouter,
 });
 
 export type AppRouter = typeof appRouter;

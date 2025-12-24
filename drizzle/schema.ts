@@ -423,3 +423,26 @@ export const analystPerformance = mysqlTable("analyst_performance", {
 });
 
 export type AnalystPerformance = typeof analystPerformance.$inferSelect;
+
+
+/**
+ * API Keys for enterprise integrations
+ */
+export const apiKeys = mysqlTable("api_keys", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  keyPrefix: varchar("keyPrefix", { length: 10 }).notNull(), // First 8 chars for identification
+  keyHash: varchar("keyHash", { length: 64 }).notNull(), // SHA-256 hash of the full key
+  tier: mysqlEnum("tier", ["free", "pro", "enterprise"]).default("free").notNull(),
+  permissions: json("permissions").$type<string[]>(),
+  rateLimit: int("rateLimit").default(100).notNull(), // Requests per minute
+  lastUsedAt: timestamp("lastUsedAt"),
+  expiresAt: timestamp("expiresAt"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type InsertApiKey = typeof apiKeys.$inferInsert;

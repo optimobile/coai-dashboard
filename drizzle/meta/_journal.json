@@ -22,6 +22,20 @@
       "when": 1766557338232,
       "tag": "0002_rare_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1766562545031,
+      "tag": "0003_lovely_texas_twister",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1766562563416,
+      "tag": "0004_handy_reaper",
+      "breakpoints": true
     }
   ]
 }

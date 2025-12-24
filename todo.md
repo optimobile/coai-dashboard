@@ -210,3 +210,28 @@
 - [x] Connect Training page to real module progress API
 - [x] Connect Workbench page to real case assignment API
 - [x] Add compliance assessment wizard functionality
+
+## Phase 2 - Sample Data, API Keys & SOAI Extension
+
+### Sample Data Seeding
+- [x] Create seed script for sample Watchdog reports
+- [x] Create seed script for case assignments
+- [x] Seed council sessions with sample votes
+- [x] Verify Workbench shows real cases
+
+#### API Key Management
+- [x] Add api_keys table to database schema
+- [x] Create API key generation endpoint
+- [x] Build API keys management UI in Settings
+- [x] Add key revocation functionalityality
+- [ ] Add API key revocation
+
+### SOAI Browser Extension
+- [x] Create Chrome extension manifest
+- [x] Build popup UI for incident reporting
+- [x] Connect to COAI API for report submission
+- [x] Add extension to project repository
+- [x] Add context menu integration
+- [x] Create content script for page interaction
+- [x] Add README with installation instructions
+

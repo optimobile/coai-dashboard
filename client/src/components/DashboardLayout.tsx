@@ -27,6 +27,8 @@ import {
   Briefcase,
   ShieldCheck,
   Globe,
+  Key,
+  Code,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -53,6 +55,8 @@ const navItems = [
   { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
   { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
   { path: "/public", label: "Public Site", icon: Globe },
+  { path: "/api-docs", label: "API Docs", icon: Code },
+  { path: "/api-keys", label: "API Keys", icon: Key },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
