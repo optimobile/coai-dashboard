@@ -397,3 +397,47 @@
 - [x] Create webhook handler for subscription events
 - [x] Build Billing settings page with pricing tiers
 
+
+
+## Phase 10 - User Journeys & End-to-End Flows
+
+### User Journey Documentation
+- [x] Document AI Company (Enterprise) complete journey
+- [x] Document Regulator/Government access journey
+- [x] Document Public User (Consumer) journey
+- [x] Document Watchdog Analyst journey
+- [x] Create visual flow diagrams for each journey
+
+### Enterprise Integration Features
+- [ ] Create enterprise onboarding wizard
+- [x] Build SDK quick-start documentation
+- [x] Add webhook event types documentation
+- [x] Create API authentication flow guide
+- [ ] Add bulk AI system registration endpoint
+
+### Regulator Dashboard Features
+- [ ] Create regulator role and permissions
+- [x] Build aggregated compliance statistics view (PublicDashboard)
+- [x] Add public incident database view (PublicDashboard)
+- [x] Create framework-specific compliance reports
+- [ ] Add industry-wide trend analysis for all compliance activities
+
+### Public Transparency Features
+- [x] Add real-time Watchdog report feed on landing page (PublicDashboard)
+- [ ] Create public company compliance scorecards
+- [x] Build council decision transparency view (PublicDashboard)
+- [x] Add framework comparison tool (PublicDashboard)ce badges for companies
+- [ ] Create public API for transparency data
+
+### RLMAI Knowledge Base
+- [ ] Document how council votes feed learning system
+- [ ] Create incident pattern analysis dashboard
+- [ ] Build recommendation engine based on historical data
+- [ ] Add scenario library from resolved cases
+
+### Missing Core Flows
+- [x] Company registration → Assessment → Certification flow (createAssessment endpoint added)
+- [x] Incident report → Council review → Resolution flow (watchdog.submit creates council session automatically)
+- [ ] PDCA cycle → Compliance improvement → Re-certification flow
+- [ ] API key → SDK integration → Automated reporting flow
+

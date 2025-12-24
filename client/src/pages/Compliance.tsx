@@ -110,6 +110,21 @@ export default function Compliance() {
     },
   });
 
+  // Create assessment mutation
+  const createAssessmentMutation = trpc.compliance.createAssessment.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Assessment completed! Score: ${data.overallScore}%`, {
+        description: `${data.compliantCount} compliant, ${data.partialCount} partial, ${data.nonCompliantCount} non-compliant`,
+      });
+      setAssessmentDialogOpen(false);
+      setSelectedSystem("");
+      setSelectedFramework("");
+    },
+    onError: (error) => {
+      toast.error("Failed to run assessment", { description: error.message });
+    },
+  });
+
   // Send report mutation
   const sendReportMutation = trpc.compliance.sendReport.useMutation({
     onSuccess: (data) => {
@@ -153,12 +168,10 @@ export default function Compliance() {
       return;
     }
     
-    toast.success("Assessment started!", {
-      description: `Running ${selectedFramework} compliance check on your AI system.`,
+    createAssessmentMutation.mutate({
+      aiSystemId: parseInt(selectedSystem),
+      frameworkId: parseInt(selectedFramework),
     });
-    setAssessmentDialogOpen(false);
-    setSelectedSystem("");
-    setSelectedFramework("");
   };
 
   const handleGenerateReport = () => {

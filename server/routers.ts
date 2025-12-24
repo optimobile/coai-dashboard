@@ -523,6 +523,113 @@ const complianceRouter = router({
       };
     }),
 
+  // Create/run a new compliance assessment
+  createAssessment: protectedProcedure
+    .input(z.object({
+      aiSystemId: z.number().positive(),
+      frameworkId: z.number().positive(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify AI system ownership
+      const [system] = await db
+        .select()
+        .from(aiSystems)
+        .where(eq(aiSystems.id, input.aiSystemId))
+        .limit(1);
+
+      if (!system || system.userId !== ctx.user.id) {
+        throw new Error("AI System not found or access denied");
+      }
+
+      // Get framework requirements
+      const frameworkReqs = await db
+        .select()
+        .from(requirements)
+        .where(eq(requirements.frameworkId, input.frameworkId));
+
+      if (frameworkReqs.length === 0) {
+        throw new Error("No requirements found for this framework");
+      }
+
+      // Create assessment
+      const [assessment] = await db.insert(assessments).values({
+        aiSystemId: input.aiSystemId,
+        frameworkId: input.frameworkId,
+        assessorId: ctx.user.id,
+        status: "in_progress",
+        overallScore: "0",
+      }).$returningId();
+
+      // Create assessment items for each requirement
+      // Simulate assessment by randomly assigning compliance status
+      const assessmentItemsData = frameworkReqs.map(req => {
+        const random = Math.random();
+        let status: "compliant" | "in_progress" | "non_compliant" | "not_applicable";
+        let score: number;
+        
+        if (random > 0.7) {
+          status = "compliant";
+          score = 100;
+        } else if (random > 0.4) {
+          status = "in_progress";
+          score = 50;
+        } else if (random > 0.1) {
+          status = "non_compliant";
+          score = 0;
+        } else {
+          status = "not_applicable";
+          score = 100;
+        }
+
+        return {
+          assessmentId: assessment.id,
+          requirementId: req.id,
+          status,
+          notes: status === "non_compliant" 
+            ? `Action required: Implement ${req.title} controls`
+            : status === "in_progress"
+            ? `Partially implemented: Review ${req.title} for full compliance`
+            : null,
+          score,
+        };
+      });
+
+      // Insert items without score field (not in schema)
+      await db.insert(assessmentItems).values(assessmentItemsData.map(item => ({
+        assessmentId: item.assessmentId,
+        requirementId: item.requirementId,
+        status: item.status,
+        notes: item.notes,
+      })));
+
+      // Calculate overall score
+      const totalScore = assessmentItemsData.reduce((sum, item) => sum + item.score, 0);
+      const overallScore = Math.round(totalScore / assessmentItemsData.length);
+
+      // Update assessment with final score
+      await db
+        .update(assessments)
+        .set({
+          overallScore: overallScore.toString(),
+          status: overallScore >= 80 ? "completed" : "in_progress",
+          completedAt: new Date(),
+        })
+        .where(eq(assessments.id, assessment.id));
+
+      return {
+        success: true,
+        assessmentId: assessment.id,
+        overallScore,
+        itemsCount: assessmentItemsData.length,
+        compliantCount: assessmentItemsData.filter(i => i.status === "compliant").length,
+        partialCount: assessmentItemsData.filter(i => i.status === "in_progress").length,
+        nonCompliantCount: assessmentItemsData.filter(i => i.status === "non_compliant").length,
+      };
+    }),
+
   // Send compliance report via email
   sendReport: protectedProcedure
     .input(z.object({

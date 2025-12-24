@@ -28,6 +28,7 @@ import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
 import Billing from "./pages/Billing";
+import PublicDashboard from "./pages/PublicDashboard";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -57,6 +58,7 @@ function Router() {
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/api-keys" component={ApiKeys} />
       <Route path="/pdca" component={PDCACycles} />
+      <Route path="/transparency" component={PublicDashboard} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
