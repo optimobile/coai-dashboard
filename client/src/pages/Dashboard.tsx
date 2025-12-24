@@ -22,8 +22,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
+import { trpc } from "@/lib/trpc";
 
 const metrics = [
   {
@@ -114,6 +115,8 @@ const quickActions = [
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
+  const { data: loiData } = trpc.applications.getCount.useQuery();
+  const { data: councilStats } = trpc.council.getStats.useQuery();
 
   return (
     <DashboardLayout>
@@ -310,6 +313,40 @@ export default function Dashboard() {
             </Card>
           </motion.div>
         </div>
+
+        {/* LOI Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: 0.28 }}
+        >
+          <Card className="bg-gradient-to-r from-primary/10 to-purple-500/10 border-primary/20">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">
+                      Join the AI Safety Movement
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {loiData?.count || 0}+ people have signed up to become Watchdog Analysts.
+                      Work from home, earn money, protect humanity.
+                    </p>
+                  </div>
+                </div>
+                <Link href="/watchdog-signup">
+                  <Button>
+                    Sign Up Now
+                    <ArrowUpRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* PDCA Loop Status */}
         <motion.div

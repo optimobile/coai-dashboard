@@ -12,7 +12,6 @@ import {
   Plus, 
   Mic, 
   ArrowUp,
-  Shield,
   FileCheck,
   AlertTriangle,
   Users,
@@ -23,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 const suggestionPrompts = [
   {
@@ -52,9 +52,10 @@ const suggestionPrompts = [
 ];
 
 export default function Home() {
+  const { user, loading } = useAuth();
   const [, setLocation] = useLocation();
   const [inputValue, setInputValue] = useState("");
-  const userName = "Admin"; // Would come from auth context
+  const userName = user?.name || "Admin";
 
   const handleSuggestionClick = (action: string) => {
     setLocation(action);

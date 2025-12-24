@@ -13,8 +13,9 @@ import AgentCouncil from "./pages/AgentCouncil";
 import Watchdog from "./pages/Watchdog";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
-
+import WatchdogSignup from "./pages/WatchdogSignup";
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       {/* Main routes */}
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/watchdog" component={Watchdog} />
       <Route path="/reports" component={Reports} />
       <Route path="/settings" component={Settings} />
+      <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
