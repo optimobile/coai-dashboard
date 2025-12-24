@@ -11,9 +11,19 @@ import {
   agentVotes,
   frameworks,
   aiSystems,
-  assessments
+  assessments,
+  trainingModules,
+  userTrainingProgress,
+  certificationTests,
+  testQuestions,
+  userTestAttempts,
+  userCertificates,
+  caseAssignments,
+  analystDecisions,
+  analystPerformance,
+  users
 } from "../drizzle/schema";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
 
 // ============================================
@@ -516,6 +526,495 @@ function generateAgentCouncil() {
 }
 
 // ============================================
+// TRAINING ROUTER - Analyst training modules
+// ============================================
+const trainingRouter = router({
+  // Get all training modules
+  getModules: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    return db
+      .select()
+      .from(trainingModules)
+      .where(eq(trainingModules.isActive, true))
+      .orderBy(trainingModules.orderIndex);
+  }),
+
+  // Get module by ID
+  getModule: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const [module] = await db
+        .select()
+        .from(trainingModules)
+        .where(eq(trainingModules.id, input.id))
+        .limit(1);
+
+      return module || null;
+    }),
+
+  // Get user's training progress
+  getProgress: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    return db
+      .select()
+      .from(userTrainingProgress)
+      .where(eq(userTrainingProgress.userId, ctx.user.id));
+  }),
+
+  // Start a training module
+  startModule: protectedProcedure
+    .input(z.object({ moduleId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Check if progress exists
+      const [existing] = await db
+        .select()
+        .from(userTrainingProgress)
+        .where(and(
+          eq(userTrainingProgress.userId, ctx.user.id),
+          eq(userTrainingProgress.moduleId, input.moduleId)
+        ))
+        .limit(1);
+
+      if (existing) {
+        await db
+          .update(userTrainingProgress)
+          .set({ status: "in_progress", startedAt: new Date() })
+          .where(eq(userTrainingProgress.id, existing.id));
+      } else {
+        await db.insert(userTrainingProgress).values({
+          userId: ctx.user.id,
+          moduleId: input.moduleId,
+          status: "in_progress",
+          startedAt: new Date(),
+        });
+      }
+
+      return { success: true };
+    }),
+
+  // Complete a training module
+  completeModule: protectedProcedure
+    .input(z.object({ moduleId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      await db
+        .update(userTrainingProgress)
+        .set({ 
+          status: "completed", 
+          progressPercent: 100,
+          completedAt: new Date() 
+        })
+        .where(and(
+          eq(userTrainingProgress.userId, ctx.user.id),
+          eq(userTrainingProgress.moduleId, input.moduleId)
+        ));
+
+      return { success: true };
+    }),
+});
+
+// ============================================
+// CERTIFICATION ROUTER - Tests and certificates
+// ============================================
+const certificationRouter = router({
+  // Get available tests
+  getTests: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    return db
+      .select()
+      .from(certificationTests)
+      .where(eq(certificationTests.isActive, true));
+  }),
+
+  // Get test with questions (for taking the test)
+  getTestQuestions: protectedProcedure
+    .input(z.object({ testId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const [test] = await db
+        .select()
+        .from(certificationTests)
+        .where(eq(certificationTests.id, input.testId))
+        .limit(1);
+
+      if (!test) return null;
+
+      const questions = await db
+        .select({
+          id: testQuestions.id,
+          questionText: testQuestions.questionText,
+          questionType: testQuestions.questionType,
+          options: testQuestions.options,
+          points: testQuestions.points,
+          difficulty: testQuestions.difficulty,
+        })
+        .from(testQuestions)
+        .where(and(
+          eq(testQuestions.testId, input.testId),
+          eq(testQuestions.isActive, true)
+        ));
+
+      return { test, questions };
+    }),
+
+  // Start a test attempt
+  startTest: protectedProcedure
+    .input(z.object({ testId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const [attempt] = await db.insert(userTestAttempts).values({
+        userId: ctx.user.id,
+        testId: input.testId,
+        startedAt: new Date(),
+      }).$returningId();
+
+      return { attemptId: attempt.id };
+    }),
+
+  // Submit test answers
+  submitTest: protectedProcedure
+    .input(z.object({
+      attemptId: z.number(),
+      answers: z.record(z.string(), z.string()), // questionId -> answer
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get the attempt
+      const [attempt] = await db
+        .select()
+        .from(userTestAttempts)
+        .where(eq(userTestAttempts.id, input.attemptId))
+        .limit(1);
+
+      if (!attempt || attempt.userId !== ctx.user.id) {
+        throw new Error("Test attempt not found");
+      }
+
+      // Get test and questions
+      const [test] = await db
+        .select()
+        .from(certificationTests)
+        .where(eq(certificationTests.id, attempt.testId))
+        .limit(1);
+
+      const questions = await db
+        .select()
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, attempt.testId));
+
+      // Calculate score
+      let totalPoints = 0;
+      let earnedPoints = 0;
+
+      for (const question of questions) {
+        totalPoints += question.points;
+        const userAnswer = input.answers[question.id.toString()];
+        if (userAnswer === question.correctAnswer) {
+          earnedPoints += question.points;
+        }
+      }
+
+      const percentScore = totalPoints > 0 ? (earnedPoints / totalPoints) * 100 : 0;
+      const passed = percentScore >= (test?.passingScore || 70);
+
+      // Update attempt
+      await db
+        .update(userTestAttempts)
+        .set({
+          score: earnedPoints,
+          totalPoints,
+          percentScore: percentScore.toFixed(2),
+          passed,
+          answers: input.answers,
+          completedAt: new Date(),
+        })
+        .where(eq(userTestAttempts.id, input.attemptId));
+
+      // If passed, issue certificate
+      if (passed) {
+        const certificateNumber = `COAI-WA-${Date.now()}-${ctx.user.id}`;
+        
+        await db.insert(userCertificates).values({
+          userId: ctx.user.id,
+          testId: attempt.testId,
+          attemptId: input.attemptId,
+          certificateNumber,
+          certificateType: "basic",
+          issuedAt: new Date(),
+          expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+        });
+
+        // Update user role to watchdog_analyst
+        await db
+          .update(users)
+          .set({ role: "watchdog_analyst" })
+          .where(eq(users.id, ctx.user.id));
+      }
+
+      return { 
+        passed, 
+        score: earnedPoints, 
+        totalPoints, 
+        percentScore: Math.round(percentScore),
+        certificateNumber: passed ? `COAI-WA-${Date.now()}-${ctx.user.id}` : null
+      };
+    }),
+
+  // Get user's certificates
+  getMyCertificates: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    return db
+      .select()
+      .from(userCertificates)
+      .where(eq(userCertificates.userId, ctx.user.id));
+  }),
+
+  // Get user's test attempts
+  getMyAttempts: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    return db
+      .select()
+      .from(userTestAttempts)
+      .where(eq(userTestAttempts.userId, ctx.user.id))
+      .orderBy(desc(userTestAttempts.createdAt));
+  }),
+});
+
+// ============================================
+// ANALYST WORKBENCH ROUTER - Case review
+// ============================================
+const workbenchRouter = router({
+  // Get assigned cases for the analyst
+  getMyCases: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    // Verify user is a watchdog analyst
+    if (ctx.user.role !== "watchdog_analyst" && ctx.user.role !== "admin") {
+      return [];
+    }
+
+    const assignments = await db
+      .select()
+      .from(caseAssignments)
+      .where(eq(caseAssignments.analystId, ctx.user.id))
+      .orderBy(desc(caseAssignments.assignedAt));
+
+    // Get report details for each assignment
+    const casesWithDetails = await Promise.all(
+      assignments.map(async (assignment) => {
+        const [report] = await db
+          .select()
+          .from(watchdogReports)
+          .where(eq(watchdogReports.id, assignment.reportId))
+          .limit(1);
+
+        return { assignment, report };
+      })
+    );
+
+    return casesWithDetails;
+  }),
+
+  // Get case details
+  getCaseDetails: protectedProcedure
+    .input(z.object({ assignmentId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const [assignment] = await db
+        .select()
+        .from(caseAssignments)
+        .where(eq(caseAssignments.id, input.assignmentId))
+        .limit(1);
+
+      if (!assignment || (assignment.analystId !== ctx.user.id && ctx.user.role !== "admin")) {
+        return null;
+      }
+
+      const [report] = await db
+        .select()
+        .from(watchdogReports)
+        .where(eq(watchdogReports.id, assignment.reportId))
+        .limit(1);
+
+      // Get council session if exists
+      let councilSession = null;
+      let councilVotes: any[] = [];
+      if (assignment.councilSessionId) {
+        const [session] = await db
+          .select()
+          .from(councilSessions)
+          .where(eq(councilSessions.id, assignment.councilSessionId))
+          .limit(1);
+        councilSession = session;
+
+        councilVotes = await db
+          .select()
+          .from(agentVotes)
+          .where(eq(agentVotes.sessionId, assignment.councilSessionId));
+      }
+
+      return { assignment, report, councilSession, councilVotes };
+    }),
+
+  // Submit decision on a case
+  submitDecision: protectedProcedure
+    .input(z.object({
+      assignmentId: z.number(),
+      decision: z.enum(["approve", "reject", "escalate", "needs_more_info"]),
+      confidence: z.enum(["low", "medium", "high"]),
+      reasoning: z.string().min(50).max(2000),
+      timeSpentMinutes: z.number().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify assignment belongs to user
+      const [assignment] = await db
+        .select()
+        .from(caseAssignments)
+        .where(eq(caseAssignments.id, input.assignmentId))
+        .limit(1);
+
+      if (!assignment || assignment.analystId !== ctx.user.id) {
+        throw new Error("Assignment not found");
+      }
+
+      // Create decision record
+      await db.insert(analystDecisions).values({
+        assignmentId: input.assignmentId,
+        analystId: ctx.user.id,
+        decision: input.decision,
+        confidence: input.confidence,
+        reasoning: input.reasoning,
+        timeSpentMinutes: input.timeSpentMinutes,
+      });
+
+      // Update assignment status
+      await db
+        .update(caseAssignments)
+        .set({ status: "completed", completedAt: new Date() })
+        .where(eq(caseAssignments.id, input.assignmentId));
+
+      // Update report status based on decision
+      const reportStatus = input.decision === "approve" ? "resolved" : 
+                          input.decision === "reject" ? "dismissed" : "investigating";
+      
+      await db
+        .update(watchdogReports)
+        .set({ status: reportStatus })
+        .where(eq(watchdogReports.id, assignment.reportId));
+
+      // Update analyst performance
+      await updateAnalystPerformance(ctx.user.id);
+
+      return { success: true };
+    }),
+
+  // Get analyst performance stats
+  getMyPerformance: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    const [performance] = await db
+      .select()
+      .from(analystPerformance)
+      .where(eq(analystPerformance.analystId, ctx.user.id))
+      .limit(1);
+
+    return performance || null;
+  }),
+
+  // Get leaderboard
+  getLeaderboard: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    const leaderboard = await db
+      .select({
+        rank: analystPerformance.rank,
+        totalCasesCompleted: analystPerformance.totalCasesCompleted,
+        accuracyRate: analystPerformance.accuracyRate,
+        qualityScore: analystPerformance.qualityScore,
+      })
+      .from(analystPerformance)
+      .orderBy(desc(analystPerformance.qualityScore))
+      .limit(50);
+
+    return leaderboard;
+  }),
+});
+
+// Helper function to update analyst performance
+async function updateAnalystPerformance(analystId: number) {
+  const db = await getDb();
+  if (!db) return;
+
+  // Get all assignments for this analyst
+  const assignments = await db
+    .select()
+    .from(caseAssignments)
+    .where(eq(caseAssignments.analystId, analystId));
+
+  const totalAssigned = assignments.length;
+  const completed = assignments.filter(a => a.status === "completed").length;
+  const expired = assignments.filter(a => a.status === "expired").length;
+
+  // Check if performance record exists
+  const [existing] = await db
+    .select()
+    .from(analystPerformance)
+    .where(eq(analystPerformance.analystId, analystId))
+    .limit(1);
+
+  const data = {
+    totalCasesAssigned: totalAssigned,
+    totalCasesCompleted: completed,
+    totalCasesExpired: expired,
+    lastActiveAt: new Date(),
+  };
+
+  if (existing) {
+    await db
+      .update(analystPerformance)
+      .set(data)
+      .where(eq(analystPerformance.analystId, analystId));
+  } else {
+    await db.insert(analystPerformance).values({
+      analystId,
+      ...data,
+    });
+  }
+}
+
+// ============================================
 // MAIN APP ROUTER
 // ============================================
 export const appRouter = router({
@@ -536,6 +1035,9 @@ export const appRouter = router({
   compliance: complianceRouter,
   aiSystems: aiSystemsRouter,
   dashboard: dashboardRouter,
+  training: trainingRouter,
+  certification: certificationRouter,
+  workbench: workbenchRouter,
 });
 
 export type AppRouter = typeof appRouter;

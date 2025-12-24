@@ -14,6 +14,9 @@ import Watchdog from "./pages/Watchdog";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import WatchdogSignup from "./pages/WatchdogSignup";
+import Training from "./pages/Training";
+import Certification from "./pages/Certification";
+import Workbench from "./pages/Workbench";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -29,6 +32,9 @@ function Router() {
       <Route path="/reports" component={Reports} />
       <Route path="/settings" component={Settings} />
       <Route path="/watchdog-signup" component={WatchdogSignup} />
+      <Route path="/training" component={Training} />
+      <Route path="/certification" component={Certification} />
+      <Route path="/workbench" component={Workbench} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

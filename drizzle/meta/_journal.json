@@ -15,6 +15,13 @@
       "when": 1766556638417,
       "tag": "0001_green_cerise",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766557338232,
+      "tag": "0002_rare_nova",
+      "breakpoints": true
     }
   ]
 }

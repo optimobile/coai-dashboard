@@ -23,6 +23,8 @@ import {
   ExternalLink,
   Sun,
   Moon,
+  GraduationCap,
+  Briefcase,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -45,6 +47,8 @@ const navItems = [
   { path: "/agent-council", label: "33-Agent Council", icon: Users },
   { path: "/watchdog", label: "The Watchdog", icon: Eye },
   { path: "/reports", label: "Reports", icon: FileText },
+  { path: "/training", label: "Training", icon: GraduationCap },
+  { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {

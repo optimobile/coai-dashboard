@@ -256,3 +256,170 @@ export const auditLogs = mysqlTable("audit_logs", {
 });
 
 export type AuditLog = typeof auditLogs.$inferSelect;
+
+
+/**
+ * Training modules for Watchdog Analyst certification
+ */
+export const trainingModules = mysqlTable("training_modules", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  content: text("content").notNull(),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  durationMinutes: int("durationMinutes").default(30).notNull(),
+  isRequired: boolean("isRequired").default(true).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrainingModule = typeof trainingModules.$inferSelect;
+
+/**
+ * User progress through training modules
+ */
+export const userTrainingProgress = mysqlTable("user_training_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  moduleId: int("moduleId").notNull(),
+  status: mysqlEnum("status", ["not_started", "in_progress", "completed"]).default("not_started").notNull(),
+  progressPercent: int("progressPercent").default(0).notNull(),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserTrainingProgress = typeof userTrainingProgress.$inferSelect;
+
+/**
+ * Certification tests for Watchdog Analysts
+ */
+export const certificationTests = mysqlTable("certification_tests", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  passingScore: int("passingScore").default(70).notNull(),
+  timeLimitMinutes: int("timeLimitMinutes").default(60).notNull(),
+  totalQuestions: int("totalQuestions").default(50).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CertificationTest = typeof certificationTests.$inferSelect;
+
+/**
+ * Questions for certification tests
+ */
+export const testQuestions = mysqlTable("test_questions", {
+  id: int("id").autoincrement().primaryKey(),
+  testId: int("testId").notNull(),
+  moduleId: int("moduleId"),
+  questionText: text("questionText").notNull(),
+  questionType: mysqlEnum("questionType", ["multiple_choice", "true_false", "scenario"]).default("multiple_choice").notNull(),
+  options: json("options").notNull(),
+  correctAnswer: varchar("correctAnswer", { length: 255 }).notNull(),
+  explanation: text("explanation"),
+  points: int("points").default(1).notNull(),
+  difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard"]).default("medium").notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TestQuestion = typeof testQuestions.$inferSelect;
+
+/**
+ * User test attempts
+ */
+export const userTestAttempts = mysqlTable("user_test_attempts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  testId: int("testId").notNull(),
+  score: int("score").default(0).notNull(),
+  totalPoints: int("totalPoints").default(0).notNull(),
+  percentScore: decimal("percentScore", { precision: 5, scale: 2 }),
+  passed: boolean("passed").default(false).notNull(),
+  answers: json("answers"),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type UserTestAttempt = typeof userTestAttempts.$inferSelect;
+
+/**
+ * Certificates issued to qualified analysts
+ */
+export const userCertificates = mysqlTable("user_certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  testId: int("testId").notNull(),
+  attemptId: int("attemptId").notNull(),
+  certificateNumber: varchar("certificateNumber", { length: 100 }).notNull().unique(),
+  certificateType: mysqlEnum("certificateType", ["basic", "advanced", "expert"]).default("basic").notNull(),
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  isRevoked: boolean("isRevoked").default(false).notNull(),
+  revokedReason: text("revokedReason"),
+});
+
+export type UserCertificate = typeof userCertificates.$inferSelect;
+
+/**
+ * Case assignments for Watchdog Analysts
+ */
+export const caseAssignments = mysqlTable("case_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  analystId: int("analystId").notNull(),
+  reportId: int("reportId").notNull(),
+  councilSessionId: int("councilSessionId"),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium").notNull(),
+  status: mysqlEnum("status", ["assigned", "in_progress", "completed", "expired", "reassigned"]).default("assigned").notNull(),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+  dueAt: timestamp("dueAt"),
+  completedAt: timestamp("completedAt"),
+});
+
+export type CaseAssignment = typeof caseAssignments.$inferSelect;
+
+/**
+ * Analyst decisions on assigned cases
+ */
+export const analystDecisions = mysqlTable("analyst_decisions", {
+  id: int("id").autoincrement().primaryKey(),
+  assignmentId: int("assignmentId").notNull(),
+  analystId: int("analystId").notNull(),
+  decision: mysqlEnum("decision", ["approve", "reject", "escalate", "needs_more_info"]).notNull(),
+  confidence: mysqlEnum("confidence", ["low", "medium", "high"]).default("medium").notNull(),
+  reasoning: text("reasoning").notNull(),
+  evidenceReviewed: json("evidenceReviewed"),
+  timeSpentMinutes: int("timeSpentMinutes"),
+  submittedAt: timestamp("submittedAt").defaultNow().notNull(),
+});
+
+export type AnalystDecision = typeof analystDecisions.$inferSelect;
+
+/**
+ * Analyst performance metrics
+ */
+export const analystPerformance = mysqlTable("analyst_performance", {
+  id: int("id").autoincrement().primaryKey(),
+  analystId: int("analystId").notNull().unique(),
+  totalCasesAssigned: int("totalCasesAssigned").default(0).notNull(),
+  totalCasesCompleted: int("totalCasesCompleted").default(0).notNull(),
+  totalCasesExpired: int("totalCasesExpired").default(0).notNull(),
+  accuracyRate: decimal("accuracyRate", { precision: 5, scale: 2 }),
+  avgResponseTimeMinutes: decimal("avgResponseTimeMinutes", { precision: 10, scale: 2 }),
+  qualityScore: decimal("qualityScore", { precision: 5, scale: 2 }),
+  rank: int("rank"),
+  totalEarnings: decimal("totalEarnings", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  lastActiveAt: timestamp("lastActiveAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AnalystPerformance = typeof analystPerformance.$inferSelect;

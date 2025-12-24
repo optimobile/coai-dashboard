@@ -204,3 +204,90 @@ describe("Dashboard Router", () => {
     expect(result).toHaveProperty("loiCount");
   });
 });
+
+// ============================================
+// TRAINING ROUTER TESTS
+// ============================================
+describe("Training Router", () => {
+  it("returns empty array for modules when database is not available", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.training.getModules();
+    expect(result).toEqual([]);
+  });
+
+  it("returns null for non-existent module", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.training.getModule({ id: 999 });
+    expect(result).toBeNull();
+  });
+
+  it("returns empty array for progress when database is not available", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.training.getProgress();
+    expect(result).toEqual([]);
+  });
+});
+
+// ============================================
+// CERTIFICATION ROUTER TESTS
+// ============================================
+describe("Certification Router", () => {
+  it("returns empty array for tests when database is not available", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.certification.getTests();
+    expect(result).toEqual([]);
+  });
+
+  it("returns empty array for certificates when database is not available", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.certification.getMyCertificates();
+    expect(result).toEqual([]);
+  });
+
+  it("returns empty array for attempts when database is not available", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.certification.getMyAttempts();
+    expect(result).toEqual([]);
+  });
+});
+
+// ============================================
+// WORKBENCH ROUTER TESTS
+// ============================================
+describe("Workbench Router", () => {
+  it("returns empty array for cases when user is not analyst", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.workbench.getMyCases();
+    expect(result).toEqual([]);
+  });
+
+  it("returns null for performance when database is not available", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.workbench.getMyPerformance();
+    expect(result).toBeNull();
+  });
+
+  it("returns empty array for leaderboard when database is not available", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.workbench.getLeaderboard();
+    expect(result).toEqual([]);
+  });
+});

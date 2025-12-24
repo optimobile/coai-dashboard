@@ -57,3 +57,28 @@
 - Backend uses tRPC for type-safe API calls
 - Database is MySQL/TiDB via Drizzle ORM
 - LLM integration via built-in Forge API
+
+## New Features - Watchdog Analyst Workflow System
+
+- [x] Research TC260 auditor qualification system
+- [x] Research PDCA operational workflows for human reviewers
+- [x] Design Watchdog Analyst journey (signup → training → certification → work)
+- [x] Build certification test system with questions and scoring
+- [x] Create certificate generation for qualified analysts
+- [x] Build Analyst Workbench UI for reviewing AI safety cases
+- [x] Create case assignment system for analysts
+- [x] Build voting/decision interface for analysts
+- [x] Add analyst performance tracking and leaderboard
+- [ ] Connect full workflow end-to-end (in progress)
+
+## Database Tables Added (23 total)
+
+- training_modules - Course content
+- user_training_progress - Track completion
+- certification_tests - Test definitions
+- test_questions - Multiple choice questions
+- user_test_attempts - Test history
+- user_certificates - Issued certificates
+- case_assignments - Analyst workload
+- analyst_decisions - Review outcomes
+- analyst_performance - Stats and rankings
