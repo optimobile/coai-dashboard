@@ -2232,6 +2232,89 @@ const apiKeysRouter = router({
 });
 
 // ============================================
+// STRIPE BILLING ROUTER - Subscription management
+// ============================================
+const stripeRouter = router({
+  // Create checkout session for subscription
+  createCheckoutSession: protectedProcedure
+    .input(z.object({
+      tier: z.enum(["pro", "enterprise"]),
+      billingPeriod: z.enum(["monthly", "yearly"]),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { createCheckoutSession } = await import("./stripe/stripeService");
+      
+      const origin = ctx.req.headers.origin || "http://localhost:3000";
+      
+      const result = await createCheckoutSession({
+        userId: ctx.user.id,
+        email: ctx.user.email || "",
+        name: ctx.user.name || undefined,
+        tier: input.tier,
+        billingPeriod: input.billingPeriod,
+        successUrl: `${origin}/settings/billing?success=true`,
+        cancelUrl: `${origin}/settings/billing?canceled=true`,
+      });
+      
+      return { url: result.url, sessionId: result.sessionId };
+    }),
+
+  // Create customer portal session for managing subscription
+  createPortalSession: protectedProcedure.mutation(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, ctx.user.id))
+      .limit(1);
+
+    if (!user?.stripeCustomerId) {
+      throw new Error("No Stripe customer found. Please subscribe first.");
+    }
+
+    const { createPortalSession } = await import("./stripe/stripeService");
+    const origin = ctx.req.headers.origin || "http://localhost:3000";
+    const url = await createPortalSession(user.stripeCustomerId, `${origin}/settings/billing`);
+    
+    return { url };
+  }),
+
+  // Get current subscription status
+  getSubscriptionStatus: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return { tier: "free", status: "none" };
+
+    const [user] = await db
+      .select({
+        subscriptionTier: users.subscriptionTier,
+        subscriptionStatus: users.subscriptionStatus,
+        stripeCustomerId: users.stripeCustomerId,
+        stripeSubscriptionId: users.stripeSubscriptionId,
+      })
+      .from(users)
+      .where(eq(users.id, ctx.user.id))
+      .limit(1);
+
+    if (!user) return { tier: "free", status: "none" };
+
+    return {
+      tier: user.subscriptionTier,
+      status: user.subscriptionStatus,
+      hasStripeCustomer: !!user.stripeCustomerId,
+      hasSubscription: !!user.stripeSubscriptionId,
+    };
+  }),
+
+  // Get pricing tiers info
+  getPricingTiers: publicProcedure.query(async () => {
+    const { SUBSCRIPTION_TIERS } = await import("./stripe/products");
+    return SUBSCRIPTION_TIERS;
+  }),
+});
+
+// ============================================
 // MAIN APP ROUTER
 // ============================================
 export const appRouter = router({
@@ -2259,6 +2342,7 @@ export const appRouter = router({
   admin: adminRouter,
   apiKeys: apiKeysRouter,
   pdca: pdcaRouter,
+  stripe: stripeRouter,
 });
 
 export type AppRouter = typeof appRouter;

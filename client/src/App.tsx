@@ -27,6 +27,7 @@ import Admin from "./pages/Admin";
 import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
+import Billing from "./pages/Billing";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -42,6 +43,7 @@ function Router() {
       <Route path="/watchdog" component={Watchdog} />
       <Route path="/reports" component={Reports} />
       <Route path="/settings" component={Settings} />
+      <Route path="/settings/billing" component={Billing} />
       <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/training" component={Training} />
       <Route path="/certification" component={Certification} />

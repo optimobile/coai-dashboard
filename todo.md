@@ -372,3 +372,28 @@
 - [x] Show loading states during generationing
 - [x] Write tests for compliance report endpoints
 - [x] Verify PDF content and formatting
+
+
+## Phase 9 - Standards Research & Alignment
+
+### TC260 Research
+- [x] Research TC260 organizational structure and mandate
+- [x] Identify TC260 AI safety framework requirements
+- [x] Document TC260 compliance controls and categories
+- [x] Update platform with accurate TC260 requirements
+
+### PDCA Methodology Research
+- [x] Research Deming cycle original methodology
+- [x] Document proper PDCA implementation standards
+- [x] Identify industry best practices for PDCA in AI governance
+- [x] Update PDCA module to match standards
+
+### Stripe Payment Integration
+- [x] Add Stripe feature to project
+- [x] Create pricing plans (Free/Pro/Enterprise)
+- [x] Implement subscription management
+- [x] Add payment UI components
+- [x] Create Stripe service module with checkout and portal
+- [x] Create webhook handler for subscription events
+- [x] Build Billing settings page with pricing tiers
+

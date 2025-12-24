@@ -65,35 +65,72 @@ import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
 import { toast } from "sonner";
 
-// Phase configuration
+// Phase configuration based on Deming/Shewhart PDCA methodology
+// Reference: ASQ Quality Resources, ISO 9001:2015, Lean.org
 const PHASES = [
   { 
     id: "plan", 
     label: "Plan", 
     icon: Target, 
     color: "blue",
-    description: "Define objectives, identify problems, and plan improvements"
+    description: "Recognize opportunity, analyze baseline, plan change",
+    guidance: [
+      "Define the problem or opportunity for improvement",
+      "Analyze current state and establish baseline metrics",
+      "Identify root causes using data analysis",
+      "Develop hypothesis for improvement",
+      "Plan the change with clear success criteria",
+      "Identify resources and timeline needed"
+    ],
+    outputs: ["Problem statement", "Root cause analysis", "Proposed countermeasures", "Success metrics"]
   },
   { 
     id: "do", 
     label: "Do", 
     icon: Play, 
     color: "green",
-    description: "Implement the planned changes on a small scale"
+    description: "Test the change through small-scale implementation",
+    guidance: [
+      "Implement planned changes on a small scale (pilot)",
+      "Execute according to the plan",
+      "Document what actually happens vs. expected",
+      "Collect data during implementation",
+      "Note any deviations from the plan",
+      "Train involved personnel as needed"
+    ],
+    outputs: ["Implementation records", "Data collected", "Observations log", "Deviation notes"]
   },
   { 
     id: "check", 
     label: "Check", 
     icon: Search, 
     color: "amber",
-    description: "Analyze results and compare against expected outcomes"
+    description: "Review results, analyze data, identify learnings",
+    guidance: [
+      "Review and analyze collected data",
+      "Compare actual results against targets",
+      "Evaluate if hypothesis was correct",
+      "Identify what worked and what didn't",
+      "Document successes and failures",
+      "Assess any unintended consequences"
+    ],
+    outputs: ["Analysis report", "Performance comparison", "Lessons learned", "Recommendations"]
   },
   { 
     id: "act", 
     label: "Act", 
     icon: Cog, 
     color: "purple",
-    description: "Standardize improvements or restart the cycle"
+    description: "Standardize success or iterate with new approach",
+    guidance: [
+      "If successful: Standardize the change across broader scope",
+      "Update standard operating procedures",
+      "Train all relevant personnel on new methods",
+      "If unsuccessful: Analyze why and plan different approach",
+      "Document best practices for future reference",
+      "Begin next PDCA cycle for continuous improvement"
+    ],
+    outputs: ["Updated SOPs", "Training materials", "Best practices doc", "Next cycle plan"]
   },
 ] as const;
 
@@ -675,6 +712,39 @@ export default function PDCACycles() {
                                           Add Content
                                         </Button>
                                       )}
+                                    </div>
+                                  )}
+
+                                  {/* Phase Guidance - Deming Cycle Best Practices */}
+                                  {isCurrentPhase && selectedCycle.status === "active" && (
+                                    <div className="mt-6 p-4 bg-muted/50 rounded-lg border">
+                                      <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                                        <Target className="h-4 w-4 text-primary" />
+                                        Phase Guidance (Deming Cycle)
+                                      </h4>
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                          <h5 className="text-xs font-medium text-muted-foreground uppercase mb-2">Key Activities</h5>
+                                          <ul className="text-sm space-y-1">
+                                            {phase.guidance.map((item, i) => (
+                                              <li key={i} className="flex items-start gap-2">
+                                                <CheckCircle2 className="h-3 w-3 mt-1 text-green-500 flex-shrink-0" />
+                                                <span>{item}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                        <div>
+                                          <h5 className="text-xs font-medium text-muted-foreground uppercase mb-2">Expected Outputs</h5>
+                                          <div className="flex flex-wrap gap-2">
+                                            {phase.outputs.map((output, i) => (
+                                              <Badge key={i} variant="secondary" className="text-xs">
+                                                {output}
+                                              </Badge>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                   )}
                                 </CardContent>

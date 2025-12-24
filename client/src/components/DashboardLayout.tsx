@@ -30,6 +30,7 @@ import {
   Key,
   Code,
   RefreshCw,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -59,6 +60,7 @@ const navItems = [
   { path: "/api-docs", label: "API Docs", icon: Code },
   { path: "/api-keys", label: "API Keys", icon: Key },
   { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
+  { path: "/settings/billing", label: "Billing", icon: CreditCard },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {

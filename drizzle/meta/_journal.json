@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1766556523141,
-      "tag": "0000_aberrant_firebrand",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1766556638417,
-      "tag": "0001_green_cerise",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1766557338232,
-      "tag": "0002_rare_nova",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1766562545031,
-      "tag": "0003_lovely_texas_twister",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1766562563416,
-      "tag": "0004_handy_reaper",
+      "when": 1766571150531,
+      "tag": "0000_modern_invisible_woman",
       "breakpoints": true
     }
   ]
