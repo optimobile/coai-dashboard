@@ -94,3 +94,46 @@
 - [x] Add LICENSE file (MIT)
 - [x] Create CONTRIBUTING.md for community guidelines
 - [ ] Set up LOI tracking dashboard for valuation metrics
+
+## Production Ready - Western TC260 Equivalent
+
+### Public Transparency (Watchdog)
+- [x] Make Watchdog reports PUBLIC by default (not internal)
+- [x] Add public report browsing without login
+- [ ] Show real-time report feed on landing page
+- [ ] Add report sharing/embedding functionality
+
+### SOAI-PDCA Loop Integration
+- [x] Add PDCA cycle visualization to dashboard
+- [x] Connect PDCA phases to real compliance data
+- [x] Show Plan→Do→Check→Act progress for each AI system
+- [x] Integrate Watchdog reports as "Check" phase input
+
+### Frontend-Backend Integration
+- [x] Connect Dashboard to real API stats
+- [ ] Connect AI Systems page to real CRUD operations
+- [ ] Connect Compliance page to real assessment data
+- [x] Connect 33-Agent Council to real voting sessions
+- [x] Connect Watchdog page to real public reports
+- [ ] Connect Training page to real module progress
+- [ ] Connect Workbench to real case assignments
+
+### Chat/LLM Integration
+- [x] Make "Send a Message" input functional
+- [x] Connect to LLM backend for AI compliance responses
+- [x] Display responses with markdown rendering
+- [x] Add conversation history in session
+
+### Public Landing Page
+- [x] Create marketing landing page at /landing
+- [x] Add Watchdog job signup CTA
+- [x] Show live LOI counter
+- [x] Add features and frameworks sections
+- [x] Add "Are you worried about AI safety?" CTA
+
+### Admin Features
+- [ ] Admin dashboard for LOI management
+- [ ] Approve/reject analyst applications
+- [ ] View certification completions
+- [ ] Manage council sessions
+

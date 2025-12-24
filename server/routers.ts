@@ -1051,6 +1051,61 @@ async function updateAnalystPerformance(analystId: number) {
 }
 
 // ============================================
+// CHAT ROUTER - LLM-powered compliance assistant
+// ============================================
+const chatRouter = router({
+  // Send a message and get AI response
+  sendMessage: protectedProcedure
+    .input(z.object({
+      message: z.string().min(1).max(2000),
+      context: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const response = await invokeLLM({
+          messages: [
+            {
+              role: "system",
+              content: `You are COAI, the Council of AIs - a Western equivalent to China's TC260 AI Safety Governance Framework. You are an expert in AI safety, compliance, and governance across multiple frameworks:
+
+1. **EU AI Act** (Regulation 2024/1689) - 113 articles covering risk classification, prohibited practices, high-risk requirements, transparency obligations
+2. **NIST AI RMF** - GOVERN, MAP, MEASURE, MANAGE functions for AI risk management
+3. **TC260** - China's AI Safety Governance Framework with 14 governance measures
+
+You help organizations:
+- Understand compliance requirements
+- Assess AI system risks
+- Navigate multi-framework compliance
+- Report and investigate AI safety incidents
+- Implement the SOAI-PDCA continuous improvement loop
+
+Be helpful, accurate, and cite specific articles/requirements when relevant. If you're unsure, recommend consulting with legal experts or using the 33-Agent Council for formal assessments.`
+            },
+            {
+              role: "user",
+              content: input.message
+            }
+          ],
+          response_format: { type: "text" }
+        });
+
+        const content = response.choices[0]?.message?.content as string || "I apologize, but I couldn't generate a response. Please try again.";
+
+        return {
+          response: content,
+          timestamp: new Date().toISOString(),
+        };
+      } catch (error) {
+        console.error("Chat error:", error);
+        return {
+          response: "I apologize, but I encountered an error processing your request. Please try again or contact support if the issue persists.",
+          timestamp: new Date().toISOString(),
+        };
+      }
+    }),
+});
+
+// ============================================
 // MAIN APP ROUTER
 // ============================================
 export const appRouter = router({
@@ -1074,6 +1129,7 @@ export const appRouter = router({
   training: trainingRouter,
   certification: certificationRouter,
   workbench: workbenchRouter,
+  chat: chatRouter,
 });
 
 export type AppRouter = typeof appRouter;
