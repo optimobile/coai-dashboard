@@ -369,6 +369,102 @@ export default function PublicHome() {
         </div>
       </section>
 
+      {/* Our Mission - Transparency Section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-background to-muted/30" id="mission">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium mb-6">
+              <Globe className="w-4 h-4" />
+              Open Source & Transparent
+            </div>
+            <h2 className="text-3xl font-bold mb-4">Our Mission: AI Safety for Humanity</h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">
+              We're building the Western equivalent of China's TC260 - a comprehensive AI safety governance 
+              framework that protects both businesses and citizens. This is bigger than any one company.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <Card className="bg-background border-2">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <Users className="w-6 h-6 text-primary" />
+                  Join the Movement
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Every Letter of Intent (LOI) from Watchdog applicants helps us prove market demand 
+                  to investors. Your interest directly contributes to building this critical infrastructure 
+                  for AI safety in the West.
+                </p>
+                <div className="bg-muted/50 rounded-lg p-4 mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Community Progress</span>
+                    <span className="text-sm text-primary font-bold">{loiCount?.count || 0} LOIs</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div 
+                      className="bg-primary rounded-full h-2 transition-all duration-500" 
+                      style={{ width: `${Math.min((loiCount?.count || 0) / 1000 * 100, 100)}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">Goal: 1,000 LOIs for Series A</p>
+                </div>
+                <Link href="/watchdog-signup">
+                  <Button className="w-full gap-2">
+                    Add Your Voice <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-background border-2">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <Lock className="w-6 h-6 text-primary" />
+                  How We're Building This
+                </h3>
+                <ul className="space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">100% Open Source</strong> - All code on GitHub, MIT licensed</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">Community-Driven</strong> - Watchdog Analysts are real people, not bots</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">Transparent Governance</strong> - All council votes are public</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">Job Creation</strong> - We're creating real jobs in AI safety</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">For Humanity</strong> - Not just for profit, but for protection</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground mb-4">
+              Together, we're building the safety infrastructure that AI companies need and humanity deserves.
+            </p>
+            <a 
+              href="https://github.com/optimobile/coai-dashboard" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+            >
+              View our code on GitHub <ChevronRight className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* For Different Users */}
       <section className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-6xl">

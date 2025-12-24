@@ -1,8 +1,10 @@
 /*
  * COAI Training Page
  * Training modules for Watchdog Analyst certification
+ * Connected to real backend API
  */
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   BookOpen,
@@ -13,6 +15,9 @@ import {
   Award,
   ArrowRight,
   GraduationCap,
+  X,
+  ChevronRight,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,60 +26,48 @@ import { useLocation } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-
-// Training modules content (will be moved to database)
-const trainingModulesData = [
-  {
-    id: 1,
-    code: "MOD-001",
-    title: "Introduction to AI Safety",
-    description: "Learn the fundamentals of AI safety, why it matters, and the role of human oversight in AI systems.",
-    duration: 30,
-    topics: ["What is AI Safety?", "Historical AI incidents", "The human-in-the-loop approach", "COAI's mission"],
-  },
-  {
-    id: 2,
-    code: "MOD-002",
-    title: "Understanding Bias and Fairness",
-    description: "Explore how bias manifests in AI systems and learn to identify unfair outcomes.",
-    duration: 45,
-    topics: ["Types of AI bias", "Protected characteristics", "Fairness metrics", "Case studies"],
-  },
-  {
-    id: 3,
-    code: "MOD-003",
-    title: "Privacy and Data Protection",
-    description: "Understand privacy risks in AI and how to evaluate data handling practices.",
-    duration: 40,
-    topics: ["GDPR fundamentals", "Data minimization", "Consent and transparency", "Privacy impact assessment"],
-  },
-  {
-    id: 4,
-    code: "MOD-004",
-    title: "EU AI Act Fundamentals",
-    description: "Learn the key requirements of the EU AI Act and how to assess compliance.",
-    duration: 60,
-    topics: ["Risk classification", "High-risk AI requirements", "Prohibited practices", "Compliance deadlines"],
-  },
-  {
-    id: 5,
-    code: "MOD-005",
-    title: "Case Review Methodology",
-    description: "Master the process of reviewing AI safety incidents and making informed decisions.",
-    duration: 45,
-    topics: ["Evidence evaluation", "Decision frameworks", "Writing clear reasoning", "When to escalate"],
-  },
-];
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Streamdown } from "streamdown";
 
 export default function Training() {
   const [, setLocation] = useLocation();
-  const { data: progress } = trpc.training.getProgress.useQuery();
+  const [selectedModule, setSelectedModule] = useState<number | null>(null);
+  
+  // Fetch modules from API
+  const { data: modules, isLoading: modulesLoading } = trpc.training.getModules.useQuery();
+  const { data: progress, refetch: refetchProgress } = trpc.training.getProgress.useQuery();
+  const { data: moduleDetail, isLoading: moduleLoading } = trpc.training.getModule.useQuery(
+    { id: selectedModule! },
+    { enabled: !!selectedModule }
+  );
+  
+  const startModuleMutation = trpc.training.startModule.useMutation({
+    onSuccess: () => {
+      refetchProgress();
+    },
+  });
+  
+  const completeModuleMutation = trpc.training.completeModule.useMutation({
+    onSuccess: () => {
+      refetchProgress();
+      toast.success("Module completed!", {
+        description: "Great job! You can now move to the next module.",
+      });
+      setSelectedModule(null);
+    },
+  });
   
   // Calculate overall progress
   const completedModules = progress?.filter(p => p.status === "completed").length || 0;
-  const totalModules = trainingModulesData.length;
-  const overallProgress = (completedModules / totalModules) * 100;
-  const allCompleted = completedModules === totalModules;
+  const totalModules = modules?.length || 5;
+  const overallProgress = totalModules > 0 ? (completedModules / totalModules) * 100 : 0;
+  const allCompleted = completedModules === totalModules && totalModules > 0;
 
   const getModuleStatus = (moduleId: number) => {
     const moduleProgress = progress?.find(p => p.moduleId === moduleId);
@@ -82,11 +75,25 @@ export default function Training() {
   };
 
   const handleStartModule = (moduleId: number) => {
-    // In a real app, this would navigate to the module content
-    toast.info("Module content coming soon!", {
-      description: "Training modules are being developed.",
-    });
+    startModuleMutation.mutate({ moduleId });
+    setSelectedModule(moduleId);
   };
+
+  const handleCompleteModule = () => {
+    if (selectedModule) {
+      completeModuleMutation.mutate({ moduleId: selectedModule });
+    }
+  };
+
+  if (modulesLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-96">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -147,11 +154,12 @@ export default function Training() {
           <h2 className="text-lg font-semibold">Training Modules</h2>
           
           <div className="grid gap-4">
-            {trainingModulesData.map((module, idx) => {
+            {modules?.map((module, idx) => {
               const status = getModuleStatus(module.id);
               const isCompleted = status === "completed";
               const isInProgress = status === "in_progress";
-              const isLocked = idx > 0 && getModuleStatus(trainingModulesData[idx - 1].id) !== "completed";
+              const prevModule = modules[idx - 1];
+              const isLocked = idx > 0 && prevModule && getModuleStatus(prevModule.id) !== "completed";
 
               return (
                 <motion.div
@@ -219,29 +227,17 @@ export default function Training() {
                           <div className="flex items-center gap-4 mt-3">
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                               <Clock className="h-3 w-3" />
-                              {module.duration} min
+                              {module.durationMinutes} min
                             </span>
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                               <BookOpen className="h-3 w-3" />
-                              {module.topics.length} topics
+                              {module.code}
                             </span>
                             {isCompleted && (
                               <span className="text-xs text-green-600 dark:text-green-400 font-medium">
                                 ✓ Completed
                               </span>
                             )}
-                          </div>
-
-                          {/* Topics Preview */}
-                          <div className="flex flex-wrap gap-2 mt-3">
-                            {module.topics.map((topic, i) => (
-                              <span
-                                key={i}
-                                className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground"
-                              >
-                                {topic}
-                              </span>
-                            ))}
                           </div>
                         </div>
                       </div>
@@ -280,6 +276,61 @@ export default function Training() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Module Content Dialog */}
+      <Dialog open={!!selectedModule} onOpenChange={(open) => !open && setSelectedModule(null)}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          {moduleLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : moduleDetail ? (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <span>{moduleDetail.code}</span>
+                  <ChevronRight className="h-4 w-4" />
+                  <span>{moduleDetail.durationMinutes} min</span>
+                </div>
+                <DialogTitle className="text-xl">{moduleDetail.title}</DialogTitle>
+                <DialogDescription>{moduleDetail.description}</DialogDescription>
+              </DialogHeader>
+              
+              <div className="mt-4 prose prose-sm dark:prose-invert max-w-none">
+                <Streamdown>{moduleDetail.content || "Content is being prepared..."}</Streamdown>
+              </div>
+              
+              <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
+                <Button variant="outline" onClick={() => setSelectedModule(null)}>
+                  Close
+                </Button>
+                {getModuleStatus(selectedModule!) !== "completed" && (
+                  <Button 
+                    onClick={handleCompleteModule}
+                    disabled={completeModuleMutation.isPending}
+                  >
+                    {completeModuleMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Completing...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                        Mark as Complete
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              Module not found
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }

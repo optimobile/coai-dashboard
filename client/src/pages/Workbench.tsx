@@ -1,9 +1,10 @@
 /*
  * COAI Analyst Workbench
  * Case review interface for certified Watchdog Analysts
+ * Connected to real backend API
  */
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Briefcase,
@@ -23,6 +24,7 @@ import {
   ThumbsUp,
   ThumbsDown,
   HelpCircle,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,53 +32,17 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useLocation } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-
-// Sample cases for demo (will be loaded from database)
-const sampleCases = [
-  {
-    id: 1,
-    title: "Gender bias detected in job recommendation AI",
-    description: "A user reported that a job recommendation system consistently shows higher-paying tech jobs to male users while showing administrative roles to female users with similar qualifications.",
-    incidentType: "bias",
-    severity: "high",
-    company: "TechRecruit AI",
-    reportedAt: "2024-12-23T10:30:00Z",
-    dueAt: "2024-12-25T10:30:00Z",
-    councilVotes: { approve: 8, reject: 15, escalate: 10 },
-    status: "assigned",
-    priority: "high",
-  },
-  {
-    id: 2,
-    title: "AI chatbot providing medical advice without disclaimer",
-    description: "A health-focused chatbot is providing specific medical diagnoses and treatment recommendations without proper disclaimers or suggestions to consult healthcare professionals.",
-    incidentType: "safety",
-    severity: "critical",
-    company: "HealthBot Inc",
-    reportedAt: "2024-12-22T14:00:00Z",
-    dueAt: "2024-12-24T14:00:00Z",
-    councilVotes: { approve: 5, reject: 20, escalate: 8 },
-    status: "assigned",
-    priority: "urgent",
-  },
-  {
-    id: 3,
-    title: "Privacy concern: AI assistant storing conversation history",
-    description: "Users discovered that an AI assistant is storing full conversation histories including sensitive personal information without clear consent or data retention policies.",
-    incidentType: "privacy",
-    severity: "medium",
-    company: "AssistAI Corp",
-    reportedAt: "2024-12-21T09:15:00Z",
-    dueAt: "2024-12-26T09:15:00Z",
-    councilVotes: { approve: 12, reject: 10, escalate: 11 },
-    status: "assigned",
-    priority: "medium",
-  },
-];
 
 const severityColors: Record<string, string> = {
   low: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
@@ -94,15 +60,64 @@ const priorityColors: Record<string, string> = {
 
 export default function Workbench() {
   const [, setLocation] = useLocation();
-  const [selectedCase, setSelectedCase] = useState<typeof sampleCases[0] | null>(null);
+  const [selectedCaseId, setSelectedCaseId] = useState<number | null>(null);
   const [decision, setDecision] = useState<string | null>(null);
+  const [confidence, setConfidence] = useState<string>("medium");
   const [reasoning, setReasoning] = useState("");
   const [activeTab, setActiveTab] = useState("queue");
 
+  // Fetch data from API
+  const { data: myCases, isLoading: casesLoading, refetch: refetchCases } = trpc.workbench.getMyCases.useQuery();
   const { data: performance } = trpc.workbench.getMyPerformance.useQuery();
-  const { data: certificates } = trpc.certification.getMyCertificates.useQuery();
+  const { data: certificates, isLoading: certsLoading } = trpc.certification.getMyCertificates.useQuery();
   
+  // Get case details when selected
+  const { data: caseDetails, isLoading: detailsLoading } = trpc.workbench.getCaseDetails.useQuery(
+    { assignmentId: selectedCaseId! },
+    { enabled: !!selectedCaseId }
+  );
+
+  // Submit decision mutation
+  const submitDecisionMutation = trpc.workbench.submitDecision.useMutation({
+    onSuccess: () => {
+      toast.success("Decision submitted successfully!", {
+        description: "Your review has been recorded and will contribute to the final outcome.",
+      });
+      refetchCases();
+      setSelectedCaseId(null);
+      setDecision(null);
+      setReasoning("");
+    },
+    onError: (error) => {
+      toast.error("Failed to submit decision", {
+        description: error.message,
+      });
+    },
+  });
+
   const isCertified = certificates && certificates.length > 0;
+
+  // Split cases into pending and completed
+  const pendingCases = useMemo(() => 
+    myCases?.filter(c => c.assignment.status === "assigned" || c.assignment.status === "in_progress") || [],
+    [myCases]
+  );
+  
+  const completedCases = useMemo(() => 
+    myCases?.filter(c => c.assignment.status === "completed") || [],
+    [myCases]
+  );
+
+  // Loading state
+  if (certsLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-96">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   // If not certified, show prompt to get certified
   if (!isCertified) {
@@ -132,22 +147,21 @@ export default function Workbench() {
   }
 
   const handleSubmitDecision = () => {
-    if (!decision || !reasoning || reasoning.length < 50) {
+    if (!decision || !reasoning || reasoning.length < 50 || !selectedCaseId) {
       toast.error("Please provide a decision and detailed reasoning (at least 50 characters)");
       return;
     }
 
-    toast.success("Decision submitted successfully!", {
-      description: "Your review has been recorded and will contribute to the final outcome.",
+    submitDecisionMutation.mutate({
+      assignmentId: selectedCaseId,
+      decision: decision as "approve" | "reject" | "escalate" | "needs_more_info",
+      confidence: confidence as "low" | "medium" | "high",
+      reasoning,
     });
-
-    // Reset form
-    setSelectedCase(null);
-    setDecision(null);
-    setReasoning("");
   };
 
-  const formatTimeRemaining = (dueAt: string) => {
+  const formatTimeRemaining = (dueAt: Date | string | null) => {
+    if (!dueAt) return "No deadline";
     const due = new Date(dueAt);
     const now = new Date();
     const diff = due.getTime() - now.getTime();
@@ -160,6 +174,8 @@ export default function Workbench() {
     const days = Math.floor(hours / 24);
     return `${days}d remaining`;
   };
+
+  const selectedCase = caseDetails;
 
   return (
     <DashboardLayout>
@@ -243,73 +259,106 @@ export default function Workbench() {
           <div className="col-span-1 space-y-4">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="w-full">
-                <TabsTrigger value="queue" className="flex-1">Queue ({sampleCases.length})</TabsTrigger>
-                <TabsTrigger value="completed" className="flex-1">Completed</TabsTrigger>
+                <TabsTrigger value="queue" className="flex-1">Queue ({pendingCases.length})</TabsTrigger>
+                <TabsTrigger value="completed" className="flex-1">Completed ({completedCases.length})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="queue" className="space-y-3 mt-4">
-                {sampleCases.map((caseItem) => (
-                  <motion.div
-                    key={caseItem.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <Card 
-                      className={`cursor-pointer transition-all hover:shadow-md border-l-4 ${
-                        priorityColors[caseItem.priority]
-                      } ${selectedCase?.id === caseItem.id ? "ring-2 ring-primary" : ""}`}
-                      onClick={() => setSelectedCase(caseItem)}
+                {casesLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  </div>
+                ) : pendingCases.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Briefcase className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">No cases assigned yet</p>
+                    <p className="text-xs mt-1">Check back later for new cases</p>
+                  </div>
+                ) : (
+                  pendingCases.map((caseItem) => (
+                    <motion.div
+                      key={caseItem.assignment.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <h3 className="font-medium text-sm line-clamp-2">
-                            {caseItem.title}
-                          </h3>
-                          <Badge className={severityColors[caseItem.severity]} variant="secondary">
-                            {caseItem.severity}
-                          </Badge>
-                        </div>
-                        
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {formatTimeRemaining(caseItem.dueAt)}
-                          </span>
-                          <span>{caseItem.company}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+                      <Card 
+                        className={`cursor-pointer transition-all hover:shadow-md border-l-4 ${
+                          priorityColors[caseItem.assignment.priority || "medium"]
+                        } ${selectedCaseId === caseItem.assignment.id ? "ring-2 ring-primary" : ""}`}
+                        onClick={() => setSelectedCaseId(caseItem.assignment.id)}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <h3 className="font-medium text-sm line-clamp-2">
+                              {caseItem.report?.title || "Untitled Case"}
+                            </h3>
+                            <Badge className={severityColors[caseItem.report?.severity || "medium"]} variant="secondary">
+                              {caseItem.report?.severity || "medium"}
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {formatTimeRemaining(caseItem.assignment.dueAt)}
+                            </span>
+                            <span>{caseItem.report?.companyName || "Unknown"}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))
+                )}
               </TabsContent>
 
               <TabsContent value="completed" className="mt-4">
-                <div className="text-center py-8 text-muted-foreground">
-                  <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No completed cases yet</p>
-                </div>
+                {completedCases.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">No completed cases yet</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {completedCases.map((caseItem) => (
+                      <Card key={caseItem.assignment.id} className="opacity-75">
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="font-medium text-sm line-clamp-2">
+                              {caseItem.report?.title || "Untitled Case"}
+                            </h3>
+                            <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
           </div>
 
           {/* Case Detail & Review */}
           <div className="col-span-2">
-            {selectedCase ? (
+            {detailsLoading ? (
+              <Card className="h-full flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </Card>
+            ) : selectedCase ? (
               <Card className="h-full">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <Badge className={severityColors[selectedCase.severity]} variant="secondary">
-                        {selectedCase.severity} severity
+                      <Badge className={severityColors[selectedCase.report?.severity || "medium"]} variant="secondary">
+                        {selectedCase.report?.severity || "medium"} severity
                       </Badge>
-                      <CardTitle className="mt-2">{selectedCase.title}</CardTitle>
+                      <CardTitle className="mt-2">{selectedCase.report?.title}</CardTitle>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Reported by user • {selectedCase.company}
+                        Reported by user • {selectedCase.report?.companyName || "Unknown Company"}
                       </p>
                     </div>
                     <Badge variant="outline" className="gap-1">
                       <Clock className="h-3 w-3" />
-                      {formatTimeRemaining(selectedCase.dueAt)}
+                      {formatTimeRemaining(selectedCase.assignment?.dueAt)}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -319,49 +368,47 @@ export default function Workbench() {
                   <div>
                     <h4 className="font-medium mb-2">Incident Description</h4>
                     <p className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg">
-                      {selectedCase.description}
+                      {selectedCase.report?.description || "No description provided."}
                     </p>
                   </div>
 
                   {/* Council Votes */}
-                  <div>
-                    <h4 className="font-medium mb-3">33-Agent Council Votes</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm w-20">Approve</span>
-                        <Progress 
-                          value={(selectedCase.councilVotes.approve / 33) * 100} 
-                          className="flex-1 h-2" 
-                        />
-                        <span className="text-sm text-muted-foreground w-8">
-                          {selectedCase.councilVotes.approve}
-                        </span>
+                  {selectedCase.councilVotes && selectedCase.councilVotes.length > 0 && (
+                    <div>
+                      <h4 className="font-medium mb-3">33-Agent Council Votes</h4>
+                      <div className="space-y-2">
+                        {(() => {
+                          const approveCount = selectedCase.councilVotes.filter(v => v.vote === "approve").length;
+                          const rejectCount = selectedCase.councilVotes.filter(v => v.vote === "reject").length;
+                          const escalateCount = selectedCase.councilVotes.filter(v => v.vote === "escalate").length;
+                          const total = selectedCase.councilVotes.length || 33;
+                          
+                          return (
+                            <>
+                              <div className="flex items-center gap-3">
+                                <span className="text-sm w-20">Approve</span>
+                                <Progress value={(approveCount / total) * 100} className="flex-1 h-2" />
+                                <span className="text-sm text-muted-foreground w-8">{approveCount}</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="text-sm w-20">Reject</span>
+                                <Progress value={(rejectCount / total) * 100} className="flex-1 h-2" />
+                                <span className="text-sm text-muted-foreground w-8">{rejectCount}</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="text-sm w-20">Escalate</span>
+                                <Progress value={(escalateCount / total) * 100} className="flex-1 h-2" />
+                                <span className="text-sm text-muted-foreground w-8">{escalateCount}</span>
+                              </div>
+                            </>
+                          );
+                        })()}
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm w-20">Reject</span>
-                        <Progress 
-                          value={(selectedCase.councilVotes.reject / 33) * 100} 
-                          className="flex-1 h-2" 
-                        />
-                        <span className="text-sm text-muted-foreground w-8">
-                          {selectedCase.councilVotes.reject}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm w-20">Escalate</span>
-                        <Progress 
-                          value={(selectedCase.councilVotes.escalate / 33) * 100} 
-                          className="flex-1 h-2" 
-                        />
-                        <span className="text-sm text-muted-foreground w-8">
-                          {selectedCase.councilVotes.escalate}
-                        </span>
-                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        No consensus reached (22/33 required). Human review needed.
+                      </p>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      No consensus reached (22/33 required). Human review needed.
-                    </p>
-                  </div>
+                  )}
 
                   {/* Your Decision */}
                   <div>
@@ -409,6 +456,20 @@ export default function Workbench() {
                       </Button>
                     </div>
 
+                    <div className="mb-4">
+                      <label className="text-sm font-medium mb-2 block">Confidence Level</label>
+                      <Select value={confidence} onValueChange={setConfidence}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low Confidence</SelectItem>
+                          <SelectItem value="medium">Medium Confidence</SelectItem>
+                          <SelectItem value="high">High Confidence</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
                     <Textarea
                       placeholder="Provide your reasoning for this decision (minimum 50 characters)..."
                       value={reasoning}
@@ -425,10 +486,19 @@ export default function Workbench() {
                     className="w-full" 
                     size="lg"
                     onClick={handleSubmitDecision}
-                    disabled={!decision || reasoning.length < 50}
+                    disabled={!decision || reasoning.length < 50 || submitDecisionMutation.isPending}
                   >
-                    <Send className="mr-2 h-4 w-4" />
-                    Submit Decision
+                    {submitDecisionMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="mr-2 h-4 w-4" />
+                        Submit Decision
+                      </>
+                    )}
                   </Button>
                 </CardContent>
               </Card>

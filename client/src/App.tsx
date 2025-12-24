@@ -20,6 +20,7 @@ import Certification from "./pages/Certification";
 import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
+import ApiDocs from "./pages/ApiDocs";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/workbench" component={Workbench} />
       <Route path="/public" component={PublicHome} />
       <Route path="/admin" component={Admin} />
+      <Route path="/api-docs" component={ApiDocs} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
