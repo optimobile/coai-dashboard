@@ -291,3 +291,136 @@ describe("Workbench Router", () => {
     expect(result).toEqual([]);
   });
 });
+
+// ============================================
+// AI SYSTEMS ROUTER TESTS (CRUD)
+// ============================================
+describe("AI Systems Router", () => {
+  it("returns empty array for list when database is not available", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.aiSystems.list();
+    expect(result).toEqual([]);
+  });
+
+  it("returns null for non-existent system", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    const result = await caller.aiSystems.getById({ id: 999 });
+    expect(result).toBeNull();
+  });
+
+  it("throws error when creating system without database", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.create({
+        name: "Test AI System",
+        description: "A test system",
+        systemType: "chatbot",
+        riskLevel: "minimal",
+      })
+    ).rejects.toThrow("Database not available");
+  });
+
+  it("throws error when updating system without database", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.update({
+        id: 1,
+        name: "Updated Name",
+      })
+    ).rejects.toThrow("Database not available");
+  });
+
+  it("throws error when deleting system without database", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.delete({ id: 1 })
+    ).rejects.toThrow("Database not available");
+  });
+
+  it("requires authentication for list", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(caller.aiSystems.list()).rejects.toThrow();
+  });
+
+  it("requires authentication for create", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.create({
+        name: "Test",
+        systemType: "chatbot",
+        riskLevel: "minimal",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("requires authentication for update", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.update({ id: 1, name: "Updated" })
+    ).rejects.toThrow();
+  });
+
+  it("requires authentication for delete", async () => {
+    const ctx = createMockContext(false);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.delete({ id: 1 })
+    ).rejects.toThrow();
+  });
+
+  it("validates system name minimum length", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.create({
+        name: "AB", // Too short (min 3)
+        systemType: "chatbot",
+        riskLevel: "minimal",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("validates system type enum", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.create({
+        name: "Test System",
+        systemType: "invalid_type" as any,
+        riskLevel: "minimal",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("validates risk level enum", async () => {
+    const ctx = createMockContext(true);
+    const caller = appRouter.createCaller(ctx);
+    
+    await expect(
+      caller.aiSystems.create({
+        name: "Test System",
+        systemType: "chatbot",
+        riskLevel: "invalid_risk" as any,
+      })
+    ).rejects.toThrow();
+  });
+});

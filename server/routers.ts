@@ -481,6 +481,66 @@ const aiSystemsRouter = router({
       if (!system || system.userId !== ctx.user.id) return null;
       return system;
     }),
+
+  // Update an AI system
+  update: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().min(3).max(255).optional(),
+      description: z.string().optional(),
+      systemType: z.enum(["chatbot", "recommendation", "classification", "generation", "analysis", "other"]).optional(),
+      riskLevel: z.enum(["minimal", "limited", "high", "unacceptable"]).optional(),
+      status: z.enum(["draft", "active", "archived", "under_review"]).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify ownership
+      const [existing] = await db
+        .select()
+        .from(aiSystems)
+        .where(eq(aiSystems.id, input.id))
+        .limit(1);
+
+      if (!existing || existing.userId !== ctx.user.id) {
+        throw new Error("AI system not found or access denied");
+      }
+
+      const { id, ...updateData } = input;
+      
+      await db
+        .update(aiSystems)
+        .set({ ...updateData, updatedAt: new Date() })
+        .where(eq(aiSystems.id, id));
+
+      return { success: true };
+    }),
+
+  // Delete an AI system
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify ownership
+      const [existing] = await db
+        .select()
+        .from(aiSystems)
+        .where(eq(aiSystems.id, input.id))
+        .limit(1);
+
+      if (!existing || existing.userId !== ctx.user.id) {
+        throw new Error("AI system not found or access denied");
+      }
+
+      await db
+        .delete(aiSystems)
+        .where(eq(aiSystems.id, input.id));
+
+      return { success: true };
+    }),
 });
 
 // ============================================

@@ -174,3 +174,16 @@
 - [x] Mobile-responsive design
 - [ ] SEO optimization
 
+
+## AI Systems CRUD Implementation
+
+- [x] Review backend aiSystems router for CRUD operations
+- [x] Add update mutation to aiSystems router
+- [x] Add delete mutation to aiSystems router
+- [x] Build AI Systems list view with real API data
+- [x] Create "Add AI System" modal with form
+- [x] Create "Edit AI System" modal with form
+- [x] Add delete confirmation dialog
+- [x] Show system type and risk level badges
+- [x] Write tests for CRUD operations (12 new tests added)
+- [x] Verify end-to-end functionality (35 tests passing)
