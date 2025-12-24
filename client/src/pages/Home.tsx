@@ -2,6 +2,7 @@
  * COAI Home Page - Open WebUI Inspired Design
  * Welcome screen with suggestion cards for AI Safety tasks
  * "Hello, [Name] - How can I help you today?"
+ * Light theme default with COAI branding
  */
 
 import { useState } from "react";
@@ -75,19 +76,19 @@ export default function Home() {
         {/* Main Content - Centered like Open WebUI */}
         <div className="flex-1 flex flex-col items-center justify-center px-8 lg:px-20">
           <div className="w-full max-w-3xl">
-            {/* Logo/Avatar */}
+            {/* COAI Logo/Avatar */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.2 }}
               className="flex justify-start mb-2"
             >
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background font-bold text-lg">
-                OI
+              <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-primary text-primary-foreground font-bold text-sm shadow-sm">
+                COAI
               </div>
             </motion.div>
 
-            {/* Welcome Message - Open WebUI Style */}
+            {/* Welcome Message */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -175,7 +176,7 @@ export default function Home() {
                     type="submit"
                     size="icon"
                     disabled={!inputValue.trim()}
-                    className="h-8 w-8 rounded-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-30"
+                    className="h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-30"
                   >
                     <ArrowUp className="h-4 w-4" />
                   </Button>
@@ -183,7 +184,7 @@ export default function Home() {
               </div>
             </form>
             
-            {/* Disclaimer - Open WebUI Style */}
+            {/* Disclaimer */}
             <p className="text-center text-xs text-muted-foreground mt-2">
               COAI can make mistakes. Verify compliance information.
             </p>

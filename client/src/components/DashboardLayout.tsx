@@ -1,7 +1,7 @@
 /*
  * COAI Dashboard Layout - Open WebUI Inspired Design
  * Clean sidebar with navigation, user menu at bottom
- * Minimal, chat-centric interface adapted for AI Safety Governance
+ * Light theme default with COAI branding
  */
 
 import { useState } from "react";
@@ -21,6 +21,8 @@ import {
   ChevronLeft,
   PenSquare,
   ExternalLink,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -47,10 +50,11 @@ const navItems = [
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location] = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar - Open WebUI Style */}
+      {/* Sidebar */}
       <motion.aside
         initial={false}
         animate={{ width: sidebarCollapsed ? 0 : 260 }}
@@ -60,17 +64,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           sidebarCollapsed && "border-r-0"
         )}
       >
-        {/* New Chat Button */}
+        {/* COAI Logo + New Chat Button */}
         <div className="flex items-center justify-between p-2 pt-3">
           <Link href="/">
             <Button
               variant="ghost"
               className="flex items-center gap-2 w-full justify-start px-3 py-2 text-sm font-medium hover:bg-accent"
             >
-              <div className="flex items-center justify-center w-7 h-7 rounded-full bg-foreground text-background font-bold text-xs">
-                OI
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground font-bold text-[10px]">
+                COAI
               </div>
-              <span>New Chat</span>
+              <span className="font-semibold">New Chat</span>
             </Button>
           </Link>
           <Tooltip>
@@ -96,7 +100,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                     isActive
-                      ? "bg-accent text-foreground"
+                      ? "bg-accent text-foreground font-medium"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -119,7 +123,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </nav>
 
-        {/* User Menu at Bottom - Open WebUI Style */}
+        {/* User Menu at Bottom */}
         <div className="p-2 border-t border-sidebar-border">
           <Button
             variant="ghost"
@@ -135,7 +139,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Top Bar - Minimal like Open WebUI */}
+        {/* Top Bar */}
         <header className="flex h-12 items-center justify-between border-b border-border px-4">
           {/* Left: Sidebar Toggle + Title */}
           <div className="flex items-center gap-2">
@@ -157,8 +161,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </span>
           </div>
 
-          {/* Right: Settings */}
+          {/* Right: Theme Toggle + Settings */}
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="h-8 w-8"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </Button>
             <Link href="/settings">
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <Settings className="h-4 w-4" />
