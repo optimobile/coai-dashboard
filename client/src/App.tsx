@@ -29,6 +29,10 @@ import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
 import Billing from "./pages/Billing";
 import PublicDashboard from "./pages/PublicDashboard";
+import ComplianceScorecard from "./pages/ComplianceScorecard";
+import KnowledgeBase from "./pages/KnowledgeBase";
+import EnterpriseOnboarding from "./pages/EnterpriseOnboarding";
+import Pricing from "./pages/Pricing";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -59,6 +63,10 @@ function Router() {
       <Route path="/api-keys" component={ApiKeys} />
       <Route path="/pdca" component={PDCACycles} />
       <Route path="/transparency" component={PublicDashboard} />
+      <Route path="/scorecard/:systemId" component={ComplianceScorecard} />
+      <Route path="/knowledge-base" component={KnowledgeBase} />
+      <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
+      <Route path="/pricing" component={Pricing} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

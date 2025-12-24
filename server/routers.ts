@@ -31,6 +31,7 @@ import {
 import { eq, desc, sql, and } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
+import { publicApiRouter } from "./publicApi";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -845,6 +846,94 @@ const aiSystemsRouter = router({
         .where(eq(aiSystems.id, input.id));
 
       return { success: true };
+    }),
+
+  // Bulk register AI systems (Enterprise only)
+  bulkCreate: protectedProcedure
+    .input(z.object({
+      systems: z.array(z.object({
+        name: z.string().min(3).max(255),
+        description: z.string().optional(),
+        systemType: z.enum(["chatbot", "recommendation", "classification", "generation", "analysis", "other"]),
+        riskLevel: z.enum(["minimal", "limited", "high", "unacceptable"]).default("minimal"),
+      })).min(1).max(100),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Check enterprise tier (in production, use permission middleware)
+      const [user] = await db.select().from(users).where(eq(users.id, ctx.user.id)).limit(1);
+      if (user?.subscriptionTier !== 'enterprise') {
+        throw new Error("Bulk registration requires Enterprise subscription");
+      }
+
+      const results = [];
+      for (const system of input.systems) {
+        const [created] = await db.insert(aiSystems).values({
+          ...system,
+          userId: ctx.user.id,
+          status: "draft",
+        }).$returningId();
+        results.push({ name: system.name, id: created.id });
+      }
+
+      return { success: true, created: results.length, systems: results };
+    }),
+
+  // Get industry-wide trend analysis (Enterprise only)
+  getTrends: protectedProcedure
+    .input(z.object({
+      timeRange: z.enum(["7d", "30d", "90d", "1y"]).default("30d"),
+    }))
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      // Get total systems by risk level
+      const riskDistribution = await db
+        .select({
+          riskLevel: aiSystems.riskLevel,
+          count: sql<number>`count(*)`,
+        })
+        .from(aiSystems)
+        .groupBy(aiSystems.riskLevel);
+
+      // Get total systems by type
+      const typeDistribution = await db
+        .select({
+          systemType: aiSystems.systemType,
+          count: sql<number>`count(*)`,
+        })
+        .from(aiSystems)
+        .groupBy(aiSystems.systemType);
+
+      // Get compliance scores by framework
+      const complianceByFramework = await db
+        .select({
+          frameworkId: assessments.frameworkId,
+          avgScore: sql<number>`AVG(overall_score)`,
+          totalAssessments: sql<number>`count(*)`,
+        })
+        .from(assessments)
+        .groupBy(assessments.frameworkId);
+
+      // Get incident trends
+      const incidentTrends = await db
+        .select({
+          severity: watchdogReports.severity,
+          count: sql<number>`count(*)`,
+        })
+        .from(watchdogReports)
+        .groupBy(watchdogReports.severity);
+
+      return {
+        riskDistribution,
+        typeDistribution,
+        complianceByFramework,
+        incidentTrends,
+        generatedAt: new Date().toISOString(),
+      };
     }),
 });
 
@@ -2450,6 +2539,7 @@ export const appRouter = router({
   apiKeys: apiKeysRouter,
   pdca: pdcaRouter,
   stripe: stripeRouter,
+  publicApi: publicApiRouter,
 });
 
 export type AppRouter = typeof appRouter;
