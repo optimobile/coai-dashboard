@@ -1802,3 +1802,61 @@
 - [x] Verify integration with CoursePlayer
 - [x] Run all tests - 185 passing
 - [ ] Save checkpoint with quiz system
+
+
+## Phase 39 - EU AI Act Modules 2-8 Quizzes
+
+### Module 2 Quiz - Risk Classification System
+- [x] Write 10 questions covering 4-tier risk approach
+- [x] Cover unacceptable, high, limited, minimal risk categories
+- [x] Include examples of each risk tier
+- [x] Add detailed explanations
+
+### Module 3 Quiz - Prohibited AI Practices
+- [x] Write 10 questions covering all 8 prohibited practices
+- [x] Cover subliminal manipulation, exploitation, social scoring
+- [x] Cover biometric identification exceptions
+- [x] Add detailed explanations
+
+### Module 4 Quiz - High-Risk AI Systems Part 1
+- [x] Write 10 questions covering Annex III Categories 1-4
+- [x] Cover biometric identification, critical infrastructure
+- [x] Cover education and employment systems
+- [x] Add detailed explanations
+
+### Module 5 Quiz - High-Risk AI Systems Part 2
+- [x] Write 10 questions covering Annex III Categories 5-8
+- [x] Cover essential services, law enforcement
+- [x] Cover migration and justice systems
+- [x] Add detailed explanations
+
+### Module 6 Quiz - Provider and Deployer Obligations
+- [x] Write 10 questions covering provider obligations (12 requirements)
+- [x] Cover deployer obligations (7 requirements)
+- [x] Cover compliance documentation
+- [x] Add detailed explanations
+
+### Module 7 Quiz - Transparency, GPAI, Governance
+- [x] Write 10 questions covering transparency obligations
+- [x] Cover GPAI baseline and systemic risk requirements
+- [x] Cover AI Office, Board, and national authorities
+- [x] Add detailed explanations
+
+### Module 8 Quiz - Compliance Timeline and Penalties
+- [x] Write 10 questions covering phased implementation
+- [x] Cover penalty tiers (€35M/7%, €15M/3%, €7.5M/1.5%)
+- [x] Cover immediate compliance actions
+- [x] Add detailed explanations
+
+### CoursePlayer Integration
+- [x] Create quiz mapping system (courseId + moduleIndex → quiz)
+- [x] Update CoursePlayer to dynamically load correct quiz
+- [x] Test all 8 quizzes in CoursePlayer
+- [x] Verify quiz state resets between modules
+
+### Testing
+- [x] Test all 8 quizzes individually
+- [x] Verify 70% passing requirement for each
+- [x] Test module completion flow with quizzes
+- [x] Run all tests and ensure passing (185 tests passing)
+- [ ] Save checkpoint with complete EU AI Act quiz system

@@ -19,7 +19,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { Quiz } from '@/components/Quiz';
-import { euAiActModule1Quiz } from '@/data/quizzes/eu-ai-act-module-1';
+import { getModuleQuiz } from '@/data/quizzes';
 import type { QuizResult } from '@/types/quiz';
 
 export default function CoursePlayer() {
@@ -275,11 +275,13 @@ export default function CoursePlayer() {
                     <Button onClick={handleShowQuiz} size="lg">
                       Start Quiz
                     </Button>
-                  ) : (
+                  ) : getModuleQuiz(courseId, currentModuleIndex) ? (
                     <Quiz 
-                      questions={euAiActModule1Quiz} 
+                      questions={getModuleQuiz(courseId, currentModuleIndex)!} 
                       onComplete={handleQuizComplete}
                     />
+                  ) : (
+                    <div className="text-muted-foreground">Quiz not available for this module yet.</div>
                   )}
                 </div>
               )}
