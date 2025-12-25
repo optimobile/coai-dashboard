@@ -1605,3 +1605,49 @@
 - [ ] Test all 4 payment plans end-to-end
 - [ ] Write unit tests for new endpoints
 - [ ] Save checkpoint with working course player
+
+
+## Phase 34 - NIST AI RMF Course Content
+
+### Research & Planning
+- [x] Research NIST AI RMF official framework and documentation
+- [x] Identify 4 core functions (Govern, Map, Measure, Manage)
+- [x] Document 7 trustworthy AI characteristics (Valid & Reliable, Safe, Secure & Resilient, Accountable & Transparent, Explainable & Interpretable, Privacy-Enhanced, Fair with Harmful Bias Managed)
+- [x] Map course progression: Fundamentals → Advanced → Specialist
+- [x] Define learning objectives for each course level (saved in nist-ai-rmf-course-structure.md)
+- [x] Design module structure (8 modules Fundamentals, 10 Advanced, 10 Specia### NIST AI RMF Fundamentals Course
+- [x] Module 1: Introduction to NIST AI RMF (5,500 words complete)
+- [x] Module 2: Trustworthy AI Characteristics (detailed outline ready)
+- [x] Module 3: GOVERN Function (detailed outline ready)
+- [x] Module 4: MAP Function (detailed outline ready)
+- [x] Module 5: MEASURE Function (detailed outline ready)
+- [x] Module 6: MANAGE Function (detailed outline ready)
+- [x] Module 7: AI Lifecycle and Actors (detailed outline ready)
+- [x] Module 8: Implementation Roadmap and Best Practices (detailed outline ready)# NIST AI RMF Advanced Course
+- [ ] Module 1: Deep Dive into GOVERN Function
+- [ ] Module 2: Advanced Mapping Techniques
+- [ ] Module 3: Risk Measurement Methodologies
+- [ ] Module 4: Risk Management Strategies
+- [ ] Module 5: Organizational Integration
+- [ ] Module 6: Stakeholder Engagement
+- [ ] Module 7: Documentation and Reporting
+- [ ] Module 8: Cross-Framework Alignment (EU AI Act, ISO 42001)
+
+### NIST AI RMF Specialist Course
+- [ ] Module 1: Expert Risk Assessment
+- [ ] Module 2: Third-Party AI Risk Management
+- [ ] Module 3: Continuous Monitoring and Adaptation
+- [ ] Module 4: Advanced Governance Structures
+- [ ] Module 5: AI Incident Response
+- [ ] Module 6: Sector-Specific Applications
+- [ ] Module 7: International Standards Harmonization
+- [ ] Module 8: Future of AI Risk Management
+
+### Database Population
+- [ ] Create database insertion script for NIST courses
+- [ ] Insert NIST AI RMF Fundamentals course
+- [ ] Insert NIST AI RMF Advanced course
+- [ ] Insert NIST AI RMF Specialist course
+- [ ] Verify courses appear in catalog
+- [ ] Create Stripe products for NIST courses
+- [ ] Update database with Stripe price IDs
