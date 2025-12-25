@@ -1651,3 +1651,47 @@
 - [ ] Verify courses appear in catalog
 - [ ] Create Stripe products for NIST courses
 - [ ] Update database with Stripe price IDs
+
+
+## Phase 35 - Complete Training System: NIST Database + Quizzes + ISO 42001
+
+### NIST AI RMF Fundamentals - Stripe & Database
+- [x] Create Stripe product for NIST AI RMF Fundamentals (prod_TfWZr8UQTD74WB)
+- [x] Create one-time price ($499 USD) - price_1SiBVsDuEg5HakgPl2cnJPC0
+- [x] Create 3-month subscription price ($199/month) - price_1SiBVsDuEg5HakgPBbZOgee2
+- [x] Create 6-month subscription price ($99/month) - price_1SiBVsDuEg5HakgPt1H4qz4H
+- [x] Create 12-month subscription price ($59/month) - price_1SiBVsDuEg5HakgP9AreWlme
+- [ ] Fix database schema mismatch (drizzle/schema.ts vs actual database)
+- [ ] Insert NIST AI RMF Fundamentals course into database with Stripe price IDs
+- [ ] Verify course appears in /courses catalog alongside EU AI Act
+- [ ] Test enrollment flow for NIST course
+
+### Quiz Components
+- [ ] Create Quiz component (client/src/components/Quiz.tsx)
+- [ ] Support multiple-choice questions with 4 options
+- [ ] Show immediate feedback (correct/incorrect with explanations)
+- [ ] Calculate score and display results
+- [ ] Require 70% passing score to mark module complete
+- [ ] Integrate quiz into CoursePlayer page
+- [ ] Add quiz data structure to course modules
+- [ ] Create sample quiz questions for EU AI Act Module 1
+- [ ] Create sample quiz questions for NIST AI RMF Module 1
+
+### ISO 42001 Course Content
+- [ ] Research ISO 42001 AI Management System standard
+- [ ] Design course structure (Fundamentals, Advanced, Specialist)
+- [ ] Define learning objectives for each level
+- [ ] Create module outlines (8-10 modules per course)
+- [ ] Write detailed content for ISO 42001 Fundamentals Module 1
+- [ ] Create Stripe products and prices for ISO 42001 courses
+- [ ] Insert ISO 42001 Fundamentals into database
+- [ ] Verify all 3 framework courses appear in catalog
+
+### Testing & Validation
+- [ ] Test course catalog displays all 3 frameworks
+- [ ] Test enrollment flow for each course
+- [ ] Test quiz functionality and scoring
+- [ ] Test progress tracking with quiz completion
+- [ ] Test certificate generation for completed courses
+- [ ] Run all unit tests and ensure passing
+- [ ] Save final checkpoint
