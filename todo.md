@@ -1518,3 +1518,29 @@
 - [ ] Create Stripe products and prices
 - [ ] Test course enrollment flow
 - [ ] Verify content displays correctly
+
+
+## Phase 32B - Complete EU AI Act Fundamentals Course Content
+
+### Module Content Creation
+- [ ] Module 3: Prohibited AI Practices (3,000+ words)
+- [ ] Module 4: High-Risk AI Systems - Part 1 (3,000+ words)
+- [ ] Module 5: High-Risk AI Systems - Part 2 (3,000+ words)
+- [ ] Module 6: Provider and Deployer Obligations (3,000+ words)
+- [ ] Module 7: Transparency, GPAI, and Governance (3,000+ words)
+- [ ] Module 8: Compliance Timeline, Penalties, Next Steps (3,000+ words)
+
+### Database Population
+- [ ] Fix schema alignment issues
+- [ ] Create SQL insert script with correct column names
+- [ ] Insert EU AI Act Fundamentals course
+- [ ] Insert all 8 modules with content
+- [ ] Verify course appears in /courses page
+- [ ] Test enrollment flow
+
+### Quality Assurance
+- [ ] Review all module content for accuracy
+- [ ] Ensure consistent formatting and style
+- [ ] Verify learning objectives alignment
+- [ ] Test quiz questions (when implemented)
+- [ ] Save final checkpoint
