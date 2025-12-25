@@ -45,6 +45,7 @@ import Standards from "./pages/Standards";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
 import NewHome from "./pages/NewHome";
+import VerifyCertificate from "./pages/VerifyCertificate";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -71,6 +72,7 @@ function Router() {
       <Route path="/courses" component={Courses} />
       <Route path="/my-courses" component={MyCourses} />
       <Route path="/courses/:id/learn" component={CoursePlayer} />
+      <Route path="/verify-certificate/:id" component={VerifyCertificate} />
       <Route path="/certification" component={Certification} />
       <Route path="/certification/exam" component={CertificationExam} />
       <Route path="/certification/results" component={CertificationResults} />

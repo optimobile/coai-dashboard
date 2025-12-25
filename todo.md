@@ -2296,3 +2296,31 @@
 - [ ] Ensure unique IDs are generated
 - [ ] Run all tests and ensure passing
 - [ ] Save checkpoint with certificate system
+
+
+## Phase 49 - Certificate Download & Verification UI
+
+### Course Completion Page Updates
+- [x] Find CoursePlayer completion state/page
+- [x] Add "Download Certificate" button with prominent styling
+- [x] Integrate with certificates.generate tRPC endpoint
+- [x] Show loading state during PDF generation
+- [x] Trigger PDF download on success
+- [x] Handle errors gracefully with user feedback
+
+### Certificate Verification Page
+- [x] Create /verify-certificate/:id route
+- [x] Build verification page component
+- [x] Call certificates.verify endpoint
+- [x] Display certificate details (student, course, date, framework)
+- [x] Show verification status (valid/invalid)
+- [x] Add professional styling matching certificate design
+- [x] Handle invalid certificate IDs
+
+### Testing & Polish
+- [x] Test complete flow: course completion → download → verify
+- [x] Test error cases (incomplete course, invalid ID)
+- [x] Verify PDF downloads correctly
+- [x] Check verification page on mobile
+- [x] Run all tests and ensure passing (185 tests passing)
+- [x] Save checkpoint with complete certificate UI

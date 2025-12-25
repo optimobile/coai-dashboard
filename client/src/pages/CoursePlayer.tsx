@@ -49,6 +49,42 @@ export default function CoursePlayer() {
     }
   });
 
+  // Generate certificate mutation
+  const generateCertificateMutation = trpc.certificates.generate.useMutation({
+    onSuccess: (data) => {
+      if (data.success && data.pdfData) {
+        // Convert base64 to blob and trigger download
+        const byteCharacters = atob(data.pdfData);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `COAI-Certificate-${course?.title?.replace(/\s+/g, '-')}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        toast.success('Certificate downloaded successfully!');
+      } else {
+        toast.info(data.message || 'Certificate already exists');
+      }
+    },
+    onError: (error) => {
+      toast.error(`Failed to generate certificate: ${error.message}`);
+    }
+  });
+
+  // Handle certificate download
+  const handleDownloadCertificate = () => {
+    if (!courseId) return;
+    generateCertificateMutation.mutate({ courseId });
+  };
+
   // Calculate progress from enrollment
   const progress = enrollment?.progress || 0;
 
@@ -325,10 +361,29 @@ export default function CoursePlayer() {
                   )}
 
                   {isModuleComplete && isLastModule && progress === 100 && (
-                    <Button onClick={() => setLocation('/my-courses')}>
-                      <Award className="w-4 h-4 mr-2" />
-                      View Certificate
-                    </Button>
+                    <div className="flex flex-col gap-3">
+                      <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-950/30 dark:to-green-950/30 p-6 rounded-lg border-2 border-blue-200 dark:border-blue-800">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Award className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                          <div>
+                            <h3 className="font-bold text-lg">Congratulations!</h3>
+                            <p className="text-sm text-muted-foreground">You've completed this course</p>
+                          </div>
+                        </div>
+                        <Button 
+                          size="lg"
+                          className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
+                          onClick={handleDownloadCertificate}
+                          disabled={generateCertificateMutation.isPending}
+                        >
+                          <Download className="w-5 h-5 mr-2" />
+                          {generateCertificateMutation.isPending ? 'Generating...' : 'Download Certificate'}
+                        </Button>
+                        <p className="text-xs text-center text-muted-foreground mt-2">
+                          Share your achievement with employers and peers
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
