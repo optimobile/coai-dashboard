@@ -1695,3 +1695,31 @@
 - [ ] Test certificate generation for completed courses
 - [ ] Run all unit tests and ensure passing
 - [ ] Save final checkpoint
+
+
+## Phase 36 - Fix Database Schema & Insert NIST AI RMF
+
+### Schema Diagnosis
+- [x] Run SHOW CREATE TABLE courses to get actual database columns
+- [x] Compare with drizzle/schema.ts courses table definition
+- [x] Identified column names use camelCase (regionId, durationHours, stripePriceId, etc.)
+- [x] Schema was already aligned - issue was using snake_case in SQL queries
+
+### Schema Synchronization
+- [x] Confirmed drizzle schema matches database (no sync needed)
+- [x] Verified no data loss
+- [x] Schema is aligned
+
+### NIST AI RMF Course Insertion
+- [x] Inserted NIST AI RMF Fundamentals with correct camelCase column names
+- [x] Included all 8 module titles with descriptions and durations
+- [x] Included Stripe price IDs (one-time $499, 3/6/12-month $199/$99/$59)
+- [x] Set active = true
+
+### Verification
+- [x] Queried courses table - confirmed 16 courses including NIST AI RMF
+- [x] Verified website running with no TypeScript errors
+- [x] Ran all tests - 185 passing (including 20 courses tests)
+- [ ] Manual test: Visit /courses page and verify both frameworks appear
+- [ ] Manual test: Test enrollment flow (Stripe Checkout)
+- [ ] Save checkpoint with both courses live
