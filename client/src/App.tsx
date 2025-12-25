@@ -41,16 +41,18 @@ import MarketingHome from "./pages/MarketingHome";
 import Standards from "./pages/Standards";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
+import NewHome from "./pages/NewHome";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       {/* Main routes */}
+      <Route path="/" component={NewHome} />
       <Route path="/marketing" component={MarketingHome} />
       <Route path="/standards" component={Standards} />
       <Route path="/resources" component={Resources} />
       <Route path="/about" component={About} />
-      <Route path={"/"} component={Home} />
+      <Route path="/old-home" component={Home} />
       <Route path="/landing" component={Landing} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/ai-systems" component={AISystems} />
