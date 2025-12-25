@@ -38,12 +38,18 @@ import RegulatorDashboard from "./pages/RegulatorDashboard";
 import Blog from "./pages/Blog";
 import Recommendations from "./pages/Recommendations";
 import MarketingHome from "./pages/MarketingHome";
+import Standards from "./pages/Standards";
+import Resources from "./pages/Resources";
+import About from "./pages/About";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       {/* Main routes */}
       <Route path="/marketing" component={MarketingHome} />
+      <Route path="/standards" component={Standards} />
+      <Route path="/resources" component={Resources} />
+      <Route path="/about" component={About} />
       <Route path={"/"} component={Home} />
       <Route path="/landing" component={Landing} />
       <Route path="/dashboard" component={Dashboard} />
