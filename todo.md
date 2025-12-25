@@ -1149,3 +1149,38 @@
 - [ ] Project Year 1-5 revenue with course sales
 - [ ] Update valuation based on new revenue streams
 - [ ] Document path to $100M+ valuation
+
+
+## Phase 29 - Monthly Payment Plans
+
+### Pricing Structure
+- [ ] Design 3-month, 6-month, and 12-month payment plans for all courses
+- [ ] Calculate monthly pricing with small premium (10-15% total cost increase)
+- [ ] Add "Pay in Full" discount (5-10% off)
+- [ ] Create comparison table showing payment options
+
+### Database Schema
+- [ ] Create course_subscriptions table for tracking monthly payments
+- [ ] Add payment_plan field to course_enrollments
+- [ ] Add subscription_status tracking (active/paused/cancelled)
+- [ ] Add next_payment_date and remaining_payments fields
+
+### Stripe Integration
+- [ ] Set up Stripe subscription products for each course
+- [ ] Implement subscription creation on course purchase
+- [ ] Add webhook handling for subscription events
+- [ ] Implement subscription cancellation and pausing
+- [ ] Add payment retry logic for failed payments
+
+### Frontend Updates
+- [ ] Update pricing pages with payment plan toggle
+- [ ] Add payment plan selector on course purchase
+- [ ] Show subscription status in user dashboard
+- [ ] Add "Manage Subscription" page
+- [ ] Display remaining payments and next payment date
+
+### Testing
+- [ ] Test subscription creation flow
+- [ ] Test payment processing
+- [ ] Test subscription cancellation
+- [ ] Verify webhook handling
