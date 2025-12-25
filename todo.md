@@ -875,3 +875,73 @@
 - [ ] Add analyst testimonials with photos
 - [ ] Add enterprise case studies
 - [ ] Create demo video (3 minutes)
+
+
+## Phase 25 - Regional Infrastructure System
+
+### Research
+- [ ] Research EU AI Act certification requirements and training standards
+- [ ] Research US AI regulations (NIST AI RMF, state laws)
+- [ ] Research UK AI Safety Institute requirements
+- [ ] Research existing AI safety certification providers
+- [ ] Identify gaps in current AI safety training market
+- [ ] Document regional compliance differences
+
+### Regional Infrastructure Design
+- [ ] Design specialist hierarchy (Regional Specialist → Industry Specialist → Analysts)
+- [ ] Define specialist roles and responsibilities per region
+- [ ] Create analyst assignment system (specialists assign work to analysts)
+- [ ] Design region-specific compliance routing
+- [ ] Define specialist performance metrics and KPIs
+
+### Database Schema
+- [ ] Create regions table (EU, US, UK, Canada, Australia, etc.)
+- [ ] Create specialists table (userId, region, industry, certifications)
+- [ ] Create analystAssignments table (specialistId, analystId, region)
+- [ ] Create regionalCourses table (courseId, region, framework, price)
+- [ ] Create regionalCertifications table (certId, region, requirements)
+- [ ] Add region field to users, trainingModules, certificates
+
+### Region-Specific Training System
+- [ ] Create EU AI Act specific courses (High-Risk AI, Conformity Assessment, CE Marking)
+- [ ] Create US NIST AI RMF specific courses (Govern, Map, Measure, Manage)
+- [ ] Create UK AI Safety Institute specific courses
+- [ ] Build course marketplace with pricing ($49-$299 per course)
+- [ ] Implement course enrollment and payment system
+- [ ] Create region-based course recommendations
+
+### Specialist Dashboard
+- [ ] Create specialist portal with analyst management
+- [ ] Build analyst assignment interface (assign reports to specific analysts)
+- [ ] Create specialist performance dashboard (analysts supervised, reports reviewed, quality scores)
+- [ ] Build specialist earnings tracking (% of analyst earnings)
+- [ ] Create specialist certification requirements page
+
+### Analyst Assignment System
+- [ ] Implement automatic routing based on user region
+- [ ] Create specialist review queue for analyst work
+- [ ] Build escalation system (analyst → specialist → council)
+- [ ] Implement quality scoring (specialists rate analyst work)
+- [ ] Create analyst performance tracking per specialist
+
+### Course Monetization
+- [ ] Implement Stripe integration for course purchases
+- [ ] Create course bundles (EU Compliance Bundle: $499, US Bundle: $399)
+- [ ] Build subscription model (Pro: $29/mo unlimited courses)
+- [ ] Create affiliate program (specialists earn 20% from analyst course sales)
+- [ ] Implement course completion certificates (PDF with blockchain verification)
+
+### Regional Compliance Routing
+- [ ] Auto-detect user region from IP/registration
+- [ ] Show region-specific frameworks on dashboard
+- [ ] Filter training modules by region
+- [ ] Route watchdog reports to region-specific specialists
+- [ ] Generate region-specific compliance reports
+
+### Testing
+- [ ] Test EU user flow (registration → EU courses → EU specialist assignment)
+- [ ] Test US user flow (registration → NIST courses → US specialist assignment)
+- [ ] Test UK user flow (registration → UK courses → UK specialist assignment)
+- [ ] Test specialist assignment and review workflows
+- [ ] Test course purchase and enrollment
+- [ ] Verify regional routing works correctly

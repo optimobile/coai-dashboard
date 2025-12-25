@@ -540,3 +540,204 @@ export const recommendationAnalytics = mysqlTable("recommendation_analytics", {
 });
 
 export type RecommendationAnalytic = typeof recommendationAnalytics.$inferSelect;
+
+
+/**
+ * Regions table for global coverage
+ * Defines geographic regions with specific AI regulations
+ */
+export const regions = mysqlTable("regions", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 10 }).notNull().unique(), // EU, US, UK, CA, AU
+  name: varchar("name", { length: 100 }).notNull(), // European Union, United States, etc.
+  description: text("description"),
+  primaryFramework: varchar("primaryFramework", { length: 100 }), // EU AI Act, NIST AI RMF, etc.
+  regulatoryBody: varchar("regulatoryBody", { length: 255 }), // European Commission, NIST, etc.
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Region = typeof regions.$inferSelect;
+export type InsertRegion = typeof regions.$inferInsert;
+
+/**
+ * Specialists table for regional and industry experts
+ * Three-tier hierarchy: Regional Specialist → Industry Specialist → Analysts
+ */
+export const specialists = mysqlTable("specialists", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(), // Links to users table
+  regionId: int("regionId").notNull(), // Links to regions table
+  specialistType: mysqlEnum("specialistType", ["regional", "industry"]).notNull(),
+  industry: varchar("industry", { length: 100 }), // healthcare, finance, automotive, etc. (for industry specialists)
+  supervisorId: int("supervisorId"), // Links to parent specialist (industry specialists report to regional)
+  certifications: json("certifications").$type<string[]>(), // Array of certification IDs
+  yearsExperience: int("yearsExperience"),
+  bio: text("bio"),
+  baseSalary: int("baseSalary").default(5000).notNull(), // Monthly base salary in USD
+  commissionRate: int("commissionRate").default(10).notNull(), // Percentage of analyst earnings
+  courseCommissionRate: int("courseCommissionRate").default(20).notNull(), // Percentage of course sales
+  status: mysqlEnum("status", ["active", "probation", "suspended", "inactive"]).default("probation").notNull(),
+  probationStartDate: timestamp("probationStartDate"),
+  probationEndDate: timestamp("probationEndDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Specialist = typeof specialists.$inferSelect;
+export type InsertSpecialist = typeof specialists.$inferInsert;
+
+/**
+ * Analyst assignments table
+ * Tracks which analysts are supervised by which specialists
+ */
+export const analystAssignments = mysqlTable("analyst_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  analystId: int("analystId").notNull(), // Links to users table (role: watchdog_analyst)
+  specialistId: int("specialistId").notNull(), // Links to specialists table
+  regionId: int("regionId").notNull(), // Links to regions table
+  industry: varchar("industry", { length: 100 }), // Analyst's industry focus
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+  status: mysqlEnum("status", ["active", "suspended", "terminated"]).default("active").notNull(),
+  qualityScore: int("qualityScore").default(0), // 0-100 score based on specialist reviews
+  reportsCompleted: int("reportsCompleted").default(0).notNull(),
+  averageTurnaroundHours: int("averageTurnaroundHours").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AnalystAssignment = typeof analystAssignments.$inferSelect;
+export type InsertAnalystAssignment = typeof analystAssignments.$inferInsert;
+
+/**
+ * Courses table for regional training content
+ * Monetized training courses specific to each region
+ */
+export const courses = mysqlTable("courses", {
+  id: int("id").autoincrement().primaryKey(),
+  regionId: int("regionId").notNull(), // Links to regions table
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  framework: varchar("framework", { length: 100 }), // EU AI Act, NIST AI RMF, etc.
+  level: mysqlEnum("level", ["fundamentals", "advanced", "specialist"]).notNull(),
+  durationHours: int("durationHours").notNull(),
+  price: int("price").notNull(), // Price in cents (e.g., 9900 = $99.00)
+  stripePriceId: varchar("stripePriceId", { length: 255 }), // Stripe Price ID for payments
+  modules: json("modules").$type<Array<{
+    title: string;
+    description: string;
+    durationMinutes: number;
+    content: string;
+  }>>(),
+  prerequisites: json("prerequisites").$type<number[]>(), // Array of course IDs
+  certificationRequired: boolean("certificationRequired").default(false).notNull(),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Course = typeof courses.$inferSelect;
+export type InsertCourse = typeof courses.$inferInsert;
+
+/**
+ * Course enrollments table
+ * Tracks user enrollment and completion of courses
+ */
+export const courseEnrollments = mysqlTable("course_enrollments", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseId: int("courseId").notNull(),
+  status: mysqlEnum("status", ["enrolled", "in_progress", "completed", "failed"]).default("enrolled").notNull(),
+  progress: int("progress").default(0).notNull(), // 0-100 percentage
+  enrolledAt: timestamp("enrolledAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  score: int("score"), // Final exam score (0-100)
+  certificateIssued: boolean("certificateIssued").default(false).notNull(),
+  // Payment tracking
+  paidAmount: int("paidAmount").default(0).notNull(), // Amount paid in cents
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  // Referral tracking for affiliate commissions
+  referredBySpecialistId: int("referredBySpecialistId"), // Links to specialists table
+  commissionPaid: boolean("commissionPaid").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CourseEnrollment = typeof courseEnrollments.$inferSelect;
+export type InsertCourseEnrollment = typeof courseEnrollments.$inferInsert;
+
+/**
+ * Course bundles table
+ * Discounted packages of multiple courses
+ */
+export const courseBundles = mysqlTable("course_bundles", {
+  id: int("id").autoincrement().primaryKey(),
+  regionId: int("regionId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(), // e.g., "EU Compliance Bundle"
+  description: text("description"),
+  courseIds: json("courseIds").$type<number[]>().notNull(), // Array of course IDs
+  regularPrice: int("regularPrice").notNull(), // Sum of individual course prices
+  bundlePrice: int("bundlePrice").notNull(), // Discounted price
+  savings: int("savings").notNull(), // regularPrice - bundlePrice
+  stripePriceId: varchar("stripePriceId", { length: 255 }),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CourseBundle = typeof courseBundles.$inferSelect;
+export type InsertCourseBundle = typeof courseBundles.$inferInsert;
+
+/**
+ * Report assignments table
+ * Tracks which specialist assigned which report to which analyst
+ */
+export const reportAssignments = mysqlTable("report_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  reportId: int("reportId").notNull(), // Links to watchdogReports table
+  analystId: int("analystId").notNull(), // Links to users table
+  specialistId: int("specialistId").notNull(), // Links to specialists table
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+  dueAt: timestamp("dueAt").notNull(), // SLA: 4 hours from assignment
+  completedAt: timestamp("completedAt"),
+  status: mysqlEnum("status", ["assigned", "in_progress", "completed", "escalated"]).default("assigned").notNull(),
+  // Quality review by specialist
+  reviewedAt: timestamp("reviewedAt"),
+  qualityScore: int("qualityScore"), // 0-100 score
+  specialistFeedback: text("specialistFeedback"),
+  // Escalation
+  escalated: boolean("escalated").default(false).notNull(),
+  escalationReason: text("escalationReason"),
+  escalatedTo: mysqlEnum("escalatedTo", ["regional_specialist", "council"]),
+  // Earnings
+  paymentAmount: int("paymentAmount"), // Amount paid to analyst in cents
+  paymentStatus: mysqlEnum("paymentStatus", ["pending", "paid"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ReportAssignment = typeof reportAssignments.$inferSelect;
+export type InsertReportAssignment = typeof reportAssignments.$inferInsert;
+
+/**
+ * Specialist earnings table
+ * Tracks specialist compensation (salary + commissions)
+ */
+export const specialistEarnings = mysqlTable("specialist_earnings", {
+  id: int("id").autoincrement().primaryKey(),
+  specialistId: int("specialistId").notNull(),
+  period: varchar("period", { length: 20 }).notNull(), // e.g., "2024-01" for monthly
+  baseSalary: int("baseSalary").notNull(), // Monthly base in cents
+  analystCommissions: int("analystCommissions").default(0).notNull(), // Earnings from analyst work
+  courseCommissions: int("courseCommissions").default(0).notNull(), // Earnings from course sales
+  performanceBonus: int("performanceBonus").default(0).notNull(),
+  totalEarnings: int("totalEarnings").notNull(), // Sum of all above
+  paidAt: timestamp("paidAt"),
+  paymentStatus: mysqlEnum("paymentStatus", ["pending", "processing", "paid"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SpecialistEarning = typeof specialistEarnings.$inferSelect;
+export type InsertSpecialistEarning = typeof specialistEarnings.$inferInsert;
