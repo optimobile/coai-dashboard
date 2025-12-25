@@ -42,6 +42,10 @@ export const modulePopulationRouter = router({
         };
 
         // Get NIST course by framework
+        console.log('Searching for NIST course...');
+        const allCourses = await ctx.db.select({ id: courses.id, title: courses.title, framework: courses.framework }).from(courses);
+        console.log('All courses:', JSON.stringify(allCourses, null, 2));
+        
         const [nistCourse] = await ctx.db.select().from(courses).where(eq(courses.framework, 'NIST AI RMF'));
         if (!nistCourse) {
           throw new Error('NIST course not found');
@@ -80,10 +84,13 @@ export const modulePopulationRouter = router({
           .where(eq(courses.id, nistCourse.id));
 
         // Get ISO course by framework
-        const [isoCourse] = await ctx.db.select().from(courses).where(eq(courses.framework, 'ISO/IEC 42001'));
+        console.log('Searching for ISO course with framework: iso_42001');
+        const [isoCourse] = await ctx.db.select().from(courses).where(eq(courses.framework, 'iso_42001'));
+        
+        let isoModulesCount = 0;
         if (!isoCourse) {
-          throw new Error('ISO 42001 course not found');
-        }
+          console.log('ISO 42001 course not found - skipping ISO population');
+        } else {
 
         // Create or update ISO modules
         const isoModuleDefinitions = [
@@ -116,6 +123,9 @@ export const modulePopulationRouter = router({
             updatedAt: new Date()
           })
           .where(eq(courses.id, isoCourse.id));
+        
+        isoModulesCount = updatedIsoModules.length;
+        }
 
         return {
           success: true,
