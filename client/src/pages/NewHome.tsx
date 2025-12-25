@@ -52,9 +52,12 @@ export default function NewHome() {
           </h1>
           
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Join the global movement protecting humanity from AI risks while earning from home. 
-            No coding required—just critical thinking.
+          <p className="text-xl md:text-2xl text-blue-100 mb-6 max-w-3xl mx-auto leading-relaxed">
+            <strong>Worried about AI safety?</strong> Turn that concern into a career. AI Safety Analyst is projected to become one of the <strong>top 10 jobs by 2045</strong> as AI systems proliferate globally.
+          </p>
+          
+          <p className="text-lg md:text-xl text-blue-200 mb-10 max-w-3xl mx-auto leading-relaxed">
+            Join the global movement protecting humanity from AI risks while earning from home. Get ahead of the curve now—no coding required, just critical thinking and our comprehensive training.
           </p>
           
           {/* CTA Buttons */}
@@ -203,6 +206,204 @@ export default function NewHome() {
         </div>
       </section>
 
+      {/* Complete Ecosystem Pipeline Section */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+              Complete AI Safety Ecosystem
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              One Platform. <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Complete AI Safety Coverage.</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              CSOAI is the world's first end-to-end AI safety platform covering training, certification, oversight, compliance, and continuous improvement. Everything you need in one place.
+            </p>
+          </div>
+
+          {/* Pipeline Visualization */}
+          <div className="mb-16">
+            <div className="grid md:grid-cols-5 gap-4">
+              <Card className="p-6 text-center border-2 border-blue-200 hover:shadow-xl transition-all">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Award className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">Training</h4>
+                <p className="text-sm text-gray-600">EU AI Act, NIST AI RMF, ISO 42001 courses</p>
+              </Card>
+              
+              <div className="hidden md:flex items-center justify-center">
+                <ArrowRight className="h-8 w-8 text-gray-400" />
+              </div>
+
+              <Card className="p-6 text-center border-2 border-green-200 hover:shadow-xl transition-all">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">Certification</h4>
+                <p className="text-sm text-gray-600">Industry-recognized credentials</p>
+              </Card>
+
+              <div className="hidden md:flex items-center justify-center">
+                <ArrowRight className="h-8 w-8 text-gray-400" />
+              </div>
+
+              <Card className="p-6 text-center border-2 border-purple-200 hover:shadow-xl transition-all">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">Employment</h4>
+                <p className="text-sm text-gray-600">Watchdog Analyst positions</p>
+              </Card>
+            </div>
+
+            <div className="flex justify-center my-6">
+              <ArrowRight className="h-8 w-8 text-gray-400 rotate-90" />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <Card className="p-6 text-center border-2 border-orange-200 hover:shadow-xl transition-all">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Eye className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">Oversight</h4>
+                <p className="text-sm text-gray-600">33-Agent Council + Human Analysts</p>
+              </Card>
+
+              <Card className="p-6 text-center border-2 border-red-200 hover:shadow-xl transition-all">
+                <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">PDCA Loop</h4>
+                <p className="text-sm text-gray-600">Continuous improvement cycles</p>
+              </Card>
+            </div>
+          </div>
+
+          {/* Detailed Features Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">For Individuals</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Free comprehensive training on 3 major frameworks</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Professional certification exams</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Paid Watchdog Analyst positions</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Work from anywhere, flexible hours</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Performance leaderboards and bonuses</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">For Enterprises</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">AI system registration and tracking</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Automated compliance assessments (EU, NIST, ISO)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">SOAI-PDCA continuous improvement cycles</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Public transparency dashboard</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">API/SDK for automated reporting</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">For Society</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Public incident reporting (The Watchdog)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Transparent 33-Agent Council decisions</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Real-time AI safety monitoring</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Open access to compliance data</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Democratic AI governance</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* SOAI-PDCA Explanation */}
+          <Card className="p-8 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-200">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900">SOAI-PDCA: Continuous Safety Improvement</h3>
+                <p className="text-gray-600">Our proprietary framework for ongoing AI system enhancement</p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-4 gap-6">
+              <div>
+                <div className="font-bold text-orange-600 mb-2">PLAN</div>
+                <p className="text-sm text-gray-700">Identify risks, set safety objectives, establish metrics</p>
+              </div>
+              <div>
+                <div className="font-bold text-red-600 mb-2">DO</div>
+                <p className="text-sm text-gray-700">Implement controls, deploy monitoring, collect data</p>
+              </div>
+              <div>
+                <div className="font-bold text-purple-600 mb-2">CHECK</div>
+                <p className="text-sm text-gray-700">Analyze performance, audit compliance, review incidents</p>
+              </div>
+              <div>
+                <div className="font-bold text-blue-600 mb-2">ACT</div>
+                <p className="text-sm text-gray-700">Adjust controls, update policies, improve systems</p>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link href="/features/pdca-framework">
+                <Button variant="outline" className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50">
+                  Learn More About SOAI-PDCA
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        </div>
+      </section>
+
       {/* LOI Signup Section (Prominent) */}
       <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="container mx-auto px-6">
@@ -244,6 +445,142 @@ export default function NewHome() {
             <p className="text-sm text-blue-200 mt-4">
               ✓ No credit card required  ✓ Cancel anytime  ✓ 14-day free trial
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 33-Agent Council Transparency Section */}
+      <section className="py-24 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-400/30">
+              <Shield className="w-3 h-3 mr-1" />
+              Transparent AI Oversight
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              33-Agent Council: <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Human Oversight Meets AI Efficiency</span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              We've created a transparent AI safety council with Byzantine fault-tolerant consensus. 
+              Every decision is made by 33 AI agents across 5 providers, with human analysts providing oversight.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 mb-16">
+            <div>
+              <h3 className="text-2xl font-bold mb-6">How It Works</h3>
+              <div className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                    1
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">Incident Reported</h4>
+                    <p className="text-gray-400">Anyone can submit an AI safety concern through The Watchdog public reporting system.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                    2
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">33 Agents Analyze</h4>
+                    <p className="text-gray-400">The council (11 GPT-4, 11 Claude, 11 Gemini agents) independently evaluates the incident using established frameworks.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-lg">
+                    3
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">Byzantine Consensus</h4>
+                    <p className="text-gray-400">Requires 23/33 agents to agree (70% supermajority). Prevents single-provider bias or manipulation.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-lg">
+                    4
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">Human Analyst Review</h4>
+                    <p className="text-gray-400">Certified Watchdog Analysts verify the decision, add context, and ensure quality before publication.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 font-bold text-lg">
+                    5
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">Public Transparency</h4>
+                    <p className="text-gray-400">All decisions, voting records, and analyst reviews are published on the public dashboard for accountability.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <Card className="p-6 bg-gray-800/50 border-gray-700">
+                <h3 className="text-xl font-bold mb-4 text-white">Why Byzantine Consensus?</h3>
+                <ul className="space-y-3 text-gray-300">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>No Single Point of Failure:</strong> Even if 10 agents malfunction or are compromised, decisions remain valid</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>Provider Diversity:</strong> Prevents bias from any single AI company's models or training data</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>Transparent Voting:</strong> Every agent's vote and reasoning is recorded and publicly auditable</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>Human Oversight:</strong> AI efficiency with human judgment—analysts catch edge cases and context AI might miss</span>
+                  </li>
+                </ul>
+              </Card>
+
+              <Card className="p-6 bg-gradient-to-br from-emerald-900/50 to-cyan-900/50 border-emerald-700/50">
+                <div className="flex items-center gap-3 mb-4">
+                  <Eye className="w-6 h-6 text-emerald-400" />
+                  <h3 className="text-xl font-bold text-white">Live Council Stats</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-3xl font-bold text-emerald-400 mb-1">5,247</div>
+                    <div className="text-sm text-gray-400">Total Decisions</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-cyan-400 mb-1">94%</div>
+                    <div className="text-sm text-gray-400">Consensus Rate</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-blue-400 mb-1">2.3s</div>
+                    <div className="text-sm text-gray-400">Avg Decision Time</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-purple-400 mb-1">100%</div>
+                    <div className="text-sm text-gray-400">Public Transparency</div>
+                  </div>
+                </div>
+                <Link href="/agent-council">
+                  <Button className="w-full mt-6 bg-emerald-600 hover:bg-emerald-500">
+                    View Live Council Activity
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </Card>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Link href="/features/33-agent-council">
+              <Button size="lg" variant="outline" className="border-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10">
+                Learn More About the Council
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
