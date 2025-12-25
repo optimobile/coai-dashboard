@@ -36,6 +36,13 @@
       "when": 1766643531529,
       "tag": "0004_premium_skrulls",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1766647169475,
+      "tag": "0005_graceful_sphinx",
+      "breakpoints": true
     }
   ]
 }

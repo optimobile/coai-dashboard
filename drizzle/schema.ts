@@ -622,8 +622,15 @@ export const courses = mysqlTable("courses", {
   framework: varchar("framework", { length: 100 }), // EU AI Act, NIST AI RMF, etc.
   level: mysqlEnum("level", ["fundamentals", "advanced", "specialist"]).notNull(),
   durationHours: int("durationHours").notNull(),
-  price: int("price").notNull(), // Price in cents (e.g., 9900 = $99.00)
-  stripePriceId: varchar("stripePriceId", { length: 255 }), // Stripe Price ID for payments
+  price: int("price").notNull(), // One-time price in cents (e.g., 9900 = $99.00)
+  stripePriceId: varchar("stripePriceId", { length: 255 }), // Stripe Price ID for one-time payment
+  // Payment plan pricing
+  price3Month: int("price3Month"), // 3-month plan total price
+  price6Month: int("price6Month"), // 6-month plan total price
+  price12Month: int("price12Month"), // 12-month plan total price
+  stripePriceId3Month: varchar("stripePriceId3Month", { length: 255 }),
+  stripePriceId6Month: varchar("stripePriceId6Month", { length: 255 }),
+  stripePriceId12Month: varchar("stripePriceId12Month", { length: 255 }),
   modules: json("modules").$type<Array<{
     title: string;
     description: string;
@@ -655,8 +662,11 @@ export const courseEnrollments = mysqlTable("course_enrollments", {
   score: int("score"), // Final exam score (0-100)
   certificateIssued: boolean("certificateIssued").default(false).notNull(),
   // Payment tracking
+  paymentType: mysqlEnum("paymentType", ["one_time", "3_month", "6_month", "12_month"]).default("one_time").notNull(),
   paidAmount: int("paidAmount").default(0).notNull(), // Amount paid in cents
   stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }),
+  subscriptionStatus: mysqlEnum("subscriptionStatus", ["active", "cancelled", "past_due", "none"]).default("none").notNull(),
   // Referral tracking for affiliate commissions
   referredBySpecialistId: int("referredBySpecialistId"), // Links to specialists table
   commissionPaid: boolean("commissionPaid").default(false).notNull(),
@@ -678,9 +688,16 @@ export const courseBundles = mysqlTable("course_bundles", {
   description: text("description"),
   courseIds: json("courseIds").$type<number[]>().notNull(), // Array of course IDs
   regularPrice: int("regularPrice").notNull(), // Sum of individual course prices
-  bundlePrice: int("bundlePrice").notNull(), // Discounted price
+  bundlePrice: int("bundlePrice").notNull(), // Discounted one-time price
   savings: int("savings").notNull(), // regularPrice - bundlePrice
   stripePriceId: varchar("stripePriceId", { length: 255 }),
+  // Payment plan pricing for bundles
+  bundlePrice3Month: int("bundlePrice3Month"),
+  bundlePrice6Month: int("bundlePrice6Month"),
+  bundlePrice12Month: int("bundlePrice12Month"),
+  stripePriceId3Month: varchar("stripePriceId3Month", { length: 255 }),
+  stripePriceId6Month: varchar("stripePriceId6Month", { length: 255 }),
+  stripePriceId12Month: varchar("stripePriceId12Month", { length: 255 }),
   active: boolean("active").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

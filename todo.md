@@ -1184,3 +1184,112 @@
 - [ ] Test payment processing
 - [ ] Test subscription cancellation
 - [ ] Verify webhook handling
+
+
+## Phase 30 - Training Certification Business Model Integration
+
+### Database Schema Extensions
+- [x] Review existing training_modules, courses, course_bundles tables
+- [x] Add payment plan pricing fields directly to courses table (price3Month, price6Month, price12Month)
+- [x] Add Stripe price IDs for each payment plan to courses table
+- [x] Update course_enrollments with paymentType, stripeSubscriptionId, subscriptionStatus
+- [x] Add payment plan pricing fields to course_bundles table
+- [x] Run ALTER TABLE commands to apply schema changes
+
+### Backend APIs - Courses Router
+- [x] Create server/courses.ts router
+- [x] Add getCatalog endpoint (returns all courses with pricing by region)
+- [x] Add getCourseDetails endpoint (full course info with modules, pricing, reviews)
+- [x] Add getCourseBundles endpoint (returns bundles with savings calculations)
+- [x] Add enrollInCourse endpoint (creates enrollment + Stripe subscription if payment plan)
+- [x] Add getMyEnrollments endpoint (user's active/completed courses)
+- [x] Add cancelEnrollment endpoint (cancels Stripe subscription)
+- [x] Add getCourseProgress endpoint (completion percentage, modules completed)
+- [x] Add generateCourseCertificate endpoint (PDF generation for completed courses)
+- [x] Export courses router in server/routers.ts
+- [x] Write comprehensive unit tests (15 tests passing)
+
+### Stripe Integration
+- [x] Review existing Stripe integration in server/stripe/stripeService.ts
+- [x] Extend webhook handler to detect course enrollment payments
+- [x] Add webhook logic for course subscription.created (via checkout.session.completed)
+- [x] Add webhook logic for course subscription.updated
+- [x] Add webhook logic for course subscription.deleted
+- [x] Update enrollment records with payment details from webhooks
+- [ ] Create Stripe products for all courses (manual Stripe dashboard setup)
+- [ ] Create Stripe prices for each payment plan (manual Stripe dashboard setup)
+- [ ] Add webhook handler for invoice.payment_succeeded
+- [ ] Add webhook handler for invoice.payment_failed
+- [ ] Update enrollment status based on webhook events
+
+### Frontend UI - Course Catalog
+- [x] Create client/src/pages/Courses.tsx for course catalog (separate from Training)
+- [x] Add course grid with cards (title, price, level, duration)
+- [x] Add filter by region dropdown
+- [x] Add filter by level (fundamentals, advanced, specialist)
+- [x] Add filter by framework (EU AI Act, NIST, ISO)
+- [x] Add payment plan selector with 4 options (one-time, 3/6/12 month)
+- [x] Add "Enroll Now" button that creates Stripe Checkout
+
+### Frontend UI - Course Details Modal
+- [ ] Create CourseDetailsModal component
+- [ ] Show course description, learning objectives, curriculum outline
+- [ ] Display pricing options with payment plan selector
+- [ ] Add "Enroll Now" button that opens Stripe Checkout
+- [ ] Show student reviews and ratings
+- [ ] Display instructor information
+- [ ] Show prerequisites and certification info
+
+### Frontend UI - Payment Plan Selector
+- [ ] Create PaymentPlanSelector component
+- [ ] Show 4 options: Pay in Full (5% discount), 3-month, 6-month, 12-month
+- [ ] Highlight recommended option (6-month most popular)
+- [ ] Show monthly payment amount and total cost
+- [ ] Display savings for pay-in-full option
+- [ ] Add tooltip explaining payment plan benefits
+
+### Frontend UI - My Courses Page
+- [x] Create MyCourses page at /my-courses route
+- [x] Show enrolled courses with progress bars
+- [x] Display enrollment date and payment info
+- [x] Add "Continue Learning" button
+- [x] Show completed courses with certificate download
+- [x] Display subscription status (active/cancelled/past_due)
+- [x] Add "Cancel Subscription" button with confirmation
+
+### Frontend UI - Course Player
+- [ ] Update Training page to show module content when enrolled
+- [ ] Add video player for lesson videos
+- [ ] Add markdown rendering for lesson text
+- [ ] Add quiz component for module quizzes
+- [ ] Track module completion automatically
+- [ ] Show progress indicator
+- [ ] Add "Next Module" navigation
+
+### Certificate Generation
+- [ ] Create courseCertificateGenerator.ts module
+- [ ] Use pdfkit to generate professional certificates
+- [ ] Include COAI branding and logo
+- [ ] Add student name, course title, completion date
+- [ ] Generate unique certificate number (format: COAI-CERT-XXXXXX)
+- [ ] Add QR code for verification
+- [ ] Store certificate PDF in S3
+- [ ] Save certificate record in database
+
+### Testing
+- [ ] Write tests for courses router (getCatalog, enrollInCourse, etc.)
+- [ ] Test Stripe webhook handling
+- [ ] Test course enrollment flow end-to-end
+- [ ] Test payment plan selection and subscription creation
+- [ ] Test certificate generation
+- [ ] Test subscription cancellation
+- [ ] Verify enrollment status updates correctly
+- [ ] Test course progress tracking
+
+### Seeding Sample Data
+- [ ] Update existing 5 training modules with full content
+- [ ] Add 10 more courses to reach 15 total courses
+- [ ] Seed course_pricing for all courses across 5 regions
+- [ ] Create 5 course bundles (Foundation, EU Bundle, US Bundle, Professional, Expert)
+- [ ] Add sample course reviews and ratings
+- [ ] Create sample enrollments for testing

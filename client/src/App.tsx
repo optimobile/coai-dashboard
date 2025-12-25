@@ -16,6 +16,8 @@ import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import WatchdogSignup from "./pages/WatchdogSignup";
 import Training from "./pages/Training";
+import Courses from "./pages/Courses";
+import MyCourses from "./pages/MyCourses";
 import Certification from "./pages/Certification";
 import CertificationExam from "./pages/CertificationExam";
 import CertificationResults from "./pages/CertificationResults";
@@ -65,6 +67,8 @@ function Router() {
       <Route path="/settings/billing" component={Billing} />
       <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/training" component={Training} />
+      <Route path="/courses" component={Courses} />
+      <Route path="/my-courses" component={MyCourses} />
       <Route path="/certification" component={Certification} />
       <Route path="/certification/exam" component={CertificationExam} />
       <Route path="/certification/results" component={CertificationResults} />

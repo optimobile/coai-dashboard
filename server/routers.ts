@@ -33,6 +33,7 @@ import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 import { publicApiRouter } from "./publicApi";
 import { recommendationsRouter } from "./recommendations";
+import { coursesRouter } from "./courses";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2769,6 +2770,7 @@ export const appRouter = router({
   publicApi: publicApiRouter,
   regulator: regulatorRouter,
   recommendations: recommendationsRouter,
+  courses: coursesRouter,
 });
 
 export type AppRouter = typeof appRouter;

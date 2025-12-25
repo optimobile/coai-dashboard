@@ -6,7 +6,7 @@
 import type { Request, Response } from "express";
 import Stripe from "stripe";
 import { getDb } from "../db";
-import { users } from "../../drizzle/schema";
+import { users, courseEnrollments } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { mapSubscriptionStatus, getTierFromPriceId } from "./stripeService";
 
@@ -90,18 +90,49 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return;
   }
 
-  const customerId = session.customer as string;
-  const subscriptionId = session.subscription as string;
-  const tier = (session.metadata?.tier as "pro" | "enterprise") || "pro";
-
-  console.log(`[Stripe Webhook] Checkout completed for user ${userId}, tier: ${tier}`);
-
-  // Update user with Stripe IDs and subscription info
   const db = await getDb();
   if (!db) {
     console.error("[Stripe Webhook] Database not available");
     return;
   }
+
+  const customerId = session.customer as string;
+  const subscriptionId = session.subscription as string;
+  const courseId = session.metadata?.courseId;
+  const paymentType = session.metadata?.paymentType;
+
+  // Check if this is a course enrollment payment
+  if (courseId && paymentType) {
+    console.log(`[Stripe Webhook] Course enrollment checkout completed for user ${userId}, course: ${courseId}, paymentType: ${paymentType}`);
+
+    // Find the enrollment record
+    const [enrollment] = await db
+      .select()
+      .from(courseEnrollments)
+      .where(eq(courseEnrollments.stripePaymentIntentId, session.id))
+      .limit(1);
+
+    if (enrollment) {
+      // Update enrollment with payment details
+      await db.update(courseEnrollments)
+        .set({
+          paidAmount: session.amount_total || 0,
+          stripeSubscriptionId: subscriptionId || null,
+          subscriptionStatus: subscriptionId ? "active" : "none",
+          status: "in_progress",
+        })
+        .where(eq(courseEnrollments.id, enrollment.id));
+
+      console.log(`[Stripe Webhook] Updated enrollment ${enrollment.id} with payment details`);
+    }
+    return;
+  }
+
+  // Otherwise, this is a platform subscription
+  const tier = (session.metadata?.tier as "pro" | "enterprise") || "pro";
+  console.log(`[Stripe Webhook] Platform subscription checkout completed for user ${userId}, tier: ${tier}`);
+
+  // Update user with Stripe IDs and subscription info
   await db.update(users)
     .set({
       stripeCustomerId: customerId,
@@ -120,17 +151,43 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     return;
   }
 
-  const status = mapSubscriptionStatus(subscription.status);
-  const priceId = subscription.items.data[0]?.price?.id || "";
-  const tier = getTierFromPriceId(priceId);
-
-  console.log(`[Stripe Webhook] Subscription updated for user ${userId}: ${status}, tier: ${tier}`);
-
   const db = await getDb();
   if (!db) {
     console.error("[Stripe Webhook] Database not available");
     return;
   }
+
+  // Check if this is a course enrollment subscription
+  const [enrollment] = await db
+    .select()
+    .from(courseEnrollments)
+    .where(eq(courseEnrollments.stripeSubscriptionId, subscription.id))
+    .limit(1);
+
+  if (enrollment) {
+    // Update course enrollment subscription status
+    const status = subscription.status === "active" ? "active" : 
+                   subscription.status === "canceled" ? "cancelled" :
+                   subscription.status === "past_due" ? "past_due" : "none";
+
+    console.log(`[Stripe Webhook] Course subscription updated for enrollment ${enrollment.id}: ${status}`);
+
+    await db.update(courseEnrollments)
+      .set({
+        subscriptionStatus: status,
+        status: status === "active" ? "in_progress" : "failed",
+      })
+      .where(eq(courseEnrollments.id, enrollment.id));
+    return;
+  }
+
+  // Otherwise, this is a platform subscription
+  const status = mapSubscriptionStatus(subscription.status);
+  const priceId = subscription.items.data[0]?.price?.id || "";
+  const tier = getTierFromPriceId(priceId);
+
+  console.log(`[Stripe Webhook] Platform subscription updated for user ${userId}: ${status}, tier: ${tier}`);
+
   await db.update(users)
     .set({
       stripeSubscriptionId: subscription.id,
@@ -148,13 +205,34 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
     return;
   }
 
-  console.log(`[Stripe Webhook] Subscription canceled for user ${userId}`);
-
   const db = await getDb();
   if (!db) {
     console.error("[Stripe Webhook] Database not available");
     return;
   }
+
+  // Check if this is a course enrollment subscription
+  const [enrollment] = await db
+    .select()
+    .from(courseEnrollments)
+    .where(eq(courseEnrollments.stripeSubscriptionId, subscription.id))
+    .limit(1);
+
+  if (enrollment) {
+    console.log(`[Stripe Webhook] Course subscription canceled for enrollment ${enrollment.id}`);
+
+    await db.update(courseEnrollments)
+      .set({
+        subscriptionStatus: "cancelled",
+        status: "failed",
+      })
+      .where(eq(courseEnrollments.id, enrollment.id));
+    return;
+  }
+
+  // Otherwise, this is a platform subscription
+  console.log(`[Stripe Webhook] Platform subscription canceled for user ${userId}`);
+
   await db.update(users)
     .set({
       subscriptionTier: "free",
