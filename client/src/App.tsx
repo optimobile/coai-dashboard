@@ -37,12 +37,14 @@ import WatchdogLeaderboard from "./pages/WatchdogLeaderboard";
 import RegulatorDashboard from "./pages/RegulatorDashboard";
 import Blog from "./pages/Blog";
 import Recommendations from "./pages/Recommendations";
+import MarketingHome from "./pages/MarketingHome";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       {/* Main routes */}
-     <Route path={"/"} component={Home} />
+      <Route path="/marketing" component={MarketingHome} />
+      <Route path={"/"} component={Home} />
       <Route path="/landing" component={Landing} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/ai-systems" component={AISystems} />

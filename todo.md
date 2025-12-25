@@ -658,3 +658,42 @@
 - [ ] SEO content calendar (52 blog posts/year)
 - [ ] Partnership outreach (compliance firms, law firms)
 - [ ] Press release distribution
+
+
+## Phase 18 - Marketing Website (proof.ai Standard)
+
+### Visual Assets
+- [x] Generate hero background image (abstract AI/network theme)
+- [x] Generate feature icons/illustrations (council, watchdog, PDCA)
+- [ ] Create product screenshots from dashboard
+- [ ] Design logo variations (light/dark mode)
+
+### Landing Page Structure
+- [x] Hero section with animated background
+- [x] Value proposition headline
+- [x] CTA buttons (Start Free Trial, Book Demo)
+- [x] Social proof (user count, companies)
+- [x] Features showcase (6 key features)
+- [x] Demo video section (placeholder + real video later)
+- [x] Pricing comparison table
+- [x] LOI signup form (prominent)
+- [ ] Customer testimonials
+- [x] FAQ section
+- [x] Footer with links
+
+### Pages
+- [x] Home/Landing page (MarketingHome.tsx at /marketing)
+- [x] Pricing page (integrated in landing)
+- [ ] Features page
+- [ ] About page
+- [x] Blog index page (Blog.tsx)
+- [ ] Contact page
+
+### Technical
+- [x] Responsive design (mobile-first)
+- [x] Page load time <2 seconds
+- [x] SEO meta tags (in index.html)
+- [x] Open Graph tags (in index.html)
+- [ ] Analytics integration
+- [x] Form validation
+- [ ] Email integration for LOI signups (needs backend)
