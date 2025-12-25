@@ -1544,3 +1544,64 @@
 - [ ] Verify learning objectives alignment
 - [ ] Test quiz questions (when implemented)
 - [ ] Save final checkpoint
+
+
+## Phase 33 - Course Player UI & Stripe Integration
+
+### Database Population
+- [ ] Read all 8 module markdown files
+- [ ] Create course insertion script with proper JSON structure
+- [ ] Insert EU AI Act Fundamentals course into courses table
+- [ ] Verify course appears in /courses catalog
+- [ ] Test course details page
+
+### Stripe Product Setup
+- [ ] Create "EU AI Act Fundamentals" product in Stripe Dashboard
+- [ ] Create price for one-time payment (€499)
+- [ ] Create price for 3-month plan (€199/month)
+- [ ] Create price for 6-month plan (€99/month)
+- [ ] Create price for 12-month plan (€59/month)
+- [ ] Copy all price IDs from Stripe Dashboard
+- [ ] Update course record with Stripe price IDs
+- [ ] Test Stripe Checkout with each payment plan
+
+### Course Player UI
+- [ ] Create CoursePlayer.tsx page component
+- [ ] Add route /courses/:courseId/learn to App.tsx
+- [ ] Build module navigation sidebar
+- [ ] Create module content display with markdown rendering
+- [ ] Add "Mark as Complete" button for each module
+- [ ] Show progress indicator (X of 8 modules completed)
+- [ ] Add "Previous" and "Next" module navigation
+
+### Progress Tracking
+- [ ] Create course_progress table in schema (if not exists)
+- [ ] Create module_completions table in schema
+- [ ] Add markModuleComplete endpoint in courses router
+- [ ] Add getCourseProgress endpoint
+- [ ] Update frontend to call progress endpoints
+- [ ] Show completion checkmarks on completed modules
+- [ ] Calculate overall course completion percentage
+
+### Quiz System
+- [ ] Create module quiz questions (5-10 per module)
+- [ ] Add quiz component to course player
+- [ ] Implement quiz submission and grading
+- [ ] Require 70% to pass each module quiz
+- [ ] Block next module until current quiz passed
+- [ ] Store quiz attempts in database
+
+### Certificate Generation
+- [ ] Add generateCourseCertificate endpoint (already exists)
+- [ ] Create certificate template for course completion
+- [ ] Show "Download Certificate" button when 100% complete
+- [ ] Generate PDF with student name, course title, completion date
+- [ ] Store certificate in course_certificates table
+- [ ] Add certificate to MyCourses page
+
+### Testing & Integration
+- [ ] Test complete flow: enroll → learn → quiz → certificate
+- [ ] Verify Stripe webhook updates enrollment status
+- [ ] Test all 4 payment plans end-to-end
+- [ ] Write unit tests for new endpoints
+- [ ] Save checkpoint with working course player

@@ -371,6 +371,65 @@ export const coursesRouter = router({
     }),
 
   /**
+   * Mark module as complete
+   */
+  markModuleComplete: protectedProcedure
+    .input(
+      z.object({
+        enrollmentId: z.number(),
+        moduleIndex: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const userId = ctx.user.id;
+
+      // Verify enrollment belongs to user
+      const [enrollment] = await db
+        .select()
+        .from(courseEnrollments)
+        .where(
+          and(
+            eq(courseEnrollments.id, input.enrollmentId),
+            eq(courseEnrollments.userId, userId)
+          )
+        );
+
+      if (!enrollment) {
+        throw new Error("Enrollment not found");
+      }
+
+      // Get course to calculate progress percentage
+      const [course] = await db
+        .select()
+        .from(courses)
+        .where(eq(courses.id, enrollment.courseId));
+
+      if (!course || !course.modules) {
+        throw new Error("Course not found");
+      }
+
+      const totalModules = (course.modules as any[]).length;
+      const completedModules = input.moduleIndex + 1; // Assuming sequential completion
+      const progressPercentage = Math.round((completedModules / totalModules) * 100);
+
+      // Update progress
+      await db
+        .update(courseEnrollments)
+        .set({
+          progress: progressPercentage,
+          status: progressPercentage === 100 ? "completed" : "in_progress",
+          completedAt: progressPercentage === 100 ? new Date() : null,
+          updatedAt: new Date(),
+        })
+        .where(eq(courseEnrollments.id, input.enrollmentId));
+
+      return { success: true, progress: progressPercentage };
+    }),
+
+  /**
    * Get course progress
    */
   getCourseProgress: protectedProcedure

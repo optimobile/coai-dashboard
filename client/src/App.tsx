@@ -18,6 +18,7 @@ import WatchdogSignup from "./pages/WatchdogSignup";
 import Training from "./pages/Training";
 import Courses from "./pages/Courses";
 import MyCourses from "./pages/MyCourses";
+import CoursePlayer from "./pages/CoursePlayer";
 import Certification from "./pages/Certification";
 import CertificationExam from "./pages/CertificationExam";
 import CertificationResults from "./pages/CertificationResults";
@@ -69,6 +70,7 @@ function Router() {
       <Route path="/training" component={Training} />
       <Route path="/courses" component={Courses} />
       <Route path="/my-courses" component={MyCourses} />
+      <Route path="/courses/:id/learn" component={CoursePlayer} />
       <Route path="/certification" component={Certification} />
       <Route path="/certification/exam" component={CertificationExam} />
       <Route path="/certification/results" component={CertificationResults} />
