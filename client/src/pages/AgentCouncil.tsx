@@ -26,7 +26,7 @@ const agentGroups = [
     count: 11,
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
-    providers: ["OpenAI (4)", "Anthropic (4)", "Google (3)"],
+    providers: ["OpenAI (3)", "Anthropic (2)", "Google (2)", "Kimi (2)", "DeepSeek (2)"],
   },
   {
     name: "Arbiter Agents",
@@ -35,7 +35,7 @@ const agentGroups = [
     count: 11,
     color: "text-purple-500",
     bgColor: "bg-purple-500/10",
-    providers: ["OpenAI (4)", "Anthropic (4)", "Google (3)"],
+    providers: ["OpenAI (3)", "Anthropic (2)", "Google (2)", "Kimi (2)", "DeepSeek (2)"],
   },
   {
     name: "Scribe Agents",
@@ -44,7 +44,7 @@ const agentGroups = [
     count: 11,
     color: "text-emerald-500",
     bgColor: "bg-emerald-500/10",
-    providers: ["OpenAI (4)", "Anthropic (4)", "Google (3)"],
+    providers: ["OpenAI (3)", "Anthropic (2)", "Google (2)", "Kimi (2)", "DeepSeek (2)"],
   },
 ];
 

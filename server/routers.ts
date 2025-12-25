@@ -249,7 +249,7 @@ const councilRouter = router({
 
       // Define the 33 agents
       const agents = generateAgentCouncil();
-      const votes: { agentId: string; agentType: "guardian" | "arbiter" | "scribe"; agentProvider: "openai" | "anthropic" | "google"; vote: "approve" | "reject" | "escalate"; confidence: number; reasoning: string }[] = [];
+      const votes: { agentId: string; agentType: "guardian" | "arbiter" | "scribe"; agentProvider: "openai" | "anthropic" | "google" | "kimi" | "deepseek"; vote: "approve" | "reject" | "escalate"; confidence: number; reasoning: string }[] = [];
 
       // Simulate voting (in production, each would call different LLM endpoints)
       for (const agent of agents) {
@@ -296,7 +296,7 @@ Respond with JSON only: {"vote": "approve|reject|escalate", "confidence": 0.0-1.
             votes.push({
               agentId: agent.id,
               agentType: agent.type as "guardian" | "arbiter" | "scribe",
-              agentProvider: agent.provider as "openai" | "anthropic" | "google",
+              agentProvider: agent.provider as "openai" | "anthropic" | "google" | "kimi" | "deepseek",
               vote: parsed.vote,
               confidence: parsed.confidence,
               reasoning: parsed.reasoning
@@ -980,12 +980,13 @@ function generateAgentCouncil() {
   const agents: { id: string; name: string; type: string; provider: string }[] = [];
   
   const types = ["guardian", "arbiter", "scribe"];
-  const providers = ["openai", "anthropic", "google"];
+  // Expanded to 5 providers for greater diversity and Byzantine fault tolerance
+  const providers = ["openai", "anthropic", "google", "kimi", "deepseek"];
   
   let agentNum = 1;
   for (const type of types) {
     for (let i = 0; i < 11; i++) {
-      const provider = providers[i % 3];
+      const provider = providers[i % 5]; // Rotate through 5 providers
       agents.push({
         id: `agent_${agentNum}`,
         name: `${type.charAt(0).toUpperCase() + type.slice(1)} Agent ${i + 1}`,
@@ -996,7 +997,7 @@ function generateAgentCouncil() {
     }
   }
   
-  return agents;
+  return agents; // Still 33 agents, now distributed across 5 providers
 }
 
 // ============================================

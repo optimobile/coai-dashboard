@@ -198,7 +198,7 @@ export const agentVotes = mysqlTable("agent_votes", {
   sessionId: int("sessionId").notNull(),
   agentId: varchar("agentId", { length: 50 }).notNull(),
   agentType: mysqlEnum("agentType", ["guardian", "arbiter", "scribe"]).notNull(),
-  agentProvider: mysqlEnum("agentProvider", ["openai", "anthropic", "google"]).notNull(),
+  agentProvider: mysqlEnum("agentProvider", ["openai", "anthropic", "google", "kimi", "deepseek"]).notNull(),
   vote: mysqlEnum("vote", ["approve", "reject", "escalate"]).notNull(),
   confidence: decimal("confidence", { precision: 5, scale: 2 }),
   reasoning: text("reasoning"),
