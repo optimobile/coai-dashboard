@@ -1,11 +1,11 @@
 /**
  * Real-time 33-Agent Council Voting Visualization
- * Animated display of Byzantine consensus in action
+ * Displays actual voting data from the council API
  */
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Scale, FileText } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 type AgentType = "guardian" | "arbiter" | "scribe";
 type VoteStatus = "pending" | "approve" | "reject" | "escalate";
@@ -15,19 +15,35 @@ interface Agent {
   type: AgentType;
   vote: VoteStatus;
   confidence: number;
+  provider?: string;
 }
 
 interface CouncilVisualizationProps {
   autoAnimate?: boolean;
   showLabels?: boolean;
+  useLiveData?: boolean;
 }
 
 export default function CouncilVisualization({ 
   autoAnimate = true, 
-  showLabels = true 
+  showLabels = true,
+  useLiveData = true
 }: CouncilVisualizationProps) {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [voteCounts, setVoteCounts] = useState({ approve: 0, reject: 0, escalate: 0, pending: 33 });
+  const [sessionTitle, setSessionTitle] = useState<string>("");
+
+  // Fetch latest council session
+  const { data: sessions, isLoading } = trpc.council.list.useQuery(undefined, {
+    enabled: useLiveData,
+    refetchInterval: 10000, // Refresh every 10 seconds
+  });
+
+  const latestSession = sessions?.[0];
+  const { data: sessionData } = trpc.council.getSession.useQuery(
+    { id: latestSession?.id ?? 0 },
+    { enabled: !!latestSession && useLiveData }
+  );
 
   // Initialize 33 agents
   useEffect(() => {
@@ -40,9 +56,37 @@ export default function CouncilVisualization({
     setAgents(initialAgents);
   }, []);
 
-  // Simulate real-time voting animation
+  // Update agents with real vote data
   useEffect(() => {
-    if (!autoAnimate || agents.length === 0) return;
+    if (!useLiveData || !sessionData?.votes || sessionData.votes.length === 0) return;
+
+    setSessionTitle(sessionData.session.subjectTitle);
+
+    // Map votes to agents
+    const updatedAgents = agents.map((agent) => {
+      // Find vote for this agent (match by agentId)
+      const vote = sessionData.votes.find((v) => {
+        const agentNum = parseInt(v.agentId.replace("agent_", ""));
+        return agentNum === agent.id;
+      });
+
+      if (vote) {
+        return {
+          ...agent,
+          vote: vote.vote as VoteStatus,
+          confidence: parseFloat(vote.confidence || "0"),
+          provider: vote.agentProvider,
+        };
+      }
+      return agent;
+    });
+
+    setAgents(updatedAgents);
+  }, [sessionData, useLiveData]);
+
+  // Simulate voting animation (fallback when no live data)
+  useEffect(() => {
+    if (!autoAnimate || agents.length === 0 || (useLiveData && sessionData)) return;
 
     const interval = setInterval(() => {
       setAgents((prev) => {
@@ -68,7 +112,7 @@ export default function CouncilVisualization({
     }, 800); // Vote every 800ms
 
     return () => clearInterval(interval);
-  }, [autoAnimate, agents.length]);
+  }, [autoAnimate, agents.length, useLiveData, sessionData]);
 
   // Update vote counts
   useEffect(() => {
@@ -98,13 +142,18 @@ export default function CouncilVisualization({
     return "hsl(48, 96%, 53%)"; // yellow for escalate
   };
 
-  const getAgentIcon = (type: AgentType) => {
-    if (type === "guardian") return Shield;
-    if (type === "arbiter") return Scale;
-    return FileText;
-  };
-
   const consensus = voteCounts.approve >= 22 ? "approved" : voteCounts.reject >= 22 ? "rejected" : null;
+
+  if (isLoading && useLiveData) {
+    return (
+      <div className="relative w-full h-full min-h-[500px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading council data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-full min-h-[500px] flex items-center justify-center">
@@ -134,7 +183,6 @@ export default function CouncilVisualization({
         {/* Agent nodes */}
         {agents.map((agent, index) => {
           const { x, y } = getAgentPosition(index, agents.length);
-          const Icon = getAgentIcon(agent.type);
 
           return (
             <g key={agent.id}>
@@ -209,6 +257,15 @@ export default function CouncilVisualization({
           </text>
         </g>
       </svg>
+
+      {/* Session title (if live data) */}
+      {useLiveData && sessionTitle && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 max-w-md text-center">
+          <p className="text-xs text-muted-foreground bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full border">
+            {sessionTitle}
+          </p>
+        </div>
+      )}
 
       {/* Vote counts overlay */}
       {showLabels && (

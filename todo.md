@@ -720,3 +720,19 @@
 - [x] Test animation performance (smooth 800ms intervals)
 - [x] Verify visualization renders correctly
 - [x] Check mobile/tablet layouts (responsive SVG)
+
+
+## Phase 20 - Live Council API Integration
+
+### API Integration
+- [x] Review council.list and council.getSession endpoints
+- [x] Fetch most recent council session on component mount
+- [x] Display real agent votes from database
+- [x] Handle loading and error states
+- [x] Auto-refresh to show latest sessions (10s interval)
+- [x] Fallback to simulation if no sessions exist
+
+### Testing
+- [x] Test with real council sessions
+- [x] Verify vote data displays correctly
+- [x] Test loading states
