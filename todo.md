@@ -2364,3 +2364,108 @@
 - [x] Check responsive design on mobile
 - [x] Run all tests and ensure passing (185 tests passing)
 - [x] Save checkpoint with certificates gallery
+
+
+## Phase 51 - Feature Detail Pages
+
+### 33-Agent Council Page (/features/33-agent-council)
+- [ ] Create AgentCouncilFeature page component
+- [ ] Add hero section with council overview
+- [ ] Explain transparency and human oversight
+- [ ] Show council structure and roles
+- [ ] Add visual diagram of council workflow
+- [ ] Include benefits and use cases
+- [ ] Add CTA to view live Watchdog
+
+### PDCA Framework Page (/features/pdca-framework)
+- [ ] Create PDCAFrameworkFeature page component
+- [ ] Add hero section with PDCA overview
+- [ ] Explain Plan-Do-Check-Act cycle
+- [ ] Show how it applies to AI safety
+- [ ] Add visual diagram of PDCA cycle
+- [ ] Include implementation examples
+- [ ] Add CTA to start training
+
+### Training Certification Page (/features/training-certification)
+- [ ] Create TrainingCertificationFeature page component
+- [ ] Add hero section with certification overview
+- [ ] Explain three frameworks (EU AI Act, NIST, ISO 42001)
+- [ ] Show certification process and benefits
+- [ ] Add visual timeline/roadmap
+- [ ] Include sample certificate preview
+- [ ] Add CTA to browse courses
+
+### Watchdog Jobs Page (/features/watchdog-jobs)
+- [ ] Create WatchdogJobsFeature page component
+- [ ] Add hero section with jobs overview
+- [ ] Explain AI Safety Analyst role
+- [ ] Show career path and opportunities
+- [ ] Add salary ranges and growth projections
+- [ ] Include testimonials or success stories
+- [ ] Add CTA to apply or start training
+
+### Routes & Navigation
+- [ ] Add all four routes to App.tsx
+- [ ] Update homepage "Learn More" links
+- [ ] Add breadcrumbs to feature pages
+- [ ] Add cross-links between feature pages
+
+### Testing & Polish
+- [ ] Test all feature pages
+- [ ] Verify responsive design
+- [ ] Check all CTAs work correctly
+- [ ] Run all tests and ensure passing
+- [ ] Save checkpoint with feature pages
+
+
+## Phase 51 - Feature Detail Pages \u2705 COMPLETE
+
+### 33-Agent Council Page
+- [x] Create AgentCouncilFeature.tsx component
+- [x] Add hero section with council overview
+- [x] Explain 33 specialized AI agents
+- [x] Show transparency and human oversight
+- [x] Add agent categories and responsibilities (4 categories, 33 agents)
+- [x] Include benefits and how it works
+- [x] Add CTAs to Watchdog and training
+
+### PDCA Framework Page
+- [x] Create PDCAFrameworkFeature.tsx component
+- [x] Add hero section with framework overview
+- [x] Explain Plan-Do-Check-Act cycle with SOAI integration
+- [x] Show PDCA phases with icons, descriptions, and action items
+- [x] Add real-world implementation examples (bias detection case study)
+- [x] Include 6 key benefits for organizations
+- [x] Add CTAs to courses and certification
+
+### Training Certification Page
+- [x] Create TrainingCertificationFeature.tsx component
+- [x] Add hero section with certification overview
+- [x] Show all 3 frameworks (EU AI Act, NIST AI RMF, ISO 42001)
+- [x] Explain 4-step certification process
+- [x] Display module topics, duration, and difficulty levels
+- [x] Show sample certificate design with QR code
+- [x] Add benefits and career advancement info
+- [x] Add CTAs to start learning
+
+### Watchdog Jobs Page
+- [x] Create WatchdogJobsFeature.tsx component
+- [x] Add hero section with "AI is taking jobs, we're creating them"
+- [x] Explain AI Safety Analyst role with 4 key highlights
+- [x] Show salary ranges and 4-level career progression
+- [x] List responsibilities across 4 categories
+- [x] Include 8 comprehensive benefits and perks
+- [x] Show how to apply (certify \u2192 exam \u2192 work)
+- [x] Add CTAs to training and Watchdog signup
+
+### Routes & Navigation
+- [x] Add routes to App.tsx for all 4 pages
+- [x] Homepage "Learn More" buttons already linked correctly
+- [x] All feature pages accessible at /features/* routes
+- [x] Navigation and back buttons working correctly
+
+### Testing
+- [x] Run all tests and ensure passing (185 tests passing)
+- [x] Verify TypeScript compilation (no errors)
+- [x] Dev server running without errors
+- [x] Save checkpoint with all feature pages

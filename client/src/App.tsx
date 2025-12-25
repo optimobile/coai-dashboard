@@ -46,6 +46,10 @@ import Resources from "./pages/Resources";
 import About from "./pages/About";
 import NewHome from "./pages/NewHome";
 import VerifyCertificate from "./pages/VerifyCertificate";
+import AgentCouncilFeature from "./pages/features/AgentCouncilFeature";
+import PDCAFrameworkFeature from "./pages/features/PDCAFrameworkFeature";
+import TrainingCertificationFeature from "./pages/features/TrainingCertificationFeature";
+import WatchdogJobsFeature from "./pages/features/WatchdogJobsFeature";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -73,6 +77,10 @@ function Router() {
       <Route path="/my-courses" component={MyCourses} />
       <Route path="/courses/:id/learn" component={CoursePlayer} />
       <Route path="/verify-certificate/:id" component={VerifyCertificate} />
+      <Route path="/features/33-agent-council" component={AgentCouncilFeature} />
+      <Route path="/features/pdca-framework" component={PDCAFrameworkFeature} />
+      <Route path="/features/training-certification" component={TrainingCertificationFeature} />
+      <Route path="/features/watchdog-jobs" component={WatchdogJobsFeature} />
       <Route path="/certification" component={Certification} />
       <Route path="/certification/exam" component={CertificationExam} />
       <Route path="/certification/results" component={CertificationResults} />
