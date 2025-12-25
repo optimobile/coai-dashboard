@@ -1723,3 +1723,41 @@
 - [ ] Manual test: Visit /courses page and verify both frameworks appear
 - [ ] Manual test: Test enrollment flow (Stripe Checkout)
 - [ ] Save checkpoint with both courses live
+
+
+## Phase 37 - ISO 42001 AI Management System Course
+
+### Research & Planning
+- [x] Research ISO 42001 AI Management System standard
+- [x] Understand ISO/IEC 42001:2023 structure and requirements (saved in iso-42001-research.md)
+- [x] Identify key clauses (4-10) and controls (PDCA methodology)
+- [x] Compare with ISO 27001 structure (compatible management system standard)
+- [x] Map course progression: Fundamentals → Advanced → Specialist
+- [x] Define learning objectives for each course level (saved in iso-42001-course-structure.md)
+- [x] Design module structure (8 modules Fundamentals, 10 Advanced, 10 Specialist)
+
+### ISO 42001 Fundamentals Course Content
+- [x] Module 1: Introduction to ISO 42001 (5,600 words complete)
+- [ ] Module 2: Context of the Organization (Clause 4)
+- [ ] Module 3: Leadership and Governance (Clause 5)
+- [ ] Module 4: Planning and Risk Assessment (Clause 6)
+- [ ] Module 5: Support and Resources (Clause 7)
+- [ ] Module 6: Operation and AI System Lifecycle (Clause 8)
+- [ ] Module 7: Performance Evaluation (Clause 9)
+- [ ] Module 8: Improvement and Certification (Clause 1### Stripe Products & Database
+- [x] Create Stripe product for ISO 42001 Fundamentals (prod_TfX5iIuQeeQbnP)
+- [x] Create one-time price ($499 USD) - price_1SiC1iDuEg5HakgP4kjwgoLh
+- [x] Create 3-month subscription price ($199/month) - price_1SiC1iDuEg5HakgP4vp96SKP
+- [x] Create 6-month subscription price ($99/month) - price_1SiC1jDuEg5HakgPRMXzNwXM
+- [x] Create 12-month subscription price ($59/month) - price_1SiC1jDuEg5HakgPxse0Tmcp# Database Population
+- [x] Insert ISO 42001 Fundamentals into database with Stripe price IDs
+- [x] Verify course appears in database alongside EU AI Act and NIST AI RMF
+- [x] Run all tests - 185 passing (including 20 courses tests)
+- [ ] Manual test: Visit /courses page and verify all 3 frameworks appear
+- [ ] Manual test: Test enrollment flow for all 3 courses
+
+### Verification
+- [ ] Verify all 3 frameworks (EU AI Act, NIST AI RMF, ISO 42001) appear in catalog
+- [ ] Test filtering by framework
+- [ ] Run all tests and ensure passing
+- [ ] Save checkpoint with complete framework trilogy
