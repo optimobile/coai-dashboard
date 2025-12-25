@@ -1026,3 +1026,79 @@
 - [ ] Document benefits of current system
 - [ ] Create council member recruitment guide
 - [ ] Write specialist recruitment guide
+
+
+## Phase 27 - Dual-Brand Architecture (CouncilOf.AI + SafetyOf.AI)
+
+### Brand Strategy
+- [ ] Define CouncilOf.AI positioning (B2B backend infrastructure)
+- [ ] Define SafetyOf.AI positioning (B2C consumer app)
+- [ ] Create brand guidelines for both
+- [ ] Design logos and visual identity for SafetyOf.AI
+- [ ] Plan domain strategy (councilof.ai + safetyof.ai)
+
+### Product Ecosystem 1: Jobs & Training (B2C - SafetyOf.AI)
+**Paid Products:**
+- [ ] Training courses marketplace ($99-$199)
+- [ ] Certification exams ($49-$99)
+- [ ] Premium analyst membership ($29/month)
+
+**LOI Funnel:**
+- [ ] "Become an AI Safety Analyst" landing page
+- [ ] Free intro course lead magnet
+- [ ] Email nurture sequence (7 days)
+- [ ] Conversion to paid certification
+
+### Product Ecosystem 2: Enterprises (B2B - CouncilOf.AI)
+**Paid Products:**
+- [ ] Enterprise API pricing page ($499-$4,999/month)
+- [ ] Compliance platform pricing ($999-$9,999/month)
+- [ ] Unlimited training packages ($4,999/year)
+
+**LOI Funnel:**
+- [ ] "Request Enterprise Demo" landing page
+- [ ] Free compliance audit offer
+- [ ] Sales team follow-up system
+- [ ] Conversion to paid subscription
+
+### Product Ecosystem 3: Early Adopters/Investors
+**Paid Products:**
+- [ ] Founding Member lifetime access ($999)
+- [ ] Premium data access ($199/month)
+- [ ] Equity crowdfunding preparation (future)
+
+**LOI Funnel:**
+- [ ] "Join Founding Members" landing page
+- [ ] Exclusive early access perks
+- [ ] Referral rewards program (10% commission)
+- [ ] Conversion to paid membership
+
+### SafetyOf.AI Mobile App
+- [ ] Design mobile app concept and user flows
+- [ ] Create app landing page with screenshots
+- [ ] Build "Report AI Issue" submission flow
+- [ ] Integrate with 33-Agent Council voting
+- [ ] Connect to analyst review system
+- [ ] Add public transparency feed
+- [ ] Plan iOS/Android development roadmap
+
+### Database Schema
+- [ ] Add brand field to all tables (councilof.ai vs safetyof.ai)
+- [ ] Create loi_signups table with ecosystem tracking
+- [ ] Create founding_members table
+- [ ] Create referral_program table
+- [ ] Add conversion tracking fields
+
+### Implementation
+- [ ] Update homepage to explain dual-brand strategy
+- [ ] Create separate landing pages for each ecosystem
+- [ ] Build 6 LOI signup forms with unique tracking
+- [ ] Integrate Stripe for all paid products
+- [ ] Set up email automation for LOI nurturing
+- [ ] Add conversion analytics and tracking
+
+### Testing
+- [ ] Test all 6 LOI funnels end-to-end
+- [ ] Verify Stripe payments work for all products
+- [ ] Test email automation sequences
+- [ ] Verify brand separation is clear to users
