@@ -375,6 +375,21 @@ export const userCertificates = mysqlTable("user_certificates", {
 export type UserCertificate = typeof userCertificates.$inferSelect;
 
 /**
+ * Training course certificates
+ */
+export const courseCertificates = mysqlTable("course_certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseId: int("courseId").notNull(),
+  certificateId: varchar("certificateId", { length: 100 }).notNull().unique(),
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CourseCertificate = typeof courseCertificates.$inferSelect;
+
+/**
  * Case assignments for Watchdog Analysts
  */
 export const caseAssignments = mysqlTable("case_assignments", {

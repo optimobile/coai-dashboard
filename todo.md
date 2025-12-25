@@ -2241,3 +2241,58 @@
 - [ ] Verify quiz integration works with populated modules
 - [ ] Run all tests and ensure passing
 - [ ] Save checkpoint with populated modules
+
+
+## Phase 48 - Certificate PDF Generation System
+
+### Dependencies Installation
+- [x] Install PDFKit for PDF generation
+- [x] Install qrcode library for QR code generation
+- [x] Install canvas for QR code rendering
+- [x] Test dependencies work correctly
+
+### Backend Certificate Endpoint
+- [x] Create certificates tRPC router
+- [x] Implement generateCertificate mutation
+- [x] Add certificate ID generation (unique format)
+- [x] Store certificate records in database
+- [x] Add certificate validation logic
+- [x] Create course_certificates table in database
+- [x] Register certificates router in appRouter
+
+### PDF Template Design
+- [x] Design professional certificate layout
+- [x] Add COAI branding and logo
+- [x] Include student name and course details
+- [x] Add completion date and certificate ID
+- [x] Add QR code for verification
+- [x] Style with professional fonts and colors
+- [x] Create certificateGenerator utility
+
+### QR Code Integration
+- [x] Generate QR code with verification URL
+- [x] Embed QR code in PDF certificate
+- [x] Implement certificate lookup by ID
+- [ ] Create verification page route
+
+### Certificate Verification System
+- [x] Create verifyCertificate query endpoint
+- [x] Implement certificate list endpoint
+- [ ] Build verification page UI
+- [ ] Display certificate details when verified
+- [ ] Handle invalid certificate IDs gracefully
+
+### Frontend Integration
+- [ ] Add "Download Certificate" button to course completion page
+- [ ] Show certificate preview before download
+- [ ] Add loading state during generation
+- [ ] Display success message after download
+- [ ] Add certificate gallery in user profile
+
+### Testing & Validation
+- [ ] Test certificate generation for all 3 frameworks
+- [ ] Verify QR codes scan correctly
+- [ ] Test certificate verification page
+- [ ] Ensure unique IDs are generated
+- [ ] Run all tests and ensure passing
+- [ ] Save checkpoint with certificate system

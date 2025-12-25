@@ -43,6 +43,13 @@
       "when": 1766647169475,
       "tag": "0005_graceful_sphinx",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1766675247913,
+      "tag": "0006_cooing_star_brand",
+      "breakpoints": true
     }
   ]
 }
