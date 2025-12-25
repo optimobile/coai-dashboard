@@ -1,4 +1,4 @@
-# COAI Dashboard Gap Analysis vs. TC260/PDCA Standards
+# CSOAI Dashboard Gap Analysis vs. TC260/PDCA Standards
 
 ## Current State: 36 Pages
 

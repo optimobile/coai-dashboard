@@ -1,5 +1,5 @@
 /*
- * COAI Reports Page
+ * CSOAI Reports Page
  * Generated compliance reports and documentation
  */
 

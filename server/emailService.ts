@@ -1,5 +1,5 @@
 /**
- * Email Service for COAI Platform
+ * Email Service for CSOAI Platform
  * Handles sending emails with PDF attachments
  */
 
@@ -119,7 +119,7 @@ export async function sendPDCAReport(
   aiSystemName: string,
   pdfBuffer: Buffer
 ): Promise<EmailResult> {
-  const subject = `COAI PDCA Cycle Report - Cycle #${cycleNumber}`;
+  const subject = `CSOAI PDCA Cycle Report - Cycle #${cycleNumber}`;
   
   const html = `
     <!DOCTYPE html>
@@ -135,7 +135,7 @@ export async function sendPDCAReport(
     </head>
     <body>
       <div class="header">
-        <h1>COAI</h1>
+        <h1>CSOAI</h1>
         <p>Council of AIs - AI Safety & Compliance Platform</p>
       </div>
       <div class="content">
@@ -156,10 +156,10 @@ export async function sendPDCAReport(
           <li>Timeline visualization</li>
         </ul>
         <p>If you have any questions about this report, please contact your organization's AI compliance team.</p>
-        <p>Best regards,<br>The COAI Team</p>
+        <p>Best regards,<br>The CSOAI Team</p>
       </div>
       <div class="footer">
-        <p>This email was sent from the COAI Platform - Council of AIs</p>
+        <p>This email was sent from the CSOAI Platform - Council of AIs</p>
         <p>AI Safety, Compliance, and Continuous Improvement</p>
       </div>
     </body>
@@ -167,7 +167,7 @@ export async function sendPDCAReport(
   `;
 
   const text = `
-COAI PDCA Cycle Report
+CSOAI PDCA Cycle Report
 
 Cycle Number: #${cycleNumber}
 AI System: ${aiSystemName}
@@ -181,7 +181,7 @@ Please find attached the PDCA cycle report containing:
 - Timeline visualization
 
 Best regards,
-The COAI Team
+The CSOAI Team
   `.trim();
 
   return sendEmail({

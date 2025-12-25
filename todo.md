@@ -1,10 +1,10 @@
-# COAI Dashboard - Project TODO
+# CSOAI Dashboard - Project TODO
 
 ## Completed Features
 
 - [x] Project initialization with React + TypeScript + Vite + TailwindCSS
 - [x] Open WebUI-inspired design system (light theme default)
-- [x] COAI branding throughout the application
+- [x] CSOAI branding throughout the application
 - [x] Dashboard layout with collapsible sidebar
 - [x] Theme toggle (light/dark mode)
 - [x] Home page with welcome screen and suggestion cards
@@ -163,7 +163,7 @@
 
 ### Master Website Frontend
 - [x] Professional public homepage at /public
-- [x] About COAI section (hero)
+- [x] About CSOAI section (hero)
 - [x] How it works section (SOAI-PDCA loop)
 - [x] Frameworks explained (EU AI Act, NIST, TC260)
 - [x] Pricing/tiers section (Pricing page with full feature matrix)
@@ -229,7 +229,7 @@
 ### SOAI Browser Extension
 - [x] Create Chrome extension manifest
 - [x] Build popup UI for incident reporting
-- [x] Connect to COAI API for report submission
+- [x] Connect to CSOAI API for report submission
 - [x] Add extension to project repository
 - [x] Add context menu integration
 - [x] Create content script for page interaction
@@ -316,7 +316,7 @@
 ### Backend PDF Generation
 - [x] Install PDF generation library (pdfkit or jspdf)
 - [x] Create PDF generation endpoint for PDCA cycles
-- [x] Build PDF template with COAI branding
+- [x] Build PDF template with CSOAI branding
 - [x] Include all phase summaries (Plan, Do, Check, Act)
 - [x] Add AI system details and risk level
 - [x] Include timeline and completion dates
@@ -764,7 +764,7 @@
 - [x] Identify visual design standards and professional elements
 
 ### Gap Analysis
-- [x] Compare current COAI site to TC260/PDCA standards
+- [x] Compare current CSOAI site to TC260/PDCA standards
 - [x] Identify missing pages and content sections (5 critical gaps found)
 - [x] Document structural improvements needed
 - [x] List visual design enhancements required
@@ -862,7 +862,7 @@
 - [x] Define shadow system (elevation levels)
 
 ### Messaging Strategy
-- [x] Document core USP: "AI is taking jobs. COAI is creating them."
+- [x] Document core USP: "AI is taking jobs. CSOAI is creating them."
 - [x] Define 4 value propositions (Job Creation, Transparency, Training, Enterprise)
 - [x] Create messaging hierarchy for all sections
 - [x] Define CTA strategy (8+ CTAs per page)
@@ -966,7 +966,7 @@
 - [ ] Analyze income share agreement (ISA) models
 - [ ] Research successful EdTech pricing strategies
 - [ ] Document competitor strengths and weaknesses
-- [ ] Identify market gaps COAI can fill
+- [ ] Identify market gaps CSOAI can fill
 
 ### 33 Human Council Members System
 - [ ] Design council member structure (33 AI Godfathers/Experts)
@@ -1269,9 +1269,9 @@
 ### Certificate Generation
 - [ ] Create courseCertificateGenerator.ts module
 - [ ] Use pdfkit to generate professional certificates
-- [ ] Include COAI branding and logo
+- [ ] Include CSOAI branding and logo
 - [ ] Add student name, course title, completion date
-- [ ] Generate unique certificate number (format: COAI-CERT-XXXXXX)
+- [ ] Generate unique certificate number (format: CSOAI-CERT-XXXXXX)
 - [ ] Add QR code for verification
 - [ ] Store certificate PDF in S3
 - [ ] Save certificate record in database
@@ -1293,3 +1293,161 @@
 - [ ] Create 5 course bundles (Foundation, EU Bundle, US Bundle, Professional, Expert)
 - [ ] Add sample course reviews and ratings
 - [ ] Create sample enrollments for testing
+
+
+## Phase 31 - CSOAI Rebrand & Production Readiness
+
+##### Global Rebrand: COAI → CSOAI
+- [x] Find and replace "COAI" → "CSOAI" in all code files (326 instances)
+- [x] Update database table names and references
+- [ ] Update environment variables (VITE_APP_TITLE, etc.) - requires manual Settings UI
+- [x] Update package.json name and description
+- [x] Update all page titles, meta descriptions, og:tags
+- [ ] Update logo files and branding assets (pending logo design)
+- [x] Update README.md and documentation
+- [x] Update API endpoints and router names
+- [x] Update test files with new branding
+
+### Branding Research & Analysis
+- [x] Research top 10 training platforms (Coursera, LinkedIn Learning analyzed)
+- [x] Research AI safety organizations (Anthropic, Center for AI Safety analyzed)
+- [x] Analyze common branding patterns (colors, typography, layouts)
+- [x] Identify healthcare/medical branding elements (white/green trust signals)
+- [x] Document tech industry branding patterns (white/blue/black modern)
+- [x] Create branding comparison matrix (saved in branding-research.md)
+- [x] Choose optimal color palette (White + Blue + Black tech professional)
+- [x] Define typography system (Inter for all text)
+- [x] Define spacing and layout system
+
+### New Branding System Implementation
+- [x] Choose final color palette (CSOAI Blue #0066CC + White + Black)
+- [x] Update Tailwind CSS theme in client/src/index.css
+- [x] Define primary, secondary, accent colors
+- [x] Define success, warning, error, info colors
+- [ ] Create new logo design or commission logo
+- [ ] Update favicon and app icons
+- [ ] Create brand guidelines document
+- [x] Update all UI components with new colors (via CSS variables)
+- [x] Ensure WCAG AA accessibility compliance
+- [x] Test dark mode compatibility
+
+### Website Redesign - Industry Leading UI/UX
+- [ ] Research top 10 training platforms (Coursera, Udemy, LinkedIn Learning, Udacity, edX, Pluralsight, Skillshare, MasterClass, Khan Academy, Codecademy
+- [ ] Analyze common branding patterns (colors, typography, layouts)
+- [ ] Identify healthcare/medical branding elements (white/green trust signals)
+- [ ] Document tech industry branding patterns (white/blue/black modern)
+- [ ] Create branding comparison matrix
+- [ ] Choose optimal color palette based on research
+- [ ] Define typography system (headings, body, code)
+- [ ] Define spacing and layout system
+
+### New Branding System Implementation
+- [ ] Choose final color palette (white/green medical OR white/blue/black tech)
+- [ ] Update Tailwind CSS theme in client/src/index.css
+- [ ] Define primary, secondary, accent colors
+- [ ] Define success, warning, error, info colors
+- [ ] Create new logo design or commission logo
+- [ ] Update favicon and app icons
+- [ ] Create brand guidelines document
+- [ ] Update all UI components with new colors
+- [ ] Ensure WCAG AA accessibility compliance
+- [ ] Test dark mode compatibility
+
+### Website Redesign - Industry Leading UI/UX
+- [ ] Redesign homepage (/) with modern hero section
+- [ ] Create compelling value proposition messaging
+- [ ] Add social proof (testimonials, stats, logos)
+- [ ] Redesign /courses page with grid layout
+- [ ] Improve course cards with images, ratings, reviews
+- [ ] Add course comparison table
+- [ ] Redesign /my-courses dashboard
+- [ ] Add learning path visualization
+- [ ] Create dedicated landing pages for each ecosystem
+- [ ] SafetyOf.AI landing page (Jobs ecosystem)
+- [ ] CouncilOf.AI landing page (Enterprises ecosystem)
+- [ ] Founding Members landing page (Early Adopters)
+- [ ] Add conversion-optimized CTAs throughout
+- [ ] Implement smooth scroll animations
+- [ ] Add micro-interactions and hover effects
+- [ ] Optimize mobile responsiveness
+- [ ] Add loading skeletons and optimistic UI
+
+### 33 Production-Ready Courses Content
+- [ ] EU AI Act Fundamentals (EU)
+- [ ] EU AI Act Advanced Compliance (EU)
+- [ ] EU AI Act Specialist Certification (EU)
+- [ ] NIST AI RMF Fundamentals (US)
+- [ ] NIST AI RMF Advanced (US)
+- [ ] NIST AI RMF Specialist (US)
+- [ ] ISO/IEC 42001 Fundamentals (Global)
+- [ ] ISO/IEC 42001 Advanced (Global)
+- [ ] ISO/IEC 42001 Specialist (Global)
+- [ ] UK AI Regulation Fundamentals (UK)
+- [ ] UK AI Regulation Advanced (UK)
+- [ ] UK AI Regulation Specialist (UK)
+- [ ] Canada AIDA Fundamentals (CA)
+- [ ] Canada AIDA Advanced (CA)
+- [ ] Canada AIDA Specialist (CA)
+- [ ] Australia AI Ethics Fundamentals (AU)
+- [ ] Australia AI Ethics Advanced (AU)
+- [ ] Australia AI Ethics Specialist (AU)
+- [ ] China TC260 Fundamentals (CN)
+- [ ] China TC260 Advanced (CN)
+- [ ] China TC260 Specialist (CN)
+- [ ] Singapore IMDA Fundamentals (SG)
+- [ ] Singapore IMDA Advanced (SG)
+- [ ] Singapore IMDA Specialist (SG)
+- [ ] Japan AI Guidelines Fundamentals (JP)
+- [ ] Japan AI Guidelines Advanced (JP)
+- [ ] Japan AI Guidelines Specialist (JP)
+- [ ] Brazil LGPD AI Fundamentals (BR)
+- [ ] Brazil LGPD AI Advanced (BR)
+- [ ] Brazil LGPD AI Specialist (BR)
+- [ ] India AI Strategy Fundamentals (IN)
+- [ ] India AI Strategy Advanced (IN)
+- [ ] India AI Strategy Specialist (IN)
+
+### Course Content Structure (Per Course)
+- [ ] Course overview and learning objectives
+- [ ] 8-12 modules with detailed content
+- [ ] Video script outlines for each module
+- [ ] Reading materials and resources
+- [ ] Practical exercises and case studies
+- [ ] Module quizzes (5-10 questions each)
+- [ ] Final certification exam (50 questions)
+- [ ] Answer keys and explanations
+- [ ] Certificate template design
+- [ ] Estimated completion time per module
+
+### Course Player Implementation
+- [ ] Create CoursePlayer component
+- [ ] Video player integration (YouTube/Vimeo embed or custom)
+- [ ] Markdown content renderer for lessons
+- [ ] Quiz component with multiple choice
+- [ ] Progress tracking (modules completed, time spent)
+- [ ] Bookmark and note-taking features
+- [ ] Module navigation (previous/next)
+- [ ] Course completion detection
+- [ ] Certificate generation trigger
+- [ ] Download certificate as PDF
+
+### Production Readiness Checklist
+- [ ] All 33 courses have complete content
+- [ ] All courses tested end-to-end
+- [ ] Stripe products and prices configured
+- [ ] Webhook testing in Stripe test mode
+- [ ] Payment flows tested (one-time + subscriptions)
+- [ ] Certificate generation tested
+- [ ] Email notifications configured
+- [ ] Analytics tracking implemented
+- [ ] SEO optimization (meta tags, sitemap, robots.txt)
+- [ ] Performance optimization (lazy loading, code splitting)
+- [ ] Security audit (SQL injection, XSS, CSRF)
+- [ ] Accessibility audit (WCAG AA compliance)
+- [ ] Cross-browser testing (Chrome, Firefox, Safari, Edge)
+- [ ] Mobile testing (iOS, Android)
+- [ ] Load testing (100+ concurrent users)
+- [ ] Backup and disaster recovery plan
+- [ ] Documentation for admins and instructors
+- [ ] User onboarding flow
+- [ ] Customer support system integration

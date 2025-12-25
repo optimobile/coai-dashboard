@@ -36,7 +36,7 @@
 - [ ] Footer: Links to dashboard, docs, blog, about, contact
 
 **Day 4: Record Demo Video (3 minutes)**
-- Intro: "COAI is the first AI governance platform with Byzantine consensus"
+- Intro: "CSOAI is the first AI governance platform with Byzantine consensus"
 - Demo 1: Watchdog report → Council voting → Resolution (30s)
 - Demo 2: AI system assessment → PDF report (30s)
 - Demo 3: PDCA cycle → Continuous improvement (30s)
@@ -45,7 +45,7 @@
 
 **Day 5-6: Create Launch Materials**
 - [ ] Product Hunt listing (title, tagline, description, screenshots, video)
-- [ ] Hacker News post (Show HN: COAI - Byzantine Consensus for AI Governance)
+- [ ] Hacker News post (Show HN: CSOAI - Byzantine Consensus for AI Governance)
 - [ ] Reddit posts (3 versions for different subreddits)
 - [ ] LinkedIn announcement (personal + company page)
 - [ ] Press release (TechCrunch, VentureBeat pitch)
@@ -70,20 +70,20 @@
 - Goal: #1 Product of the Day (500+ upvotes)
 
 **Day 9 (Wednesday): Hacker News Launch**
-- Post "Show HN: COAI - AI Governance Platform with Byzantine Consensus"
+- Post "Show HN: CSOAI - AI Governance Platform with Byzantine Consensus"
 - Engage in comments (technical discussions)
 - Share on Twitter with #HackerNews tag
 - Goal: Front page (100+ upvotes, 50+ comments)
 
 **Day 10 (Thursday): Reddit Launch**
 - r/MachineLearning: "We built an AI governance platform with 33-agent Byzantine consensus"
-- r/artificial: "COAI: First platform to implement TC260 + EU AI Act + NIST compliance"
-- r/startups: "Launching COAI: AI Governance SaaS - Feedback welcome"
+- r/artificial: "CSOAI: First platform to implement TC260 + EU AI Act + NIST compliance"
+- r/startups: "Launching CSOAI: AI Governance SaaS - Feedback welcome"
 - Goal: 1000+ upvotes combined, 200+ comments
 
 **Day 11 (Friday): LinkedIn Campaign**
-- Personal post: "After 6 months of building, we're launching COAI..."
-- Company page post: "Introducing COAI: AI Governance Made Simple"
+- Personal post: "After 6 months of building, we're launching CSOAI..."
+- Company page post: "Introducing CSOAI: AI Governance Made Simple"
 - Target hashtags: #AIGovernance #AICompliance #AIEthics #TC260 #EUAIAct
 - Engage with comments, DM interested prospects
 - Goal: 10,000 impressions, 100 LOI signups
@@ -101,7 +101,7 @@
 
 **Day 15: Email Campaign #1 - "Founding Member Offer"**
 - Subject: "You're invited: Founding Member 50% off"
-- Body: "Thank you for your interest in COAI. As a founding member, you get 50% off for life..."
+- Body: "Thank you for your interest in CSOAI. As a founding member, you get 50% off for life..."
 - CTA: "Claim your discount" → Free trial signup
 - Goal: 10% open rate, 2% conversion (20 signups)
 
@@ -143,7 +143,7 @@
 
 **Day 24-25: Cold Email Campaign**
 - Subject: "AI Governance for [Company Name]"
-- Body: "Hi [Name], I noticed [Company] is deploying AI at scale. We built COAI to help companies like yours..."
+- Body: "Hi [Name], I noticed [Company] is deploying AI at scale. We built CSOAI to help companies like yours..."
 - CTA: "Book a 15-minute demo"
 - Send 50 emails/day (personalized)
 - Goal: 20% open rate, 5% reply rate (10 demos booked)

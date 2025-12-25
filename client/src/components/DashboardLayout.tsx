@@ -1,7 +1,7 @@
 /*
- * COAI Dashboard Layout - Open WebUI Inspired Design
+ * CSOAI Dashboard Layout - Open WebUI Inspired Design
  * Clean sidebar with navigation, user menu at bottom
- * Light theme default with COAI branding
+ * Light theme default with CSOAI branding
  */
 
 import { useState } from "react";
@@ -94,7 +94,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           sidebarCollapsed && "border-r-0"
         )}
       >
-        {/* COAI Logo + New Chat Button */}
+        {/* CSOAI Logo + New Chat Button */}
         <div className="flex items-center justify-between p-2 pt-3">
           <Link href="/">
             <Button
@@ -102,7 +102,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               className="flex items-center gap-2 w-full justify-start px-3 py-2 text-sm font-medium hover:bg-accent"
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground font-bold text-[10px]">
-                COAI
+                CSOAI
               </div>
               <span className="font-semibold">New Chat</span>
             </Button>
@@ -187,7 +187,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               />
             </Button>
             <span className="text-sm font-medium">
-              {navItems.find((item) => item.path === location)?.label || "COAI"}
+              {navItems.find((item) => item.path === location)?.label || "CSOAI"}
             </span>
           </div>
 

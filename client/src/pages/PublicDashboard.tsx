@@ -57,7 +57,7 @@ export default function PublicDashboard() {
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-white">COAI</h1>
+                  <h1 className="text-xl font-bold text-white">CSOAI</h1>
                   <p className="text-xs text-zinc-400">Public Transparency Dashboard</p>
                 </div>
               </div>
@@ -91,7 +91,7 @@ export default function PublicDashboard() {
           </h1>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-8">
             Track AI safety incidents, compliance assessments, and council decisions in real-time. 
-            COAI provides unprecedented transparency into AI governance worldwide.
+            CSOAI provides unprecedented transparency into AI governance worldwide.
           </p>
         </div>
       </section>
@@ -499,7 +499,7 @@ export default function PublicDashboard() {
               </h2>
               <p className="text-zinc-400 max-w-2xl mx-auto mb-8">
                 Whether you're an AI company seeking compliance, a regulator monitoring the industry, 
-                or a concerned citizen, COAI provides the tools and transparency you need.
+                or a concerned citizen, CSOAI provides the tools and transparency you need.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link href="/report">
@@ -532,7 +532,7 @@ export default function PublicDashboard() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-emerald-400" />
-              <span className="text-zinc-400">COAI - Council of AIs</span>
+              <span className="text-zinc-400">CSOAI - Council of AIs</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-zinc-500">
               <Link href="/api-docs">
@@ -546,7 +546,7 @@ export default function PublicDashboard() {
               </Link>
             </div>
             <p className="text-sm text-zinc-500">
-              © 2024 COAI. All rights reserved.
+              © 2024 CSOAI. All rights reserved.
             </p>
           </div>
         </div>

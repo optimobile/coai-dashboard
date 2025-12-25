@@ -1,8 +1,8 @@
-# COAI - Council of AIs
+# CSOAI - Council of AIs
 
 <div align="center">
 
-![COAI Logo](client/public/favicon.svg)
+![CSOAI Logo](client/public/favicon.svg)
 
 **The West's Answer to TC260 - AI Safety Governance for Humanity**
 
@@ -25,7 +25,7 @@ By **August 2026**, the EU AI Act becomes fully enforceable. Companies face:
 
 ## 💡 The Solution
 
-**COAI (Council of AIs)** is an open-source AI safety governance platform that:
+**CSOAI (Council of AIs)** is an open-source AI safety governance platform that:
 
 1. **Unifies compliance** across EU AI Act, NIST AI RMF, TC260, and other frameworks
 2. **Automates assessment** using a 33-agent council with Byzantine fault tolerance
@@ -38,7 +38,7 @@ By **August 2026**, the EU AI Act becomes fully enforceable. Companies face:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                         COAI                                 │
+│                         CSOAI                                 │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
 │  │  SOAI-PDCA  │  │  33-Agent   │  │  Watchdog   │         │
@@ -99,8 +99,8 @@ By **August 2026**, the EU AI Act becomes fully enforceable. Companies face:
 
 ```bash
 # Clone the repository
-git clone https://github.com/coai-safety/coai-dashboard.git
-cd coai-dashboard
+git clone https://github.com/coai-safety/csoai-dashboard.git
+cd csoai-dashboard
 
 # Install dependencies
 pnpm install
@@ -123,7 +123,7 @@ pnpm dev
 
 ## 📊 Database Schema
 
-COAI uses 23 tables organized into functional groups:
+CSOAI uses 23 tables organized into functional groups:
 
 ### Core Tables
 - `users` - User accounts with roles
@@ -249,7 +249,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 
 - **Website**: [safetyof.ai](https://safetyof.ai)
 - **Email**: hello@safetyof.ai
-- **Twitter**: [@COAISafety](https://twitter.com/COAISafety)
+- **Twitter**: [@CSOAISafety](https://twitter.com/CSOAISafety)
 
 ---
 

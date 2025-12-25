@@ -52,7 +52,7 @@
 
 ---
 
-## Gap Analysis: Current COAI Site vs. TC260/PDCA Standards
+## Gap Analysis: Current CSOAI Site vs. TC260/PDCA Standards
 
 ### Missing Elements
 1. **Formal Documentation Section** - Need comprehensive PDF publications of frameworks
@@ -100,7 +100,7 @@
 
 ---
 
-## Recommendations for COAI Dashboard
+## Recommendations for CSOAI Dashboard
 
 ### Phase 1: Information Architecture (High Priority)
 1. Add "Standards & Frameworks" section

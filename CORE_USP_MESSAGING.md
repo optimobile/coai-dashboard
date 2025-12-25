@@ -1,8 +1,8 @@
-# COAI Core USP & Messaging Strategy
+# CSOAI Core USP & Messaging Strategy
 
 ## The Breakthrough Message
 
-**"AI is taking jobs. COAI is creating them."**
+**"AI is taking jobs. CSOAI is creating them."**
 
 ---
 
@@ -67,7 +67,7 @@
 - Jobs disappearing, but safety jobs INCREASING
 
 ### Section 3: The Solution
-**Headline:** "COAI: The Western TC260"
+**Headline:** "CSOAI: The Western TC260"
 - 33-Agent Byzantine Consensus (decentralized decisions)
 - Public Watchdog System (anyone can report incidents)
 - Certified Analyst Network (trained professionals review)

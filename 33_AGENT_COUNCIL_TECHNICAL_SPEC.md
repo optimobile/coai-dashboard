@@ -2,7 +2,7 @@
 
 ## Overview
 
-The COAI 33-Agent Council is a **Byzantine fault-tolerant (BFT) voting system** that uses 33 independent AI agents to evaluate AI safety incidents, compliance assessments, and policy proposals. The system achieves consensus through distributed voting with a 2/3 majority requirement (22 out of 33 votes).
+The CSOAI 33-Agent Council is a **Byzantine fault-tolerant (BFT) voting system** that uses 33 independent AI agents to evaluate AI safety incidents, compliance assessments, and policy proposals. The system achieves consensus through distributed voting with a 2/3 majority requirement (22 out of 33 votes).
 
 ---
 
@@ -138,7 +138,7 @@ for (const agent of agents) {
     messages: [
       {
         role: "system",
-        content: `You are ${agent.name}, a ${agent.type} agent in the COAI 33-Agent Council. 
+        content: `You are ${agent.name}, a ${agent.type} agent in the CSOAI 33-Agent Council. 
         Your role is to evaluate AI safety incidents and vote on appropriate actions. 
         You must respond with a JSON object containing: 
         vote ("approve", "reject", or "escalate"), 
@@ -571,4 +571,4 @@ The 33-Agent Council is a **production-ready Byzantine fault-tolerant voting sys
 ✅ Provides public API for transparency audits  
 ✅ Has 34 passing unit tests  
 
-This system forms the **core decision-making infrastructure** for COAI's AI governance platform.
+This system forms the **core decision-making infrastructure** for CSOAI's AI governance platform.

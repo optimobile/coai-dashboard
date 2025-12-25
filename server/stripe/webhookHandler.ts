@@ -1,5 +1,5 @@
 /**
- * COAI Stripe Webhook Handler
+ * CSOAI Stripe Webhook Handler
  * Processes Stripe webhook events for subscription management
  */
 

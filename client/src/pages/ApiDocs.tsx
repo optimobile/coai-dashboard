@@ -67,7 +67,7 @@ print(f"Votes: {session.votes}")`;
 
 // Initialize the client
 const client = new CoaiClient({
-  apiKey: process.env.COAI_API_KEY
+  apiKey: process.env.CSOAI_API_KEY
 });
 
 // Register an AI system
@@ -136,7 +136,7 @@ curl -X POST https://api.coai.org/v1/council/submit \\
           <Link href="/public">
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xs">COAI</span>
+                <span className="text-white font-bold text-xs">CSOAI</span>
               </div>
               <span className="font-semibold text-lg">API Documentation</span>
             </div>
@@ -161,7 +161,7 @@ curl -X POST https://api.coai.org/v1/council/submit \\
               <Code className="w-4 h-4" />
               Enterprise Integration
             </div>
-            <h1 className="text-4xl font-bold mb-4">COAI API & SDK</h1>
+            <h1 className="text-4xl font-bold mb-4">CSOAI API & SDK</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Integrate AI safety governance directly into your systems. 
               Programmatic access to compliance, council voting, and Watchdog alerts.

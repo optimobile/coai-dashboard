@@ -60,7 +60,7 @@ export const aiSystems = mysqlTable("ai_systems", {
 export type AISystem = typeof aiSystems.$inferSelect;
 
 /**
- * Compliance frameworks supported by COAI
+ * Compliance frameworks supported by CSOAI
  */
 export const frameworks = mysqlTable("frameworks", {
   id: int("id").autoincrement().primaryKey(),

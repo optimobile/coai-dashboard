@@ -1,5 +1,5 @@
 /*
- * COAI Risk Assessment Page
+ * CSOAI Risk Assessment Page
  * Multi-framework risk assessment wizard
  */
 

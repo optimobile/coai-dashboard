@@ -81,7 +81,7 @@ export default function Resources() {
 
   const videos = [
     {
-      title: "COAI Platform Overview",
+      title: "CSOAI Platform Overview",
       duration: "12:34",
       views: "2.4K",
       thumbnail: "/api/placeholder/400/225",

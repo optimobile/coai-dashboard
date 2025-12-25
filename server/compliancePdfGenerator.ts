@@ -99,7 +99,7 @@ export function generateComplianceReportPDF(
         margin: 50,
         info: {
           Title: `Compliance Report - ${data.aiSystem.name} - ${data.framework.name}`,
-          Author: "COAI - Council of AIs",
+          Author: "CSOAI - Council of AIs",
           Subject: "AI Compliance Assessment Report",
           Keywords: `Compliance, ${data.framework.code}, AI Safety, Assessment`,
         },
@@ -144,12 +144,12 @@ function drawCoverPage(doc: PDFKit.PDFDocument, data: ComplianceReportData) {
   const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
   const centerX = doc.page.margins.left + pageWidth / 2;
 
-  // COAI Logo/Branding
+  // CSOAI Logo/Branding
   doc
     .fontSize(36)
     .font("Helvetica-Bold")
     .fillColor(COLORS.primary)
-    .text("COAI", 50, 80, { align: "center", width: pageWidth });
+    .text("CSOAI", 50, 80, { align: "center", width: pageWidth });
 
   doc
     .fontSize(14)
@@ -555,7 +555,7 @@ function drawPageFooter(doc: PDFKit.PDFDocument, pageNum: number, totalPages: nu
     .fontSize(8)
     .font("Helvetica")
     .fillColor(COLORS.secondary)
-    .text(`COAI Compliance Report - ${frameworkCode}`, 50, footerY)
+    .text(`CSOAI Compliance Report - ${frameworkCode}`, 50, footerY)
     .text(`Page ${pageNum} of ${totalPages}`, 50, footerY, { align: "right", width: pageWidth })
     .text(`Generated: ${formatDate(new Date())}`, 50, footerY + 12, { align: "center", width: pageWidth });
 }

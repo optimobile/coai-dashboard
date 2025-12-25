@@ -1,4 +1,4 @@
-# COAI Dashboard Design Brainstorm
+# CSOAI Dashboard Design Brainstorm
 ## Three Distinct Stylistic Approaches
 
 ---
@@ -185,13 +185,13 @@
 
 **Rationale for Selection:**
 
-1. **Fits the Product Purpose:** COAI is a serious compliance and safety monitoring tool. The Command Center aesthetic conveys authority, precision, and trustworthiness - exactly what enterprises and governments need when managing AI safety.
+1. **Fits the Product Purpose:** CSOAI is a serious compliance and safety monitoring tool. The Command Center aesthetic conveys authority, precision, and trustworthiness - exactly what enterprises and governments need when managing AI safety.
 
 2. **Information Density:** Compliance dashboards require showing many metrics simultaneously. The dark theme with strategic color accents allows for high information density without overwhelming users.
 
 3. **Professional Credibility:** When selling to B2B/B2G customers, the interface needs to look like a professional tool, not a consumer app. The tactical aesthetic signals "enterprise-grade."
 
-4. **Differentiation:** Most SaaS dashboards use light themes with rounded corners. The Command Center approach stands out and reinforces COAI's unique positioning as the "Western TC260."
+4. **Differentiation:** Most SaaS dashboards use light themes with rounded corners. The Command Center approach stands out and reinforces CSOAI's unique positioning as the "Western TC260."
 
 5. **Practical for Analysts:** The human "AI Safety Watchdog Analysts" will spend hours in this interface. Dark themes reduce eye strain, and the monospace fonts for metrics improve scanability.
 

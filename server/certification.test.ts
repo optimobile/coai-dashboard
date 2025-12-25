@@ -194,11 +194,11 @@ describe("Certification Exam System", () => {
       const timestamp1 = Date.now();
       const timestamp2 = timestamp1 + 1;
 
-      const cert1 = `COAI-WA-${timestamp1}-${userId}`;
-      const cert2 = `COAI-WA-${timestamp2}-${userId}`;
+      const cert1 = `CSOAI-WA-${timestamp1}-${userId}`;
+      const cert2 = `CSOAI-WA-${timestamp2}-${userId}`;
 
       expect(cert1).not.toBe(cert2);
-      expect(cert1).toMatch(/^COAI-WA-\d+-\d+$/);
+      expect(cert1).toMatch(/^CSOAI-WA-\d+-\d+$/);
     });
 
     it("should set correct expiry date (1 year)", () => {

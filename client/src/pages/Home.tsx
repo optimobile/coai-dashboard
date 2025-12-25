@@ -1,5 +1,5 @@
 /*
- * COAI Home Page - Open WebUI Inspired Design
+ * CSOAI Home Page - Open WebUI Inspired Design
  * Welcome screen with suggestion cards for AI Safety tasks
  * "Hello, [Name] - How can I help you today?"
  * Functional LLM chat for compliance questions
@@ -215,7 +215,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">COAI is thinking...</span>
+                    <span className="text-sm">CSOAI is thinking...</span>
                   </div>
                 </motion.div>
               )}
@@ -226,7 +226,7 @@ export default function Home() {
             // Welcome Screen - Centered like Open WebUI
             <div className="flex-1 flex flex-col items-center justify-center px-8 lg:px-20 h-full">
               <div className="w-full max-w-3xl">
-                {/* COAI Logo/Avatar */}
+                {/* CSOAI Logo/Avatar */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -234,7 +234,7 @@ export default function Home() {
                   className="flex justify-start mb-2"
                 >
                   <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-primary text-primary-foreground font-bold text-sm shadow-sm">
-                    COAI
+                    CSOAI
                   </div>
                 </motion.div>
 
@@ -348,7 +348,7 @@ export default function Home() {
             
             {/* Disclaimer */}
             <p className="text-center text-xs text-muted-foreground mt-2">
-              COAI can make mistakes. Verify compliance information with legal experts.
+              CSOAI can make mistakes. Verify compliance information with legal experts.
             </p>
           </div>
         </div>

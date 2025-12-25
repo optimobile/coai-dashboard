@@ -1,5 +1,5 @@
 /*
- * COAI Training Page
+ * CSOAI Training Page
  * Training modules for Watchdog Analyst certification
  * Connected to real backend API
  */
@@ -259,7 +259,7 @@ export default function Training() {
             <CardContent className="p-6 text-center">
               <Award className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <h3 className="font-semibold text-lg mb-2">
-                COAI Watchdog Analyst Certification
+                CSOAI Watchdog Analyst Certification
               </h3>
               <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
                 After completing all training modules, you'll take a 50-question certification test.

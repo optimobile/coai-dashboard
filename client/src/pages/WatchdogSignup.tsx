@@ -120,7 +120,7 @@ export default function WatchdogSignup() {
           <Link href="/">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground font-bold text-[10px]">
-                COAI
+                CSOAI
               </div>
               <span className="font-semibold">Council of AIs</span>
             </div>
@@ -286,7 +286,7 @@ export default function WatchdogSignup() {
                 </p>
                 <Link href="/">
                   <Button>
-                    Explore COAI Dashboard
+                    Explore CSOAI Dashboard
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -390,7 +390,7 @@ export default function WatchdogSignup() {
       {/* Footer */}
       <footer className="py-8 border-t border-border">
         <div className="container text-center text-sm text-muted-foreground">
-          <p>© 2024 COAI - Council of AIs. Building the future of AI safety.</p>
+          <p>© 2024 CSOAI - Council of AIs. Building the future of AI safety.</p>
           <p className="mt-2">
             Part of the SOAI (Safety Of AI) ecosystem.
           </p>

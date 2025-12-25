@@ -2,7 +2,7 @@
 
 ## Overview
 
-COAI operates a **three-tier hierarchy** in each region:
+CSOAI operates a **three-tier hierarchy** in each region:
 1. **Regional Specialist** - Oversees entire region, manages industry specialists
 2. **Industry Specialists** - Manage analysts within specific industries (healthcare, finance, etc.)
 3. **Certified Analysts** - Perform watchdog report reviews and compliance assessments
@@ -17,14 +17,14 @@ COAI operates a **three-tier hierarchy** in each region:
 - Review escalated cases from industry specialists
 - Train and certify new industry specialists
 - Maintain relationships with regional regulators
-- Adapt global COAI standards to regional requirements
+- Adapt global CSOAI standards to regional requirements
 
 ### Qualifications:
 - 5+ years AI/ML or regulatory compliance experience
 - Legal/regulatory background in target region
 - Industry certifications (CIPP/E, CISSP, NIST AI RMF Certified, etc.)
-- Completed all COAI regional courses with 95%+ scores
-- Passed COAI Regional Specialist Certification Exam
+- Completed all CSOAI regional courses with 95%+ scores
+- Passed CSOAI Regional Specialist Certification Exam
 
 ### Compensation:
 - Base salary: $5,000-$10,000/month (depending on region size)
@@ -52,9 +52,9 @@ COAI operates a **three-tier hierarchy** in each region:
 
 ### Qualifications:
 - 3+ years experience in target industry
-- Completed COAI regional compliance bundle
+- Completed CSOAI regional compliance bundle
 - Completed industry-specific training modules
-- Passed COAI Industry Specialist Certification Exam
+- Passed CSOAI Industry Specialist Certification Exam
 - Supervised by regional specialist for 3-month probation
 
 ### Compensation:
@@ -81,8 +81,8 @@ COAI operates a **three-tier hierarchy** in each region:
 - Escalate complex cases to industry specialist
 
 ### Qualifications:
-- Completed COAI regional compliance bundle
-- Passed COAI Analyst Certification Exam (region-specific)
+- Completed CSOAI regional compliance bundle
+- Passed CSOAI Analyst Certification Exam (region-specific)
 - Assigned to industry specialist for supervision
 
 ### Compensation:
@@ -336,7 +336,7 @@ COAI operates a **three-tier hierarchy** in each region:
 2. **Regional Regulatory Expert Training** (20 hours) → $499
 3. **Multi-Industry Training** (varies) → $1,000-$2,000
 4. **Regional Specialist Certification Exam** (8 hours) → Included
-5. **Probation Period** (180 days) → Supervised by COAI leadership
+5. **Probation Period** (180 days) → Supervised by CSOAI leadership
 6. **Full Regional Specialist Status** → Begin managing region
 
 **Total Investment:** $2,944-$4,444 + 72 hours

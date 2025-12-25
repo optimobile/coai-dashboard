@@ -1,8 +1,8 @@
-# COAI Platform - Progress Report
+# CSOAI Platform - Progress Report
 
 ## Executive Summary
 
-The COAI (Collective Oversight of AI) platform is approximately **75% complete** for MVP launch. The core architecture is solid with 25 database tables, 67 passing tests, and comprehensive frontend coverage. Key remaining work focuses on completing frontend-backend connections and adding monetization features.
+The CSOAI (Collective Oversight of AI) platform is approximately **75% complete** for MVP launch. The core architecture is solid with 25 database tables, 67 passing tests, and comprehensive frontend coverage. Key remaining work focuses on completing frontend-backend connections and adding monetization features.
 
 ---
 

@@ -3,7 +3,7 @@
   "name": "SOAI - Safety of AI Reporter",
   "short_name": "SOAI",
   "version": "1.0.0",
-  "description": "Report AI safety incidents directly from any website. Part of the COAI (Council of AIs) governance framework.",
+  "description": "Report AI safety incidents directly from any website. Part of the CSOAI (Council of AIs) governance framework.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -23,7 +23,7 @@
     "contextMenus"
   ],
   "host_permissions": [
-    "https://coai-dashboard.manus.space/*"
+    "https://csoai-dashboard.manus.space/*"
   ],
   "background": {
     "service_worker": "background.js"

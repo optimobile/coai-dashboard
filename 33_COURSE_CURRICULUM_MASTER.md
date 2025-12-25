@@ -738,7 +738,7 @@ Based on TC260 AI Safety Governance Framework (September 2024):
 ## Competitive Advantages
 
 ### vs IAPP (AI Governance Professional - $1,994)
-**COAI Advantages:**
+**CSOAI Advantages:**
 - 10x cheaper ($199 vs $1,994)
 - Region-specific (EU/US/UK/CA/AU vs generic)
 - Job creation (paid analyst work vs just certification)
@@ -746,7 +746,7 @@ Based on TC260 AI Safety Governance Framework (September 2024):
 - Transparent (public Watchdog + Council vs black box)
 
 ### vs CSA (Trusted AI Safety Expert - $795)
-**COAI Advantages:**
+**CSOAI Advantages:**
 - 4x cheaper ($199 vs $795)
 - Industry-specific (33 courses vs 1 generic)
 - Ongoing earnings ($45/hr analyst work vs one-time cert)
@@ -754,7 +754,7 @@ Based on TC260 AI Safety Governance Framework (September 2024):
 - 33 AI Godfathers (vs anonymous instructors)
 
 ### vs MIT/Harvard ($2,500-$4,500)
-**COAI Advantages:**
+**CSOAI Advantages:**
 - 12-22x cheaper ($199 vs $2,500-$4,500)
 - Faster (2-4 weeks vs 6-12 months)
 - Practical (real cases vs academic theory)

@@ -1,5 +1,5 @@
 /*
- * COAI Dashboard Overview Page
+ * CSOAI Dashboard Overview Page
  * Real-time metrics, compliance status, SOAI-PDCA loop visualization
  * Connected to backend APIs for live data
  */
@@ -112,7 +112,7 @@ export default function Dashboard() {
     })) || []),
     {
       action: "System initialized",
-      system: "COAI Platform",
+      system: "CSOAI Platform",
       time: "Today",
       status: "success",
       icon: CheckCircle2,

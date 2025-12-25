@@ -1,5 +1,5 @@
 /**
- * COAI Stripe Service
+ * CSOAI Stripe Service
  * Handles checkout sessions, subscriptions, and customer management
  */
 

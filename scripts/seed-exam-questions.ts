@@ -565,7 +565,7 @@ const questions: QuestionData[] = [
     points: 1
   },
   {
-    questionText: "In the COAI framework, what triggers escalation to the 33-Agent Council?",
+    questionText: "In the CSOAI framework, what triggers escalation to the 33-Agent Council?",
     questionType: "multiple_choice",
     options: [
       { id: "A", text: "All reports are automatically escalated" },

@@ -1,5 +1,5 @@
 /**
- * COAI Feature Permissions by Subscription Tier
+ * CSOAI Feature Permissions by Subscription Tier
  * 
  * This file defines which features are available at each subscription level.
  * Used by both frontend (to show/hide UI) and backend (to enforce access).
@@ -256,7 +256,7 @@ export function isAtLimit(tier: SubscriptionTier, feature: keyof FeaturePermissi
  */
 export function getUpgradeMessage(feature: keyof FeaturePermissions): string {
   const messages: Partial<Record<keyof FeaturePermissions, string>> = {
-    apiAccess: 'Upgrade to Pro to access the API and integrate COAI with your systems.',
+    apiAccess: 'Upgrade to Pro to access the API and integrate CSOAI with your systems.',
     bulkOperations: 'Upgrade to Enterprise for bulk AI system registration and management.',
     advancedAnalytics: 'Upgrade to Pro for advanced analytics and trend insights.',
     trendAnalysis: 'Upgrade to Enterprise for industry-wide trend analysis.',

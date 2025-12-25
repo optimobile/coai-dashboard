@@ -1,5 +1,5 @@
 /**
- * COAI Stripe Products Configuration
+ * CSOAI Stripe Products Configuration
  * Defines subscription tiers and pricing for the platform
  */
 

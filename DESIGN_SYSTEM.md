@@ -1,11 +1,11 @@
-# COAI Design System & Branding Guidelines
+# CSOAI Design System & Branding Guidelines
 
 ## Brand Identity
 
 ### Brand Essence
 **Authority • Transparency • Humanity • Innovation**
 
-COAI is the Western standard for AI safety governance - professional, trustworthy, and human-centered.
+CSOAI is the Western standard for AI safety governance - professional, trustworthy, and human-centered.
 
 ---
 

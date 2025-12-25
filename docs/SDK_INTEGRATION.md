@@ -1,8 +1,8 @@
-# COAI SDK Integration Guide
+# CSOAI SDK Integration Guide
 
 ## Overview
 
-This guide explains how to integrate COAI's AI safety and compliance platform into your organization's AI systems using our REST API and SDK libraries.
+This guide explains how to integrate CSOAI's AI safety and compliance platform into your organization's AI systems using our REST API and SDK libraries.
 
 ---
 
@@ -10,7 +10,7 @@ This guide explains how to integrate COAI's AI safety and compliance platform in
 
 ### 1. Get Your API Key
 
-1. Log into your COAI dashboard
+1. Log into your CSOAI dashboard
 2. Navigate to **API Keys** in the sidebar
 3. Click **Generate New Key**
 4. Select your tier (Free/Pro/Enterprise)
@@ -36,9 +36,9 @@ pnpm add @coai/sdk
 
 **Python**
 ```python
-from coai import COAIClient
+from coai import CSOAIClient
 
-client = COAIClient(
+client = CSOAIClient(
     api_key="coai_xxx...",
     base_url="https://api.coai.io/v1"  # Optional, defaults to production
 )
@@ -46,9 +46,9 @@ client = COAIClient(
 
 **JavaScript**
 ```javascript
-import { COAIClient } from '@coai/sdk';
+import { CSOAIClient } from '@coai/sdk';
 
-const client = new COAIClient({
+const client = new CSOAIClient({
     apiKey: 'coai_xxx...',
     baseUrl: 'https://api.coai.io/v1'  // Optional
 });
@@ -231,10 +231,10 @@ All SDK methods may raise exceptions. Handle them appropriately:
 **Python**
 ```python
 from coai.exceptions import (
-    COAIAuthError,
-    COAIRateLimitError,
-    COAIValidationError,
-    COAINotFoundError
+    CSOAIAuthError,
+    CSOAIRateLimitError,
+    CSOAIValidationError,
+    CSOAINotFoundError
 )
 
 try:
@@ -242,13 +242,13 @@ try:
         ai_system_id=999,
         framework_id=1
     )
-except COAIAuthError:
+except CSOAIAuthError:
     print("Invalid API key")
-except COAIRateLimitError as e:
+except CSOAIRateLimitError as e:
     print(f"Rate limited. Retry after {e.retry_after} seconds")
-except COAINotFoundError:
+except CSOAINotFoundError:
     print("AI system not found")
-except COAIValidationError as e:
+except CSOAIValidationError as e:
     print(f"Validation error: {e.message}")
 ```
 
@@ -277,10 +277,10 @@ Rate limit headers are included in all responses:
 import os
 
 # Good: Use environment variables
-client = COAIClient(api_key=os.environ["COAI_API_KEY"])
+client = CSOAIClient(api_key=os.environ["CSOAI_API_KEY"])
 
 # Bad: Hardcoded keys
-client = COAIClient(api_key="coai_xxx...")  # Never do this!
+client = CSOAIClient(api_key="coai_xxx...")  # Never do this!
 ```
 
 ### 2. Implement Retry Logic

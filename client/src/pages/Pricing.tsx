@@ -141,7 +141,7 @@ const FEATURE_CATEGORIES = [
   {
     name: 'Integration & API',
     features: [
-      { key: 'apiAccess', label: 'API Access', description: 'Programmatic access to COAI' },
+      { key: 'apiAccess', label: 'API Access', description: 'Programmatic access to CSOAI' },
       { key: 'bulkRegistration', label: 'Bulk Registration', description: 'Register multiple systems at once' },
       { key: 'customIntegrations', label: 'Custom Integrations', description: 'Connect to your existing tools' },
     ],
@@ -155,7 +155,7 @@ const FEATURE_CATEGORIES = [
     ],
   },
   {
-    name: 'COAI Ecosystem',
+    name: 'CSOAI Ecosystem',
     features: [
       { key: 'councilAccess', label: '33-Agent Council', description: 'AI safety evaluation access' },
       { key: 'watchdogReports', label: 'Watchdog Reports', description: 'Monthly incident reports' },

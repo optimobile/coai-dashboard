@@ -59,7 +59,7 @@ export default function About() {
   ];
 
   const milestones = [
-    { year: "2024 Q1", event: "COAI Framework v1.0 Published", description: "Released Western equivalent to TC260" },
+    { year: "2024 Q1", event: "CSOAI Framework v1.0 Published", description: "Released Western equivalent to TC260" },
     { year: "2024 Q2", event: "33-Agent Council Launched", description: "Byzantine consensus mechanism deployed" },
     { year: "2024 Q3", event: "Watchdog System Activated", description: "Public oversight platform operational" },
     { year: "2024 Q4", event: "1,000+ AI Systems Registered", description: "Reached first major adoption milestone" },
@@ -72,13 +72,13 @@ export default function About() {
       <div className="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-20">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <Badge className="mb-4 bg-white/20 text-white border-white/30">About COAI</Badge>
+            <Badge className="mb-4 bg-white/20 text-white border-white/30">About CSOAI</Badge>
             <h1 className="text-5xl font-bold mb-6">Council of AI</h1>
             <p className="text-2xl text-blue-100 mb-8">
               The Western Standard for AI Safety Governance
             </p>
             <p className="text-lg text-blue-200">
-              Established in 2024, the Council of AI (COAI) provides a comprehensive framework for AI safety
+              Established in 2024, the Council of AI (CSOAI) provides a comprehensive framework for AI safety
               governance, serving as the Western equivalent to China's TC260. We combine Byzantine consensus,
               public oversight, and continuous improvement to ensure responsible AI development.
             </p>
@@ -224,7 +224,7 @@ export default function About() {
             <div className="flex-1">
               <h3 className="text-2xl font-bold mb-2">Recognition & Certifications</h3>
               <p className="text-muted-foreground mb-4">
-                COAI is recognized by international standards bodies and has achieved certifications
+                CSOAI is recognized by international standards bodies and has achieved certifications
                 from ISO/IEC, NIST, and the European Commission for AI governance excellence.
               </p>
               <div className="flex gap-3">

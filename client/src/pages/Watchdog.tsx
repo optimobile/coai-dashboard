@@ -1,5 +1,5 @@
 /*
- * COAI Watchdog Page
+ * CSOAI Watchdog Page
  * PUBLIC incident reporting - Full transparency for AI safety
  * "The Watchdog" - Creating jobs for AI Safety Analysts
  */

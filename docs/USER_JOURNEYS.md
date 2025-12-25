@@ -1,8 +1,8 @@
-# COAI Platform - User Journeys & System Architecture
+# CSOAI Platform - User Journeys & System Architecture
 
 ## Executive Summary
 
-COAI serves as the **compliance infrastructure layer** between three key stakeholders in the AI safety ecosystem. This document outlines how each stakeholder interacts with the platform and how the system creates value through the SOAI-PDCA continuous improvement loop.
+CSOAI serves as the **compliance infrastructure layer** between three key stakeholders in the AI safety ecosystem. This document outlines how each stakeholder interacts with the platform and how the system creates value through the SOAI-PDCA continuous improvement loop.
 
 ---
 
@@ -16,7 +16,7 @@ COAI serves as the **compliance infrastructure layer** between three key stakeho
                                       │
                                       ▼
                         ┌─────────────────────────┐
-                        │    BRIDGE 1: COAI       │
+                        │    BRIDGE 1: CSOAI       │
                         │  Translates regulations │
                         │  into actionable        │
                         │  compliance controls    │
@@ -59,7 +59,7 @@ COAI serves as the **compliance infrastructure layer** between three key stakeho
 ### Journey Stages
 
 #### Stage 1: Discovery & Signup
-1. Visit COAI public landing page
+1. Visit CSOAI public landing page
 2. Learn about compliance requirements for their AI system
 3. Sign up for account (Free tier initially)
 4. Explore dashboard and features
@@ -108,7 +108,7 @@ COAI serves as the **compliance infrastructure layer** between three key stakeho
 
 #### Stage 6: Certification & Ongoing Monitoring
 1. Achieve passing compliance score (>80%)
-2. Receive COAI certification badge
+2. Receive CSOAI certification badge
 3. Embed badge on company website
 4. Set up API integration for continuous monitoring
 5. Receive alerts if Watchdog reports are filed
@@ -117,9 +117,9 @@ COAI serves as the **compliance infrastructure layer** between three key stakeho
 
 ```python
 # Example: Enterprise SDK Usage
-from coai import COAIClient
+from coai import CSOAIClient
 
-client = COAIClient(api_key="coai_xxx...")
+client = CSOAIClient(api_key="coai_xxx...")
 
 # Register AI system
 system = client.ai_systems.create(
@@ -152,7 +152,7 @@ if assessment.score < 80:
 
 #### Stage 1: Regulator Account Setup
 1. Request regulator access (verified government email)
-2. COAI admin approves regulator role
+2. CSOAI admin approves regulator role
 3. Access regulator-specific dashboard
 
 #### Stage 2: Industry Overview
@@ -198,11 +198,11 @@ if assessment.score < 80:
 #### Stage 1: Incident Discovery
 1. Sarah applies for job, rejected by AI screening
 2. Suspects bias in the AI system
-3. Searches "report AI bias" → finds COAI Watchdog
+3. Searches "report AI bias" → finds CSOAI Watchdog
 
 #### Stage 2: Report Submission
 **Option A: Web Portal**
-1. Visit COAI Watchdog page
+1. Visit CSOAI Watchdog page
 2. Click "Report an Incident"
 3. Fill in details:
    - AI System: "HireBot by TechRecruit Inc."
@@ -388,13 +388,13 @@ The platform implements a continuous improvement cycle that connects all stakeho
 
 ## Why Companies Can't Build This Themselves
 
-1. **Regulatory Interpretation**: COAI maintains expert interpretation of complex regulations
+1. **Regulatory Interpretation**: CSOAI maintains expert interpretation of complex regulations
 2. **Cross-Framework Mapping**: We map controls across EU AI Act, NIST, TC260, ISO
 3. **Collective Intelligence**: 33-Agent Council provides unbiased evaluation
 4. **Public Accountability**: Watchdog creates external pressure for compliance
 5. **Continuous Updates**: Regulations change; we update controls centrally
 6. **Network Effects**: More companies = better benchmarks and insights
-7. **Third-Party Credibility**: Self-certification isn't trusted; COAI certification is
+7. **Third-Party Credibility**: Self-certification isn't trusted; CSOAI certification is
 
 ---
 

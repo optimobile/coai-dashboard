@@ -1,6 +1,6 @@
-# Contributing to COAI
+# Contributing to CSOAI
 
-First off, thank you for considering contributing to COAI! It's people like you who make AI safety a reality for everyone.
+First off, thank you for considering contributing to CSOAI! It's people like you who make AI safety a reality for everyone.
 
 ## Table of Contents
 
@@ -79,11 +79,11 @@ Documentation improvements are always welcome:
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/coai-dashboard.git
-cd coai-dashboard
+git clone https://github.com/YOUR_USERNAME/csoai-dashboard.git
+cd csoai-dashboard
 
 # Add upstream remote
-git remote add upstream https://github.com/coai-safety/coai-dashboard.git
+git remote add upstream https://github.com/coai-safety/csoai-dashboard.git
 
 # Install dependencies
 pnpm install

@@ -1,5 +1,5 @@
 /*
- * COAI AI Systems Page
+ * CSOAI AI Systems Page
  * Full CRUD functionality for managing AI systems
  * Connected to backend API with real data
  */

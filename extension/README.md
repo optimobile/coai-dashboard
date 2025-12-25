@@ -1,6 +1,6 @@
 # SOAI - Safety of AI Reporter
 
-A Chrome browser extension for reporting AI safety incidents directly from any website. Part of the COAI (Council of AIs) governance framework.
+A Chrome browser extension for reporting AI safety incidents directly from any website. Part of the CSOAI (Council of AIs) governance framework.
 
 ## Features
 
@@ -45,7 +45,7 @@ The extension will be available on the Chrome Web Store once approved.
 
 ### API Key (Optional)
 For authenticated submissions with tracking:
-1. Get an API key from [COAI Dashboard](https://coai-dashboard.manus.space/api-keys)
+1. Get an API key from [CSOAI Dashboard](https://csoai-dashboard.manus.space/api-keys)
 2. Open extension settings
 3. Enter your API key
 
@@ -56,10 +56,10 @@ Enable a floating report button on all pages:
 
 ## Privacy
 
-- Reports are submitted to the COAI platform for review
+- Reports are submitted to the CSOAI platform for review
 - Page URLs are only included if you opt-in
 - No browsing data is collected without explicit action
-- See our [Privacy Policy](https://coai-dashboard.manus.space/privacy) for details
+- See our [Privacy Policy](https://csoai-dashboard.manus.space/privacy) for details
 
 ## Development
 
@@ -87,7 +87,7 @@ No build step required - the extension uses vanilla JavaScript.
 
 ## API Reference
 
-The extension uses the COAI Watchdog API:
+The extension uses the CSOAI Watchdog API:
 
 ```javascript
 // Submit a report
@@ -107,8 +107,8 @@ POST /api/trpc/watchdog.submit
 
 ## Support
 
-- [COAI Dashboard](https://coai-dashboard.manus.space)
-- [API Documentation](https://coai-dashboard.manus.space/api-docs)
+- [CSOAI Dashboard](https://csoai-dashboard.manus.space)
+- [API Documentation](https://csoai-dashboard.manus.space/api-docs)
 - [Report Issues](https://github.com/coai/extension/issues)
 
 ## License
@@ -121,5 +121,5 @@ Contributions are welcome! Please read our contributing guidelines before submit
 
 ---
 
-**COAI - Council of AIs**
+**CSOAI - Council of AIs**
 *Building a safer AI future through collective oversight*

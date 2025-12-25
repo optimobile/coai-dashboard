@@ -55,7 +55,7 @@ export default function MarketingHome() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
               CO
             </div>
-            <span className="font-bold text-xl">COAI</span>
+            <span className="font-bold text-xl">CSOAI</span>
           </div>
 
           <div className="hidden md:flex items-center gap-6">
@@ -192,7 +192,7 @@ export default function MarketingHome() {
               Everything you need for AI governance
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From Byzantine consensus to PDCA cycles, COAI provides a complete governance platform.
+              From Byzantine consensus to PDCA cycles, CSOAI provides a complete governance platform.
             </p>
           </div>
 
@@ -558,9 +558,9 @@ export default function MarketingHome() {
 
             <Card>
               <CardContent className="pt-6">
-                <h3 className="font-bold mb-2">Is COAI compliant with TC260?</h3>
+                <h3 className="font-bold mb-2">Is CSOAI compliant with TC260?</h3>
                 <p className="text-muted-foreground">
-                  Yes, COAI implements all requirements of China's TC260 AI Safety Governance Framework,
+                  Yes, CSOAI implements all requirements of China's TC260 AI Safety Governance Framework,
                   including continuous monitoring (PDCA), ethical review (Council), incident reporting
                   (Watchdog), and transparency (public dashboard).
                 </p>
@@ -580,10 +580,10 @@ export default function MarketingHome() {
 
             <Card>
               <CardContent className="pt-6">
-                <h3 className="font-bold mb-2">Can I integrate COAI with my existing systems?</h3>
+                <h3 className="font-bold mb-2">Can I integrate CSOAI with my existing systems?</h3>
                 <p className="text-muted-foreground">
                   Yes, Enterprise plans include full API access with webhooks, TypeScript SDK, and
-                  comprehensive documentation. You can automate compliance reporting and integrate COAI with
+                  comprehensive documentation. You can automate compliance reporting and integrate CSOAI with
                   your CI/CD pipeline.
                 </p>
               </CardContent>
@@ -598,7 +598,7 @@ export default function MarketingHome() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to get started?</h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Join 1,000+ companies building safer AI with COAI.
+              Join 1,000+ companies building safer AI with CSOAI.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-lg px-8 py-6">
@@ -622,7 +622,7 @@ export default function MarketingHome() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
                   CO
                 </div>
-                <span className="font-bold text-xl">COAI</span>
+                <span className="font-bold text-xl">CSOAI</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 AI governance made simple with Byzantine consensus.
@@ -699,7 +699,7 @@ export default function MarketingHome() {
           </div>
 
           <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>&copy; 2025 COAI. All rights reserved.</p>
+            <p>&copy; 2025 CSOAI. All rights reserved.</p>
           </div>
         </div>
       </footer>

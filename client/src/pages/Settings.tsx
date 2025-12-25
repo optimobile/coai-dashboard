@@ -1,5 +1,5 @@
 /*
- * COAI Settings Page
+ * CSOAI Settings Page
  * User and organization settings
  */
 
@@ -125,7 +125,7 @@ export default function Settings() {
                   {/* Organization */}
                   <div className="space-y-2">
                     <Label htmlFor="organization">Organization</Label>
-                    <Input id="organization" defaultValue="COAI Demo Corp" />
+                    <Input id="organization" defaultValue="CSOAI Demo Corp" />
                   </div>
 
                   <Separator />
