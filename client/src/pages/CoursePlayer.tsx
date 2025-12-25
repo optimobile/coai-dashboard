@@ -18,6 +18,9 @@ import {
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
+import { Quiz } from '@/components/Quiz';
+import { euAiActModule1Quiz } from '@/data/quizzes/eu-ai-act-module-1';
+import type { QuizResult } from '@/types/quiz';
 
 export default function CoursePlayer() {
   const params = useParams();
@@ -25,6 +28,8 @@ export default function CoursePlayer() {
   const courseId = parseInt(params.id || '0');
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
   const [completedModules, setCompletedModules] = useState<Set<number>>(new Set());
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizPassed, setQuizPassed] = useState(false);
 
   // Fetch course details
   const { data: course, isLoading } = trpc.courses.getCourseDetails.useQuery({ courseId });
@@ -52,7 +57,17 @@ export default function CoursePlayer() {
   const isFirstModule = currentModuleIndex === 0;
   const isModuleComplete = completedModules.has(currentModuleIndex);
 
-  // Handle module completion
+  // Handle quiz completion
+  const handleQuizComplete = (result: QuizResult) => {
+    if (result.passed) {
+      setQuizPassed(true);
+      toast.success(`Quiz passed with ${result.percentage}%!`);
+    } else {
+      toast.error(`Quiz failed. You need 70% to pass.`);
+    }
+  };
+
+  // Handle module completion (after quiz)
   const handleMarkComplete = () => {
     if (!course || !enrollment) return;
     
@@ -60,6 +75,16 @@ export default function CoursePlayer() {
       enrollmentId: enrollment.id,
       moduleIndex: currentModuleIndex
     });
+    
+    // Reset quiz state for next module
+    setShowQuiz(false);
+    setQuizPassed(false);
+  };
+
+  // Show quiz button handler
+  const handleShowQuiz = () => {
+    setShowQuiz(true);
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   };
 
   // Navigation
@@ -238,6 +263,29 @@ export default function CoursePlayer() {
 
               <Separator className="my-8" />
 
+              {/* Module Quiz */}
+              {!isModuleComplete && (
+                <div className="mb-8">
+                  <h3 className="text-xl font-semibold mb-4">Module Assessment</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Complete the quiz below to test your understanding. You need 70% to pass.
+                  </p>
+                  
+                  {!showQuiz ? (
+                    <Button onClick={handleShowQuiz} size="lg">
+                      Start Quiz
+                    </Button>
+                  ) : (
+                    <Quiz 
+                      questions={euAiActModule1Quiz} 
+                      onComplete={handleQuizComplete}
+                    />
+                  )}
+                </div>
+              )}
+
+              <Separator className="my-8" />
+
               {/* Module Actions */}
               <div className="flex items-center justify-between">
                 <Button
@@ -250,7 +298,7 @@ export default function CoursePlayer() {
                 </Button>
 
                 <div className="flex items-center gap-3">
-                  {!isModuleComplete && (
+                  {!isModuleComplete && quizPassed && (
                     <Button
                       variant="default"
                       onClick={handleMarkComplete}
@@ -259,6 +307,12 @@ export default function CoursePlayer() {
                       <CheckCircle2 className="w-4 h-4 mr-2" />
                       Mark as Complete
                     </Button>
+                  )}
+                  
+                  {!isModuleComplete && !quizPassed && showQuiz && (
+                    <div className="text-sm text-muted-foreground">
+                      Pass the quiz to mark this module as complete
+                    </div>
                   )}
                   
                   {isModuleComplete && !isLastModule && (
