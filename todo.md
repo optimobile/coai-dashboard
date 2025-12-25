@@ -945,3 +945,84 @@
 - [ ] Test specialist assignment and review workflows
 - [ ] Test course purchase and enrollment
 - [ ] Verify regional routing works correctly
+
+
+## Phase 26 - 33 Human Council Members & Business Model Revision
+
+### Research & Legal Compliance
+- [ ] Research EU AI Act training/certification legal requirements
+- [ ] Research NIST AI RMF training/certification legal requirements
+- [ ] Research UK AI Safety Institute training/certification legal requirements
+- [ ] Research Canada AIDA training/certification legal requirements
+- [ ] Research Australia AI Ethics Framework training/certification legal requirements
+- [ ] Verify we can legally offer paid certifications in each region
+- [ ] Research government demand for AI safety training
+- [ ] Document compliance requirements for each region
+
+### Competitor Analysis
+- [ ] Research existing AI training platforms (DataCamp, Coursera, Udemy, etc.)
+- [ ] Analyze AI certification bodies (IAPP, ISC2, CompTIA, etc.)
+- [ ] Research coding bootcamp models (Lambda School, App Academy, etc.)
+- [ ] Analyze income share agreement (ISA) models
+- [ ] Research successful EdTech pricing strategies
+- [ ] Document competitor strengths and weaknesses
+- [ ] Identify market gaps COAI can fill
+
+### 33 Human Council Members System
+- [ ] Design council member structure (33 AI Godfathers/Experts)
+- [ ] Create council member profiles (bio, expertise, region, industry)
+- [ ] Build council member database table
+- [ ] Design council member recruitment strategy
+- [ ] Create application/nomination system
+- [ ] Build council member public profiles page
+- [ ] Add "Join the Council" CTA throughout website
+- [ ] Create council member dashboard
+- [ ] Implement council member voting interface
+- [ ] Add council member signatures to decisions
+
+### Regional Specialist Recruitment
+- [ ] Create Regional Specialist job descriptions (5 regions)
+- [ ] Build specialist application system
+- [ ] Create specialist recruitment landing page
+- [ ] Add "Become a Specialist" CTAs
+- [ ] Build specialist onboarding workflow
+
+### Business Model Revision
+- [ ] Document complete revenue streams (courses, subscriptions, enterprise, data)
+- [ ] Calculate unit economics for analyst flywheel
+- [ ] Project 5-year revenue with realistic growth
+- [ ] Document competitive advantages
+- [ ] Create investor pitch deck
+- [ ] Update pricing strategy based on competitor research
+
+### Website Improvements
+- [ ] Remove all fake statistics (replace with "0+" or real numbers)
+- [ ] Add proper footer with links (About, Contact, Terms, Privacy, Careers)
+- [ ] Create "How It Works" explainer page
+- [ ] Add council member showcase section
+- [ ] Improve course marketplace UI
+- [ ] Add testimonials section (real or "Coming Soon")
+- [ ] Add FAQ section addressing common concerns
+- [ ] Improve mobile responsiveness
+
+### LOI Generation Strategy
+- [ ] Add LOI signup forms on every page
+- [ ] Create lead magnets (free mini-courses, whitepapers)
+- [ ] Build email nurture sequence
+- [ ] Add exit-intent popups
+- [ ] Create referral program for analysts
+- [ ] Add social proof widgets (live analyst count, reports reviewed)
+
+### Data & Analytics
+- [ ] Set up real-time statistics dashboard
+- [ ] Track genuine user metrics (signups, course enrollments, reports)
+- [ ] Display real data on homepage
+- [ ] Create public transparency dashboard
+- [ ] Add live activity feed
+
+### Documentation
+- [ ] Update todo.md with all new tasks
+- [ ] Create execution roadmap (30/60/90 days)
+- [ ] Document benefits of current system
+- [ ] Create council member recruitment guide
+- [ ] Write specialist recruitment guide
