@@ -7,10 +7,18 @@ import { euAiActModule5Quiz } from './eu-ai-act-module-5';
 import { euAiActModule6Quiz } from './eu-ai-act-module-6';
 import { euAiActModule7Quiz } from './eu-ai-act-module-7';
 import { euAiActModule8Quiz } from './eu-ai-act-module-8';
+import { nistAiRmfModule1Quiz } from './nist-ai-rmf-module-1';
+import { nistAiRmfModule2Quiz } from './nist-ai-rmf-module-2';
+import { nistAiRmfModule3Quiz } from './nist-ai-rmf-module-3';
+import { nistAiRmfModule4Quiz } from './nist-ai-rmf-module-4';
+import { nistAiRmfModule5Quiz } from './nist-ai-rmf-module-5';
+import { nistAiRmfModule6Quiz } from './nist-ai-rmf-module-6';
+import { nistAiRmfModule7Quiz } from './nist-ai-rmf-module-7';
+import { nistAiRmfModule8Quiz } from './nist-ai-rmf-module-8';
 
 // Quiz mapping: courseId -> moduleIndex -> quiz questions
 const quizMap: Record<number, Record<number, QuizQuestion[]>> = {
-  // EU AI Act Fundamentals (courseId: 1, assuming this is the ID from database)
+  // EU AI Act Fundamentals (courseId: 1)
   1: {
     0: euAiActModule1Quiz,
     1: euAiActModule2Quiz,
@@ -20,6 +28,17 @@ const quizMap: Record<number, Record<number, QuizQuestion[]>> = {
     5: euAiActModule6Quiz,
     6: euAiActModule7Quiz,
     7: euAiActModule8Quiz,
+  },
+  // NIST AI RMF Fundamentals (courseId: 2)
+  2: {
+    0: nistAiRmfModule1Quiz,
+    1: nistAiRmfModule2Quiz,
+    2: nistAiRmfModule3Quiz,
+    3: nistAiRmfModule4Quiz,
+    4: nistAiRmfModule5Quiz,
+    5: nistAiRmfModule6Quiz,
+    6: nistAiRmfModule7Quiz,
+    7: nistAiRmfModule8Quiz,
   },
 };
 

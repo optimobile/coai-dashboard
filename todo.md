@@ -1860,3 +1860,67 @@
 - [x] Test module completion flow with quizzes
 - [x] Run all tests and ensure passing (185 tests passing)
 - [ ] Save checkpoint with complete EU AI Act quiz system
+
+
+## Phase 40 - NIST AI RMF Modules 1-8 Quizzes
+
+### Module 1 Quiz - Introduction to NIST AI RMF
+- [x] Write 10 questions covering framework history and purpose
+- [x] Cover voluntary nature and alignment with other frameworks
+- [x] Cover stakeholder roles and benefits
+- [x] Add detailed explanations
+
+### Module 2 Quiz - Trustworthy AI Characteristics
+- [x] Write 10 questions covering all 7 characteristics
+- [x] Cover Valid & Reliable, Safe, Secure & Resilient
+- [x] Cover Accountable & Transparent, Explainable & Interpretable
+- [x] Cover Privacy-Enhanced, Fair with Harmful Bias Managed
+- [x] Add detailed explanations
+
+### Module 3 Quiz - GOVERN Function
+- [x] Write 10 questions covering governance structure
+- [x] Cover policies, procedures, and accountability
+- [x] Cover risk management culture
+- [x] Add detailed explanations
+
+### Module 4 Quiz - MAP Function
+- [x] Write 10 questions covering context mapping
+- [x] Cover AI system categorization and impact assessment
+- [x] Cover stakeholder identification
+- [x] Add detailed explanations
+
+### Module 5 Quiz - MEASURE Function
+- [x] Write 10 questions covering metrics and testing
+- [x] Cover performance evaluation and validation
+- [x] Cover continuous monitoring
+- [x] Add detailed explanations
+
+### Module 6 Quiz - MANAGE Function
+- [x] Write 10 questions covering risk mitigation
+- [x] Cover incident response and continuous improvement
+- [x] Cover documentation and reporting
+- [x] Add detailed explanations
+
+### Module 7 Quiz - AI Lifecycle and Actors
+- [x] Write 10 questions covering AI lifecycle stages
+- [x] Cover roles and responsibilities of different actors
+- [x] Cover supply chain considerations
+- [x] Add detailed explanations
+
+### Module 8 Quiz - Implementation Roadmap
+- [x] Write 10 questions covering implementation steps
+- [x] Cover organizational readiness and maturity
+- [x] Cover best practices and common pitfalls
+- [x] Add detailed explanations
+
+### Quiz Mapping Integration
+- [x] Update client/src/data/quizzes/index.ts with NIST AI RMF mapping
+- [x] Add courseId mapping for NIST AI RMF (courseId: 2)
+- [x] Test dynamic quiz loading for NIST course
+
+### Testing
+- [x] Test all 8 NIST quizzes individually
+- [x] Verify 70% passing requirement for each
+- [x] Test module completion flow with NIST quizzes
+- [x] Run all tests and ensure passing
+- [x] Save checkpoint with complete NIST AI RMF quiz system
