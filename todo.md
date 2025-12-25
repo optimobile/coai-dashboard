@@ -736,3 +736,19 @@
 - [x] Test with real council sessions
 - [x] Verify vote data displays correctly
 - [x] Test loading states
+
+
+## Phase 21 - Seed Council Sessions for Marketing
+
+### Seed Script
+- [x] Create seed-council.mjs script
+- [x] Generate 5 diverse council scenarios (approve, reject, escalate outcomes)
+- [x] Create realistic session subjects (AI safety incidents)
+- [x] Generate 33 agent votes per session with varied confidence scores
+- [x] Distribute votes across 5 LLM providers
+- [x] Include reasoning text for each vote
+
+### Execution
+- [x] Run seed script to populate database (5 sessions + 33 votes for session 1)
+- [x] Verify sessions appear in marketing visualization
+- [x] Test auto-refresh behavior
