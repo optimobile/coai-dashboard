@@ -15,6 +15,14 @@ import { nistAiRmfModule5Quiz } from './nist-ai-rmf-module-5';
 import { nistAiRmfModule6Quiz } from './nist-ai-rmf-module-6';
 import { nistAiRmfModule7Quiz } from './nist-ai-rmf-module-7';
 import { nistAiRmfModule8Quiz } from './nist-ai-rmf-module-8';
+import { iso42001Module1Quiz } from './iso-42001-module-1';
+import { iso42001Module2Quiz } from './iso-42001-module-2';
+import { iso42001Module3Quiz } from './iso-42001-module-3';
+import { iso42001Module4Quiz } from './iso-42001-module-4';
+import { iso42001Module5Quiz } from './iso-42001-module-5';
+import { iso42001Module6Quiz } from './iso-42001-module-6';
+import { iso42001Module7Quiz } from './iso-42001-module-7';
+import { iso42001Module8Quiz } from './iso-42001-module-8';
 
 // Quiz mapping: courseId -> moduleIndex -> quiz questions
 const quizMap: Record<number, Record<number, QuizQuestion[]>> = {
@@ -39,6 +47,17 @@ const quizMap: Record<number, Record<number, QuizQuestion[]>> = {
     5: nistAiRmfModule6Quiz,
     6: nistAiRmfModule7Quiz,
     7: nistAiRmfModule8Quiz,
+  },
+  // ISO 42001 AI Management System Fundamentals (courseId: 3)
+  3: {
+    0: iso42001Module1Quiz,
+    1: iso42001Module2Quiz,
+    2: iso42001Module3Quiz,
+    3: iso42001Module4Quiz,
+    4: iso42001Module5Quiz,
+    5: iso42001Module6Quiz,
+    6: iso42001Module7Quiz,
+    7: iso42001Module8Quiz,
   },
 };
 

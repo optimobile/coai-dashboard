@@ -1924,3 +1924,66 @@
 - [x] Test module completion flow with NIST quizzes
 - [x] Run all tests and ensure passing
 - [x] Save checkpoint with complete NIST AI RMF quiz system
+
+
+## Phase 41 - ISO 42001 Modules 1-8 Quizzes
+
+### Module 1 Quiz - Introduction to ISO 42001
+- [x] Write 10 questions covering ISO 42001 history and purpose
+- [x] Cover AI management system (AIMS) concept
+- [x] Cover benefits and certification process
+- [x] Add detailed explanations
+
+### Module 2 Quiz - AIMS Requirements and Structure
+- [x] Write 10 questions covering ISO 42001 structure (10 clauses)
+- [x] Cover mandatory vs optional clauses
+- [x] Cover documentation requirements
+- [x] Add detailed explanations
+
+### Module 3 Quiz - Context and Leadership
+- [x] Write 10 questions covering organizational context (Clause 4)
+- [x] Cover leadership and commitment (Clause 5)
+- [x] Cover AI policy and roles
+- [x] Add detailed explanations
+
+### Module 4 Quiz - Planning and Risk Management
+- [x] Write 10 questions covering planning (Clause 6)
+- [x] Cover AI risk assessment and treatment
+- [x] Cover objectives and planning to achieve them
+- [x] Add detailed explanations
+
+### Module 5 Quiz - Support and Operations
+- [x] Write 10 questions covering support (Clause 7)
+- [x] Cover operational planning and control (Clause 8)
+- [x] Cover AI system lifecycle management
+- [x] Add detailed explanations
+
+### Module 6 Quiz - Performance Evaluation
+- [x] Write 10 questions covering monitoring and measurement (Clause 9)
+- [x] Cover internal audit requirements
+- [x] Cover management review process
+- [x] Add detailed explanations
+
+### Module 7 Quiz - Improvement and Certification
+- [x] Write 10 questions covering continual improvement (Clause 10)
+- [x] Cover nonconformity and corrective action
+- [x] Cover certification process and audits
+- [x] Add detailed explanations
+
+### Module 8 Quiz - Implementation Best Practices
+- [x] Write 10 questions covering implementation roadmap
+- [x] Cover integration with existing management systems
+- [x] Cover common challenges and solutions
+- [x] Add detailed explanations
+
+### Quiz Mapping Integration
+- [x] Update client/src/data/quizzes/index.ts with ISO 42001 mapping
+- [x] Add courseId mapping for ISO 42001 (courseId: 3)
+- [x] Test dynamic quiz loading for ISO 42001 course
+
+### Testing
+- [x] Test all 8 ISO 42001 quizzes individually
+- [x] Verify 70% passing requirement for each
+- [x] Test module completion flow with ISO 42001 quizzes
+- [x] Run all tests and ensure passing
+- [x] Save checkpoint with complete ISO 42001 quiz system
