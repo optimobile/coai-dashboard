@@ -26,6 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import CouncilVisualization from "@/components/CouncilVisualization";
 
 export default function MarketingHome() {
   const [email, setEmail] = useState("");
@@ -150,20 +151,30 @@ export default function MarketingHome() {
             </div>
           </motion.div>
 
-          {/* Product Screenshot */}
+          {/* Live 33-Agent Council Visualization */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mt-20 max-w-6xl mx-auto"
           >
-            <div className="relative rounded-2xl border-2 shadow-2xl overflow-hidden bg-card">
-              <div className="aspect-video bg-gradient-to-br from-primary/10 via-background to-accent/10 flex items-center justify-center">
-                <div className="text-center">
-                  <Play className="h-20 w-20 mx-auto mb-4 text-primary" />
-                  <p className="text-lg font-medium">Watch 3-Minute Demo</p>
-                  <p className="text-sm text-muted-foreground">See COAI in action</p>
-                </div>
+            <div className="relative rounded-2xl border-2 shadow-2xl overflow-hidden bg-card/50 backdrop-blur-sm">
+              <div className="absolute top-4 left-4 z-10">
+                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                  <span className="relative flex h-2 w-2 mr-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  </span>
+                  Live Voting
+                </Badge>
+              </div>
+              <div className="aspect-video bg-gradient-to-br from-primary/5 via-background/50 to-accent/5">
+                <CouncilVisualization autoAnimate={true} showLabels={true} />
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent p-6">
+                <p className="text-center text-sm text-muted-foreground">
+                  <strong className="text-foreground">Byzantine Consensus in Action</strong> — Watch 33 AI agents reach agreement in real-time
+                </p>
               </div>
             </div>
           </motion.div>
