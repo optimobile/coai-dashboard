@@ -36,6 +36,7 @@ import { recommendationsRouter } from "./recommendations";
 import { coursesRouter } from "./courses";
 import { modulePopulationRouter } from "./routers/modulePopulation";
 import { certificatesRouter } from "./routers/certificates";
+import { progressRouter } from "./routers/progress";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2774,6 +2775,7 @@ export const appRouter = router({
   recommendations: recommendationsRouter,
   courses: coursesRouter,
   modulePopulation: modulePopulationRouter,
+  progress: progressRouter,
   certificates: certificatesRouter,
 });
 

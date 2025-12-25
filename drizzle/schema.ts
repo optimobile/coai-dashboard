@@ -773,3 +773,76 @@ export const specialistEarnings = mysqlTable("specialist_earnings", {
 
 export type SpecialistEarning = typeof specialistEarnings.$inferSelect;
 export type InsertSpecialistEarning = typeof specialistEarnings.$inferInsert;
+
+/**
+ * Learning sessions table
+ * Tracks time spent by users on course modules for analytics
+ */
+export const learningSessions = mysqlTable("learning_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseId: int("courseId").notNull(),
+  moduleIndex: int("moduleIndex").notNull(), // Which module (0-based)
+  sessionStart: timestamp("sessionStart").notNull(),
+  sessionEnd: timestamp("sessionEnd"),
+  durationMinutes: int("durationMinutes").default(0).notNull(), // Calculated duration
+  completed: boolean("completed").default(false).notNull(), // Did they finish the module?
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LearningSession = typeof learningSessions.$inferSelect;
+export type InsertLearningSession = typeof learningSessions.$inferInsert;
+
+/**
+ * Quiz analytics table
+ * Detailed tracking of quiz performance for progress analytics
+ */
+export const quizAnalytics = mysqlTable("quiz_analytics", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseId: int("courseId").notNull(),
+  moduleIndex: int("moduleIndex").notNull(),
+  attemptNumber: int("attemptNumber").default(1).notNull(), // How many times they tried
+  score: int("score").notNull(), // 0-100 percentage
+  correctAnswers: int("correctAnswers").notNull(),
+  totalQuestions: int("totalQuestions").notNull(),
+  timeSpentSeconds: int("timeSpentSeconds").notNull(), // Time taken to complete quiz
+  passed: boolean("passed").notNull(), // Did they meet 70% threshold?
+  questionResults: json("questionResults").$type<{
+    questionId: string;
+    correct: boolean;
+    selectedAnswer: string;
+    timeSpent: number;
+  }[]>(), // Detailed per-question results
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type QuizAnalytic = typeof quizAnalytics.$inferSelect;
+export type InsertQuizAnalytic = typeof quizAnalytics.$inferInsert;
+
+/**
+ * User recommendations table
+ * Personalized course recommendations based on progress and performance
+ */
+export const userRecommendations = mysqlTable("user_recommendations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  recommendedCourseId: int("recommendedCourseId").notNull(),
+  reason: mysqlEnum("reason", [
+    "weak_area", // Low quiz scores in related topics
+    "next_in_path", // Logical next course
+    "advanced", // Ready for advanced level
+    "framework_preference", // Matches user's framework interest
+    "popular", // Trending course
+    "incomplete" // User started but didn't finish
+  ]).notNull(),
+  reasonText: text("reasonText"), // Human-readable explanation
+  priority: int("priority").default(5).notNull(), // 1-10, higher = more important
+  dismissed: boolean("dismissed").default(false).notNull(), // User dismissed this recommendation
+  enrolled: boolean("enrolled").default(false).notNull(), // User enrolled after seeing recommendation
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserRecommendation = typeof userRecommendations.$inferSelect;
+export type InsertUserRecommendation = typeof userRecommendations.$inferInsert;

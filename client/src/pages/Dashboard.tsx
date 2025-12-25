@@ -24,6 +24,7 @@ import {
   CheckCircle,
   CircleDot,
   Circle,
+  Target,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -39,6 +40,7 @@ const frameworkCompliance = [
 ];
 
 const quickActions = [
+  { label: "My Progress", href: "/dashboard/progress", icon: Target },
   { label: "Register AI System", href: "/ai-systems", icon: Shield },
   { label: "Run Assessment", href: "/compliance", icon: FileCheck },
   { label: "View Council", href: "/agent-council", icon: Users },

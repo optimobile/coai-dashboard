@@ -1578,7 +1578,7 @@
 - [ ] Create course_progress table in schema (if not exists)
 - [ ] Create module_completions table in schema
 - [ ] Add markModuleComplete endpoint in courses router
-- [ ] Add getCourseProgress endpoint
+- [x] Add getCourseProgress endpoint
 - [ ] Update frontend to call progress endpoints
 - [ ] Show completion checkmarks on completed modules
 - [ ] Calculate overall course completion percentage
@@ -2469,3 +2469,58 @@
 - [x] Verify TypeScript compilation (no errors)
 - [x] Dev server running without errors
 - [x] Save checkpoint with all feature pages
+
+## Phase 52 - Student Progress Dashboard
+
+### Database Schema Extensions
+- [x] Review existing course_enrollments table for progress tracking fields
+- [x] Add learning_sessions table for time tracking (session start/end, duration, module_id)
+- [x] Add quiz_analytics table for detailed quiz performance (attempts, scores, time_taken)
+- [x] Add user_recommendations table for personalized learning suggestions
+- [x] Run database migration to add new tables
+
+### Backend APIs - Progress Router
+- [x] Create progress tRPC router
+- [x] Add getOverallProgress endpoint (completion %, courses enrolled, completed, in-progress)
+- [x] Add getCourseProgress endpoint (module completion, quiz scores, time spent per course)
+- [x] Add getQuizAnalytics endpoint (average scores, strongest/weakest topics, improvement trends)
+- [x] Add getCertificates endpoint (earned certificates with issue dates)
+- [x] Add getRecommendations endpoint (personalized course suggestions based on progress)
+- [x] Add trackLearningSession endpoint (log time spent on modules)
+- [x] Write unit tests for all progress endpoints (target: 15+ tests)
+
+### Frontend UI - Progress Dashboard Page
+- [x] Create StudentProgress.tsx page component
+- [x] Build overview section with key metrics cards (completion %, hours learned, certificates, avg score)
+- [x] Create course progress section with progress bars and module completion
+- [x] Build quiz analytics section with charts (score trends, topic performance)
+- [x] Add certificates showcase section with download buttons
+- [x] Create recommendations section with suggested next courses
+- [x] Add time spent visualization (daily/weekly learning activity)
+- [x] Implement responsive design for mobile/tablet
+- [x] Add route to App.tsx (/dashboard/progress)
+- [x] Link from main dashboard and user profile
+
+### Analytics & Visualizations
+- [x] Install chart library (recharts)
+- [x] Create line chart for quiz score trends over time
+- [x] Create bar chart for time spent per course
+- [ ] Create radar chart for topic strength analysis
+- [x] Add progress ring components for completion percentages
+- [ ] Create activity heatmap for learning consistency
+
+### Personalized Recommendations Engine
+- [ ] Analyze user's completed courses and quiz performance
+- [ ] Recommend courses based on weak areas (e.g., low quiz scores)
+- [ ] Suggest next logical course in learning path
+- [ ] Recommend advanced courses after completing fundamentals
+- [ ] Consider user's framework preferences (EU AI Act, NIST, ISO)
+- [ ] Add "Why recommended" explanations for each suggestion
+
+### Testing & Integration
+- [ ] Write unit tests for progress router (15+ tests)
+- [ ] Test progress calculations with sample data
+- [ ] Verify chart rendering and data accuracy
+- [ ] Test recommendations engine logic
+- [ ] Ensure all 200+ tests passing
+- [ ] Manual testing of complete dashboard flow
