@@ -1451,3 +1451,70 @@
 - [ ] Documentation for admins and instructors
 - [ ] User onboarding flow
 - [ ] Customer support system integration
+
+
+## Phase 32 - EU AI Act Course Content Population
+
+### Research & Planning
+- [x] Research EU AI Act official text and requirements
+- [x] Identify key articles, definitions, and compliance requirements (saved in eu-ai-act-research.md)
+- [x] Map course progression: Fundamentals → Advanced → Specialist
+- [x] Define learning objectives for each course level
+- [x] Design module structure (8 modules Fundamentals, 10 Advanced, 10 Specialist)
+
+### EU AI Act Fundamentals Course
+- [ ] Course overview and description
+- [ ] Learning objectives (5-7 objectives)
+- [ ] Module 1: Introduction to EU AI Act
+- [ ] Module 2: Risk Classification System
+- [ ] Module 3: Prohibited AI Practices
+- [ ] Module 4: High-Risk AI Systems
+- [ ] Module 5: Transparency Requirements
+- [ ] Module 6: Provider and Deployer Obligations
+- [ ] Module 7: Governance and Enforcement
+- [ ] Module 8: Compliance Timeline and Penalties
+- [ ] Module quizzes (5-10 questions each)
+- [ ] Final certification exam (50 questions)
+
+### EU AI Act Advanced Course
+- [ ] Course overview and description
+- [ ] Learning objectives (5-7 objectives)
+- [ ] Module 1: Deep Dive into Risk Assessment
+- [ ] Module 2: Technical Documentation Requirements
+- [ ] Module 3: Data Governance and Quality
+- [ ] Module 4: Human Oversight Mechanisms
+- [ ] Module 5: Conformity Assessment Procedures
+- [ ] Module 6: Post-Market Monitoring
+- [ ] Module 7: Incident Reporting and Response
+- [ ] Module 8: AI Office and Regulatory Bodies
+- [ ] Module 9: Sector-Specific Applications
+- [ ] Module 10: International Harmonization
+- [ ] Module quizzes (5-10 questions each)
+- [ ] Final certification exam (50 questions)
+
+### EU AI Act Specialist Course
+- [ ] Course overview and description
+- [ ] Learning objectives (5-7 objectives)
+- [ ] Module 1: Advanced Risk Management Frameworks
+- [ ] Module 2: AI System Lifecycle Management
+- [ ] Module 3: Auditing and Certification
+- [ ] Module 4: Legal and Contractual Considerations
+- [ ] Module 5: Cross-Border Compliance
+- [ ] Module 6: AI Governance Structures
+- [ ] Module 7: Case Studies and Best Practices
+- [ ] Module 8: Future Regulatory Developments
+- [ ] Module 9: Consulting and Advisory Services
+- [ ] Module 10: Specialist Certification Project
+- [ ] Module quizzes (5-10 questions each)
+- [ ] Final certification exam (50 questions)
+
+### Database Population
+- [ ] Insert course records into database
+- [ ] Insert module records with content
+- [ ] Insert quiz questions and answers
+- [ ] Insert exam questions and answers
+- [ ] Link courses to EU region
+- [ ] Set pricing and payment plans
+- [ ] Create Stripe products and prices
+- [ ] Test course enrollment flow
+- [ ] Verify content displays correctly
