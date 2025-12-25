@@ -34,6 +34,7 @@ import { notifyOwner } from "./_core/notification";
 import { publicApiRouter } from "./publicApi";
 import { recommendationsRouter } from "./recommendations";
 import { coursesRouter } from "./courses";
+import { modulePopulationRouter } from "./routers/modulePopulation";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2771,6 +2772,7 @@ export const appRouter = router({
   regulator: regulatorRouter,
   recommendations: recommendationsRouter,
   courses: coursesRouter,
+  modulePopulation: modulePopulationRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -2164,3 +2164,45 @@
 - [ ] Populate module content into database (pending schema verification)
 - [ ] Test module display in CoursePlayer
 - [ ] Save checkpoint with complete content
+
+
+## Phase 46 - Populate Module Content to Database
+
+### Database Schema Analysis
+- [x] Review courses table structure
+- [x] Understand module storage approach (JSON modules field)
+- [x] Identify correct fields for module content
+
+### API Endpoint Creation
+- [x] Create server-side tRPC endpoint (modulePopulation router)
+- [x] Handle file reading from markdown files
+- [x] Implement module update logic with fallback to creation
+
+### Module Population
+- [ ] Populate NIST AI RMF Module 2 (Trustworthy AI - 4,626 words)
+- [ ] Populate NIST AI RMF Module 3 (GOVERN - 3,675 words)
+- [ ] Populate NIST AI RMF Module 4 (MAP - 3,789 words)
+- [ ] Populate NIST AI RMF Module 5 (MEASURE - 3,225 words)
+- [ ] Populate NIST AI RMF Module 6 (MANAGE - 3,375 words)
+- [ ] Populate NIST AI RMF Module 7 (Lifecycle - 3,529 words)
+- [ ] Populate NIST AI RMF Module 8 (Implementation - 3,240 words)
+- [ ] Populate ISO 42001 Module 2 (AIMS Structure - 3,911 words)
+- [ ] Populate ISO 42001 Module 3 (Context & Leadership - 3,098 words)
+- [ ] Populate ISO 42001 Module 4 (Planning & Risk - 3,076 words)
+- [ ] Populate ISO 42001 Module 5 (Support & Operations - 3,204 words)
+- [ ] Populate ISO 42001 Module 6 (Performance - 2,854 words)
+- [ ] Populate ISO 42001 Module 7 (Improvement - 2,880 words)
+- [ ] Populate ISO 42001 Module 8 (Best Practices - 2,920 words)
+
+### Current Status
+- [x] All 14 comprehensive module markdown files created (47,402 words)
+- [x] Module population tRPC endpoint created and tested
+- [x] Module content ready for population
+- [ ] Resolve database course ID mapping issue (NIST/ISO framework mismatch)
+- [ ] Complete module population to correct course IDs
+- [ ] Test module display in CoursePlayer
+- [ ] Verify all 14 modules are accessible
+- [ ] Check content formatting and readability
+- [ ] Save checkpoint with populated modules
+- [ ] Run all tests and ensure passing
+- [ ] Save checkpoint with populated modules
