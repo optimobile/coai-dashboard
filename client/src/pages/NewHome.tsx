@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import AnimatedParticles from "@/components/AnimatedParticles";
+import PlatformTour from "@/components/PlatformTour";
 
 export default function NewHome() {
   const [email, setEmail] = useState("");
@@ -23,7 +25,9 @@ export default function NewHome() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0A2540] via-[#1E3A5F] to-[#0A2540]">
+    <>
+      <PlatformTour />
+      <div className="min-h-screen bg-gradient-to-b from-[#0A2540] via-[#1E3A5F] to-[#0A2540]">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
@@ -34,6 +38,9 @@ export default function NewHome() {
         
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A2540]/90 via-[#0A2540]/70 to-[#0A2540]/90" />
+        
+        {/* Animated Particles */}
+        <AnimatedParticles />
         
         {/* Content */}
         <div className="relative z-10 container mx-auto px-6 py-20 text-center">
@@ -1006,5 +1013,6 @@ export default function NewHome() {
         </div>
       </section>
     </div>
+    </>
   );
 }
