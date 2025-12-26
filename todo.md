@@ -3174,3 +3174,22 @@
 - [ ] Improve call-to-action placement
 - [ ] Add trust signals
 - [ ] Create cohesive user journey
+
+## Phase 11: Training & Certification Page Redesign
+
+### Training Page
+- [x] Rewrite page header with clear value proposition
+- [x] Add compelling course benefits section
+- [x] Improve course descriptions with learning outcomes
+- [x] Add "What You'll Learn" sections for each framework
+- [x] Include time commitments and prerequisites
+- [x] Add clear CTAs for starting courses
+
+### Certification Page
+- [x] Rewrite certification overview with clear benefits
+- [x] Detail exam format, duration, and passing criteria
+- [x] Explain certification levels (Foundation, Professional, Expert)
+- [x] Add "Why Get Certified?" section
+- [x] Include sample questions or exam preview
+- [x] Show career outcomes and salary data
+- [x] Add clear exam registration CTAs

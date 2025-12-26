@@ -20,10 +20,12 @@ import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import WatchdogSignup from "./pages/WatchdogSignup";
 import Training from "./pages/Training";
+import TrainingV2 from "./pages/Training-v2";
 import Courses from "./pages/Courses";
 import MyCourses from "./pages/MyCourses";
 import CoursePlayer from "./pages/CoursePlayer";
 import Certification from "./pages/Certification";
+import CertificationV2 from "./pages/Certification-v2";
 import CertificationExam from "./pages/CertificationExam";
 import CertificationResults from "./pages/CertificationResults";
 import MyCertificates from "./pages/MyCertificates";
@@ -110,7 +112,7 @@ function App() {
                   <Route path="/settings/billing" component={Billing} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
-                  <Route path="/training" component={Training} />
+                  <Route path="/training" component={TrainingV2} />
                   <Route path="/courses" component={Courses} />
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/dashboard/progress" component={StudentProgress} />
@@ -120,7 +122,7 @@ function App() {
                   <Route path="/features/pdca-framework" component={PDCAFrameworkFeature} />
                   <Route path="/features/training-certification" component={TrainingCertificationFeature} />
                   <Route path="/features/watchdog-jobs" component={WatchdogJobsFeature} />
-                  <Route path="/certification" component={Certification} />
+                  <Route path="/certification" component={CertificationV2} />
                   <Route path="/certification/exam" component={CertificationExam} />
                   <Route path="/certification/results" component={CertificationResults} />
                   <Route path="/certificates" component={MyCertificates} />
