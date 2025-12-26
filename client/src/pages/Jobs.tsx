@@ -33,6 +33,9 @@ import {
   TrendingUp,
   Users,
   Globe,
+  Upload,
+  FileText,
+  X,
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
@@ -45,6 +48,9 @@ export default function Jobs() {
   const [selectedJob, setSelectedJob] = useState<number | null>(null);
   const [showApplicationDialog, setShowApplicationDialog] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
 
   // Fetch job listings with filters
   const { data: jobsData, isLoading } = trpc.jobs.getJobListings.useQuery({
@@ -77,11 +83,78 @@ export default function Jobs() {
     },
   });
 
+  // File upload mutation
+  const uploadMutation = trpc.fileUpload.uploadFile.useMutation();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB');
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Only PDF, DOC, DOCX, and TXT files are allowed');
+      return;
+    }
+
+    setResumeFile(file);
+
+    // Upload file
+    setUploading(true);
+    try {
+      // Read file as base64
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64Data = reader.result?.toString().split(',')[1];
+        if (!base64Data) {
+          toast.error('Failed to read file');
+          setUploading(false);
+          return;
+        }
+
+        // Generate key
+        const timestamp = Date.now();
+        const key = `resumes/${timestamp}-${file.name}`;
+
+        // Upload to server
+        const result = await uploadMutation.mutateAsync({
+          key,
+          data: base64Data,
+          contentType: file.type,
+        });
+
+        setResumeUrl(result.url);
+        toast.success('Resume uploaded successfully');
+        setUploading(false);
+      };
+      reader.onerror = () => {
+        toast.error('Failed to read file');
+        setUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast.error('Failed to upload resume');
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setResumeFile(null);
+    setResumeUrl('');
+  };
+
   const handleApply = () => {
     if (!selectedJob) return;
     applyMutation.mutate({
       jobId: selectedJob,
       coverLetter: coverLetter || undefined,
+      resumeUrl: resumeUrl || undefined,
     });
   };
 
@@ -443,6 +516,53 @@ export default function Jobs() {
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                Resume (Optional)
+              </label>
+              {!resumeFile ? (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                  <input
+                    type="file"
+                    id="resume-upload"
+                    className="hidden"
+                    accept=".pdf,.doc,.docx,.txt"
+                    onChange={handleFileChange}
+                    disabled={uploading}
+                  />
+                  <label htmlFor="resume-upload" className="cursor-pointer">
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                    <p className="text-sm text-gray-600 mb-1">
+                      {uploading ? 'Uploading...' : 'Click to upload resume'}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      PDF, DOC, DOCX, or TXT (max 10MB)
+                    </p>
+                  </label>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border">
+                  <FileText className="h-5 w-5 text-blue-600" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {resumeFile.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {(resumeFile.size / 1024).toFixed(1)} KB
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleRemoveFile}
+                    className="h-8 w-8"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">
                 Cover Letter (Optional)

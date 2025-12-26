@@ -53,6 +53,7 @@ import Signup from "./pages/Signup";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
+import NotificationSettings from "./pages/NotificationSettings";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import AgentCouncilFeature from "./pages/features/AgentCouncilFeature";
 import PDCAFrameworkFeature from "./pages/features/PDCAFrameworkFeature";
@@ -94,6 +95,7 @@ function App() {
                   <Route path="/reports" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
+                  <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
                   <Route path="/training" component={Training} />
                   <Route path="/courses" component={Courses} />

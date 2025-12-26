@@ -41,6 +41,7 @@ import { pdcaTemplatesRouter } from "./routers/pdcaTemplates";
 import { bulkImportRouter } from "./routers/bulkImport";
 import { jobsRouter } from "./routers/jobs";
 import { notificationsRouter } from "./routers/notifications";
+import { fileUploadRouter } from "./routers/fileUpload";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2785,6 +2786,7 @@ export const appRouter = router({
   bulkImport: bulkImportRouter,
   jobs: jobsRouter,
   notifications: notificationsRouter,
+  fileUpload: fileUploadRouter,
 });
 
 export type AppRouter = typeof appRouter;
