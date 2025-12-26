@@ -28,7 +28,7 @@ import {
   apiKeys,
   pdcaCycles,
 } from "../drizzle/schema";
-import { eq, desc, sql, and } from "drizzle-orm";
+import { eq, desc, sql, and, or } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 import { publicApiRouter } from "./publicApi";
@@ -43,10 +43,23 @@ import { jobsRouter } from "./routers/jobs";
 import { notificationsRouter } from "./routers/notifications";
 import { fileUploadRouter } from "./routers/fileUpload";
 import { translationsRouter } from "./routers/translations";
+import { reportsRouter } from "./routers/reports";
+import { webhooksRouter } from "./routers/webhooks";
+import { onboardingRouter } from "./routers/onboarding";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
 // ============================================
+// Framework router for compliance frameworks
+const frameworksRouter = router({
+  list: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    const frameworks = await db.query.complianceFrameworks.findMany();
+    return frameworks;
+  }),
+});
+
 const watchdogRouter = router({
   // Get all public watchdog reports
   list: publicProcedure.query(async () => {
@@ -941,7 +954,7 @@ const aiSystemsRouter = router({
       return {
         riskDistribution,
         typeDistribution,
-        complianceByFramework,
+        complianceFrameworks,
         incidentTrends,
         generatedAt: new Date().toISOString(),
       };
@@ -2789,6 +2802,9 @@ export const appRouter = router({
   notifications: notificationsRouter,
   fileUpload: fileUploadRouter,
   translations: translationsRouter,
+  reports: reportsRouter,
+  webhooks: webhooksRouter,
+  onboarding: onboardingRouter,
 });
 
 export type AppRouter = typeof appRouter;
