@@ -8,6 +8,7 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
+import './lib/i18n';
 
 const queryClient = new QueryClient();
 
@@ -54,11 +55,11 @@ const trpcClient = trpc.createClient({
 });
 
 createRoot(document.getElementById("root")!).render(
-  <HelmetProvider>
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
+  <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
         <App />
-      </QueryClientProvider>
-    </trpc.Provider>
-  </HelmetProvider>
+      </HelmetProvider>
+    </QueryClientProvider>
+  </trpc.Provider>
 );

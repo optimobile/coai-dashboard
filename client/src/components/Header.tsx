@@ -5,10 +5,11 @@
 
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Globe } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { LanguageSelector } from './LanguageSelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,62 +33,48 @@ export function Header() {
       name: 'Training', 
       href: '/training',
       submenu: [
-        { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
-        { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses and progress' },
-        { name: 'EU AI Act', href: '/courses?framework=eu', description: 'European AI regulation training' },
-        { name: 'NIST AI RMF', href: '/courses?framework=nist', description: 'US AI risk management framework' },
-        { name: 'ISO 42001', href: '/courses?framework=iso', description: 'International AI management system' },
+        { name: 'Courses', href: '/courses', description: 'Browse courses' },
+        { name: 'My Courses', href: '/my-courses', description: 'Your courses' },
       ]
     },
     { 
       name: 'Certification', 
       href: '/certification',
       submenu: [
-        { name: 'Overview', href: '/certification', description: 'Learn about certification' },
-        { name: 'Take Exam', href: '/exam', description: 'Start your certification exam' },
-        { name: 'My Certificates', href: '/certificates', description: 'View your earned certificates' },
-        { name: 'Verify Certificate', href: '/verify-certificate', description: 'Verify a certificate' },
+        { name: 'Exam', href: '/exam', description: 'Take exam' },
+        { name: 'My Certs', href: '/certificates', description: 'Your certificates' },
       ]
     },
     { 
       name: 'SOAI-PDCA', 
       href: '/soai-pdca',
       submenu: [
-        { name: 'Framework Overview', href: '/soai-pdca', description: 'Learn about our methodology' },
-        { name: 'PDCA Simulator', href: '/pdca-simulator', description: 'Interactive PDCA walkthrough' },
-        { name: '33-Agent Council', href: '/council-detail', description: 'Byzantine consensus system' },
-        { name: 'Templates', href: '/soai-pdca#templates', description: 'Download PDCA templates' },
+        { name: 'Framework', href: '/soai-pdca', description: 'Learn about SOAI-PDCA' },
+        { name: 'Simulator', href: '/pdca-simulator', description: 'Interactive demo' },
       ]
     },
     { 
       name: 'Watchdog', 
       href: '/watchdog',
       submenu: [
-        { name: 'Report Incident', href: '/watchdog', description: 'Submit AI safety incident' },
-        { name: 'Analyst Jobs', href: '/jobs', description: 'Browse analyst opportunities' },
-        { name: 'My Applications', href: '/my-applications', description: 'Track your job applications' },
-        { name: 'Leaderboard', href: '/leaderboard', description: 'Top performing analysts' },
+        { name: 'Report', href: '/watchdog', description: 'Report incident' },
+        { name: 'Jobs', href: '/jobs', description: 'Analyst jobs' },
       ]
     },
     { 
       name: 'Enterprise', 
       href: '/enterprise',
       submenu: [
-        { name: 'Overview', href: '/enterprise', description: 'Enterprise solutions' },
-        { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
-        { name: 'API Documentation', href: '/api-docs', description: 'Developer resources' },
-        { name: 'Compliance Dashboard', href: '/compliance', description: 'Monitor AI compliance' },
+        { name: 'Pricing', href: '/pricing', description: 'Plans' },
+        { name: 'API', href: '/api-docs', description: 'Developers' },
       ]
     },
     { 
       name: 'Resources', 
       href: '/resources',
       submenu: [
-        { name: 'About CSOAI', href: '/about', description: 'Our mission and story' },
-        { name: 'Accreditation', href: '/accreditation', description: 'Official recognition' },
-        { name: 'Standards', href: '/standards', description: 'Frameworks we support' },
-        { name: 'Knowledge Base', href: '/knowledge-base', description: 'RLMAI learning system' },
-        { name: 'Blog', href: '/blog', description: 'News and insights' },
+        { name: 'About', href: '/about', description: 'About us' },
+        { name: 'Blog', href: '/blog', description: 'News' },
       ]
     },
   ];
@@ -244,6 +231,7 @@ export function Header() {
 
           {/* Right Side Actions */}
           <div className="hidden lg:flex items-center space-x-4">
+            <LanguageSelector />
             {user ? (
               <>
                 <NotificationCenter />
@@ -325,10 +313,17 @@ export function Header() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-200">
-            <div className="flex flex-col space-y-2">
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            {/* Mobile Menu */}
+            <div className="fixed left-0 right-0 top-18 bottom-0 bg-white overflow-y-auto z-50 lg:hidden border-t border-gray-200">
+              <div className="flex flex-col space-y-2 p-4">
               <a
                 href="/"
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -445,7 +440,8 @@ export function Header() {
                 )}
               </div>
             </div>
-          </div>
+            </div>
+          </>
         )}
       </nav>
     </header>

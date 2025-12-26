@@ -3389,3 +3389,94 @@
 - [x] Add CORS headers for cross-origin requests
 - [x] Test all API endpoints
 - [x] Deploy and monitor API usage
+
+
+## Phase 11 - Multi-Language & Currency System + UX Fixes
+
+### i18n Infrastructure
+- [x] Install i18next dependencies
+- [x] Create i18n configuration with 13 languages
+- [x] Set up language detection (browser locale + IP geolocation)
+- [x] Create currency converter utility with exchange rates
+- [x] Create useLanguage hook for easy access
+
+### Translation Files (All 13 Languages)
+- [x] English (US) - en-US.json
+- [x] English (UK) - en-GB.json
+- [x] French - fr.json
+- [x] German - de.json
+- [x] Spanish - es.json
+- [x] Italian - it.json
+- [x] Dutch - nl.json
+- [x] Polish - pl.json
+- [x] Portuguese - pt.json
+- [x] Swedish - sv.json
+- [x] Danish - da.json
+- [x] Finnish - fi.json
+- [x] Chinese (Simplified) - zh-CN.json
+
+### UI Components
+- [x] LanguageSelector component with flag icons
+- [x] PricingCard component with currency conversion
+- [x] RegionSettings page for manual override
+- [x] useLanguage hook
+
+### Course/Module Translation Support
+- [x] courseTranslations.ts - Translation cache and API
+- [x] useCourseTranslation hook
+- [x] useModuleTranslation hook
+- [x] useLessonTranslation hook
+
+### Navigation Menu Fixes
+- [x] Compress menu items (5+ → 2-3 per submenu)
+- [x] Shorten menu text for mobile fit
+- [x] Remove redundant items
+
+### Mobile Menu Overlay
+- [x] Add backdrop overlay (z-40)
+- [x] Fix z-index layering
+- [x] Ensure menu hides main content
+- [x] Add click-to-close on backdrop
+
+### Sidebar Collapsibility
+- [x] Create CollapsibleSidebar component
+- [x] Add floating toggle button for mobile
+- [x] Implement smooth animations
+- [x] Auto-hide on desktop
+
+### Header Integration
+- [x] Add LanguageSelector to header
+- [x] Maintain responsive design
+
+### Backend API Endpoints (TODO)
+- [ ] GET /api/courses/:id/translations/:language
+- [ ] GET /api/modules/:id/translations/:language
+- [ ] GET /api/lessons/:id/translations/:language
+- [ ] POST /api/courses/:id/translations
+- [ ] POST /api/modules/:id/translations
+- [ ] POST /api/lessons/:id/translations
+
+### Database Schema Updates (TODO)
+- [ ] Add course_translations table
+- [ ] Add module_translations table
+- [ ] Add lesson_translations table
+- [ ] Add language field to user preferences
+- [ ] Add currency field to user preferences
+
+### Testing (TODO)
+- [ ] Unit tests for language detection
+- [ ] Unit tests for currency conversion
+- [ ] Unit tests for useLanguage hook
+- [ ] Unit tests for useCourseTranslation hook
+- [ ] Unit tests for LanguageSelector component
+- [ ] Unit tests for CollapsibleSidebar component
+- [ ] Integration tests for language switching
+- [ ] Integration tests for mobile menu overlay
+- [ ] E2E tests for full user flow
+
+### Content Translation (TODO)
+- [ ] Translate all training courses to 13 languages
+- [ ] Translate all modules to 13 languages
+- [ ] Translate all lessons to 13 languages
+- [ ] Translate video captions/subtitles
+- [ ] Translate downloadable resources

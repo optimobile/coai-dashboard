@@ -83,6 +83,7 @@ import APIKeyManagement from "./pages/APIKeyManagement";
 import WebhookMonitoring from "./pages/WebhookMonitoring";
 import GovernmentAdminDashboard from "./pages/GovernmentAdminDashboard";
 import NotificationPreferences from "./pages/NotificationPreferences";
+import RegionSettings from "./pages/RegionSettings";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -181,6 +182,7 @@ function App() {
                   <Route path="/admin/webhooks" component={WebhookMonitoring} />
                   <Route path="/admin/government" component={GovernmentAdminDashboard} />
                   <Route path="/notification-preferences" component={NotificationPreferences} />
+                  <Route path="/region-settings" component={RegionSettings} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
