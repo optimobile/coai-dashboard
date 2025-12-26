@@ -126,6 +126,7 @@ function App() {
                   <Route path="/features/training-certification" component={TrainingCertificationFeature} />
                   <Route path="/features/watchdog-jobs" component={WatchdogJobsFeature} />
                   <Route path="/certification" component={CertificationV2} />
+                  <Route path="/exam" component={CertificationExam} />
                   <Route path="/certification/exam" component={CertificationExam} />
                   <Route path="/certification/results" component={CertificationResults} />
                   <Route path="/certificates" component={MyCertificates} />

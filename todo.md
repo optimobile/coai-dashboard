@@ -3274,3 +3274,5 @@
 - [x] Fix mega menu scrolling overflow (menu too large, can't scroll)
 - [x] Add missing CSOAI/Council of AI framework content
 - [x] Ensure all navigation menu items have corresponding pages
+
+- [x] Fix missing /exam route (404 error)
