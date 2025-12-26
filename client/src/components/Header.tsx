@@ -26,6 +26,8 @@ export function Header() {
     { name: 'Home', href: '/' },
     { name: 'Training', href: '/training' },
     { name: 'Certification', href: '/certification' },
+    { name: 'SOAI-PDCA', href: '/soai-pdca' },
+    { name: 'Accreditation', href: '/accreditation' },
     { name: 'Watchdog', href: '/watchdog' },
     { name: 'About', href: '/about' },
   ];

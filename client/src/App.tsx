@@ -56,6 +56,7 @@ import WatchdogJobsFeature from "./pages/features/WatchdogJobsFeature";
 import StudentProgress from "./pages/StudentProgress";
 import Accreditation from "./pages/Accreditation";
 import SOAIPDCAFramework from "./pages/SOAIPDCAFramework";
+import PDCASimulator from "./pages/PDCASimulator";
 
 function App() {
   return (
@@ -117,6 +118,7 @@ function App() {
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
+                  <Route path="/pdca-simulator" component={PDCASimulator} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

@@ -37,6 +37,7 @@ import { coursesRouter } from "./courses";
 import { modulePopulationRouter } from "./routers/modulePopulation";
 import { certificatesRouter } from "./routers/certificates";
 import { progressRouter } from "./routers/progress";
+import { pdcaTemplatesRouter } from "./routers/pdcaTemplates";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2777,6 +2778,7 @@ export const appRouter = router({
   modulePopulation: modulePopulationRouter,
   progress: progressRouter,
   certificates: certificatesRouter,
+  pdcaTemplates: pdcaTemplatesRouter,
 });
 
 export type AppRouter = typeof appRouter;

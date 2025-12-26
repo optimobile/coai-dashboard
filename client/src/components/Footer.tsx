@@ -23,10 +23,11 @@ export function Footer() {
     {
       title: 'Frameworks',
       links: [
+        { name: 'SOAI-PDCA Framework', href: '/soai-pdca' },
+        { name: 'Accreditation', href: '/accreditation' },
         { name: 'EU AI Act', href: '/frameworks/eu-ai-act' },
         { name: 'NIST AI RMF', href: '/frameworks/nist' },
         { name: 'China TC260', href: '/frameworks/tc260' },
-        { name: 'SOAI-PDCA Loop', href: '/frameworks/soai-pdca' },
       ],
     },
     {

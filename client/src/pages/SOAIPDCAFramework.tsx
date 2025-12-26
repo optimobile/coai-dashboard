@@ -6,6 +6,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Link } from 'wouter';
 import {
   Download,
   FileText,
@@ -663,11 +664,24 @@ export default function SOAIPDCAFramework() {
             <p className="text-xl text-green-100 mb-8">
               Download comprehensive guides, templates, and case studies
             </p>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <Link href="/pdca-simulator">
+                <Button
+                  size="lg"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 h-auto py-4"
+                >
+                  <div className="text-left w-full">
+                    <div className="font-semibold text-lg">🎮 Try Interactive Simulator</div>
+                    <div className="text-xs text-emerald-100 mt-1">
+                      Walk through a complete PDCA cycle with a fictional AI system
+                    </div>
+                  </div>
+                  <ArrowRight className="ml-4 h-6 w-6 flex-shrink-0" />
+                </Button>
+              </Link>
               {[
                 { name: 'Complete Implementation Guide', size: '8.2 MB' },
                 { name: 'All Templates (ZIP)', size: '4.5 MB' },
-                { name: 'Case Studies Collection', size: '12.1 MB' },
               ].map((resource, i) => (
                 <Button
                   key={i}

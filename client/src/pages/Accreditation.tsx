@@ -213,9 +213,35 @@ export default function Accreditation() {
                   className="h-40 w-40 mx-auto mb-4"
                 />
                 <h4 className="font-semibold text-gray-900 mb-2">PDCA Certified</h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 mb-4">
                   SOAI-PDCA Continuous Improvement Framework
                 </p>
+                <Link href="/soai-pdca">
+                  <Button variant="outline" size="sm" className="w-full">
+                    Learn About SOAI-PDCA
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* SOAI-PDCA Framework Callout */}
+            <div className="mt-12 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-8 border-2 border-green-200">
+              <div className="max-w-3xl mx-auto text-center">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Powered by the SOAI-PDCA Continuous Improvement Framework
+                </h3>
+                <p className="text-gray-700 mb-6">
+                  Our accreditation system is built on the industry-standard SOAI-PDCA methodology,
+                  combining AI-powered safety oversight with the proven Plan-Do-Check-Act cycle
+                  for continuous improvement and regulatory compliance.
+                </p>
+                <Link href="/soai-pdca">
+                  <Button size="lg" className="bg-green-600 hover:bg-green-700">
+                    Explore the SOAI-PDCA Framework
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
