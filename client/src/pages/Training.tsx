@@ -25,6 +25,7 @@ import { Progress } from "@/components/ui/progress";
 import { useLocation } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -97,6 +98,9 @@ export default function Training() {
 
   return (
     <DashboardLayout>
+      <div className="container">
+        <Breadcrumb items={[{ label: "Training", href: "/training" }]} />
+      </div>
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">

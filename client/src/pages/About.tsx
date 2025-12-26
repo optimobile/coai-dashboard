@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { AlertCircle } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 export default function About() {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +45,61 @@ export default function About() {
     );
   }
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Who can become an AI Safety Analyst?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Anyone with critical thinking skills and attention to detail. You don't need a computer science degree or coding experience. Our training teaches you everything you need to know about AI safety frameworks, risk assessment, and compliance monitoring."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does certification take?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most students complete the training in 4-6 hours and pass the certification exam on their first attempt. The exam is 50 questions, 90 minutes, with a 70% passing threshold. You can retake it as many times as needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What do AI Safety Analysts actually do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You review AI systems for compliance with safety frameworks (EU AI Act, NIST AI RMF, ISO 42001). This includes checking documentation, assessing risk levels, identifying bias, and writing safety reports. You work with our 33-Agent Council system to make final safety determinations."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much can I earn?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Entry-level analysts start at $45/hour. Experienced analysts earn $75-150/hour depending on expertise and case complexity. All work is remote, and you set your own hours. Many analysts work part-time while maintaining other jobs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why should companies trust CSOAI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unlike single-vendor AI safety tools, CSOAI uses a 33-Agent Council with 12 different AI providers for unbiased assessments. Our Watchdog system is public by default, ensuring transparency. We're aligned with EU AI Act, NIST AI RMF, and ISO 42001—the three major global frameworks."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is CSOAI different from other AI safety organizations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most AI safety organizations focus on research or advocacy. CSOAI is the only platform that combines training, certification, job creation, and operational oversight. We're not just talking about AI safety—we're building the workforce to enforce it."
+        }
+      }
+    ]
+  };
+
   if (error) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-6">
@@ -59,6 +115,11 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(faqSchema)}
+        </script>
+      </Helmet>
       {/* Hero Section - Origin Story */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
         <div className="container max-w-4xl">
