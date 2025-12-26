@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { handleStripeWebhook } from "../stripe/webhookHandler";
+import { generatePDCATemplate } from "../utils/pdcaTemplateGenerator";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -40,6 +41,12 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
+  // PDF template download endpoint
+  app.get("/api/download-template/:templateId", (req, res) => {
+    const { templateId } = req.params;
+    generatePDCATemplate(templateId, res);
+  });
   // tRPC API
   app.use(
     "/api/trpc",

@@ -2732,3 +2732,27 @@
 - [x] Add link to simulator from SOAI-PDCA Framework page
 - [x] Test all navigation links
 - [x] Test interactive simulator
+
+## Phase 55 - PDF Downloads, Homepage Link, Certificate Verification
+- [ ] Wire up PDF template download buttons to backend
+- [ ] Create Express endpoint for PDF template downloads
+- [ ] Update SOAI-PDCA Framework page download buttons
+- [ ] Test all 12 template downloads
+- [ ] Add PDCA Simulator link to homepage hero section
+- [ ] Create certificate verification portal page (/verify-certificate)
+- [ ] Add QR code scanning functionality
+- [ ] Add certificate lookup by ID
+- [ ] Display certificate details and validation status
+- [ ] Test certificate verification with real certificates
+
+## Phase 55 - Completed Tasks
+- [x] Wire up PDF template download buttons to backend
+- [x] Create Express endpoint for PDF template downloads
+- [x] Update SOAI-PDCA Framework page download buttons
+- [x] Add PDCA Simulator link to homepage hero section
+- [x] Create certificate verification portal page (/verify-certificate)
+- [x] Add certificate lookup by ID
+- [x] Display certificate details and validation status
+- [ ] Test all 12 template downloads (backend needs PDF generation implementation)
+- [ ] Add QR code scanning functionality (placeholder added, needs camera integration)
+- [ ] Test certificate verification with real certificates

@@ -68,9 +68,14 @@ export default function NewHome() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
+            <Link href="/pdca-simulator">
+              <Button size="lg" variant="outline" className="border-2 border-green-400/50 text-green-300 hover:bg-green-500/20 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
+                <Play className="mr-2 h-5 w-5" />
+                Try Interactive Demo
+              </Button>
+            </Link>
             <Link href="/training">
               <Button size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
-                <Play className="mr-2 h-5 w-5" />
                 See Job Opportunities
               </Button>
             </Link>

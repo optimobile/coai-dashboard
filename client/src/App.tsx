@@ -57,6 +57,7 @@ import StudentProgress from "./pages/StudentProgress";
 import Accreditation from "./pages/Accreditation";
 import SOAIPDCAFramework from "./pages/SOAIPDCAFramework";
 import PDCASimulator from "./pages/PDCASimulator";
+import CertificateVerification from "./pages/CertificateVerification";
 
 function App() {
   return (
@@ -119,6 +120,7 @@ function App() {
                   <Route path="/accreditation" component={Accreditation} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
                   <Route path="/pdca-simulator" component={PDCASimulator} />
+                  <Route path="/verify-certificate" component={CertificateVerification} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

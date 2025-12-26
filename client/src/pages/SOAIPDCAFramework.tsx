@@ -24,9 +24,30 @@ import {
 } from 'lucide-react';
 
 export default function SOAIPDCAFramework() {
+  // Map template names to backend template IDs
+  const templateIdMap: Record<string, string> = {
+    'Risk Assessment Matrix': 'risk-assessment-matrix',
+    'Compliance Checklist': 'compliance-checklist',
+    'Implementation Roadmap': 'implementation-roadmap',
+    'Safety Control Guide': 'safety-control-guide',
+    'Incident Response Playbook': 'incident-response-playbook',
+    'Monitoring Configuration': 'monitoring-configuration',
+    'Performance Metrics Dashboard': 'performance-metrics-dashboard',
+    'Incident Report Form': 'incident-report-form',
+    'Audit Checklist': 'audit-checklist',
+    'Root Cause Analysis Template': 'root-cause-analysis',
+    'Corrective Action Plan': 'corrective-action-plan',
+    'Lessons Learned Document': 'lessons-learned',
+  };
+
   const downloadTemplate = (templateName: string) => {
-    // Placeholder for template download
-    console.log(`Downloading template: ${templateName}`);
+    const templateId = templateIdMap[templateName];
+    if (templateId) {
+      // Direct download from backend
+      window.open(`/api/download-template/${templateId}`, '_blank');
+    } else {
+      console.log(`Template not found: ${templateName}`);
+    }
   };
 
   return (

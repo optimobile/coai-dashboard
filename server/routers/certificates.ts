@@ -183,4 +183,53 @@ export const certificatesRouter = router({
         throw new Error(`Failed to list certificates: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }),
+
+  /**
+   * Verify a certificate by certificate number (public endpoint)
+   */
+  verifyCertificate: publicProcedure
+    .input(z.object({
+      certificateNumber: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        const db = await getDb();
+        if (!db) throw new Error('Database not available');
+
+        // Look up certificate by certificate ID
+        const [result] = await db
+          .select({
+            certificateId: courseCertificates.certificateId,
+            userId: courseCertificates.userId,
+            courseId: courseCertificates.courseId,
+            courseName: courses.title,
+            issuedAt: courseCertificates.issuedAt,
+          })
+          .from(courseCertificates)
+          .leftJoin(courses, eq(courseCertificates.courseId, courses.id))
+          .where(eq(courseCertificates.certificateId, input.certificateNumber));
+
+        if (!result) {
+          return {
+            valid: false,
+            message: 'Certificate not found',
+          };
+        }
+
+        return {
+          valid: true,
+          message: 'Certificate verified successfully',
+          certificate: {
+            certificateNumber: result.certificateId,
+            userName: 'Certificate Holder',
+            courseName: result.courseName || 'AI Safety Analyst Certification',
+            issuedAt: result.issuedAt,
+            level: 'Professional',
+          },
+        };
+      } catch (error) {
+        console.error('Error verifying certificate:', error);
+        throw new Error(`Failed to verify certificate: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }),
 });
