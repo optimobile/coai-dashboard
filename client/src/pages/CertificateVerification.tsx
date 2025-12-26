@@ -3,7 +3,7 @@
  * Public page where anyone can verify CSOAI certifications by ID or QR code
  */
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,8 @@ import { toast } from 'sonner';
 export default function CertificateVerification() {
   const [certificateId, setCertificateId] = useState('');
   const [searchMode, setSearchMode] = useState<'manual' | 'qr'>('manual');
+  const [isScanning, setIsScanning] = useState(false);
+  const scannerRef = useRef<any>(null);
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
 
@@ -56,8 +58,59 @@ export default function CertificateVerification() {
   };
 
   const handleQRScan = () => {
-    toast.info('QR code scanning coming soon! Please enter certificate ID manually.');
+    setIsScanning(true);
   };
+
+  const stopScanning = () => {
+    if (scannerRef.current) {
+      scannerRef.current.stop();
+      scannerRef.current = null;
+    }
+    setIsScanning(false);
+  };
+
+  useEffect(() => {
+    if (isScanning && searchMode === 'qr') {
+      // Dynamically import html5-qrcode
+      import('html5-qrcode').then(({ Html5Qrcode }) => {
+        const scanner = new Html5Qrcode('qr-reader');
+        scannerRef.current = scanner;
+
+        scanner
+          .start(
+            { facingMode: 'environment' },
+            {
+              fps: 10,
+              qrbox: { width: 250, height: 250 },
+            },
+            (decodedText) => {
+              // QR code successfully scanned
+              setCertificateId(decodedText);
+              stopScanning();
+              toast.success('QR code scanned successfully!');
+              // Auto-verify
+              setIsVerifying(true);
+              setVerificationResult(null);
+              verifyCertificate.mutate({ certificateNumber: decodedText });
+            },
+            (errorMessage) => {
+              // Scanning error (can be ignored, happens frequently)
+            }
+          )
+          .catch((err) => {
+            console.error('Failed to start scanner:', err);
+            toast.error('Camera access denied or not available');
+            setIsScanning(false);
+          });
+      });
+    }
+
+    return () => {
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(() => {});
+      }
+    };
+  }, [isScanning, searchMode]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-12">
@@ -99,7 +152,7 @@ export default function CertificateVerification() {
           </Button>
         </div>
 
-        {/* Search Input */}
+        {/* Manual Search Input */}
         {searchMode === 'manual' && (
           <Card className="mb-8">
             <CardContent className="pt-6">
@@ -129,6 +182,50 @@ export default function CertificateVerification() {
                   )}
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* QR Scanner */}
+        {searchMode === 'qr' && (
+          <Card className="mb-8">
+            <CardContent className="pt-6">
+              {!isScanning ? (
+                <div className="text-center py-8">
+                  <QrCode className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-4">
+                    Click the button below to start scanning QR codes with your camera
+                  </p>
+                  <Button
+                    onClick={handleQRScan}
+                    size="lg"
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <QrCode className="mr-2 h-5 w-5" />
+                    Start Camera
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Scanning QR Code...</h3>
+                    <Button
+                      onClick={stopScanning}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Stop Scanning
+                    </Button>
+                  </div>
+                  <div
+                    id="qr-reader"
+                    className="border-2 border-green-500 rounded-lg overflow-hidden"
+                  />
+                  <p className="text-sm text-gray-600 mt-4 text-center">
+                    Position the QR code within the frame to scan
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

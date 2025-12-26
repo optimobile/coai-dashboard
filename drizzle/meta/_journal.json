@@ -57,6 +57,13 @@
       "when": 1766677944941,
       "tag": "0007_fast_nextwave",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1766726098442,
+      "tag": "0008_classy_anthem",
+      "breakpoints": true
     }
   ]
 }
