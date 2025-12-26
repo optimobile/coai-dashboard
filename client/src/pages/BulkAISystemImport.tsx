@@ -156,10 +156,10 @@ export default function BulkAISystemImport() {
       </div>
 
       {/* Instructions Card */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-emerald-50 border-emerald-200">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Info className="h-5 w-5 text-blue-600" />
+            <Info className="h-5 w-5 text-emerald-600" />
             <CardTitle className="text-blue-900">How to Use Bulk Import</CardTitle>
           </div>
         </CardHeader>
@@ -171,9 +171,9 @@ export default function BulkAISystemImport() {
             <li>Review validation results and fix any errors</li>
             <li>Systems will be automatically imported with risk classification</li>
           </ol>
-          <div className="flex items-start gap-2 mt-4 p-3 bg-blue-100 rounded">
-            <AlertTriangle className="h-5 w-5 text-blue-700 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-blue-800">
+          <div className="flex items-start gap-2 mt-4 p-3 bg-emerald-100 rounded">
+            <AlertTriangle className="h-5 w-5 text-emerald-700 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-emerald-800">
               <strong>Note:</strong> Duplicate systems (matching name) will be skipped automatically.
               Risk levels are auto-classified based on system type if not provided.
             </p>

@@ -106,9 +106,9 @@ export default function Signup() {
           </CardHeader>
 
           <CardContent className="space-y-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
               <h3 className="font-semibold text-blue-900 mb-2">What's Included (Free):</h3>
-              <ul className="space-y-1 text-sm text-blue-800">
+              <ul className="space-y-1 text-sm text-emerald-800">
                 <li>✓ Access to 3 foundation courses</li>
                 <li>✓ Progress tracking dashboard</li>
                 <li>✓ Community forum access</li>

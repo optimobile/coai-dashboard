@@ -45,7 +45,7 @@ export default function NewHome() {
         {/* Content */}
         <div className="relative z-10 container mx-auto px-6 py-20 text-center">
           {/* Badge */}
-          <Badge className="mb-6 bg-green-500/20 text-blue-300 border-blue-400/30 text-sm px-4 py-2">
+          <Badge className="mb-6 bg-green-500/20 text-emerald-300 border-blue-400/30 text-sm px-4 py-2">
             <span className="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse" />
             Leading AI Safety Certification Platform
           </Badge>
@@ -620,7 +620,7 @@ export default function NewHome() {
               <Button 
                 type="submit"
                 size="lg" 
-                className="bg-white text-green-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-lg"
+                className="bg-white text-green-600 hover:bg-emerald-50 px-8 py-6 text-lg font-semibold shadow-lg"
               >
                 Get Early Access
               </Button>
@@ -994,7 +994,7 @@ export default function NewHome() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/watchdog-signup">
-              <Button size="lg" className="bg-white text-green-600 hover:bg-blue-50 px-12 py-6 text-lg font-semibold shadow-lg">
+              <Button size="lg" className="bg-white text-green-600 hover:bg-emerald-50 px-12 py-6 text-lg font-semibold shadow-lg">
                 Start Training (Individuals)
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

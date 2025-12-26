@@ -25,7 +25,7 @@ import {
 // Scenario categories based on real AI safety incidents
 const SCENARIO_CATEGORIES = [
   { id: 'bias', name: 'Algorithmic Bias', icon: Users, color: 'text-gray-400', bgColor: 'bg-gray-500/20' },
-  { id: 'privacy', name: 'Privacy Violations', icon: Shield, color: 'text-blue-400', bgColor: 'bg-blue-500/20' },
+  { id: 'privacy', name: 'Privacy Violations', icon: Shield, color: 'text-emerald-400', bgColor: 'bg-emerald-500/20' },
   { id: 'misinformation', name: 'Misinformation', icon: AlertTriangle, color: 'text-orange-400', bgColor: 'bg-orange-500/20' },
   { id: 'safety', name: 'Safety Failures', icon: Zap, color: 'text-red-400', bgColor: 'bg-red-500/20' },
   { id: 'transparency', name: 'Transparency Issues', icon: FileText, color: 'text-cyan-400', bgColor: 'bg-cyan-500/20' },
@@ -400,7 +400,7 @@ export default function KnowledgeBase() {
                 <div className="space-y-4">
                   <div className="p-4 rounded-lg border bg-card">
                     <h4 className="font-semibold mb-2 flex items-center gap-2">
-                      <Shield className="h-4 w-4 text-blue-500" />
+                      <Shield className="h-4 w-4 text-emerald-500" />
                       For High-Risk AI Systems
                     </h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">

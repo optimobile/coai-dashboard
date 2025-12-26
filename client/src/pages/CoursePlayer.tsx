@@ -362,9 +362,9 @@ export default function CoursePlayer() {
 
                   {isModuleComplete && isLastModule && progress === 100 && (
                     <div className="flex flex-col gap-3">
-                      <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-950/30 dark:to-green-950/30 p-6 rounded-lg border-2 border-blue-200 dark:border-blue-800">
+                      <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-950/30 dark:to-green-950/30 p-6 rounded-lg border-2 border-emerald-200 dark:border-emerald-800">
                         <div className="flex items-center gap-3 mb-3">
-                          <Award className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                          <Award className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                           <div>
                             <h3 className="font-bold text-lg">Congratulations!</h3>
                             <p className="text-sm text-muted-foreground">You've completed this course</p>

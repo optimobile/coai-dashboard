@@ -120,7 +120,7 @@ export default function WatchdogLeaderboard() {
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{monthlyStats.resolvedCases}</div>
+              <div className="text-2xl font-bold text-emerald-600">{monthlyStats.resolvedCases}</div>
               <div className="text-xs text-muted-foreground">Resolved</div>
             </CardContent>
           </Card>

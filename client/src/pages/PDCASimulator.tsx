@@ -53,8 +53,8 @@ const PHASES: PhaseData[] = [
     title: 'Phase 1: PLAN',
     description: 'Define objectives and establish safety requirements',
     icon: Target,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-50',
     scenario:
       'HealthBot AI is a medical symptom checker used by 500,000 patients monthly. Recent user feedback indicates potential bias in diagnostic suggestions for certain demographics.',
     tasks: [

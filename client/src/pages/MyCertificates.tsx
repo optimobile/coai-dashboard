@@ -181,7 +181,7 @@ export default function MyCertificates() {
                         <CardHeader className="pb-3">
                           <div className="flex items-start justify-between mb-2">
                             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900/30 dark:to-green-900/30 flex items-center justify-center">
-                              <Award className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                              <Award className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
                             </div>
                             <Badge variant="outline" className="border-green-500 text-green-600">
                               <CheckCircle className="h-3 w-3 mr-1" />

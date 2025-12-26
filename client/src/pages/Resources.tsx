@@ -205,7 +205,7 @@ export default function Resources() {
                   <div className="flex flex-col items-center text-center">
                     <div className="p-4 bg-primary/10 rounded-lg mb-4">
                       {template.type === "Excel" && <FileSpreadsheet className="h-8 w-8 text-green-600" />}
-                      {template.type === "Word" && <FileText className="h-8 w-8 text-blue-600" />}
+                      {template.type === "Word" && <FileText className="h-8 w-8 text-emerald-600" />}
                       {template.type === "PowerPoint" && <Presentation className="h-8 w-8 text-orange-600" />}
                     </div>
                     <h3 className="font-semibold mb-2">{template.title}</h3>

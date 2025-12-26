@@ -374,8 +374,8 @@ export default function PublicDashboard() {
                 <Card className="bg-zinc-900/50 border-zinc-800">
                   <CardHeader>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                        <Scale className="w-5 h-5 text-blue-400" />
+                      <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                        <Scale className="w-5 h-5 text-emerald-400" />
                       </div>
                       <div>
                         <CardTitle className="text-white text-lg">EU AI Act</CardTitle>

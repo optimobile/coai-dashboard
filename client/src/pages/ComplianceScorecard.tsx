@@ -65,7 +65,7 @@ export default function ComplianceScorecard() {
   
   const getScoreBadge = (score: number) => {
     if (score >= 90) return { label: 'Excellent', color: 'bg-green-500/20 text-green-400 border-green-500/30' };
-    if (score >= 80) return { label: 'Good', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' };
+    if (score >= 80) return { label: 'Good', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' };
     if (score >= 60) return { label: 'Fair', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' };
     return { label: 'Needs Improvement', color: 'bg-red-500/20 text-red-400 border-red-500/30' };
   };
@@ -73,7 +73,7 @@ export default function ComplianceScorecard() {
   const getRiskBadge = (risk: string) => {
     const colors: Record<string, string> = {
       minimal: 'bg-green-500/20 text-green-400',
-      limited: 'bg-blue-500/20 text-blue-400',
+      limited: 'bg-emerald-500/20 text-emerald-400',
       high: 'bg-orange-500/20 text-orange-400',
       unacceptable: 'bg-red-500/20 text-red-400',
     };

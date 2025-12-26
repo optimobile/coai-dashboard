@@ -107,7 +107,7 @@ export default function EnterpriseDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">{activeCycles}</div>
+              <div className="text-3xl font-bold text-emerald-600">{activeCycles}</div>
               <p className="text-sm text-gray-600 mt-1">
                 {completedCycles} completed this quarter
               </p>
@@ -222,10 +222,10 @@ export default function EnterpriseDashboard() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-gray-900">NIST AI RMF</span>
-                    <span className="text-sm font-semibold text-blue-600">78%</span>
+                    <span className="text-sm font-semibold text-emerald-600">78%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '78%' }} />
+                    <div className="bg-emerald-600 h-2 rounded-full" style={{ width: '78%' }} />
                   </div>
                   <p className="text-xs text-gray-600 mt-1">18/23 controls implemented</p>
                 </div>
@@ -267,7 +267,7 @@ export default function EnterpriseDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-blue-600" />
+                <Activity className="h-5 w-5 text-emerald-600" />
                 PDCA Cycles
               </CardTitle>
             </CardHeader>
@@ -316,7 +316,7 @@ export default function EnterpriseDashboard() {
                   <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 mb-4">No PDCA cycles started yet</p>
                   <Link href="/pdca-cycles">
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button className="bg-emerald-600 hover:bg-emerald-700">
                       Start First Cycle
                     </Button>
                   </Link>
@@ -348,9 +348,9 @@ export default function EnterpriseDashboard() {
                     <p className="text-sm text-gray-600">Compliance Officers</p>
                     <p className="text-xl font-bold text-green-700">5</p>
                   </div>
-                  <div className="p-4 bg-blue-50 rounded-lg">
+                  <div className="p-4 bg-emerald-50 rounded-lg">
                     <p className="text-sm text-gray-600">AI Safety Analysts</p>
-                    <p className="text-xl font-bold text-blue-700">7</p>
+                    <p className="text-xl font-bold text-emerald-700">7</p>
                   </div>
                 </div>
 

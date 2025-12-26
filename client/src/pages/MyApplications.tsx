@@ -37,7 +37,7 @@ export default function MyApplications() {
       reviewing: {
         icon: Eye,
         label: 'Reviewing',
-        className: 'bg-blue-100 text-blue-800 border-blue-200',
+        className: 'bg-emerald-100 text-emerald-800 border-emerald-200',
       },
       shortlisted: {
         icon: CheckCircle2,
@@ -124,8 +124,8 @@ export default function MyApplications() {
       label: 'Total Applications',
       value: applications.length,
       icon: Briefcase,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-100',
     },
     {
       label: 'Pending',
@@ -138,8 +138,8 @@ export default function MyApplications() {
       label: 'Reviewed',
       value: groupedApplications.reviewed.length,
       icon: Eye,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-100',
     },
     {
       label: 'Accepted',
@@ -243,12 +243,12 @@ export default function MyApplications() {
               {/* Resume */}
               {application.resumeUrl && (
                 <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-blue-600" />
+                  <FileText className="h-4 w-4 text-emerald-600" />
                   <a
                     href={application.resumeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:underline flex items-center gap-1"
+                    className="text-sm text-emerald-600 hover:underline flex items-center gap-1"
                   >
                     View Resume
                     <ExternalLink className="h-3 w-3" />
@@ -258,12 +258,12 @@ export default function MyApplications() {
 
               {/* Employer Response */}
               {application.employerResponse && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="h-4 w-4 text-blue-600" />
+                    <MessageSquare className="h-4 w-4 text-emerald-600" />
                     <span className="text-sm font-medium text-blue-900">Employer Response</span>
                   </div>
-                  <p className="text-sm text-blue-800">{application.employerResponse}</p>
+                  <p className="text-sm text-emerald-800">{application.employerResponse}</p>
                 </div>
               )}
 
@@ -288,7 +288,7 @@ export default function MyApplications() {
                   </Badge>
                 )}
                 {application.status === 'shortlisted' && (
-                  <Badge className="bg-blue-600 text-white">
+                  <Badge className="bg-emerald-600 text-white">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     Shortlisted!
                   </Badge>

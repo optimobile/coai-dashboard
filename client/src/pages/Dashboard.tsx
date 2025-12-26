@@ -77,8 +77,8 @@ export default function Dashboard() {
       change: `${dashboardStats?.pendingReviews || 0} pending review`,
       changeType: "neutral",
       icon: Activity,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      color: "text-emerald-600",
+      bgColor: "bg-emerald-50",
       description: "Registered systems in your organization",
     },
     {
@@ -301,7 +301,7 @@ export default function Dashboard() {
                   ].map((item, idx) => {
                     const Icon = item.icon;
                     const colorClasses = {
-                      blue: { bg: "bg-blue-500", light: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
+                      blue: { bg: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
                       emerald: { bg: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
                       amber: { bg: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600", border: "border-amber-200" },
                       purple: { bg: "bg-purple-500", light: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
@@ -371,7 +371,7 @@ export default function Dashboard() {
                   </div>
                   {pdcaStats && (
                     <div className="flex items-center gap-4 text-xs">
-                      <span className="text-blue-600 font-medium">{pdcaStats.activeCycles} active</span>
+                      <span className="text-emerald-600 font-medium">{pdcaStats.activeCycles} active</span>
                       <span className="text-emerald-600 font-medium">{pdcaStats.completedCycles} completed</span>
                       <span className="text-muted-foreground">{pdcaStats.totalCycles} total cycles</span>
                     </div>
@@ -516,8 +516,8 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 rounded-lg bg-blue-50 dark:bg-blue-950">
-                    <div className="text-2xl font-bold text-blue-600">{pdcaStats.phaseDistribution.plan}</div>
+                  <div className="text-center p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950">
+                    <div className="text-2xl font-bold text-emerald-600">{pdcaStats.phaseDistribution.plan}</div>
                     <div className="text-xs text-muted-foreground">Plan Phase</div>
                   </div>
                   <div className="text-center p-4 rounded-lg bg-green-50 dark:bg-green-950">

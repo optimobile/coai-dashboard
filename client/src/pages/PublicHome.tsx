@@ -116,7 +116,7 @@ export default function PublicHome() {
           <p className="text-center text-sm text-muted-foreground mb-6">Compliance frameworks supported</p>
           <div className="flex flex-wrap items-center justify-center gap-8">
             <div className="flex items-center gap-3 px-4 py-2 bg-background rounded-lg border">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xs">EU</span>
               </div>
               <div>
@@ -157,9 +157,9 @@ export default function PublicHome() {
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
-            <Card className="relative overflow-hidden border-2 border-blue-200 bg-blue-50/50">
+            <Card className="relative overflow-hidden border-2 border-emerald-200 bg-emerald-50/50">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center mb-4">
                   <span className="text-white font-bold">P</span>
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Plan</h3>
@@ -477,8 +477,8 @@ export default function PublicHome() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Building2 className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Building2 className="w-8 h-8 text-emerald-600" />
               </div>
               <h3 className="font-semibold text-lg mb-2">AI Companies (B2B)</h3>
               <p className="text-sm text-muted-foreground mb-4">

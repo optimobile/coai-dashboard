@@ -140,7 +140,7 @@ export default function SOAIPDCAFramework() {
 
             <Card className="border-2 border-blue-100">
               <CardHeader>
-                <RefreshCw className="h-12 w-12 text-blue-600 mb-4" />
+                <RefreshCw className="h-12 w-12 text-emerald-600 mb-4" />
                 <CardTitle>PDCA Cycle (Deming Cycle)</CardTitle>
               </CardHeader>
               <CardContent>
@@ -150,15 +150,15 @@ export default function SOAIPDCAFramework() {
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <span>Iterative improvement process</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <span>Evidence-based decision making</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <span>Continuous compliance monitoring</span>
                   </li>
                 </ul>
@@ -240,9 +240,9 @@ export default function SOAIPDCAFramework() {
             {/* PLAN Phase */}
             <TabsContent value="plan" className="mt-8">
               <Card>
-                <CardHeader className="bg-blue-50">
+                <CardHeader className="bg-emerald-50">
                   <div className="flex items-center gap-4">
-                    <Target className="h-10 w-10 text-blue-600" />
+                    <Target className="h-10 w-10 text-emerald-600" />
                     <div>
                       <CardTitle className="text-2xl">Phase 1: PLAN</CardTitle>
                       <p className="text-sm text-gray-600 mt-1">
@@ -266,14 +266,14 @@ export default function SOAIPDCAFramework() {
                           'Create implementation timeline',
                         ].map((activity, i) => (
                           <li key={i} className="flex items-start gap-2 text-gray-700">
-                            <CheckCircle2 className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                            <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                             <span>{activity}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <div className="bg-blue-50 rounded-lg p-6">
+                    <div className="bg-emerald-50 rounded-lg p-6">
                       <h4 className="font-semibold text-gray-900 mb-3">Required Documentation:</h4>
                       <div className="grid md:grid-cols-2 gap-4">
                         {[
@@ -488,9 +488,9 @@ export default function SOAIPDCAFramework() {
                       </ul>
                     </div>
 
-                    <div className="bg-blue-50 rounded-lg p-6">
+                    <div className="bg-emerald-50 rounded-lg p-6">
                       <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                        <AlertCircle className="h-5 w-5 text-blue-600" />
+                        <AlertCircle className="h-5 w-5 text-emerald-600" />
                         Watchdog Integration
                       </h4>
                       <p className="text-gray-700">

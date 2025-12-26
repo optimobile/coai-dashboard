@@ -211,7 +211,7 @@ export default function Watchdog() {
       {/* How It Works */}
       <div className="container py-20 max-w-6xl">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Your Path to Success</Badge>
+          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Your Path to Success</Badge>
           <h2 className="text-4xl font-bold mb-4">From Zero to Earning in 3 Steps</h2>
           <p className="text-xl text-gray-600">
             No coding required. No degree required. Just critical thinking and attention to detail.
@@ -220,7 +220,7 @@ export default function Watchdog() {
 
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="p-8 text-center border-2 border-blue-100">
-            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-3xl font-bold text-blue-600 mx-auto mb-6">
+            <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl font-bold text-emerald-600 mx-auto mb-6">
               1
             </div>
             <h3 className="text-2xl font-bold mb-4">Complete Training</h3>
@@ -284,7 +284,7 @@ export default function Watchdog() {
             </Card>
 
             <Card className="p-8">
-              <CheckCircle2 className="h-12 w-12 text-blue-600 mb-4" />
+              <CheckCircle2 className="h-12 w-12 text-emerald-600 mb-4" />
               <h3 className="text-2xl font-bold mb-4">Assess Risk Levels</h3>
               <p className="text-gray-600 leading-relaxed">
                 Determine if an AI system is low, medium, or high risk. High-risk systems (credit scoring, 

@@ -300,7 +300,7 @@ export default function PDCACycles() {
       case "active":
         return <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">Active</Badge>;
       case "completed":
-        return <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">Completed</Badge>;
+        return <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">Completed</Badge>;
       case "paused":
         return <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300">Paused</Badge>;
       default:
@@ -361,8 +361,8 @@ export default function PDCACycles() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                    <RefreshCw className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center">
+                    <RefreshCw className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div>
                     <div className="text-2xl font-bold">{stats.totalCycles}</div>

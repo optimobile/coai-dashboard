@@ -352,14 +352,14 @@ export default function ExamReview() {
 
                         {/* Explanation */}
                         {currentQuestion.explanation && (
-                          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
                             <div className="flex items-start gap-3">
-                              <Lightbulb className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                              <Lightbulb className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                               <div>
-                                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-1">
+                                <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-1">
                                   Explanation
                                 </h4>
-                                <p className="text-sm text-blue-600 dark:text-blue-400">
+                                <p className="text-sm text-emerald-600 dark:text-emerald-400">
                                   {currentQuestion.explanation}
                                 </p>
                               </div>

@@ -124,7 +124,7 @@ const getRiskColor = (risk: RiskLevel) => {
     case "high":
       return "bg-amber-500/10 text-amber-500 border-amber-500/30";
     case "limited":
-      return "bg-blue-500/10 text-blue-500 border-blue-500/30";
+      return "bg-emerald-500/10 text-emerald-500 border-emerald-500/30";
     case "minimal":
       return "bg-emerald-500/10 text-emerald-500 border-emerald-500/30";
     default:

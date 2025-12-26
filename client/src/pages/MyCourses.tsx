@@ -41,7 +41,7 @@ export default function MyCourses() {
       case "completed":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
       case "in_progress":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-blue-200";
       case "failed":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
       default:
@@ -216,8 +216,8 @@ export default function MyCourses() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-300" />
+                <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-emerald-600 dark:text-emerald-300" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{enrollments.length}</p>

@@ -73,7 +73,7 @@ export default function CertificationResults() {
   // Get score color
   const getScoreColor = () => {
     if (score >= 90) return "text-green-500";
-    if (score >= 70) return "text-blue-500";
+    if (score >= 70) return "text-emerald-500";
     if (score >= 50) return "text-amber-500";
     return "text-red-500";
   };
@@ -305,12 +305,12 @@ export default function CertificationResults() {
               transition={{ delay: 0.75 }}
               className="mb-6"
             >
-              <Card className="bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800">
+              <Card className="bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                        <ClipboardList className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center">
+                        <ClipboardList className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <div>
                         <h3 className="font-semibold">Review Your Answers</h3>

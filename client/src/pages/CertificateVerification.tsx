@@ -387,7 +387,7 @@ export default function CertificateVerification() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertCircle className="h-5 w-5 text-blue-600" />
+                  <AlertCircle className="h-5 w-5 text-emerald-600" />
                   Where to Find Certificate ID
                 </CardTitle>
               </CardHeader>

@@ -93,8 +93,8 @@ export default function StudentProgress() {
                 <p className="text-3xl font-bold mt-1">{overallProgress?.totalHours || 0}</p>
                 <p className="text-xs text-muted-foreground mt-1">Time invested</p>
               </div>
-              <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center">
-                <Clock className="h-6 w-6 text-blue-500" />
+              <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                <Clock className="h-6 w-6 text-emerald-500" />
               </div>
             </div>
           </Card>

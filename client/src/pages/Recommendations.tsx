@@ -91,7 +91,7 @@ const effortColors = {
 
 const impactColors = {
   low: 'text-gray-400',
-  medium: 'text-blue-400',
+  medium: 'text-emerald-400',
   high: 'text-purple-400',
 };
 
@@ -596,12 +596,12 @@ export default function Recommendations() {
                             interaction.action === 'implemented' ? 'bg-green-500/20' :
                             interaction.action === 'dismissed' ? 'bg-red-500/20' :
                             interaction.action === 'snoozed' ? 'bg-yellow-500/20' :
-                            'bg-blue-500/20'
+                            'bg-emerald-500/20'
                           }`}>
                             {interaction.action === 'implemented' ? <CheckCircle2 className="h-4 w-4 text-green-400" /> :
                              interaction.action === 'dismissed' ? <X className="h-4 w-4 text-red-400" /> :
                              interaction.action === 'snoozed' ? <PauseCircle className="h-4 w-4 text-yellow-400" /> :
-                             <Lightbulb className="h-4 w-4 text-blue-400" />}
+                             <Lightbulb className="h-4 w-4 text-emerald-400" />}
                           </div>
                           <div>
                             <p className="font-medium text-sm">
@@ -704,7 +704,7 @@ export default function Recommendations() {
                             <p className="text-xs text-muted-foreground">Snoozed</p>
                           </div>
                           <div>
-                            <p className="text-2xl font-bold text-blue-400">
+                            <p className="text-2xl font-bold text-emerald-400">
                               {month.totalViewed > 0 
                                 ? Math.round((month.totalImplemented / month.totalViewed) * 100) 
                                 : 0}%
@@ -736,8 +736,8 @@ export default function Recommendations() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-3">
-                  <AlertTriangle className="h-6 w-6 text-blue-400" />
+                <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-3">
+                  <AlertTriangle className="h-6 w-6 text-emerald-400" />
                 </div>
                 <h4 className="font-semibold mb-2">Incident Analysis</h4>
                 <p className="text-sm text-muted-foreground">

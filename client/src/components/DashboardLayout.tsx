@@ -101,9 +101,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               variant="ghost"
               className="flex items-center gap-2 w-full justify-start px-3 py-2 text-sm font-medium hover:bg-accent"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground font-bold text-[10px]">
-                CSOAI
-              </div>
+              <img
+                src="/csoai-icon.svg.png"
+                alt="CSOAI"
+                className="w-8 h-8 rounded-lg"
+              />
               <span className="font-semibold">New Chat</span>
             </Button>
           </Link>

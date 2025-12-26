@@ -49,7 +49,7 @@ export default function VerifyCertificate() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-8 text-center">
-          <Loader2 className="w-16 h-16 text-blue-500 mx-auto mb-4 animate-spin" />
+          <Loader2 className="w-16 h-16 text-emerald-500 mx-auto mb-4 animate-spin" />
           <h2 className="text-xl font-semibold">Verifying Certificate...</h2>
           <p className="text-sm text-muted-foreground mt-2">
             Please wait while we verify the certificate
@@ -194,7 +194,7 @@ export default function VerifyCertificate() {
             </div>
 
             {/* Verification Notice */}
-            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+            <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-200 dark:border-emerald-800">
               <p className="text-sm text-blue-900 dark:text-blue-100">
                 <strong>Verification Confirmed:</strong> This certificate has been issued by COAI Dashboard 
                 and represents successful completion of the training course. The certificate holder has 

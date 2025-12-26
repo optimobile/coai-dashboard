@@ -44,7 +44,7 @@ export default function Courses() {
     <DashboardLayout>
       <div className="p-6 space-y-6">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white rounded-2xl p-8 shadow-xl">
+        <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white rounded-2xl p-8 shadow-xl">
           <div className="max-w-3xl">
             <Badge className="mb-3 bg-white/20 text-white border-white/30">
               <Award className="w-4 h-4 mr-2" />
@@ -53,7 +53,7 @@ export default function Courses() {
             <h1 className="text-4xl font-bold mb-4">
               AI Safety & Compliance Training
             </h1>
-            <p className="text-lg text-blue-100 mb-6">
+            <p className="text-lg text-emerald-100 mb-6">
               Master AI regulations worldwide. Get certified. Earn from home.
               <br />
               <strong>Flexible payment plans available</strong> - Pay monthly or save with one-time payment.
@@ -148,7 +148,7 @@ export default function Courses() {
           <TabsContent value="courses" className="mt-6">
             {coursesLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="inline-block h-8 w-8 animate-spin text-blue-600" />
+                <Loader2 className="inline-block h-8 w-8 animate-spin text-emerald-600" />
                 <p className="mt-4 text-gray-600">Loading courses...</p>
               </div>
             ) : courses.length === 0 ? (
@@ -229,7 +229,7 @@ function CourseCard({ course }: { course: any }) {
       case "fundamentals":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
       case "advanced":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-blue-200";
       case "specialist":
         return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
       default:
@@ -265,14 +265,14 @@ function CourseCard({ course }: { course: any }) {
       </div>
 
       {/* Payment Plan Selector */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-lg p-4 mb-4">
+      <div className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-green-950 rounded-lg p-4 mb-4">
         <label className="text-sm font-semibold mb-3 block">Choose Payment Plan</label>
         <div className="grid grid-cols-2 gap-2 mb-3">
           <button
             onClick={() => setSelectedPlan("oneTime")}
             className={`p-3 rounded-lg border-2 transition-all ${
               selectedPlan === "oneTime"
-                ? "border-blue-600 bg-blue-50 dark:bg-blue-900 shadow-md"
+                ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
                 : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
             }`}
           >
@@ -286,7 +286,7 @@ function CourseCard({ course }: { course: any }) {
               onClick={() => setSelectedPlan("threeMonth")}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "threeMonth"
-                  ? "border-blue-600 bg-blue-50 dark:bg-blue-900 shadow-md"
+                  ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
                   : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
               }`}
             >
@@ -305,7 +305,7 @@ function CourseCard({ course }: { course: any }) {
               onClick={() => setSelectedPlan("sixMonth")}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "sixMonth"
-                  ? "border-blue-600 bg-blue-50 dark:bg-blue-900 shadow-md"
+                  ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
                   : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
               }`}
             >
@@ -324,7 +324,7 @@ function CourseCard({ course }: { course: any }) {
               onClick={() => setSelectedPlan("twelveMonth")}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "twelveMonth"
-                  ? "border-blue-600 bg-blue-50 dark:bg-blue-900 shadow-md"
+                  ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
                   : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
               }`}
             >
@@ -343,7 +343,7 @@ function CourseCard({ course }: { course: any }) {
       <Button
         onClick={handleEnroll}
         disabled={enrollMutation.isPending}
-        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+        className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700"
       >
         {enrollMutation.isPending ? "Processing..." : "Enroll Now"}
       </Button>

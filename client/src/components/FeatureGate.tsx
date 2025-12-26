@@ -119,7 +119,7 @@ interface TierBadgeProps {
 export function TierBadge({ tier, className = '' }: TierBadgeProps) {
   if (tier === 'pro') {
     return (
-      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 ${className}`}>
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 ${className}`}>
         <Sparkles className="h-3 w-3" />
         Pro
       </span>

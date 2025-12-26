@@ -69,7 +69,7 @@ export function NotificationCenter() {
       case 'compliance_alert':
         return <AlertTriangle className="h-5 w-5 text-red-600" />;
       case 'system_update':
-        return <Info className="h-5 w-5 text-blue-600" />;
+        return <Info className="h-5 w-5 text-emerald-600" />;
       case 'certificate_issued':
         return <Award className="h-5 w-5 text-green-600" />;
       case 'job_application':
@@ -86,7 +86,7 @@ export function NotificationCenter() {
       case 'high':
         return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'medium':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
       case 'low':
         return 'bg-gray-100 text-gray-800 border-gray-200';
       default:
@@ -151,7 +151,7 @@ export function NotificationCenter() {
               <div
                 key={notification.id}
                 className={`p-3 hover:bg-gray-50 cursor-pointer rounded transition-colors ${
-                  !notification.isRead ? 'bg-blue-50' : ''
+                  !notification.isRead ? 'bg-emerald-50' : ''
                 }`}
                 onClick={() => handleNotificationClick(notification)}
               >
@@ -215,7 +215,7 @@ export function NotificationCenter() {
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-center justify-center text-blue-600 cursor-pointer"
+              className="text-center justify-center text-emerald-600 cursor-pointer"
               onClick={() => {
                 setLocation('/settings');
                 setOpen(false);

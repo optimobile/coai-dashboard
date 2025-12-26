@@ -115,7 +115,7 @@ export default function Accreditation() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-blue-800">
+              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-emerald-800">
                 <Download className="mr-2 h-5 w-5" />
                 Download Standards
               </Button>
@@ -140,7 +140,7 @@ export default function Accreditation() {
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <Card className="border-2 border-blue-100">
               <CardHeader>
-                <Shield className="h-12 w-12 text-blue-600 mb-4" />
+                <Shield className="h-12 w-12 text-emerald-600 mb-4" />
                 <CardTitle>100% Independent</CardTitle>
               </CardHeader>
               <CardContent>
@@ -307,7 +307,7 @@ export default function Accreditation() {
             {accreditationLevels.map((cert, index) => (
               <Card key={index} className="border-2 border-gray-200 hover:shadow-xl transition-shadow">
                 <CardHeader className="bg-gradient-to-r from-blue-50 to-green-50">
-                  <div className="text-sm font-semibold text-blue-600 mb-2">
+                  <div className="text-sm font-semibold text-emerald-600 mb-2">
                     LEVEL {index + 1}
                   </div>
                   <CardTitle className="text-2xl">{cert.title}</CardTitle>
@@ -323,8 +323,8 @@ export default function Accreditation() {
                       </li>
                     ))}
                   </ul>
-                  <div className="bg-blue-50 rounded-lg p-4 text-center">
-                    <Award className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                  <div className="bg-emerald-50 rounded-lg p-4 text-center">
+                    <Award className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
                     <div className="text-sm font-semibold text-blue-900">
                       {cert.badge}
                     </div>
@@ -398,13 +398,13 @@ export default function Accreditation() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/training">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
                 Start Free Training
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="/certification">
-              <Button size="lg" variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50">
+              <Button size="lg" variant="outline" className="border-2 border-blue-600 text-emerald-600 hover:bg-emerald-50">
                 View Certification Exams
               </Button>
             </Link>

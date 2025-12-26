@@ -136,7 +136,7 @@ export default function About() {
       <div className="container py-20">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">What Makes Us Different</Badge>
+            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">What Makes Us Different</Badge>
             <h2 className="text-4xl font-bold mb-6">We're Not Just Talking. We're Building.</h2>
           </div>
 
@@ -154,7 +154,7 @@ export default function About() {
               </p>
             </Card>
 
-            <Card className="p-8 border-l-4 border-blue-500">
+            <Card className="p-8 border-l-4 border-emerald-500">
               <h3 className="text-2xl font-bold mb-4">👁️ Watchdog: Public Transparency</h3>
               <p className="text-gray-600 leading-relaxed mb-4">
                 Every AI safety incident reported to CSOAI is public by default. No hiding failures. No sweeping 

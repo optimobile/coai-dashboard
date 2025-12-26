@@ -24,8 +24,8 @@ const agentGroups = [
     description: "Safety, Security, Privacy",
     icon: Shield,
     count: 11,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
+    color: "text-emerald-500",
+    bgColor: "bg-emerald-500/10",
     providers: ["OpenAI (3)", "Anthropic (2)", "Google (2)", "Kimi (2)", "DeepSeek (2)"],
   },
   {
@@ -154,7 +154,7 @@ export default function AgentCouncil() {
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
-                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-sm">
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3 text-sm">
                   <strong>⚡ Real LLM Voting:</strong> This will trigger all 33 agents (OpenAI, Anthropic, Google) 
                   to vote on your proposal using Byzantine fault-tolerant consensus.
                 </div>
@@ -198,7 +198,7 @@ export default function AgentCouncil() {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
-            { label: "Total Sessions", value: stats?.totalSessions || 0, color: "text-blue-600" },
+            { label: "Total Sessions", value: stats?.totalSessions || 0, color: "text-emerald-600" },
             { label: "Consensus Reached", value: stats?.consensusReached || 0, color: "text-emerald-600" },
             { label: "Escalated to Human", value: stats?.escalatedToHuman || 0, color: "text-amber-600" },
             { label: "Pending Review", value: stats?.pendingReview || 0, color: "text-purple-600" },

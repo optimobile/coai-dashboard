@@ -54,7 +54,7 @@ import { toast } from "sonner";
 
 const tierColors: Record<string, string> = {
   free: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-  pro: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
+  pro: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
   enterprise: "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
 };
 
@@ -303,8 +303,8 @@ export default function ApiKeys() {
                 <div className="text-sm text-muted-foreground">100 requests/min</div>
                 <div className="text-xs text-muted-foreground mt-1">Basic access</div>
               </div>
-              <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950">
-                <div className="text-2xl font-bold text-blue-600">Pro</div>
+              <div className="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950">
+                <div className="text-2xl font-bold text-emerald-600">Pro</div>
                 <div className="text-sm text-muted-foreground">500 requests/min</div>
                 <div className="text-xs text-muted-foreground mt-1">Priority support</div>
               </div>

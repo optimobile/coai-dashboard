@@ -232,9 +232,9 @@ export default function CertificationV2() {
             </Card>
           </div>
 
-          <Card className="p-8 bg-blue-50 border-blue-200">
+          <Card className="p-8 bg-emerald-50 border-emerald-200">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -297,7 +297,7 @@ export default function CertificationV2() {
 
             <Card className="p-8">
               <div className="mb-4">
-                <span className="text-sm font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">NIST AI RMF</span>
+                <span className="text-sm font-semibold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">NIST AI RMF</span>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-4">
                 What are the four core functions of the NIST AI Risk Management Framework?

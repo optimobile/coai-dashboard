@@ -113,8 +113,8 @@ export default function NotificationSettings() {
           {/* Email Notifications */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Mail className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <Mail className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
                 <p className="font-medium text-gray-900">Email Notifications</p>
@@ -228,8 +228,8 @@ export default function NotificationSettings() {
           {/* System Updates */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Info className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <Info className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
                 <p className="font-medium text-gray-900">System Updates</p>
@@ -373,13 +373,13 @@ export default function NotificationSettings() {
       </Card>
 
       {/* Help Section */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-emerald-50 border-emerald-200">
         <CardContent className="pt-6">
           <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+            <Info className="h-5 w-5 text-emerald-600 mt-0.5" />
             <div>
               <p className="font-medium text-blue-900 mb-1">About Notifications</p>
-              <p className="text-sm text-blue-800">
+              <p className="text-sm text-emerald-800">
                 In-app notifications are always enabled. These settings control additional delivery channels
                 like email and Slack. You can test each channel to ensure notifications are working correctly.
               </p>

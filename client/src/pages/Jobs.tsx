@@ -174,7 +174,7 @@ export default function Jobs() {
       case 'entry':
         return 'bg-green-100 text-green-800';
       case 'mid':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-emerald-100 text-emerald-800';
       case 'senior':
         return 'bg-purple-100 text-purple-800';
       case 'lead':
@@ -213,8 +213,8 @@ export default function Jobs() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Briefcase className="h-6 w-6 text-blue-600" />
+                <div className="p-3 bg-emerald-100 rounded-lg">
+                  <Briefcase className="h-6 w-6 text-emerald-600" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900">{stats.totalJobs}</p>
@@ -358,8 +358,8 @@ export default function Jobs() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-blue-50 rounded-lg">
-                        <Briefcase className="h-6 w-6 text-blue-600" />
+                      <div className="p-3 bg-emerald-50 rounded-lg">
+                        <Briefcase className="h-6 w-6 text-emerald-600" />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-semibold text-gray-900 mb-1">
@@ -542,7 +542,7 @@ export default function Jobs() {
                 </div>
               ) : (
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border">
-                  <FileText className="h-5 w-5 text-blue-600" />
+                  <FileText className="h-5 w-5 text-emerald-600" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">
                       {resumeFile.name}

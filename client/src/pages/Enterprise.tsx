@@ -267,7 +267,7 @@ export default function Enterprise() {
       {/* Case Studies */}
       <div className="container py-20 max-w-6xl">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Case Studies</Badge>
+          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Case Studies</Badge>
           <h2 className="text-4xl font-bold mb-4">Real Results from Real Companies</h2>
           <p className="text-xl text-gray-600">
             See how enterprises are using CSOAI to slash compliance costs and accelerate AI deployment
@@ -312,13 +312,13 @@ export default function Enterprise() {
             </div>
           </Card>
 
-          <Card className="p-10 border-2 border-blue-200">
+          <Card className="p-10 border-2 border-emerald-200">
             <div className="flex items-start gap-6">
-              <div className="p-4 bg-blue-100 rounded-xl">
-                <Zap className="h-12 w-12 text-blue-600" />
+              <div className="p-4 bg-emerald-100 rounded-xl">
+                <Zap className="h-12 w-12 text-emerald-600" />
               </div>
               <div className="flex-1">
-                <Badge className="mb-3 bg-blue-50 text-blue-700 border-blue-200">
+                <Badge className="mb-3 bg-emerald-50 text-emerald-700 border-emerald-200">
                   Healthcare Tech
                 </Badge>
                 <h3 className="text-2xl font-bold mb-4">MedTech Startup Achieves ISO 42001 in 3 Months</h3>
@@ -328,19 +328,19 @@ export default function Enterprise() {
                 </p>
                 <div className="grid md:grid-cols-3 gap-6">
                   <div>
-                    <div className="text-3xl font-bold text-blue-600 mb-1">$135K</div>
+                    <div className="text-3xl font-bold text-emerald-600 mb-1">$135K</div>
                     <div className="text-sm text-gray-600">Saved on Consulting</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-blue-600 mb-1">6 months</div>
+                    <div className="text-3xl font-bold text-emerald-600 mb-1">6 months</div>
                     <div className="text-sm text-gray-600">Faster Certification</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-blue-600 mb-1">Zero</div>
+                    <div className="text-3xl font-bold text-emerald-600 mb-1">Zero</div>
                     <div className="text-sm text-gray-600">Compliance Violations</div>
                   </div>
                 </div>
-                <blockquote className="mt-6 pl-6 border-l-4 border-blue-500 italic text-gray-700">
+                <blockquote className="mt-6 pl-6 border-l-4 border-emerald-500 italic text-gray-700">
                   "CSOAI's SOAI-PDCA framework made continuous compliance easy. We now run assessments 
                   weekly instead of annually, catching issues before they become problems."
                 </blockquote>
@@ -409,7 +409,7 @@ export default function Enterprise() {
             </Card>
 
             <Card className="p-8">
-              <FileCheck className="h-12 w-12 text-blue-600 mb-4" />
+              <FileCheck className="h-12 w-12 text-emerald-600 mb-4" />
               <h3 className="text-2xl font-bold mb-3">Multi-Framework Compliance</h3>
               <p className="text-gray-600 leading-relaxed">
                 One platform for EU AI Act, NIST AI RMF, and ISO 42001. Stop juggling multiple consultants 

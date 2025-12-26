@@ -38,7 +38,7 @@ export default function NewHome() {
         {/* Content */}
         <div className="relative z-10 container mx-auto px-6 py-20 text-center">
           {/* Badge */}
-          <Badge className="mb-6 bg-blue-500/20 text-blue-300 border-blue-400/30 text-sm px-4 py-2">
+          <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-blue-400/30 text-sm px-4 py-2">
             <span className="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse" />
             10,000+ Certified Analysts Worldwide
           </Badge>
@@ -123,7 +123,7 @@ export default function NewHome() {
           {/* 3-Step Process */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-2 border-blue-100">
-              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Award className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Train</h3>
@@ -132,7 +132,7 @@ export default function NewHome() {
                 Learn at your own pace.
               </p>
               <Link href="/training">
-                <Button variant="ghost" className="text-blue-600 hover:text-blue-700">
+                <Button variant="ghost" className="text-emerald-600 hover:text-emerald-700">
                   Browse Courses →
                 </Button>
               </Link>
@@ -174,7 +174,7 @@ export default function NewHome() {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-4xl font-black text-blue-600 mb-2">10,000+</div>
+              <div className="text-4xl font-black text-emerald-600 mb-2">10,000+</div>
               <div className="text-gray-600">Certified Analysts</div>
             </div>
             <div className="text-center">
@@ -235,7 +235,7 @@ export default function NewHome() {
               <Button 
                 type="submit"
                 size="lg" 
-                className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-lg"
+                className="bg-white text-emerald-600 hover:bg-emerald-50 px-8 py-6 text-lg font-semibold shadow-lg"
               >
                 Get Early Access
               </Button>
@@ -252,7 +252,7 @@ export default function NewHome() {
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-blue-100 text-blue-700 text-sm px-4 py-2">
+            <Badge className="mb-4 bg-emerald-100 text-emerald-700 text-sm px-4 py-2">
               The Western TC260
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -266,8 +266,8 @@ export default function NewHome() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <Shield className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+                <Shield className="h-6 w-6 text-emerald-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 33-Agent Byzantine Consensus
@@ -446,7 +446,7 @@ export default function NewHome() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-5xl font-black text-blue-600 mb-2">1,000+</div>
+              <div className="text-5xl font-black text-emerald-600 mb-2">1,000+</div>
               <div className="text-gray-600">AI Systems Registered</div>
             </div>
             <div className="text-center">
@@ -473,7 +473,7 @@ export default function NewHome() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/watchdog-signup">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-12 py-6 text-lg font-semibold shadow-lg">
+              <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 px-12 py-6 text-lg font-semibold shadow-lg">
                 Start Training (Individuals)
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

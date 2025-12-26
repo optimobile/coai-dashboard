@@ -172,8 +172,8 @@ curl -X POST https://api.coai.org/v1/council/submit \\
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <Card>
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                  <Key className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                  <Key className="w-6 h-6 text-emerald-600" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2">1. Get API Key</h3>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -253,7 +253,7 @@ curl -X POST https://api.coai.org/v1/council/submit \\
                     <div className="col-span-2">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
                         api.method === "GET" ? "bg-green-100 text-green-700" :
-                        api.method === "POST" ? "bg-blue-100 text-blue-700" :
+                        api.method === "POST" ? "bg-emerald-100 text-emerald-700" :
                         api.method === "PUT" ? "bg-yellow-100 text-yellow-700" :
                         "bg-red-100 text-red-700"
                       }`}>

@@ -45,14 +45,14 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
 const severityColors: Record<string, string> = {
-  low: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
+  low: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
   medium: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300",
   high: "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
   critical: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
 };
 
 const priorityColors: Record<string, string> = {
-  low: "border-blue-500",
+  low: "border-emerald-500",
   medium: "border-yellow-500",
   high: "border-orange-500",
   urgent: "border-red-500",
@@ -199,8 +199,8 @@ export default function Workbench() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                  <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center">
+                  <Target className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{performance?.totalCasesCompleted || 0}</p>
@@ -447,7 +447,7 @@ export default function Workbench() {
                       <Button
                         variant={decision === "needs_more_info" ? "default" : "outline"}
                         className={`flex-col h-auto py-4 ${
-                          decision === "needs_more_info" ? "bg-blue-600 hover:bg-blue-700" : ""
+                          decision === "needs_more_info" ? "bg-emerald-600 hover:bg-emerald-700" : ""
                         }`}
                         onClick={() => setDecision("needs_more_info")}
                       >
