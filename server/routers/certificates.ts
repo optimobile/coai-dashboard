@@ -10,6 +10,7 @@ import { getDb } from "../db";
 import { courseCertificates, courses, courseEnrollments } from "../../drizzle/schema";
 import { eq, and, isNotNull } from "drizzle-orm";
 import { generateCertificatePDF } from "../utils/certificateGenerator";
+import { generateCertificatePDFV2 } from "../utils/certificateGeneratorV2";
 import crypto from "crypto";
 
 export const certificatesRouter = router({
@@ -73,8 +74,8 @@ export const certificatesRouter = router({
         // Generate unique certificate ID
         const certificateId = `COAI-${(course.framework || 'GENERAL').replace(/[^A-Z0-9]/g, '')}-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
-        // Generate PDF certificate
-        const pdfBuffer = await generateCertificatePDF({
+        // Generate PDF certificate (using V2 with modern template)
+        const pdfBuffer = await generateCertificatePDFV2({
           certificateId,
           studentName: ctx.user.name || 'Student',
           courseName: course.title,
