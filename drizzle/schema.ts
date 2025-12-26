@@ -374,6 +374,285 @@ export const userCertificates = mysqlTable("user_certificates", {
 
 export type UserCertificate = typeof userCertificates.$inferSelect;
 
+// ============================================================================
+// GOVERNMENT PORTAL TABLES
+// ============================================================================
+
+/**
+ * Government Portal Users
+ * Stores government agency users with jurisdiction and role information
+ */
+export const governmentUsers = mysqlTable(
+  "government_users",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull().unique(),
+    jurisdiction: varchar("jurisdiction", { length: 255 }).notNull(),
+    role: mysqlEnum("role", ["admin", "analyst", "viewer"]).default("viewer").notNull(),
+    organizationName: varchar("organization_name", { length: 255 }).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    isActive: boolean("is_active").default(true).notNull()
+  },
+  (table) => ({
+    jurisdictionIdx: index("government_users_jurisdiction_idx").on(table.jurisdiction),
+    emailIdx: index("government_users_email_idx").on(table.email)
+  })
+);
+
+export type GovernmentUser = typeof governmentUsers.$inferSelect;
+
+/**
+ * Compliance Requirements
+ * Stores compliance framework requirements (EU AI Act, NIST, ISO, TC260)
+ */
+export const complianceRequirements = mysqlTable(
+  "compliance_requirements",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    framework: mysqlEnum("framework", ["EU AI Act", "NIST RMF", "ISO 42001", "TC260"]).notNull(),
+    requirement: text("requirement").notNull(),
+    description: text("description").notNull(),
+    priority: mysqlEnum("priority", ["critical", "high", "medium", "low"]).default("medium").notNull(),
+    effectiveDate: timestamp("effective_date").notNull(),
+    createdBy: varchar("created_by", { length: 255 }).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    version: int("version").default(1).notNull(),
+    isActive: boolean("is_active").default(true).notNull()
+  },
+  (table) => ({
+    frameworkIdx: index("compliance_requirements_framework_idx").on(table.framework),
+    effectiveDateIdx: index("compliance_requirements_effective_date_idx").on(table.effectiveDate)
+  })
+);
+
+export type ComplianceRequirement = typeof complianceRequirements.$inferSelect;
+
+/**
+ * Compliance Status
+ * Tracks compliance status for each AI system
+ */
+export const complianceStatus = mysqlTable(
+  "compliance_status",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    systemId: int("system_id").notNull(),
+    companyId: int("company_id").notNull(),
+    complianceScore: int("compliance_score").notNull(),
+    status: mysqlEnum("status", ["compliant", "non_compliant", "under_review", "flagged"]).default("under_review").notNull(),
+    lastAudit: timestamp("last_audit"),
+    nextAuditDue: timestamp("next_audit_due"),
+    euAiActScore: int("eu_ai_act_score"),
+    nistRmfScore: int("nist_rmf_score"),
+    iso42001Score: int("iso42001_score"),
+    tc260Score: int("tc260_score"),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull()
+  },
+  (table) => ({
+    systemIdIdx: index("compliance_status_system_id_idx").on(table.systemId),
+    companyIdIdx: index("compliance_status_company_id_idx").on(table.companyId),
+    statusIdx: index("compliance_status_status_idx").on(table.status)
+  })
+);
+
+export type ComplianceStatus = typeof complianceStatus.$inferSelect;
+
+/**
+ * Enforcement Actions
+ * Tracks enforcement actions taken against non-compliant systems
+ */
+export const enforcementActions = mysqlTable(
+  "enforcement_actions",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    systemId: int("system_id").notNull(),
+    companyId: int("company_id").notNull(),
+    reason: text("reason").notNull(),
+    severity: mysqlEnum("severity", ["critical", "high", "medium", "low"]).default("medium").notNull(),
+    action: mysqlEnum("action", ["warning", "audit_required", "monitoring", "suspension", "shutdown"]).notNull(),
+    issuedBy: varchar("issued_by", { length: 255 }).notNull(),
+    issuedAt: timestamp("issued_at").defaultNow().notNull(),
+    dueDate: timestamp("due_date"),
+    status: mysqlEnum("status", ["open", "in_progress", "resolved", "escalated"]).default("open").notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull()
+  },
+  (table) => ({
+    systemIdIdx: index("enforcement_actions_system_id_idx").on(table.systemId),
+    companyIdIdx: index("enforcement_actions_company_id_idx").on(table.companyId),
+    severityIdx: index("enforcement_actions_severity_idx").on(table.severity)
+  })
+);
+
+export type EnforcementAction = typeof enforcementActions.$inferSelect;
+
+// ============================================================================
+// ENTERPRISE INTEGRATION TABLES
+// ============================================================================
+
+/**
+ * Enterprise API Keys
+ * Stores API keys for enterprise integration
+ */
+export const enterpriseAPIKeys = mysqlTable(
+  "enterprise_api_keys",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    companyId: int("company_id").notNull(),
+    keyHash: varchar("key_hash", { length: 255 }).notNull().unique(),
+    name: varchar("name", { length: 255 }).notNull(),
+    permissions: json("permissions").notNull(),
+    rateLimit: int("rate_limit").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    lastUsedAt: timestamp("last_used_at"),
+    expiresAt: timestamp("expires_at"),
+    isActive: boolean("is_active").default(true).notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+  },
+  (table) => ({
+    companyIdIdx: index("enterprise_api_keys_company_id_idx").on(table.companyId),
+    keyHashIdx: index("enterprise_api_keys_hash_idx").on(table.keyHash)
+  })
+);
+
+export type EnterpriseAPIKey = typeof enterpriseAPIKeys.$inferSelect;
+
+/**
+ * Audit Requests
+ * Tracks compliance audit requests from enterprises
+ */
+export const auditRequests = mysqlTable(
+  "audit_requests",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    systemId: int("system_id").notNull(),
+    companyId: int("company_id").notNull(),
+    reason: text("reason").notNull(),
+    priority: mysqlEnum("priority", ["high", "medium", "low"]).default("medium").notNull(),
+    framework: varchar("framework", { length: 50 }),
+    status: mysqlEnum("status", ["scheduled", "in_progress", "completed", "failed"]).default("scheduled").notNull(),
+    estimatedCompletion: timestamp("estimated_completion"),
+    assignedAnalyst: varchar("assigned_analyst", { length: 255 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    completedAt: timestamp("completed_at")
+  },
+  (table) => ({
+    systemIdIdx: index("audit_requests_system_id_idx").on(table.systemId),
+    companyIdIdx: index("audit_requests_company_id_idx").on(table.companyId),
+    statusIdx: index("audit_requests_status_idx").on(table.status)
+  })
+);
+
+export type AuditRequest = typeof auditRequests.$inferSelect;
+
+/**
+ * Webhook Subscriptions
+ * Stores webhook subscriptions for enterprises
+ */
+export const webhookSubscriptions = mysqlTable(
+  "webhook_subscriptions",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    companyId: int("company_id").notNull(),
+    url: varchar("url", { length: 500 }).notNull(),
+    events: json("events").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    lastTriggeredAt: timestamp("last_triggered_at"),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    secret: varchar("secret", { length: 255 }).notNull()
+  },
+  (table) => ({
+    companyIdIdx: index("webhook_subscriptions_company_id_idx").on(table.companyId),
+    urlIdx: index("webhook_subscriptions_url_idx").on(table.url)
+  })
+);
+
+export type WebhookSubscription = typeof webhookSubscriptions.$inferSelect;
+
+/**
+ * Webhook Events
+ * Stores webhook events for delivery tracking
+ */
+export const webhookEvents = mysqlTable(
+  "webhook_events",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    eventId: varchar("event_id", { length: 255 }).notNull().unique(),
+    eventType: varchar("event_type", { length: 100 }).notNull(),
+    timestamp: timestamp("timestamp").defaultNow().notNull(),
+    data: json("data").notNull(),
+    companyId: int("company_id").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull()
+  },
+  (table) => ({
+    eventIdIdx: index("webhook_events_event_id_idx").on(table.eventId),
+    companyIdIdx: index("webhook_events_company_id_idx").on(table.companyId),
+    eventTypeIdx: index("webhook_events_event_type_idx").on(table.eventType)
+  })
+);
+
+export type WebhookEvent = typeof webhookEvents.$inferSelect;
+
+/**
+ * Webhook Deliveries
+ * Tracks webhook delivery attempts and status
+ */
+export const webhookDeliveries = mysqlTable(
+  "webhook_deliveries",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    eventId: varchar("event_id", { length: 255 }).notNull(),
+    subscriptionId: int("subscription_id").notNull(),
+    status: mysqlEnum("status", ["pending", "delivered", "failed", "retrying"]).default("pending").notNull(),
+    httpStatus: int("http_status"),
+    responseBody: text("response_body"),
+    error: text("error"),
+    attemptCount: int("attempt_count").default(0).notNull(),
+    nextRetryAt: timestamp("next_retry_at"),
+    deliveredAt: timestamp("delivered_at"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+  },
+  (table) => ({
+    eventIdIdx: index("webhook_deliveries_event_id_idx").on(table.eventId),
+    subscriptionIdIdx: index("webhook_deliveries_subscription_id_idx").on(table.subscriptionId),
+    statusIdx: index("webhook_deliveries_status_idx").on(table.status)
+  })
+);
+
+export type WebhookDelivery = typeof webhookDeliveries.$inferSelect;
+
+/**
+ * API Usage
+ * Tracks API usage for rate limiting and analytics
+ */
+export const apiUsage = mysqlTable(
+  "api_usage",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    apiKeyId: int("api_key_id").notNull(),
+    endpoint: varchar("endpoint", { length: 255 }).notNull(),
+    method: varchar("method", { length: 10 }).notNull(),
+    statusCode: int("status_code").notNull(),
+    responseTimeMs: int("response_time_ms").notNull(),
+    requestSize: int("request_size"),
+    responseSize: int("response_size"),
+    timestamp: timestamp("timestamp").defaultNow().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull()
+  },
+  (table) => ({
+    apiKeyIdIdx: index("api_usage_api_key_id_idx").on(table.apiKeyId),
+    endpointIdx: index("api_usage_endpoint_idx").on(table.endpoint),
+    timestampIdx: index("api_usage_timestamp_idx").on(table.timestamp)
+  })
+);
+
+export type APIUsage = typeof apiUsage.$inferSelect;
+
 /**
  * Training course certificates
  */
