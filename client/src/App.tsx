@@ -81,6 +81,8 @@ import NISTRecognition from "./pages/NISTRecognition";
 import TC260Alignment from "./pages/TC260Alignment";
 import APIKeyManagement from "./pages/APIKeyManagement";
 import WebhookMonitoring from "./pages/WebhookMonitoring";
+import GovernmentAdminDashboard from "./pages/GovernmentAdminDashboard";
+import NotificationPreferences from "./pages/NotificationPreferences";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -177,6 +179,8 @@ function App() {
                   <Route path="/enterprise-integration" component={EnterpriseIntegration} />
                   <Route path="/admin/api-keys" component={APIKeyManagement} />
                   <Route path="/admin/webhooks" component={WebhookMonitoring} />
+                  <Route path="/admin/government" component={GovernmentAdminDashboard} />
+                  <Route path="/notification-preferences" component={NotificationPreferences} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
