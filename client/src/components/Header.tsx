@@ -1,11 +1,11 @@
 /**
- * Unified Header Component
- * Professional Udemy-style navigation with CSOAI branding
+ * Unified Header Component with Mega Menu
+ * Professional navigation with CSOAI branding and comprehensive dropdown menus
  */
 
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3 } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,17 +22,71 @@ export function Header() {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Training', href: '/training' },
-    { name: 'Certification', href: '/certification' },
-    { name: 'SOAI-PDCA', href: '/soai-pdca' },
-    { name: 'Accreditation', href: '/accreditation' },
-    { name: 'Watchdog', href: '/watchdog' },
-    { name: 'Jobs', href: '/jobs' },
-    { name: 'Enterprise', href: '/enterprise' },
-    { name: 'About', href: '/about' },
+    { 
+      name: 'Training', 
+      href: '/training',
+      submenu: [
+        { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
+        { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses and progress' },
+        { name: 'EU AI Act', href: '/courses?framework=eu', description: 'European AI regulation training' },
+        { name: 'NIST AI RMF', href: '/courses?framework=nist', description: 'US AI risk management framework' },
+        { name: 'ISO 42001', href: '/courses?framework=iso', description: 'International AI management system' },
+      ]
+    },
+    { 
+      name: 'Certification', 
+      href: '/certification',
+      submenu: [
+        { name: 'Overview', href: '/certification', description: 'Learn about certification' },
+        { name: 'Take Exam', href: '/exam', description: 'Start your certification exam' },
+        { name: 'My Certificates', href: '/certificates', description: 'View your earned certificates' },
+        { name: 'Verify Certificate', href: '/verify-certificate', description: 'Verify a certificate' },
+      ]
+    },
+    { 
+      name: 'SOAI-PDCA', 
+      href: '/soai-pdca',
+      submenu: [
+        { name: 'Framework Overview', href: '/soai-pdca', description: 'Learn about our methodology' },
+        { name: 'PDCA Simulator', href: '/pdca-simulator', description: 'Interactive PDCA walkthrough' },
+        { name: '33-Agent Council', href: '/council-detail', description: 'Byzantine consensus system' },
+        { name: 'Templates', href: '/soai-pdca#templates', description: 'Download PDCA templates' },
+      ]
+    },
+    { 
+      name: 'Watchdog', 
+      href: '/watchdog',
+      submenu: [
+        { name: 'Report Incident', href: '/watchdog', description: 'Submit AI safety incident' },
+        { name: 'Analyst Jobs', href: '/jobs', description: 'Browse analyst opportunities' },
+        { name: 'My Applications', href: '/my-applications', description: 'Track your job applications' },
+        { name: 'Leaderboard', href: '/leaderboard', description: 'Top performing analysts' },
+      ]
+    },
+    { 
+      name: 'Enterprise', 
+      href: '/enterprise',
+      submenu: [
+        { name: 'Overview', href: '/enterprise', description: 'Enterprise solutions' },
+        { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
+        { name: 'API Documentation', href: '/api-docs', description: 'Developer resources' },
+        { name: 'Compliance Dashboard', href: '/compliance', description: 'Monitor AI compliance' },
+      ]
+    },
+    { 
+      name: 'Resources', 
+      href: '/resources',
+      submenu: [
+        { name: 'About CSOAI', href: '/about', description: 'Our mission and story' },
+        { name: 'Accreditation', href: '/accreditation', description: 'Official recognition' },
+        { name: 'Standards', href: '/standards', description: 'Frameworks we support' },
+        { name: 'Knowledge Base', href: '/knowledge-base', description: 'RLMAI learning system' },
+        { name: 'Blog', href: '/blog', description: 'News and insights' },
+      ]
+    },
   ];
 
   const isActive = (href: string) => {
@@ -56,25 +110,59 @@ export function Header() {
             </a>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          {/* Desktop Navigation with Mega Menu */}
+          <div className="hidden lg:flex items-center space-x-1">
+            <Link href="/">
+              <a
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  location === '/'
+                    ? 'text-emerald-600 bg-emerald-50'
+                    : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                }`}
+              >
+                Home
+              </a>
+            </Link>
+            
             {navigation.map((item) => (
-              <Link key={item.name} href={item.href}>
-                <a
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive(item.href)
-                      ? 'text-emerald-600 bg-emerald-50'
-                      : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                  }`}
-                >
-                  {item.name}
-                </a>
-              </Link>
+              <div
+                key={item.name}
+                className="relative"
+                onMouseEnter={() => setActiveDropdown(item.name)}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <Link href={item.href}>
+                  <a
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                      isActive(item.href)
+                        ? 'text-emerald-600 bg-emerald-50'
+                        : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {item.name}
+                    <ChevronDown className="h-3 w-3" />
+                  </a>
+                </Link>
+                
+                {/* Mega Menu Dropdown */}
+                {activeDropdown === item.name && item.submenu && (
+                  <div className="absolute left-0 top-full mt-1 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    {item.submenu.map((subItem) => (
+                      <Link key={subItem.name} href={subItem.href}>
+                        <a className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                          <div className="font-medium text-gray-900 text-sm">{subItem.name}</div>
+                          <div className="text-xs text-gray-500 mt-0.5">{subItem.description}</div>
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             {user ? (
               <>
                 <NotificationCenter />
@@ -96,7 +184,7 @@ export function Header() {
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/training">
+                      <Link href="/my-courses">
                         <a className="flex items-center w-full">
                           <BookOpen className="h-4 w-4 mr-2" />
                           My Courses
@@ -145,7 +233,7 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? (
@@ -158,21 +246,50 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="lg:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-2">
+              <Link href="/">
+                <a
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    location === '/'
+                      ? 'text-emerald-600 bg-emerald-50'
+                      : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </a>
+              </Link>
+              
               {navigation.map((item) => (
-                <Link key={item.name} href={item.href}>
-                  <a
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive(item.href)
-                        ? 'text-emerald-600 bg-emerald-50'
-                        : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                    }`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                </Link>
+                <div key={item.name}>
+                  <Link href={item.href}>
+                    <a
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors block ${
+                        isActive(item.href)
+                          ? 'text-emerald-600 bg-emerald-50'
+                          : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                      }`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </a>
+                  </Link>
+                  {item.submenu && (
+                    <div className="ml-4 mt-1 space-y-1">
+                      {item.submenu.map((subItem) => (
+                        <Link key={subItem.name} href={subItem.href}>
+                          <a
+                            className="block px-4 py-2 text-xs text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-lg"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {subItem.name}
+                          </a>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
               
               <div className="pt-4 border-t border-gray-200 space-y-2">
@@ -189,7 +306,7 @@ export function Header() {
                         Dashboard
                       </Button>
                     </Link>
-                    <Link href="/training">
+                    <Link href="/my-courses">
                       <Button
                         variant="ghost"
                         size="sm"

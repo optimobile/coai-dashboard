@@ -69,6 +69,7 @@ import SOAIPDCAFramework from "./pages/SOAIPDCAFramework";
 import PDCASimulator from "./pages/PDCASimulator";
 import CertificateVerification from "./pages/CertificateVerification";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
+import Enterprise from "./pages/Enterprise";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -148,7 +149,8 @@ function App() {
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
                   <Route path="/pdca-simulator" component={PDCASimulator} />
                   <Route path="/verify-certificate" component={CertificateVerification} />
-                  <Route path="/enterprise" component={EnterpriseDashboard} />
+                  <Route path="/enterprise" component={Enterprise} />
+                  <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
                   <Route path="/compliance-monitoring" component={ComplianceMonitoring} />
                   <Route path="/bulk-import" component={BulkAISystemImport} />
                   <Route path="/404" component={NotFound} />
