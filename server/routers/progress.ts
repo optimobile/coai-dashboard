@@ -3,10 +3,7 @@ import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { 
   courseEnrollments, 
-  courses, 
-  learningSessions, 
-  quizAnalytics, 
-  userRecommendations,
+  courses,
   courseCertificates
 } from "../../drizzle/schema";
 import { eq, and, desc, sql, avg, sum, count } from "drizzle-orm";

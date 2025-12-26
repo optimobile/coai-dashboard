@@ -42,6 +42,7 @@ import { bulkImportRouter } from "./routers/bulkImport";
 import { jobsRouter } from "./routers/jobs";
 import { notificationsRouter } from "./routers/notifications";
 import { fileUploadRouter } from "./routers/fileUpload";
+import { translationsRouter } from "./routers/translations";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2787,6 +2788,7 @@ export const appRouter = router({
   jobs: jobsRouter,
   notifications: notificationsRouter,
   fileUpload: fileUploadRouter,
+  translations: translationsRouter,
 });
 
 export type AppRouter = typeof appRouter;
