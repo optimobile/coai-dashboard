@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, json, decimal } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, json, decimal, index } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -846,3 +846,116 @@ export const userRecommendations = mysqlTable("user_recommendations", {
 
 export type UserRecommendation = typeof userRecommendations.$inferSelect;
 export type InsertUserRecommendation = typeof userRecommendations.$inferInsert;
+
+/**
+ * Job postings table
+ * AI Safety Analyst job opportunities
+ */
+export const jobPostings = mysqlTable("job_postings", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  company: varchar("company", { length: 255 }).notNull(),
+  location: varchar("location", { length: 255 }).notNull(), // e.g., "Remote", "San Francisco, CA", "London, UK"
+  locationType: mysqlEnum("locationType", ["remote", "hybrid", "onsite"]).default("remote").notNull(),
+  country: varchar("country", { length: 100 }),
+  payRate: int("payRate").notNull(), // Hourly rate in cents (e.g., 4500 = $45/hr)
+  payRateMax: int("payRateMax"), // Optional max for range (e.g., $45-65/hr)
+  payCurrency: varchar("payCurrency", { length: 3 }).default("USD").notNull(),
+  experienceLevel: mysqlEnum("experienceLevel", ["entry", "mid", "senior", "lead"]).default("entry").notNull(),
+  employmentType: mysqlEnum("employmentType", ["full_time", "part_time", "contract", "freelance"]).default("full_time").notNull(),
+  description: text("description").notNull(),
+  responsibilities: text("responsibilities"), // JSON array or newline-separated
+  requirements: text("requirements"), // JSON array or newline-separated
+  requiredCertifications: text("requiredCertifications"), // e.g., "CSOAI Foundation, NIST AI RMF"
+  preferredCertifications: text("preferredCertifications"),
+  benefits: text("benefits"),
+  applicationUrl: varchar("applicationUrl", { length: 500 }),
+  contactEmail: varchar("contactEmail", { length: 320 }),
+  status: mysqlEnum("status", ["active", "closed", "draft"]).default("active").notNull(),
+  postedBy: int("postedBy"), // User ID of poster (optional)
+  viewCount: int("viewCount").default(0).notNull(),
+  applicationCount: int("applicationCount").default(0).notNull(),
+  expiresAt: timestamp("expiresAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type JobPosting = typeof jobPostings.$inferSelect;
+export type InsertJobPosting = typeof jobPostings.$inferInsert;
+
+/**
+ * Job applications table
+ * Track user applications to job postings
+ */
+export const jobApplications = mysqlTable("job_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  jobId: int("jobId").notNull(),
+  userId: int("userId").notNull(),
+  applicantName: varchar("applicantName", { length: 255 }).notNull(),
+  applicantEmail: varchar("applicantEmail", { length: 320 }).notNull(),
+  resumeUrl: varchar("resumeUrl", { length: 500 }),
+  coverLetter: text("coverLetter"),
+  certifications: text("certifications"), // List of CSOAI certifications
+  yearsExperience: int("yearsExperience"),
+  status: mysqlEnum("status", ["submitted", "reviewing", "shortlisted", "rejected", "accepted"]).default("submitted").notNull(),
+  notes: text("notes"), // Internal notes from reviewer
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type JobApplication = typeof jobApplications.$inferSelect;
+export type InsertJobApplication = typeof jobApplications.$inferInsert;
+
+/**
+ * Notifications table
+ * In-app notifications for users
+ */
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  type: mysqlEnum("type", [
+    "compliance_alert",
+    "system_update",
+    "job_application",
+    "certificate_issued",
+    "council_decision",
+    "report_update",
+  ]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  link: varchar("link", { length: 500 }),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium").notNull(),
+  isRead: boolean("isRead").default(false).notNull(),
+  readAt: timestamp("readAt"),
+  metadata: json("metadata").$type<Record<string, any>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  userIdIsReadIdx: index("idx_userId_isRead").on(table.userId, table.isRead),
+  createdAtIdx: index("idx_createdAt").on(table.createdAt),
+}));
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+
+/**
+ * Notification preferences table
+ * User preferences for notification delivery
+ */
+export const notificationPreferences = mysqlTable("notification_preferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  emailEnabled: boolean("emailEnabled").default(true).notNull(),
+  slackEnabled: boolean("slackEnabled").default(false).notNull(),
+  slackWebhookUrl: varchar("slackWebhookUrl", { length: 500 }),
+  complianceAlerts: boolean("complianceAlerts").default(true).notNull(),
+  systemUpdates: boolean("systemUpdates").default(true).notNull(),
+  jobApplications: boolean("jobApplications").default(true).notNull(),
+  certificateIssued: boolean("certificateIssued").default(true).notNull(),
+  councilDecisions: boolean("councilDecisions").default(true).notNull(),
+  reportUpdates: boolean("reportUpdates").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;

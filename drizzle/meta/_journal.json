@@ -64,6 +64,20 @@
       "when": 1766726098442,
       "tag": "0008_classy_anthem",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1766727515352,
+      "tag": "0009_worthless_leper_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1766728145351,
+      "tag": "0010_strong_wallflower",
+      "breakpoints": true
     }
   ]
 }

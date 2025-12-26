@@ -6,6 +6,7 @@
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3 } from 'lucide-react';
+import { NotificationCenter } from './NotificationCenter';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -75,6 +76,7 @@ export function Header() {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
+                <NotificationCenter />
                 <Link href="/dashboard">
                   <Button variant="ghost" size="sm" className="text-gray-700">
                     <BarChart3 className="h-4 w-4 mr-2" />

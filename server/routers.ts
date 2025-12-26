@@ -38,6 +38,9 @@ import { modulePopulationRouter } from "./routers/modulePopulation";
 import { certificatesRouter } from "./routers/certificates";
 import { progressRouter } from "./routers/progress";
 import { pdcaTemplatesRouter } from "./routers/pdcaTemplates";
+import { bulkImportRouter } from "./routers/bulkImport";
+import { jobsRouter } from "./routers/jobs";
+import { notificationsRouter } from "./routers/notifications";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2779,6 +2782,9 @@ export const appRouter = router({
   progress: progressRouter,
   certificates: certificatesRouter,
   pdcaTemplates: pdcaTemplatesRouter,
+  bulkImport: bulkImportRouter,
+  jobs: jobsRouter,
+  notifications: notificationsRouter,
 });
 
 export type AppRouter = typeof appRouter;

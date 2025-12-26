@@ -19,25 +19,35 @@ import {
   Info,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { trpc } from '@/lib/trpc';
+
+interface ValidationError {
+  row: number;
+  field: string;
+  message: string;
+  value: any;
+}
 
 interface ImportResult {
-  total: number;
-  successful: number;
-  failed: number;
-  duplicates: number;
-  systems: Array<{
-    name: string;
-    status: 'success' | 'error' | 'duplicate';
-    message: string;
-    riskLevel?: string;
-  }>;
+  success: boolean;
+  imported: number;
+  skipped: number;
+  errors: ValidationError[];
+  duplicates: string[];
 }
 
 export default function BulkAISystemImport() {
   const [file, setFile] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ImportResult | null>(null);
+
+  // Get template and field descriptions
+  const { data: template } = trpc.bulkImport.getCSVTemplate.useQuery();
+  const { data: fieldInfo } = trpc.bulkImport.getFieldDescriptions.useQuery();
+
+  // Import mutations
+  const importCSV = trpc.bulkImport.importFromCSV.useMutation();
+  const importExcel = trpc.bulkImport.importFromExcel.useMutation();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -48,7 +58,10 @@ export default function BulkAISystemImport() {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       ];
       
-      if (!validTypes.includes(selectedFile.type)) {
+      if (!validTypes.includes(selectedFile.type) && 
+          !selectedFile.name.endsWith('.csv') && 
+          !selectedFile.name.endsWith('.xlsx') && 
+          !selectedFile.name.endsWith('.xls')) {
         toast.error('Please upload a CSV or Excel file');
         return;
       }
@@ -66,121 +79,69 @@ export default function BulkAISystemImport() {
     }
 
     setImporting(true);
-    setProgress(0);
+    setResult(null);
 
-    // Simulate file processing with progress
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 90) {
-          clearInterval(progressInterval);
-          return 90;
+    try {
+      const isCSV = file.name.endsWith('.csv');
+      
+      if (isCSV) {
+        // Read CSV file as text
+        const text = await file.text();
+        const importResult = await importCSV.mutateAsync({ csvData: text });
+        setResult(importResult);
+        
+        if (importResult.success) {
+          toast.success(`Successfully imported ${importResult.imported} AI systems`);
+        } else {
+          toast.warning(`Import completed with ${importResult.errors.length} errors`);
         }
-        return prev + 10;
-      });
-    }, 300);
-
-    // Simulate API call
-    setTimeout(() => {
-      clearInterval(progressInterval);
-      setProgress(100);
-
-      // Mock result
-      const mockResult: ImportResult = {
-        total: 25,
-        successful: 20,
-        failed: 3,
-        duplicates: 2,
-        systems: [
-          {
-            name: 'Customer Service Chatbot',
-            status: 'success',
-            message: 'Successfully imported',
-            riskLevel: 'Low',
-          },
-          {
-            name: 'Fraud Detection System',
-            status: 'success',
-            message: 'Successfully imported',
-            riskLevel: 'High',
-          },
-          {
-            name: 'Recommendation Engine',
-            status: 'duplicate',
-            message: 'System already exists in database',
-          },
-          {
-            name: 'Content Moderation AI',
-            status: 'success',
-            message: 'Successfully imported',
-            riskLevel: 'Medium',
-          },
-          {
-            name: 'Invalid System Name',
-            status: 'error',
-            message: 'Missing required field: description',
-          },
-        ],
-      };
-
-      setResult(mockResult);
+      } else {
+        // Read Excel file as base64
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const base64 = e.target?.result as string;
+          const base64Data = base64.split(',')[1]; // Remove data:... prefix
+          
+          const importResult = await importExcel.mutateAsync({ excelData: base64Data });
+          setResult(importResult);
+          
+          if (importResult.success) {
+            toast.success(`Successfully imported ${importResult.imported} AI systems`);
+          } else {
+            toast.warning(`Import completed with ${importResult.errors.length} errors`);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Import failed');
+      console.error('Import error:', error);
+    } finally {
       setImporting(false);
-      toast.success(`Import complete: ${mockResult.successful} systems added`);
-    }, 3000);
+    }
   };
 
   const downloadTemplate = () => {
-    // Create CSV template
-    const template = `Name,Description,Purpose,Risk Level,Framework Compliance,Owner,Department
-Customer Service AI,Automated customer support chatbot,Customer Service,Low,EU AI Act,John Doe,Support
-Fraud Detection System,Real-time fraud detection and prevention,Security,High,NIST AI RMF,Jane Smith,Security
-Recommendation Engine,Product recommendation system,Marketing,Medium,ISO 42001,Mike Johnson,Marketing`;
-
-    const blob = new Blob([template], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'ai_systems_template.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success('Template downloaded');
+    if (template) {
+      const blob = new Blob([template.template], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = template.filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success('Template downloaded');
+    }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
+  const getStatusIcon = (type: 'success' | 'error' | 'duplicate') => {
+    switch (type) {
       case 'success':
         return <CheckCircle2 className="h-5 w-5 text-green-600" />;
       case 'error':
         return <XCircle className="h-5 w-5 text-red-600" />;
       case 'duplicate':
         return <AlertTriangle className="h-5 w-5 text-yellow-600" />;
-      default:
-        return null;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'success':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'error':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'duplicate':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getRiskColor = (risk: string) => {
-    switch (risk.toLowerCase()) {
-      case 'high':
-        return 'bg-red-100 text-red-800';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'low':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -205,20 +166,53 @@ Recommendation Engine,Product recommendation system,Marketing,Medium,ISO 42001,M
         <CardContent className="space-y-3 text-blue-900">
           <ol className="list-decimal list-inside space-y-2">
             <li>Download the CSV template below</li>
-            <li>Fill in your AI system information (Name, Description, Purpose, Risk Level, etc.)</li>
+            <li>Fill in your AI system information (Name, Description, System Type, etc.)</li>
             <li>Upload the completed CSV or Excel file</li>
             <li>Review validation results and fix any errors</li>
-            <li>Confirm import to add systems to your dashboard</li>
+            <li>Systems will be automatically imported with risk classification</li>
           </ol>
           <div className="flex items-start gap-2 mt-4 p-3 bg-blue-100 rounded">
             <AlertTriangle className="h-5 w-5 text-blue-700 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-blue-800">
               <strong>Note:</strong> Duplicate systems (matching name) will be skipped automatically.
-              Risk levels are auto-classified based on system purpose and compliance requirements.
+              Risk levels are auto-classified based on system type if not provided.
             </p>
           </div>
         </CardContent>
       </Card>
+
+      {/* Field Descriptions */}
+      {fieldInfo && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Required Fields</CardTitle>
+            <CardDescription>
+              Field descriptions and validation rules
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4">
+              {fieldInfo.fields.map((field) => (
+                <div key={field.name} className="p-3 border rounded">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-semibold">{field.name}</span>
+                    {field.required && (
+                      <Badge variant="destructive" className="text-xs">Required</Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600 mb-1">{field.description}</p>
+                  <p className="text-xs text-gray-500">Example: {field.example}</p>
+                  {field.options && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Options: {field.options.join(', ')}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Upload Section */}
       <div className="grid md:grid-cols-2 gap-6">
@@ -234,6 +228,7 @@ Recommendation Engine,Product recommendation system,Marketing,Medium,ISO 42001,M
               variant="outline"
               className="w-full"
               onClick={downloadTemplate}
+              disabled={!template}
             >
               <Download className="mr-2 h-5 w-5" />
               Download CSV Template
@@ -302,114 +297,81 @@ Recommendation Engine,Product recommendation system,Marketing,Medium,ISO 42001,M
         </Card>
       </div>
 
-      {/* Progress Bar */}
-      {importing && (
-        <Card>
-          <CardContent className="pt-6">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
-                  Processing file...
-                </span>
-                <span className="text-sm font-medium text-gray-700">{progress}%</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-              <p className="text-sm text-gray-600">
-                Validating data, checking for duplicates, and classifying risk levels...
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Results */}
       {result && (
-        <div className="space-y-6">
-          {/* Summary Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-gray-900">{result.total}</div>
-                <p className="text-sm text-gray-600">Total Systems</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-green-600">{result.successful}</div>
-                <p className="text-sm text-gray-600">Successful</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-red-600">{result.failed}</div>
-                <p className="text-sm text-gray-600">Failed</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-yellow-600">{result.duplicates}</div>
-                <p className="text-sm text-gray-600">Duplicates</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Detailed Results */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Import Results</CardTitle>
-              <CardDescription>
-                Detailed status for each system in your file
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {result.systems.map((system, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 border rounded-lg"
-                  >
-                    <div className="flex items-center gap-3">
-                      {getStatusIcon(system.status)}
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{system.name}</h4>
-                        <p className="text-sm text-gray-600">{system.message}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      {system.riskLevel && (
-                        <Badge className={getRiskColor(system.riskLevel)}>
-                          {system.riskLevel} Risk
-                        </Badge>
-                      )}
-                      <Badge className={getStatusColor(system.status)}>
-                        {system.status.toUpperCase()}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
+        <Card>
+          <CardHeader>
+            <CardTitle>Import Results</CardTitle>
+            <CardDescription>
+              Summary of the import operation
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Summary Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center gap-2 mb-1">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span className="text-sm font-medium text-green-900">Imported</span>
+                </div>
+                <p className="text-2xl font-bold text-green-900">{result.imported}</p>
               </div>
 
-              <div className="flex gap-3 mt-6">
-                <Button onClick={() => window.location.href = '/ai-systems'}>
-                  View All Systems
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setFile(null);
-                    setResult(null);
-                  }}
-                >
-                  Import Another File
-                </Button>
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div className="flex items-center gap-2 mb-1">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                  <span className="text-sm font-medium text-yellow-900">Skipped</span>
+                </div>
+                <p className="text-2xl font-bold text-yellow-900">{result.skipped}</p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center gap-2 mb-1">
+                  <XCircle className="h-5 w-5 text-red-600" />
+                  <span className="text-sm font-medium text-red-900">Errors</span>
+                </div>
+                <p className="text-2xl font-bold text-red-900">{result.errors.length}</p>
+              </div>
+            </div>
+
+            {/* Duplicates */}
+            {result.duplicates.length > 0 && (
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
+                <h4 className="font-semibold text-yellow-900 mb-2">Duplicate Systems Skipped</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-yellow-800">
+                  {result.duplicates.map((name, idx) => (
+                    <li key={idx}>{name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Validation Errors */}
+            {result.errors.length > 0 && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded">
+                <h4 className="font-semibold text-red-900 mb-2">Validation Errors</h4>
+                <div className="space-y-2">
+                  {result.errors.map((error, idx) => (
+                    <div key={idx} className="text-sm text-red-800">
+                      <span className="font-medium">Row {error.row}:</span> {error.field} - {error.message}
+                      {error.value && <span className="text-red-600"> (value: {String(error.value)})</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {result.success && result.imported > 0 && (
+              <div className="p-4 bg-green-50 border border-green-200 rounded">
+                <p className="text-green-900">
+                  ✅ Successfully imported {result.imported} AI system{result.imported !== 1 ? 's' : ''}.
+                  You can view them in the AI Systems page.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
     </div>
   );

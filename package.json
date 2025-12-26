@@ -48,6 +48,7 @@
     "@trpc/react-query": "^11.6.0",
     "@trpc/server": "^11.6.0",
     "@types/nodemailer": "^7.0.4",
+    "@types/papaparse": "^5.5.2",
     "@types/pdfkit": "^0.17.4",
     "@types/qrcode": "^1.5.6",
     "axios": "^1.12.0",
@@ -71,6 +72,7 @@
     "nanoid": "^5.1.5",
     "next-themes": "^0.4.6",
     "nodemailer": "^7.0.12",
+    "papaparse": "^5.5.3",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.17.2",
     "postgres": "^3.4.7",
@@ -90,6 +92,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
     "wouter": "^3.3.5",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.12"
   },
   "devDependencies": {
