@@ -48,6 +48,7 @@ import Blog from "./pages/Blog";
 import Recommendations from "./pages/Recommendations";
 import MarketingHome from "./pages/MarketingHome";
 import Standards from "./pages/Standards";
+import WatchdogPublic from "./pages/WatchdogPublic";
 import CouncilDetail from "./pages/CouncilDetail";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
@@ -110,11 +111,13 @@ function App() {
                   <Route path="/agent-council" component={AgentCouncil} />
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/watchdog" component={Watchdog} />
+      <Route path="/watchdog-hub" component={WatchdogPublic} />
                   <Route path="/reports" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
+      <Route path="/watchdog/report" component={WatchdogPublic} />
                   <Route path="/training" component={TrainingV2} />
                   <Route path="/courses" component={Courses} />
                   <Route path="/my-courses" component={MyCourses} />
@@ -144,8 +147,8 @@ function App() {
                   <Route path="/knowledge-base" component={KnowledgeBase} />
                   <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
                   <Route path="/pricing" component={Pricing} />
-                  <Route path="/leaderboard" component={WatchdogLeaderboard} />
-                  <Route path="/regulator" component={RegulatorDashboard} />
+             <Route path="/watchdog-leaderboard" component={WatchdogLeaderboard} />
+      <Route path="/public-watchdog" component={WatchdogPublic} />               <Route path="/regulator" component={RegulatorDashboard} />
                   <Route path="/blog" component={Blog} />
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />

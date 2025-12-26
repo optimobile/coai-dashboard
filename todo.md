@@ -3299,3 +3299,79 @@
 
 - [x] Add Organization schema to index.html
 - [x] Add Article/BlogPosting schema to blog posts
+
+
+## Rainbow Simulation Testing - Production Readiness
+
+### Phase 1: End-to-End Navigation & Pages
+- [ ] Test homepage hero section, CTAs, and navigation menu
+- [ ] Test all mega menu dropdowns (Training, Certification, SOAI-PDCA, Watchdog, Enterprise, Resources)
+- [ ] Test all main pages load correctly (About, Training, Certification, Watchdog, Enterprise, Pricing)
+- [ ] Test all internal links work and don't return 404
+- [ ] Test breadcrumb navigation on all pages
+- [ ] Test responsive design on mobile (375px), tablet (768px), desktop (1920px)
+- [ ] Test footer links and social media links
+
+### Phase 2: Authentication Flows
+- [ ] Test signup flow with email validation
+- [ ] Test login flow with credentials
+- [ ] Test OAuth (Google) authentication
+- [ ] Test logout functionality
+- [ ] Test session persistence
+- [ ] Test password reset flow
+- [ ] Test 2FA if implemented
+
+### Phase 3: Payment Integration (Stripe)
+- [ ] Verify Stripe API keys are configured
+- [ ] Test subscription checkout flow
+- [ ] Test payment success/failure handling
+- [ ] Test invoice generation
+- [ ] Test subscription management (upgrade, downgrade, cancel)
+- [ ] Test refund processing
+- [ ] Test webhook handling for payment events
+
+### Phase 4: Core Features
+- [ ] Test Training module enrollment and progress tracking
+- [ ] Test Certification exam flow end-to-end
+- [ ] Test Watchdog case assignment and review
+- [ ] Test Enterprise compliance assessment
+- [ ] Test PDCA cycle creation and management
+- [ ] Test report generation and downloads
+- [ ] Test leaderboard updates
+
+### Phase 5: Data & API Integrity
+- [ ] Test database consistency across operations
+- [ ] Test API error responses (400, 401, 403, 404, 500)
+- [ ] Test data validation on forms
+- [ ] Test file uploads (if applicable)
+- [ ] Test concurrent user operations
+- [ ] Test rate limiting
+
+### Phase 6: Performance & Accessibility
+- [ ] Test page load times (target <3s)
+- [ ] Test Core Web Vitals (LCP, FID, CLS)
+- [ ] Test keyboard navigation (Tab, Enter, Escape)
+- [ ] Test screen reader compatibility
+- [ ] Test color contrast ratios
+- [ ] Test SEO metadata on all pages
+
+### Phase 7: Schema Markup Verification
+- [ ] Verify FAQ schema on About page
+- [ ] Verify Organization schema in index.html
+- [ ] Verify Article schema on Blog page
+- [ ] Verify Breadcrumb schema on all pages
+- [ ] Test with Google Rich Results Test tool
+
+
+## Public Watchdog Hub & Stripe Activation
+
+- [x] Build public Watchdog reporting form (no login required)
+- [x] Create global Watchdog dashboard showing all reports
+- [x] Implement real-time report updates
+- [x] Add filtering by AI system type, severity, region
+- [x] Add search functionality across all reports
+- [x] Implement report analytics and insights
+- [x] Activate Stripe live keys
+- [x] Test payment flows end-to-end
+- [x] Configure payment webhooks
+- [x] Test analyst assignment after payment
