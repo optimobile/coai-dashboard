@@ -55,6 +55,7 @@ import TrainingCertificationFeature from "./pages/features/TrainingCertification
 import WatchdogJobsFeature from "./pages/features/WatchdogJobsFeature";
 import StudentProgress from "./pages/StudentProgress";
 import Accreditation from "./pages/Accreditation";
+import SOAIPDCAFramework from "./pages/SOAIPDCAFramework";
 
 function App() {
   return (
@@ -115,6 +116,7 @@ function App() {
                   <Route path="/blog" component={Blog} />
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />
+                  <Route path="/soai-pdca" component={SOAIPDCAFramework} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
