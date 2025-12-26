@@ -72,6 +72,13 @@ import PDCASimulator from "./pages/PDCASimulator";
 import CertificateVerification from "./pages/CertificateVerification";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import Enterprise from "./pages/Enterprise";
+import RegulatoryAuthority from "./pages/RegulatoryAuthority";
+import GovernmentPortal from "./pages/GovernmentPortal";
+import EnterpriseIntegration from "./pages/EnterpriseIntegration";
+import ISO17065 from "./pages/ISO17065";
+import EUNotifiedBody from "./pages/EUNotifiedBody";
+import NISTRecognition from "./pages/NISTRecognition";
+import TC260Alignment from "./pages/TC260Alignment";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -159,6 +166,13 @@ function App() {
                   <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
                   <Route path="/compliance-monitoring" component={ComplianceMonitoring} />
                   <Route path="/bulk-import" component={BulkAISystemImport} />
+                  <Route path="/regulatory-authority" component={RegulatoryAuthority} />
+                  <Route path="/regulatory/iso-17065" component={ISO17065} />
+                  <Route path="/regulatory/eu-notified-body" component={EUNotifiedBody} />
+                  <Route path="/regulatory/nist-recognition" component={NISTRecognition} />
+                  <Route path="/regulatory/tc260-alignment" component={TC260Alignment} />
+                  <Route path="/government-portal" component={GovernmentPortal} />
+                  <Route path="/enterprise-integration" component={EnterpriseIntegration} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
