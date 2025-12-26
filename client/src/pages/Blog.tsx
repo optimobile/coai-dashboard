@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Helmet } from "react-helmet-async";
 
 // Placeholder blog posts
 const blogPosts = [
@@ -87,6 +88,47 @@ const blogPosts = [
 const categories = ["All", "Regulatory", "Product", "Research", "Community", "Best Practices"];
 
 export default function Blog() {
+  // Generate Article schema for blog posts
+  const articlesSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "CSOAI Blog",
+    "description": "AI safety news, regulatory updates, and insights from the CSOAI platform",
+    "url": "https://councilof.ai/blog",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CSOAI - Certified Safety Oversight AI",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://councilof.ai/logo.png"
+      }
+    },
+    "blogPost": blogPosts.map(post => ({
+      "@type": "BlogPosting",
+      "headline": post.title,
+      "description": post.excerpt,
+      "author": {
+        "@type": "Organization",
+        "name": post.author
+      },
+      "datePublished": new Date(post.date).toISOString(),
+      "publisher": {
+        "@type": "Organization",
+        "name": "CSOAI - Certified Safety Oversight AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://councilof.ai/logo.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://councilof.ai/blog/${post.id}`
+      },
+      "articleSection": post.category,
+      "keywords": post.category === "Regulatory" ? "EU AI Act, NIST AI RMF, AI compliance" : post.category === "Product" ? "33-Agent Council, AI safety, Byzantine consensus" : "AI governance, frameworks, research"
+    }))
+  };
+
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success("Thanks for subscribing! You'll receive our latest updates.");
@@ -98,6 +140,11 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(articlesSchema)}
+        </script>
+      </Helmet>
       {/* Header */}
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4">

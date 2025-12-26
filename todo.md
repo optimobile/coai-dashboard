@@ -3293,3 +3293,9 @@
 - [x] Create robots.txt to guide search crawlers
 - [x] Implement Breadcrumb component with schema markup
 - [x] Add breadcrumbs to all subpages (Training, Certification, Watchdog, Enterprise, Courses, Jobs)
+
+
+## Additional Schema Markup
+
+- [x] Add Organization schema to index.html
+- [x] Add Article/BlogPosting schema to blog posts
