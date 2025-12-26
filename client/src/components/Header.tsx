@@ -99,30 +99,27 @@ export function Header() {
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
           {/* Logo */}
-          <Link href="/">
-            <a className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-              <img
-                src="/csoai-icon.svg.png"
-                alt="CSOAI"
-                className="h-10 w-10"
-              />
-              <span className="text-2xl font-bold text-slate-900">CSOAI</span>
-            </a>
-          </Link>
+          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <img
+              src="/csoai-icon.svg.png"
+              alt="CSOAI"
+              className="h-10 w-10"
+            />
+            <span className="text-2xl font-bold text-slate-900">CSOAI</span>
+          </a>
 
           {/* Desktop Navigation with Mega Menu */}
           <div className="hidden lg:flex items-center space-x-1">
-            <Link href="/">
-              <a
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location === '/'
-                    ? 'text-emerald-600 bg-emerald-50'
-                    : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                }`}
-              >
-                Home
-              </a>
-            </Link>
+            <a
+              href="/"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                location === '/'
+                  ? 'text-emerald-600 bg-emerald-50'
+                  : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+              }`}
+            >
+              Home
+            </a>
             
             {navigation.map((item) => (
               <div
@@ -131,29 +128,26 @@ export function Header() {
                 onMouseEnter={() => setActiveDropdown(item.name)}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <Link href={item.href}>
-                  <a
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
-                      isActive(item.href)
-                        ? 'text-emerald-600 bg-emerald-50'
-                        : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {item.name}
-                    <ChevronDown className="h-3 w-3" />
-                  </a>
-                </Link>
+                <a
+                  href={item.href}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                    isActive(item.href)
+                      ? 'text-emerald-600 bg-emerald-50'
+                      : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {item.name}
+                  <ChevronDown className="h-3 w-3" />
+                </a>
                 
                 {/* Mega Menu Dropdown */}
                 {activeDropdown === item.name && item.submenu && (
                   <div className="absolute left-0 top-full mt-1 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                     {item.submenu.map((subItem) => (
-                      <Link key={subItem.name} href={subItem.href}>
-                        <a className="block px-4 py-3 hover:bg-gray-50 transition-colors">
-                          <div className="font-medium text-gray-900 text-sm">{subItem.name}</div>
-                          <div className="text-xs text-gray-500 mt-0.5">{subItem.description}</div>
-                        </a>
-                      </Link>
+                      <a key={subItem.name} href={subItem.href} className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                        <div className="font-medium text-gray-900 text-sm">{subItem.name}</div>
+                        <div className="text-xs text-gray-500 mt-0.5">{subItem.description}</div>
+                      </a>
                     ))}
                   </div>
                 )}
@@ -248,44 +242,42 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-2">
-              <Link href="/">
-                <a
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    location === '/'
-                      ? 'text-emerald-600 bg-emerald-50'
-                      : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Home
-                </a>
-              </Link>
+              <a
+                href="/"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  location === '/'
+                    ? 'text-emerald-600 bg-emerald-50'
+                    : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </a>
               
               {navigation.map((item) => (
                 <div key={item.name}>
-                  <Link href={item.href}>
-                    <a
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors block ${
-                        isActive(item.href)
-                          ? 'text-emerald-600 bg-emerald-50'
-                          : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                      }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </a>
-                  </Link>
+                  <a
+                    href={item.href}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors block ${
+                      isActive(item.href)
+                        ? 'text-emerald-600 bg-emerald-50'
+                        : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
                   {item.submenu && (
                     <div className="ml-4 mt-1 space-y-1">
                       {item.submenu.map((subItem) => (
-                        <Link key={subItem.name} href={subItem.href}>
-                          <a
-                            className="block px-4 py-2 text-xs text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-lg"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {subItem.name}
-                          </a>
-                        </Link>
+                        <a
+                          key={subItem.name}
+                          href={subItem.href}
+                          className="block px-4 py-2 text-xs text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-lg"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {subItem.name}
+                        </a>
                       ))}
                     </div>
                   )}

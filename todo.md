@@ -3206,3 +3206,9 @@
 - [x] Clearly explain USPs: solving AI safety problem + creating jobs pipeline
 - [x] Test all menu navigation and page content
 - [x] Ensure all pages match new white/green/black branding
+
+
+## Bug Fixes - React Errors
+
+- [x] Fix TabsContent error on leaderboard page (must be wrapped in Tabs component)
+- [x] Fix nested anchor tag error in Header component (Link wrapping anchor tags)

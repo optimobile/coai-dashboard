@@ -152,8 +152,8 @@ export default function WatchdogLeaderboard() {
           {/* Leaderboard */}
           <div className="lg:col-span-2">
             <Card>
-              <CardHeader>
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <CardHeader>
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="analysts">
                       <Shield className="h-4 w-4 mr-2" />
@@ -164,10 +164,9 @@ export default function WatchdogLeaderboard() {
                       Top Reporters
                     </TabsTrigger>
                   </TabsList>
-                </Tabs>
-              </CardHeader>
-              <CardContent>
-                <TabsContent value="analysts" className="mt-0">
+                </CardHeader>
+                <CardContent>
+                  <TabsContent value="analysts" className="mt-0">
                   <div className="space-y-3">
                     {topAnalysts.map((analyst, index) => (
                       <motion.div
@@ -233,7 +232,8 @@ export default function WatchdogLeaderboard() {
                     ))}
                   </div>
                 </TabsContent>
-              </CardContent>
+                </CardContent>
+              </Tabs>
             </Card>
           </div>
 
