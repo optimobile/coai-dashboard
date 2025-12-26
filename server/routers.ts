@@ -47,6 +47,7 @@ import { reportsRouter } from "./routers/reports";
 import { webhooksRouter } from "./routers/webhooks";
 import { onboardingRouter } from "./routers/onboarding";
 import { complianceRouter } from "./routers/compliance";
+import { enterpriseRouter } from "./routers/enterprise";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2807,6 +2808,7 @@ export const appRouter = router({
   webhooks: webhooksRouter,
   onboarding: onboardingRouter,
   compliance: complianceRouter,
+  enterprise: enterpriseRouter,
 });
 
 export type AppRouter = typeof appRouter;
