@@ -3699,13 +3699,13 @@ All three launch features have been successfully implemented and integrated:
 - [x] Implement cancelScheduledReport endpoint
 - [x] Implement downloadReport endpoint with file streaming
 - [x] Add report history tracking to database
-- [ ] Create ReportGenerator frontend page (/dashboard/reports)
-- [ ] Build report configuration UI (format, filters, date range)
-- [ ] Add report scheduling UI (frequency, recipients, time)
-- [ ] Implement report download functionality
-- [ ] Add report history view with status tracking
+- [x] Create ReportGenerator frontend page (/dashboard/reports)
+- [x] Build report configuration UI (format, filters, date range)
+- [x] Add report scheduling UI (frequency, recipients, time)
+- [x] Implement report download functionality
+- [x] Add report history view with status tracking
 - [x] Connect to existing compliance data
-- [ ] Test end-to-end report generation flow
+- [x] Test end-to-end report generation flow
 
 ### Feature 2: Webhook Notification System for Rule Updates
 - [x] Extend webhook_subscriptions schema for rule update events
@@ -3718,10 +3718,10 @@ All three launch features have been successfully implemented and integrated:
 - [x] Create webhook test endpoint for rule updates
 - [x] Build webhook event log viewer for rule changes
 - [x] Add delivery status tracking for rule update webhooks
-- [ ] Implement rule version tracking in database
-- [ ] Create rule change diff generator
-- [ ] Test webhook delivery with sample rule updates
-- [ ] Document webhook payload format for rule updates
+- [x] Implement rule version tracking in database
+- [x] Create rule change diff generator
+- [x] Test webhook delivery with sample rule updates
+- [x] Document webhook payload format for rule updates
 
 ### Feature 3: Enterprise Onboarding Flow
 - [x] Create OnboardingWizard component with 5 steps
@@ -3732,11 +3732,11 @@ All three launch features have been successfully implemented and integrated:
 - [x] Step 5: Team Setup (add team members and roles)
 - [x] Create onboarding database schema
 - [x] Implement onboarding progress tracking
-- [ ] Build jurisdiction validator
-- [ ] Create framework selector with descriptions
-- [ ] Build AI system import/mapping UI
+- [x] Build jurisdiction validator
+- [x] Create framework selector with descriptions
+- [x] Build AI system import/mapping UI
 - [x] Implement baseline compliance calculation
-- [ ] Create team member invitation system
-- [ ] Add onboarding completion certificate
-- [ ] Create onboarding success page with next steps
-- [ ] Test complete onboarding workflow
+- [x] Create team member invitation system
+- [x] Add onboarding completion certificate
+- [x] Create onboarding success page with next steps
+- [x] Test complete onboarding workflow
