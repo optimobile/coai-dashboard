@@ -54,6 +54,7 @@ import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
 import NotificationSettings from "./pages/NotificationSettings";
+import MyApplications from "./pages/MyApplications";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import AgentCouncilFeature from "./pages/features/AgentCouncilFeature";
 import PDCAFrameworkFeature from "./pages/features/PDCAFrameworkFeature";
@@ -114,6 +115,7 @@ function App() {
                   <Route path="/certification/review" component={ExamReview} />
                   <Route path="/workbench" component={Workbench} />
                   <Route path="/jobs" component={Jobs} />
+                  <Route path="/my-applications" component={MyApplications} />
                   <Route path="/public" component={PublicHome} />
                   <Route path="/admin" component={Admin} />
                   <Route path="/api-docs" component={ApiDocs} />

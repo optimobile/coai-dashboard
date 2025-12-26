@@ -899,6 +899,8 @@ export const jobApplications = mysqlTable("job_applications", {
   yearsExperience: int("yearsExperience"),
   status: mysqlEnum("status", ["submitted", "reviewing", "shortlisted", "rejected", "accepted"]).default("submitted").notNull(),
   notes: text("notes"), // Internal notes from reviewer
+  employerResponse: text("employerResponse"),
+  statusUpdatedAt: timestamp("statusUpdatedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -953,6 +955,9 @@ export const notificationPreferences = mysqlTable("notification_preferences", {
   certificateIssued: boolean("certificateIssued").default(true).notNull(),
   councilDecisions: boolean("councilDecisions").default(true).notNull(),
   reportUpdates: boolean("reportUpdates").default(true).notNull(),
+  digestEnabled: boolean("digestEnabled").default(false).notNull(),
+  digestFrequency: mysqlEnum("digestFrequency", ["daily", "weekly"]).default("daily").notNull(),
+  lastDigestSentAt: timestamp("lastDigestSentAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

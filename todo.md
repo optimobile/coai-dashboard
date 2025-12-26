@@ -2992,3 +2992,23 @@
 - [x] Store resume files in S3
 - [x] Update job application to include resume URL
 - [x] Test all three enhancements
+
+## Phase 60 - Application Status Tracking & Email Digests
+
+- [x] Add status column to job_applications table (pending/reviewed/accepted/rejected)
+- [x] Add employer_response column to job_applications table
+- [x] Add status_updated_at column to job_applications table
+- [x] Create updateApplicationStatus endpoint in jobs router
+- [x] Create getMyApplications endpoint in jobs router
+- [x] Create My Applications page component
+- [x] Add application status badges with colors
+- [x] Display employer responses
+- [x] Add status timeline/history
+- [x] Add email digest preferences to notification_preferences table
+- [x] Create email digest scheduler
+- [x] Add digest frequency options (daily/weekly)
+- [x] Implement notification batching logic
+- [x] Create digest email template
+- [x] Add digest settings to notification settings page
+- [x] Test application status tracking
+- [x] Test email digest functionality

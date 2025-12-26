@@ -272,6 +272,8 @@ export const notificationsRouter = router({
         certificateIssued: z.boolean().optional(),
         councilDecisions: z.boolean().optional(),
         reportUpdates: z.boolean().optional(),
+        digestEnabled: z.boolean().optional(),
+        digestFrequency: z.enum(["daily", "weekly"]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {

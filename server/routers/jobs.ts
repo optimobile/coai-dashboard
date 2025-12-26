@@ -196,28 +196,6 @@ export const jobsRouter = router({
     }),
 
   /**
-   * Get user's job applications
-   */
-  getMyApplications: protectedProcedure.query(async ({ ctx }) => {
-    const db = await getDb();
-    if (!db) return [];
-
-    const userId = Number(ctx.user.id);
-
-    const applications = await db
-      .select({
-        application: jobApplications,
-        job: jobPostings,
-      })
-      .from(jobApplications)
-      .leftJoin(jobPostings, eq(jobApplications.jobId, jobPostings.id))
-      .where(eq(jobApplications.userId, userId))
-      .orderBy(desc(jobApplications.createdAt));
-
-    return applications;
-  }),
-
-  /**
    * Get job statistics for dashboard
    */
   getJobStats: publicProcedure.query(async () => {
@@ -300,4 +278,75 @@ export const jobsRouter = router({
       ],
     };
   }),
+
+  /**
+   * Get user's job applications
+   */
+  getMyApplications: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    const userId = Number(ctx.user.id);
+
+    const applications = await db
+      .select({
+        id: jobApplications.id,
+        jobId: jobApplications.jobId,
+        coverLetter: jobApplications.coverLetter,
+        resumeUrl: jobApplications.resumeUrl,
+        status: jobApplications.status,
+        employerResponse: jobApplications.employerResponse,
+        statusUpdatedAt: jobApplications.statusUpdatedAt,
+        appliedAt: jobApplications.createdAt,
+        jobTitle: jobPostings.title,
+        company: jobPostings.company,
+        location: jobPostings.location,
+        locationType: jobPostings.locationType,
+        payRate: jobPostings.payRate,
+        maxPayRate: jobPostings.payRateMax,
+        currency: jobPostings.payCurrency,
+      })
+      .from(jobApplications)
+      .leftJoin(jobPostings, eq(jobApplications.jobId, jobPostings.id))
+      .where(eq(jobApplications.userId, userId))
+      .orderBy(desc(jobApplications.createdAt));
+
+    return applications;
+  }),
+
+  /**
+   * Update application status (for employers/admins)
+   */
+  updateApplicationStatus: protectedProcedure
+    .input(
+      z.object({
+        applicationId: z.number(),
+        status: z.enum(["pending", "reviewed", "accepted", "rejected"]),
+        employerResponse: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
+      }
+
+      // Update application status
+      await db
+        .update(jobApplications)
+        .set({
+          status: input.status === 'pending' ? 'submitted' : input.status === 'reviewed' ? 'reviewing' : input.status,
+          employerResponse: input.employerResponse,
+          statusUpdatedAt: new Date(),
+        })
+        .where(eq(jobApplications.id, input.applicationId));
+
+      return {
+        success: true,
+        message: "Application status updated",
+      };
+    }),
 });

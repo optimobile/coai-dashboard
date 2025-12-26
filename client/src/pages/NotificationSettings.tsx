@@ -320,6 +320,58 @@ export default function NotificationSettings() {
         </CardContent>
       </Card>
 
+      {/* Email Digest Settings */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Mail className="h-5 w-5 text-gray-600" />
+            <CardTitle>Email Digest</CardTitle>
+          </div>
+          <CardDescription>Batch notifications into periodic email digests</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium text-gray-900">Enable Email Digest</p>
+              <p className="text-sm text-gray-600">Receive batched notifications instead of individual emails</p>
+            </div>
+            <Switch
+              checked={preferences.digestEnabled || false}
+              onCheckedChange={(checked) => handleToggle('digestEnabled', checked)}
+            />
+          </div>
+
+          {preferences.digestEnabled && (
+            <div className="ml-0 space-y-3">
+              <div>
+                <Label>Digest Frequency</Label>
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    variant={preferences.digestFrequency === 'daily' ? 'default' : 'outline'}
+                    onClick={() => updateMutation.mutate({ digestFrequency: 'daily' })}
+                    className="flex-1"
+                  >
+                    Daily
+                  </Button>
+                  <Button
+                    variant={preferences.digestFrequency === 'weekly' ? 'default' : 'outline'}
+                    onClick={() => updateMutation.mutate({ digestFrequency: 'weekly' })}
+                    className="flex-1"
+                  >
+                    Weekly
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  {preferences.digestFrequency === 'daily'
+                    ? 'You\'ll receive a daily summary of notifications'
+                    : 'You\'ll receive a weekly summary of notifications'}
+                </p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Help Section */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="pt-6">

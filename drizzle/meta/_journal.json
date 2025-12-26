@@ -78,6 +78,13 @@
       "when": 1766728145351,
       "tag": "0010_strong_wallflower",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1766729862310,
+      "tag": "0011_even_champions",
+      "breakpoints": true
     }
   ]
 }
