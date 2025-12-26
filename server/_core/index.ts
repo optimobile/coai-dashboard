@@ -9,6 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { handleStripeWebhook } from "../stripe/webhookHandler";
 import { generatePDCATemplate } from "../utils/pdcaTemplateGenerator";
+import watchdogApiRouter from "../routes/watchdog-api";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -42,11 +43,22 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   
+  // Public Watchdog API
+  app.use("/api/watchdog", watchdogApiRouter);
+  
   // PDF template download endpoint
   app.get("/api/download-template/:templateId", (req, res) => {
     const { templateId } = req.params;
     generatePDCATemplate(templateId, res);
   });
+  // CORS for public API
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    next();
+  });
+  
   // tRPC API
   app.use(
     "/api/trpc",

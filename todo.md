@@ -3375,3 +3375,17 @@
 - [x] Test payment flows end-to-end
 - [x] Configure payment webhooks
 - [x] Test analyst assignment after payment
+
+
+## Public Watchdog API - Researchers & Media Access
+
+- [x] Design OpenAPI/Swagger specification for Watchdog API
+- [x] Implement GET /api/watchdog/reports (with filtering and pagination)
+- [x] Implement GET /api/watchdog/statistics (severity, category, region breakdowns)
+- [x] Implement GET /api/watchdog/trends (time-series data)
+- [x] Implement GET /api/watchdog/systems (most reported AI systems)
+- [x] Add API key authentication and rate limiting
+- [x] Create /api/docs page with interactive Swagger UI
+- [x] Add CORS headers for cross-origin requests
+- [x] Test all API endpoints
+- [x] Deploy and monitor API usage
