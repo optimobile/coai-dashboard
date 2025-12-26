@@ -29,6 +29,7 @@ export function Header() {
     { name: 'SOAI-PDCA', href: '/soai-pdca' },
     { name: 'Accreditation', href: '/accreditation' },
     { name: 'Watchdog', href: '/watchdog' },
+    { name: 'Enterprise', href: '/enterprise' },
     { name: 'About', href: '/about' },
   ];
 
