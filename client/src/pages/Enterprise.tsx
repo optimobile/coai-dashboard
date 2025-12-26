@@ -3,12 +3,13 @@
  * B2B value proposition with ROI calculator, case studies, and clear pricing
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Shield, 
   TrendingDown, 
@@ -20,11 +21,22 @@ import {
   FileCheck,
   Zap,
   Building2,
-  ArrowRight
+  ArrowRight,
+  AlertCircle
 } from 'lucide-react';
 import { Link } from 'wouter';
 
 export default function Enterprise() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // ROI Calculator State
   const [numSystems, setNumSystems] = useState(10);
   const [avgRiskLevel, setAvgRiskLevel] = useState<'low' | 'medium' | 'high'>('medium');
@@ -42,6 +54,41 @@ export default function Enterprise() {
   const totalCsoaiCost = csoaiCost + csoaiStaffCost;
   const savings = totalManualCost - totalCsoaiCost;
   const savingsPercent = Math.round((savings / totalManualCost) * 100);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+          <div className="container max-w-6xl space-y-4">
+            <Skeleton className="h-8 w-48 bg-white/10" />
+            <Skeleton className="h-16 w-full bg-white/10" />
+            <Skeleton className="h-24 w-3/4 bg-white/10" />
+          </div>
+        </div>
+        <div className="container py-20 space-y-12">
+          <Skeleton className="h-96 w-full" />
+          <div className="grid md:grid-cols-3 gap-8">
+            <Skeleton className="h-64" />
+            <Skeleton className="h-64" />
+            <Skeleton className="h-64" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+        <Card className="p-8 max-w-md text-center">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-2">Failed to Load Content</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">

@@ -10,7 +10,9 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate"
+    "db:push": "drizzle-kit generate && drizzle-kit migrate",
+    "chromatic": "chromatic --exit-zero-on-changes",
+    "chromatic:ci": "chromatic --exit-once-uploaded"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
@@ -109,6 +111,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "add": "^2.0.6",
     "autoprefixer": "^10.4.20",
+    "chromatic": "^13.3.4",
     "drizzle-kit": "^0.31.4",
     "esbuild": "^0.25.0",
     "pnpm": "^10.15.1",

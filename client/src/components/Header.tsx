@@ -7,7 +7,7 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   DropdownMenu,
@@ -23,6 +23,9 @@ export function Header() {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [focusedItemIndex, setFocusedItemIndex] = useState<number>(-1);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
   const navigation = [
     { 
@@ -94,6 +97,67 @@ export function Header() {
     return location.startsWith(href);
   };
 
+  // Keyboard navigation handler
+  const handleKeyDown = (e: React.KeyboardEvent, itemName: string, submenuLength: number) => {
+    if (!activeDropdown) return;
+
+    switch (e.key) {
+      case 'Escape':
+        e.preventDefault();
+        setActiveDropdown(null);
+        setFocusedItemIndex(-1);
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        setFocusedItemIndex((prev) => {
+          const next = prev + 1;
+          if (next < submenuLength) {
+            menuItemsRef.current[next]?.focus();
+            return next;
+          }
+          return prev;
+        });
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusedItemIndex((prev) => {
+          const next = prev - 1;
+          if (next >= 0) {
+            menuItemsRef.current[next]?.focus();
+            return next;
+          }
+          return prev;
+        });
+        break;
+      case 'Tab':
+        // Allow natural tab behavior but close dropdown
+        setActiveDropdown(null);
+        setFocusedItemIndex(-1);
+        break;
+    }
+  };
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+        setFocusedItemIndex(-1);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Reset focused item when dropdown changes
+  useEffect(() => {
+    if (!activeDropdown) {
+      setFocusedItemIndex(-1);
+      menuItemsRef.current = [];
+    }
+  }, [activeDropdown]);
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,9 +188,11 @@ export function Header() {
             {navigation.map((item) => (
               <div
                 key={item.name}
+                ref={activeDropdown === item.name ? dropdownRef : null}
                 className="relative"
                 onMouseEnter={() => setActiveDropdown(item.name)}
                 onMouseLeave={() => setActiveDropdown(null)}
+                onKeyDown={(e) => handleKeyDown(e, item.name, item.submenu?.length || 0)}
               >
                 <a
                   href={item.href}
@@ -135,6 +201,16 @@ export function Header() {
                       ? 'text-emerald-600 bg-emerald-50'
                       : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
                   }`}
+                  aria-expanded={activeDropdown === item.name}
+                  aria-haspopup="true"
+                  onClick={(e) => {
+                    if (activeDropdown === item.name) {
+                      e.preventDefault();
+                      setActiveDropdown(null);
+                    } else {
+                      setActiveDropdown(item.name);
+                    }
+                  }}
                 >
                   {item.name}
                   <ChevronDown className="h-3 w-3" />
@@ -142,9 +218,20 @@ export function Header() {
                 
                 {/* Mega Menu Dropdown */}
                 {activeDropdown === item.name && item.submenu && (
-                  <div className="absolute left-0 top-full mt-1 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    {item.submenu.map((subItem) => (
-                      <a key={subItem.name} href={subItem.href} className="block px-4 py-3 hover:bg-gray-50 transition-colors">
+                  <div 
+                    className="absolute left-0 top-full mt-1 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                    role="menu"
+                    aria-label={`${item.name} submenu`}
+                  >
+                    {item.submenu.map((subItem, idx) => (
+                      <a 
+                        key={subItem.name} 
+                        href={subItem.href} 
+                        ref={(el) => { menuItemsRef.current[idx] = el; }}
+                        className="block px-4 py-3 hover:bg-gray-50 transition-colors focus:bg-emerald-50 focus:outline-none"
+                        role="menuitem"
+                        tabIndex={0}
+                      >
                         <div className="font-medium text-gray-900 text-sm">{subItem.name}</div>
                         <div className="text-xs text-gray-500 mt-0.5">{subItem.description}</div>
                       </a>

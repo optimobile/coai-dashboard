@@ -1,10 +1,62 @@
 import { Users, Target, Shield, Globe, Award, Building2, Heart, Zap, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
+import { AlertCircle } from "lucide-react";
 
 export default function About() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Simulate content loading (in real app, this would fetch data)
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+          <div className="container max-w-4xl space-y-4">
+            <Skeleton className="h-8 w-32 bg-white/10" />
+            <Skeleton className="h-16 w-full bg-white/10" />
+            <Skeleton className="h-16 w-3/4 bg-white/10" />
+            <Skeleton className="h-32 w-full bg-white/10" />
+          </div>
+        </div>
+        <div className="container py-20">
+          <div className="max-w-4xl mx-auto space-y-8">
+            <Skeleton className="h-12 w-2/3 mx-auto" />
+            <Skeleton className="h-24 w-full" />
+            <div className="grid md:grid-cols-2 gap-8">
+              <Skeleton className="h-64" />
+              <Skeleton className="h-64" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+        <Card className="p-8 max-w-md text-center">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-2">Failed to Load Content</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Origin Story */}
