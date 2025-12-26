@@ -211,6 +211,125 @@ export default function NewHome() {
         </div>
       </section>
 
+      {/* Social Proof Section */}
+      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-green-600 text-white">
+              Trusted by Thousands
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Real Stories. Real Results.
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Join thousands of certified analysts who've transformed their careers with CSOAI
+            </p>
+          </div>
+
+          {/* Testimonials Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <Card className="p-8 hover:shadow-xl transition-shadow">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                  SC
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Sarah Chen</h4>
+                  <p className="text-sm text-gray-600">AI Safety Analyst</p>
+                </div>
+              </div>
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">★</span>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-4">
+                "CSOAI certification opened doors I didn't know existed. Within 3 months, I landed a $120K AI Safety Analyst role at a Fortune 500 company. The training was comprehensive and the community support was incredible."
+              </p>
+              <Badge className="bg-green-100 text-green-800">Certified in 2024</Badge>
+            </Card>
+
+            <Card className="p-8 hover:shadow-xl transition-shadow">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                  MR
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Marcus Rodriguez</h4>
+                  <p className="text-sm text-gray-600">Former Teacher</p>
+                </div>
+              </div>
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">★</span>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-4">
+                "I transitioned from teaching to AI safety with zero technical background. CSOAI's courses made complex concepts accessible. Now I work from home, set my own hours, and earn 40% more than I did teaching."
+              </p>
+              <Badge className="bg-green-100 text-green-800">Certified in 2023</Badge>
+            </Card>
+
+            <Card className="p-8 hover:shadow-xl transition-shadow">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                  AP
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Aisha Patel</h4>
+                  <p className="text-sm text-gray-600">Compliance Officer</p>
+                </div>
+              </div>
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">★</span>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-4">
+                "As a compliance officer, CSOAI gave me the AI-specific expertise I needed. The 33-Agent Council framework is brilliant—it's now part of our company's standard operating procedures. Worth every minute."
+              </p>
+              <Badge className="bg-green-100 text-green-800">Certified in 2024</Badge>
+            </Card>
+          </div>
+
+          {/* Animated Statistics Counter */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-white">
+            <div className="grid md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="text-5xl font-black mb-2">10,247</div>
+                <div className="text-blue-100">Certified Analysts</div>
+                <div className="text-sm text-blue-200 mt-1">+127 this week</div>
+              </div>
+              <div>
+                <div className="text-5xl font-black mb-2">52,891</div>
+                <div className="text-blue-100">Courses Completed</div>
+                <div className="text-sm text-blue-200 mt-1">+1,243 this month</div>
+              </div>
+              <div>
+                <div className="text-5xl font-black mb-2">8,934</div>
+                <div className="text-blue-100">Certificates Issued</div>
+                <div className="text-sm text-blue-200 mt-1">+89 today</div>
+              </div>
+              <div>
+                <div className="text-5xl font-black mb-2">1,247</div>
+                <div className="text-blue-100">Active Analysts</div>
+                <div className="text-sm text-blue-200 mt-1">Online right now</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Success Stories CTA */}
+          <div className="text-center mt-12">
+            <Link href="/blog">
+              <Button variant="outline" size="lg" className="border-2 border-gray-300 hover:border-gray-400">
+                Read More Success Stories
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Complete Ecosystem Pipeline Section */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">

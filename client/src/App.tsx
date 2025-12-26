@@ -48,6 +48,10 @@ import Standards from "./pages/Standards";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
 import NewHome from "./pages/NewHome";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ComplianceMonitoring from "./pages/ComplianceMonitoring";
+import BulkAISystemImport from "./pages/BulkAISystemImport";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import AgentCouncilFeature from "./pages/features/AgentCouncilFeature";
 import PDCAFrameworkFeature from "./pages/features/PDCAFrameworkFeature";
@@ -72,6 +76,8 @@ function App() {
                 <Switch>
                   {/* Main routes */}
                   <Route path="/" component={NewHome} />
+                  <Route path="/login" component={Login} />
+                  <Route path="/signup" component={Signup} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
@@ -123,6 +129,8 @@ function App() {
                   <Route path="/pdca-simulator" component={PDCASimulator} />
                   <Route path="/verify-certificate" component={CertificateVerification} />
                   <Route path="/enterprise" component={EnterpriseDashboard} />
+                  <Route path="/compliance-monitoring" component={ComplianceMonitoring} />
+                  <Route path="/bulk-import" component={BulkAISystemImport} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
