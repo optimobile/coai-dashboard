@@ -84,6 +84,9 @@ import WebhookMonitoring from "./pages/WebhookMonitoring";
 import GovernmentAdminDashboard from "./pages/GovernmentAdminDashboard";
 import NotificationPreferences from "./pages/NotificationPreferences";
 import RegionSettings from "./pages/RegionSettings";
+import { DashboardIntegrated } from "./pages/DashboardIntegrated";
+import { ComplianceRoadmapPage } from "./pages/ComplianceRoadmapPage";
+import { AlertManagementPage } from "./pages/AlertManagementPage";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -117,6 +120,9 @@ function App() {
                   <Route path="/old-home" component={Home} />
                   <Route path="/landing" component={Landing} />
                   <Route path="/dashboard" component={Dashboard} />
+                  <Route path="/dashboard/executive" component={DashboardIntegrated} />
+                  <Route path="/dashboard/roadmap" component={ComplianceRoadmapPage} />
+                  <Route path="/dashboard/alerts" component={AlertManagementPage} />
                   <Route path="/ai-systems" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/compliance" component={Compliance} />

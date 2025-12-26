@@ -4,6 +4,8 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { trpc } from '@/lib/trpc';
+import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -142,7 +144,7 @@ export const AlertManagementPage: React.FC = () => {
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('unresolved');
   const [filterOrganization, setFilterOrganization] = useState<string>('all');
-
+  const [alerts, setAlerts] = useState<Alert[]>(MOCK_ALERTS);
   const [notificationPreferences, setNotificationPreferences] = useState<NotificationPreference[]>([
     { channel: 'email', enabled: true, icon: <Mail className="w-4 h-4" />, label: 'Email' },
     { channel: 'push', enabled: true, icon: <Bell className="w-4 h-4" />, label: 'Push Notifications' },
@@ -151,9 +153,34 @@ export const AlertManagementPage: React.FC = () => {
     { channel: 'webhook', enabled: false, icon: <Webhook className="w-4 h-4" />, label: 'Webhook' },
   ]);
 
+  // Fetch alerts from tRPC
+  const { data: alertsData, isLoading } = trpc.enterprise.getAlerts.useQuery({
+    severity: filterSeverity as any,
+    status: filterStatus as any,
+  });
+
+  // Fetch notification preferences from tRPC
+  const { data: prefsData } = trpc.enterprise.getNotificationPreferences.useQuery({});
+
+  React.useEffect(() => {
+    if (alertsData?.alerts) {
+      setAlerts(alertsData.alerts as Alert[]);
+    }
+  }, [alertsData]);
+
+  React.useEffect(() => {
+    if (prefsData?.channels) {
+      const newPrefs = notificationPreferences.map((pref) => ({
+        ...pref,
+        enabled: (prefsData.channels as any)[pref.channel] ?? pref.enabled,
+      }));
+      setNotificationPreferences(newPrefs);
+    }
+  }, [prefsData]);
+
   // Filter alerts
   const filteredAlerts = useMemo(() => {
-    return MOCK_ALERTS.filter((alert) => {
+    return alerts.filter((alert) => {
       if (filterSeverity !== 'all' && alert.severity !== filterSeverity) return false;
       if (filterType !== 'all' && alert.type !== filterType) return false;
       if (filterStatus === 'unresolved' && alert.resolvedAt) return false;
@@ -165,10 +192,10 @@ export const AlertManagementPage: React.FC = () => {
 
   // Alert statistics
   const stats = {
-    total: MOCK_ALERTS.length,
-    unresolved: MOCK_ALERTS.filter((a) => !a.resolvedAt).length,
-    critical: MOCK_ALERTS.filter((a) => a.severity === 'critical').length,
-    high: MOCK_ALERTS.filter((a) => a.severity === 'high').length,
+    total: alerts.length,
+    unresolved: alerts.filter((a) => !a.resolvedAt).length,
+    critical: alerts.filter((a) => a.severity === 'critical').length,
+    high: alerts.filter((a) => a.severity === 'high').length,
   };
 
   const toggleAlertSelection = (alertId: string) => {
@@ -189,18 +216,39 @@ export const AlertManagementPage: React.FC = () => {
     }
   };
 
-  const handleBulkResolve = () => {
-    console.log('Resolving alerts:', Array.from(selectedAlerts));
+  const handleBulkResolve = async () => {
+    try {
+      await trpc.enterprise.bulkResolveAlerts.mutate({ alertIds: Array.from(selectedAlerts) });
+      setAlerts(alerts.map((a) => (selectedAlerts.has(a.id) ? { ...a, resolvedAt: new Date() } : a)));
+      setSelectedAlerts(new Set());
+    } catch (error) {
+      console.error('Failed to resolve alerts:', error);
+    }
+  };
+
+  const handleBulkSnooze = async () => {
+    try {
+      for (const alertId of selectedAlerts) {
+        await trpc.enterprise.snoozeAlert.mutate({ alertId, duration: '1d' });
+      }
+      setAlerts(alerts.map((a) => (selectedAlerts.has(a.id) ? { ...a, snoozedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000) } : a)));
+      setSelectedAlerts(new Set());
+    } catch (error) {
+      console.error('Failed to snooze alerts:', error);
+    }
     setSelectedAlerts(new Set());
   };
 
-  const handleBulkSnooze = () => {
-    console.log('Snoozing alerts:', Array.from(selectedAlerts));
-    setSelectedAlerts(new Set());
-  };
-
-  const handleBulkArchive = () => {
-    console.log('Archiving alerts:', Array.from(selectedAlerts));
+  const handleBulkArchive = async () => {
+    try {
+      for (const alertId of selectedAlerts) {
+        await trpc.enterprise.archiveAlert.mutate({ alertId });
+      }
+      setAlerts(alerts.filter((a) => !selectedAlerts.has(a.id)));
+      setSelectedAlerts(new Set());
+    } catch (error) {
+      console.error('Failed to archive alerts:', error);
+    }
     setSelectedAlerts(new Set());
   };
 

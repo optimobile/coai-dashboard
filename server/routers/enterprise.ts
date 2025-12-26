@@ -433,4 +433,330 @@ export const enterpriseRouter = router({
 
       return ComplianceMarketplaceService.getIntegrationHealth(connection);
     }),
+
+  // ============================================
+  // Compliance Roadmap Endpoints
+  // ============================================
+
+  /**
+   * Get compliance remediation roadmap
+   */
+  getComplianceRoadmap: publicProcedure
+    .input(
+      z.object({
+        organizationId: z.string().optional(),
+        systemId: z.string().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      // Mock roadmap data - in production, would generate from compliance gaps
+      const phases = [
+        {
+          phase: 1,
+          name: 'Critical Remediation',
+          duration: '0-30 days',
+          startDate: new Date(),
+          endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          actions: [
+            {
+              id: 'action-1',
+              title: 'Implement Data Protection Controls',
+              description: 'Deploy encryption and access controls',
+              estimatedHours: 120,
+              priority: 'critical' as const,
+              owner: 'Security Officer',
+              startDate: new Date(),
+              endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+              status: 'in-progress' as const,
+              progress: 60,
+            },
+            {
+              id: 'action-2',
+              title: 'Establish Governance Framework',
+              description: 'Create compliance governance structure',
+              estimatedHours: 80,
+              priority: 'critical' as const,
+              owner: 'Compliance Officer',
+              startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+              endDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
+              status: 'pending' as const,
+              progress: 0,
+            },
+          ],
+          expectedOutcome: 'Address all critical compliance gaps',
+          progress: 30,
+        },
+        {
+          phase: 2,
+          name: 'High Priority Implementation',
+          duration: '1-3 months',
+          startDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+          actions: [
+            {
+              id: 'action-3',
+              title: 'Deploy Transparency Controls',
+              description: 'Implement disclosure and documentation',
+              estimatedHours: 60,
+              priority: 'high' as const,
+              owner: 'Product Manager',
+              startDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+              endDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+              status: 'pending' as const,
+              progress: 0,
+            },
+          ],
+          expectedOutcome: 'Implement high-priority controls',
+          progress: 0,
+        },
+        {
+          phase: 3,
+          name: 'Medium Priority Enhancement',
+          duration: '3-6 months',
+          startDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+          endDate: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000),
+          actions: [],
+          expectedOutcome: 'Enhance compliance posture',
+          progress: 0,
+        },
+        {
+          phase: 4,
+          name: 'Continuous Improvement',
+          duration: '6+ months',
+          startDate: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000),
+          endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          actions: [],
+          expectedOutcome: 'Maintain and improve compliance',
+          progress: 0,
+        },
+      ];
+
+      return {
+        organizationId: input.organizationId || 'org-1',
+        systemId: input.systemId,
+        phases,
+        totalHours: 260,
+        completedHours: 0,
+        overallProgress: 30,
+        generatedAt: new Date(),
+      };
+    }),
+
+  // ============================================
+  // Alert Management Endpoints
+  // ============================================
+
+  /**
+   * Get alerts with filtering
+   */
+  getAlerts: publicProcedure
+    .input(
+      z.object({
+        severity: z.enum(['critical', 'high', 'medium', 'low', 'all']).default('all'),
+        type: z.string().optional(),
+        status: z.enum(['unresolved', 'resolved', 'all']).default('unresolved'),
+        organizationId: z.string().optional(),
+        limit: z.number().default(50),
+        offset: z.number().default(0),
+      })
+    )
+    .query(async ({ input }) => {
+      // Mock alerts - in production, would query database
+      const allAlerts = [
+        {
+          id: 'alert-1',
+          type: 'compliance_violation',
+          severity: 'critical' as const,
+          title: 'Data Protection Control Failure',
+          description: 'System failed to implement required data protection controls',
+          organization: 'Acme Corp',
+          system: 'AI-Model-v2',
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          resolvedAt: undefined,
+        },
+        {
+          id: 'alert-2',
+          type: 'webhook_failure',
+          severity: 'high' as const,
+          title: 'Webhook Delivery Failed (5 retries)',
+          description: 'Webhook endpoint unreachable for rule update notifications',
+          organization: 'TechCorp Inc',
+          createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
+          resolvedAt: undefined,
+        },
+        {
+          id: 'alert-3',
+          type: 'onboarding_dropoff',
+          severity: 'medium' as const,
+          title: 'Onboarding Dropoff at Framework Selection',
+          description: 'Organization abandoned onboarding process at step 2',
+          organization: 'Global Industries',
+          createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          resolvedAt: undefined,
+        },
+      ];
+
+      // Filter alerts
+      let filtered = allAlerts;
+      if (input.severity !== 'all') {
+        filtered = filtered.filter((a) => a.severity === input.severity);
+      }
+      if (input.type) {
+        filtered = filtered.filter((a) => a.type === input.type);
+      }
+      if (input.status === 'unresolved') {
+        filtered = filtered.filter((a) => !a.resolvedAt);
+      } else if (input.status === 'resolved') {
+        filtered = filtered.filter((a) => a.resolvedAt);
+      }
+      if (input.organizationId) {
+        filtered = filtered.filter((a) => a.organization === input.organizationId);
+      }
+
+      return {
+        alerts: filtered.slice(input.offset, input.offset + input.limit),
+        total: filtered.length,
+        hasMore: input.offset + input.limit < filtered.length,
+      };
+    }),
+
+  /**
+   * Resolve alert
+   */
+  resolveAlert: publicProcedure
+    .input(z.object({ alertId: z.string() }))
+    .mutation(async ({ input }) => {
+      return {
+        success: true,
+        alertId: input.alertId,
+        resolvedAt: new Date(),
+        message: 'Alert resolved successfully',
+      };
+    }),
+
+  /**
+   * Snooze alert
+   */
+  snoozeAlert: publicProcedure
+    .input(
+      z.object({
+        alertId: z.string(),
+        duration: z.enum(['1h', '4h', '1d', '3d', '1w']),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const durationMap: Record<string, number> = {
+        '1h': 60 * 60 * 1000,
+        '4h': 4 * 60 * 60 * 1000,
+        '1d': 24 * 60 * 60 * 1000,
+        '3d': 3 * 24 * 60 * 60 * 1000,
+        '1w': 7 * 24 * 60 * 60 * 1000,
+      };
+
+      return {
+        success: true,
+        alertId: input.alertId,
+        snoozedUntil: new Date(Date.now() + durationMap[input.duration]),
+        message: `Alert snoozed for ${input.duration}`,
+      };
+    }),
+
+  /**
+   * Archive alert
+   */
+  archiveAlert: publicProcedure
+    .input(z.object({ alertId: z.string() }))
+    .mutation(async ({ input }) => {
+      return {
+        success: true,
+        alertId: input.alertId,
+        archivedAt: new Date(),
+        message: 'Alert archived successfully',
+      };
+    }),
+
+  /**
+   * Bulk resolve alerts
+   */
+  bulkResolveAlerts: publicProcedure
+    .input(z.object({ alertIds: z.array(z.string()) }))
+    .mutation(async ({ input }) => {
+      return {
+        success: true,
+        resolvedCount: input.alertIds.length,
+        resolvedAt: new Date(),
+        message: `${input.alertIds.length} alerts resolved successfully`,
+      };
+    }),
+
+  /**
+   * Get notification preferences
+   */
+  getNotificationPreferences: publicProcedure.query(async () => {
+    return {
+      channels: {
+        email: true,
+        push: true,
+        inApp: true,
+        slack: false,
+        webhook: false,
+      },
+      alertTypes: {
+        compliance_violation: true,
+        webhook_failure: true,
+        onboarding_dropoff: true,
+        assessment_overdue: true,
+        certification_expiring: true,
+        control_failure: true,
+      },
+      quietHours: {
+        enabled: true,
+        startTime: '22:00',
+        endTime: '08:00',
+      },
+    };
+  }),
+
+  /**
+   * Update notification preferences
+   */
+  updateNotificationPreferences: publicProcedure
+    .input(
+      z.object({
+        channels: z
+          .object({
+            email: z.boolean().optional(),
+            push: z.boolean().optional(),
+            inApp: z.boolean().optional(),
+            slack: z.boolean().optional(),
+            webhook: z.boolean().optional(),
+          })
+          .optional(),
+        alertTypes: z
+          .object({
+            compliance_violation: z.boolean().optional(),
+            webhook_failure: z.boolean().optional(),
+            onboarding_dropoff: z.boolean().optional(),
+            assessment_overdue: z.boolean().optional(),
+            certification_expiring: z.boolean().optional(),
+            control_failure: z.boolean().optional(),
+          })
+          .optional(),
+        quietHours: z
+          .object({
+            enabled: z.boolean().optional(),
+            startTime: z.string().optional(),
+            endTime: z.string().optional(),
+          })
+          .optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return {
+        success: true,
+        preferences: input,
+        updatedAt: new Date(),
+        message: 'Notification preferences updated successfully',
+      };
+    }),
 });

@@ -3,7 +3,9 @@
  * 4-phase remediation timeline with Gantt chart and resource allocation
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { trpc } from '@/lib/trpc';
+import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -140,6 +142,32 @@ const getStatusIcon = (status: string) => {
 export const ComplianceRoadmapPage: React.FC = () => {
   const [selectedPhase, setSelectedPhase] = useState<number>(1);
   const [expandedActions, setExpandedActions] = useState<Set<string>>(new Set());
+  const [phases, setPhases] = useState<RemediationPhase[]>(MOCK_PHASES);
+
+  // Fetch roadmap data from tRPC
+  const { data: roadmapData, isLoading, error } = trpc.enterprise.getComplianceRoadmap.useQuery({});
+
+  useEffect(() => {
+    if (roadmapData?.phases) {
+      setPhases(roadmapData.phases as RemediationPhase[]);
+    }
+  }, [roadmapData]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-600">Error loading roadmap: {error.message}</p>
+      </div>
+    );
+  }
 
   const toggleActionExpanded = (actionId: string) => {
     const newExpanded = new Set(expandedActions);
@@ -151,12 +179,12 @@ export const ComplianceRoadmapPage: React.FC = () => {
     setExpandedActions(newExpanded);
   };
 
-  const totalHours = MOCK_PHASES.reduce(
+  const totalHours = phases.reduce(
     (sum, phase) => sum + phase.actions.reduce((actionSum, action) => actionSum + action.estimatedHours, 0),
     0
   );
 
-  const completedHours = MOCK_PHASES.reduce(
+  const completedHours = phases.reduce(
     (sum, phase) =>
       sum +
       phase.actions
@@ -165,7 +193,7 @@ export const ComplianceRoadmapPage: React.FC = () => {
     0
   );
 
-  const overallProgress = Math.round((completedHours / totalHours) * 100);
+  const overallProgress = totalHours > 0 ? Math.round((completedHours / totalHours) * 100) : 0;
 
   return (
     <div className="space-y-6">
@@ -224,7 +252,7 @@ export const ComplianceRoadmapPage: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {MOCK_PHASES.map((phase) => (
+            {phases.map((phase) => (
               <div key={phase.phase} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -270,14 +298,14 @@ export const ComplianceRoadmapPage: React.FC = () => {
       {/* Phase Details Tabs */}
       <Tabs value={`phase-${selectedPhase}`} onValueChange={(val) => setSelectedPhase(parseInt(val.split('-')[1]))}>
         <TabsList className="grid w-full grid-cols-4">
-          {MOCK_PHASES.map((phase) => (
+          {phases.map((phase) => (
             <TabsTrigger key={phase.phase} value={`phase-${phase.phase}`}>
               Phase {phase.phase}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {MOCK_PHASES.map((phase) => (
+        {phases.map((phase) => (
           <TabsContent key={phase.phase} value={`phase-${phase.phase}`} className="space-y-4">
             <Card>
               <CardHeader>
@@ -411,7 +439,7 @@ export const ComplianceRoadmapPage: React.FC = () => {
         <CardContent>
           <div className="space-y-4">
             {['Security Officer', 'Compliance Officer', 'Product Manager', 'Operations Manager'].map((owner) => {
-              const ownerActions = MOCK_PHASES.flatMap((p) => p.actions).filter((a) => a.owner === owner);
+              const ownerActions = phases.flatMap((p) => p.actions).filter((a) => a.owner === owner);
               const ownerHours = ownerActions.reduce((sum, a) => sum + a.estimatedHours, 0);
 
               return (

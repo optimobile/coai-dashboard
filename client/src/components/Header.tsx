@@ -30,6 +30,15 @@ export function Header() {
 
   const navigation = [
     { 
+      name: 'Dashboard', 
+      href: '/dashboard',
+      submenu: [
+        { name: 'Executive', href: '/dashboard/executive', description: 'Real-time metrics' },
+        { name: 'Roadmap', href: '/dashboard/roadmap', description: 'Remediation timeline' },
+        { name: 'Alerts', href: '/dashboard/alerts', description: 'Alert management' },
+      ]
+    },
+    { 
       name: 'Training', 
       href: '/training',
       submenu: [
