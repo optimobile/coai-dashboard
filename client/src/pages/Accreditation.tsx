@@ -171,7 +171,7 @@ export default function Accreditation() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  10,000+ certified analysts working with Fortune 500 companies,
+                  Certified analysts working with Fortune 500 companies,
                   governments, and startups globally.
                 </p>
               </CardContent>
@@ -393,7 +393,7 @@ export default function Accreditation() {
             Ready to Become CSOAI Certified?
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join 10,000+ certified AI Safety Analysts building careers in the fastest-growing
+            Join certified AI Safety Analysts building careers in the fastest-growing
             field in tech.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

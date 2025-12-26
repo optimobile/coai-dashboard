@@ -61,7 +61,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-slate-900 text-white">
+    <footer className="bg-white border-t border-gray-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
@@ -77,7 +77,7 @@ export function Footer() {
                 <span className="text-2xl font-bold">CSOAI</span>
               </a>
             </Link>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-gray-600 text-sm mb-4">
               Building the future of AI safety through independent training, certification, and transparent oversight.
             </p>
             <div className="flex space-x-4">
@@ -87,7 +87,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-emerald-500 transition-colors"
+                  className="text-gray-600 hover:text-green-600 transition-colors"
                   aria-label={social.name}
                 >
                   <social.icon className="h-5 w-5" />
@@ -99,14 +99,14 @@ export function Footer() {
           {/* Link Columns */}
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
                 {section.title}
               </h3>
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link href={link.href}>
-                      <a className="text-gray-400 hover:text-emerald-500 text-sm transition-colors">
+                      <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
                         {link.name}
                       </a>
                     </Link>
@@ -118,28 +118,28 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm mb-4 md:mb-0">
+        <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-600 text-sm mb-4 md:mb-0">
             © {currentYear} CSOAI. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
             <Link href="/privacy">
-              <a className="text-gray-400 hover:text-emerald-500 text-sm transition-colors">
+              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
                 Privacy Policy
               </a>
             </Link>
             <Link href="/terms">
-              <a className="text-gray-400 hover:text-emerald-500 text-sm transition-colors">
+              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
                 Terms of Service
               </a>
             </Link>
             <Link href="/cookies">
-              <a className="text-gray-400 hover:text-emerald-500 text-sm transition-colors">
+              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
                 Cookie Policy
               </a>
             </Link>
             <Link href="/accessibility">
-              <a className="text-gray-400 hover:text-emerald-500 text-sm transition-colors">
+              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
                 Accessibility
               </a>
             </Link>
@@ -147,8 +147,8 @@ export function Footer() {
         </div>
 
         {/* Independence Statement */}
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <p className="text-gray-500 text-xs text-center max-w-4xl mx-auto">
+        <div className="border-t border-gray-200 mt-8 pt-8">
+          <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto">
             CSOAI is an independent organization with no financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor. 
             Our only incentive is public safety and workforce development.
           </p>

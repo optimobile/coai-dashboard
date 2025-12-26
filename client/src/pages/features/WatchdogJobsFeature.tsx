@@ -409,7 +409,7 @@ export default function WatchdogJobsFeature() {
               Ready to Protect Humanity?
             </h2>
             <p className="text-xl text-muted-foreground">
-              Join 10,000+ certified AI Safety Analysts worldwide making a difference.
+              Join certified AI Safety Analysts worldwide making a difference.
               No coding required - just critical thinking and our comprehensive training.
             </p>
             <div className="flex gap-4 justify-center">

@@ -38,7 +38,7 @@ export default function NewHome() {
         {/* Content */}
         <div className="relative z-10 container mx-auto px-6 py-20 text-center">
           {/* Badge */}
-          <Badge className="mb-6 bg-green-500/20 text-blue-300 border-blue-400/30 text-sm px-4 py-2">
+          <Badge className="mb-6 bg-blue-500/20 text-blue-300 border-blue-400/30 text-sm px-4 py-2">
             <span className="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse" />
             Leading AI Safety Certification Platform
           </Badge>
@@ -52,11 +52,11 @@ export default function NewHome() {
           </h1>
           
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-white mb-6 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-blue-100 mb-6 max-w-3xl mx-auto leading-relaxed">
             <strong>Worried about AI safety?</strong> Turn that concern into a career. AI Safety Analyst is projected to become one of the <strong>top 10 jobs by 2045</strong> as AI systems proliferate globally.
           </p>
           
-          <p className="text-lg md:text-xl text-gray-100 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-blue-200 mb-10 max-w-3xl mx-auto leading-relaxed">
             Join the global movement protecting humanity from AI risks while earning from home. Get ahead of the curve now—no coding required, just critical thinking and our comprehensive training.
           </p>
           
@@ -88,11 +88,11 @@ export default function NewHome() {
               <span>Transparent AI Governance</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-400" />
+              <CheckCircle className="h-4 w-4 text-blue-400" />
               <span>Byzantine Fault-Tolerant Consensus</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-gray-600" />
+              <CheckCircle className="h-4 w-4 text-purple-400" />
               <span>Public Accountability</span>
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function NewHome() {
           {/* Value Propositions */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-4xl font-black text-green-600 mb-2">Free</div>
+              <div className="text-4xl font-black text-blue-600 mb-2">Free</div>
               <div className="text-gray-600">Training & Certification</div>
             </div>
             <div className="text-center">
@@ -243,11 +243,11 @@ export default function NewHome() {
               <div className="text-gray-600">Competitive Pay</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-black text-gray-900 mb-2">100%</div>
+              <div className="text-4xl font-black text-purple-600 mb-2">100%</div>
               <div className="text-gray-600">Remote Work</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-black text-green-600 mb-2">24/7</div>
+              <div className="text-4xl font-black text-orange-600 mb-2">24/7</div>
               <div className="text-gray-600">Flexible Hours</div>
             </div>
           </div>
@@ -350,23 +350,23 @@ export default function NewHome() {
             <div className="grid md:grid-cols-4 gap-8 text-center">
               <div>
                 <div className="text-5xl font-black mb-2">3</div>
-                <div className="text-white">Major Frameworks</div>
-                <div className="text-sm text-gray-100 mt-1">EU AI Act, NIST, ISO</div>
+                <div className="text-blue-100">Major Frameworks</div>
+                <div className="text-sm text-blue-200 mt-1">EU AI Act, NIST, ISO</div>
               </div>
               <div>
                 <div className="text-5xl font-black mb-2">33</div>
-                <div className="text-white">AI Agents</div>
-                <div className="text-sm text-gray-100 mt-1">Byzantine Consensus</div>
+                <div className="text-blue-100">AI Agents</div>
+                <div className="text-sm text-blue-200 mt-1">Byzantine Consensus</div>
               </div>
               <div>
                 <div className="text-5xl font-black mb-2">100%</div>
-                <div className="text-white">Transparent</div>
-                <div className="text-sm text-gray-100 mt-1">Public Dashboard</div>
+                <div className="text-blue-100">Transparent</div>
+                <div className="text-sm text-blue-200 mt-1">Public Dashboard</div>
               </div>
               <div>
                 <div className="text-5xl font-black mb-2">24/7</div>
-                <div className="text-white">Monitoring</div>
-                <div className="text-sm text-gray-100 mt-1">Real-time Oversight</div>
+                <div className="text-blue-100">Monitoring</div>
+                <div className="text-sm text-blue-200 mt-1">Real-time Oversight</div>
               </div>
             </div>
           </div>
@@ -463,23 +463,23 @@ export default function NewHome() {
               <h3 className="text-2xl font-bold text-gray-900 mb-4">For Individuals</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Free comprehensive training on 3 major frameworks</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Professional certification exams</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Paid Watchdog Analyst positions</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Work from anywhere, flexible hours</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Performance leaderboards and bonuses</span>
                 </li>
               </ul>
@@ -515,23 +515,23 @@ export default function NewHome() {
               <h3 className="text-2xl font-bold text-gray-900 mb-4">For Society</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Public incident reporting (The Watchdog)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Transparent 33-Agent Council decisions</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Real-time AI safety monitoring</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Open access to compliance data</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Democratic AI governance</span>
                 </li>
               </ul>
@@ -539,9 +539,9 @@ export default function NewHome() {
           </div>
 
           {/* SOAI-PDCA Explanation */}
-          <Card className="p-8 bg-gradient-to-br from-green-50 to-gray-50 border-2 border-green-200">
+          <Card className="p-8 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-200">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
                 <TrendingUp className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -552,26 +552,26 @@ export default function NewHome() {
             
             <div className="grid md:grid-cols-4 gap-6">
               <div>
-                <div className="font-bold text-green-600 mb-2">PLAN</div>
+                <div className="font-bold text-orange-600 mb-2">PLAN</div>
                 <p className="text-sm text-gray-700">Identify risks, set safety objectives, establish metrics</p>
               </div>
               <div>
-                <div className="font-bold text-gray-900 mb-2">DO</div>
+                <div className="font-bold text-red-600 mb-2">DO</div>
                 <p className="text-sm text-gray-700">Implement controls, deploy monitoring, collect data</p>
               </div>
               <div>
-                <div className="font-bold text-gray-900 mb-2">CHECK</div>
+                <div className="font-bold text-purple-600 mb-2">CHECK</div>
                 <p className="text-sm text-gray-700">Analyze performance, audit compliance, review incidents</p>
               </div>
               <div>
-                <div className="font-bold text-green-600 mb-2">ACT</div>
+                <div className="font-bold text-blue-600 mb-2">ACT</div>
                 <p className="text-sm text-gray-700">Adjust controls, update policies, improve systems</p>
               </div>
             </div>
 
             <div className="mt-6 text-center">
               <Link href="/features/pdca-framework">
-                <Button variant="outline" className="border-2 border-green-600 text-green-600 hover:bg-green-50">
+                <Button variant="outline" className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50">
                   Learn More About SOAI-PDCA
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -588,7 +588,7 @@ export default function NewHome() {
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Join the Founding Members
             </h2>
-            <p className="text-xl text-white mb-8">
+            <p className="text-xl text-blue-100 mb-8">
               Get 50% off your first year + priority job placement. 
               Limited to first 1,000 signups.
             </p>
@@ -613,13 +613,13 @@ export default function NewHome() {
               <Button 
                 type="submit"
                 size="lg" 
-                className="bg-white text-green-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-lg"
+                className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-lg"
               >
                 Get Early Access
               </Button>
             </form>
 
-            <p className="text-sm text-gray-100 mt-4">
+            <p className="text-sm text-blue-200 mt-4">
               ✓ No credit card required  ✓ Cancel anytime  ✓ 14-day free trial
             </p>
           </div>
@@ -666,7 +666,7 @@ export default function NewHome() {
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold text-lg">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-lg">
                     3
                   </div>
                   <div>
@@ -675,7 +675,7 @@ export default function NewHome() {
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-500/20 flex items-center justify-center text-gray-600 font-bold text-lg">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-lg">
                     4
                   </div>
                   <div>
@@ -733,11 +733,11 @@ export default function NewHome() {
                     <div className="text-sm text-gray-400">Consensus Rate</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-green-400 mb-1">2.3s</div>
+                    <div className="text-3xl font-bold text-blue-400 mb-1">2.3s</div>
                     <div className="text-sm text-gray-400">Avg Decision Time</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-gray-600 mb-1">100%</div>
+                    <div className="text-3xl font-bold text-purple-400 mb-1">100%</div>
                     <div className="text-sm text-gray-400">Public Transparency</div>
                   </div>
                 </div>
@@ -766,7 +766,7 @@ export default function NewHome() {
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-green-100 text-green-800 text-sm px-4 py-2">
+            <Badge className="mb-4 bg-blue-100 text-blue-700 text-sm px-4 py-2">
               The Western TC260
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -780,8 +780,8 @@ export default function NewHome() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <Shield className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                <Shield className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 33-Agent Byzantine Consensus
@@ -806,8 +806,8 @@ export default function NewHome() {
             </Card>
 
             <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-6">
-                <Users className="h-6 w-6 text-gray-900" />
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                <Users className="h-6 w-6 text-purple-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 Certified Analyst Network
@@ -819,8 +819,8 @@ export default function NewHome() {
             </Card>
 
             <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <TrendingUp className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                <TrendingUp className="h-6 w-6 text-orange-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 PDCA Continuous Improvement
@@ -832,8 +832,8 @@ export default function NewHome() {
             </Card>
 
             <Card className="p-8 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-6">
-                <Globe className="h-6 w-6 text-gray-900" />
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-6">
+                <Globe className="h-6 w-6 text-red-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 Transparent Public Dashboard
@@ -897,7 +897,7 @@ export default function NewHome() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge className="mb-4 bg-gray-500/20 text-purple-300 border-purple-400/30">
+              <Badge className="mb-4 bg-purple-500/20 text-purple-300 border-purple-400/30">
                 For Enterprises
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -960,7 +960,7 @@ export default function NewHome() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-5xl font-black text-green-600 mb-2">Global</div>
+              <div className="text-5xl font-black text-blue-600 mb-2">Global</div>
               <div className="text-gray-600">AI Safety Standards</div>
             </div>
             <div className="text-center">
@@ -968,7 +968,7 @@ export default function NewHome() {
               <div className="text-gray-600">Byzantine Consensus</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-black text-gray-900 mb-2">Leading</div>
+              <div className="text-5xl font-black text-purple-600 mb-2">Leading</div>
               <div className="text-gray-600">Certification Platform</div>
             </div>
           </div>
@@ -981,13 +981,13 @@ export default function NewHome() {
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to Protect Humanity?
           </h2>
-          <p className="text-xl text-white mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
             Be among the first certified analysts earning while making AI safer for everyone
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/watchdog-signup">
-              <Button size="lg" className="bg-white text-green-600 hover:bg-blue-50 px-12 py-6 text-lg font-semibold shadow-lg">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-12 py-6 text-lg font-semibold shadow-lg">
                 Start Training (Individuals)
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

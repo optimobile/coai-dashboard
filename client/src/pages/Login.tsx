@@ -41,7 +41,7 @@ export default function Login() {
           </h1>
           
           <p className="text-lg text-gray-600 mb-8">
-            Join 10,000+ certified AI Safety Analysts protecting humanity from AI risks while
+            Join certified AI Safety Analysts protecting humanity from AI risks while
             building rewarding careers.
           </p>
 
