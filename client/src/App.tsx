@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
+import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -47,7 +48,7 @@ import MarketingHome from "./pages/MarketingHome";
 import Standards from "./pages/Standards";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
-import NewHome from "./pages/NewHome";
+import NewHomeV2 from "./pages/NewHome-v2";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
@@ -67,6 +68,16 @@ import PDCASimulator from "./pages/PDCASimulator";
 import CertificateVerification from "./pages/CertificateVerification";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 
+function ScrollToTop() {
+  const [location] = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [location]);
+  
+  return null;
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -74,11 +85,12 @@ function App() {
         <AuthProvider>
           <TooltipProvider>
             <div className="flex flex-col min-h-screen">
+              <ScrollToTop />
               <Header />
               <main className="flex-1">
                 <Switch>
                   {/* Main routes */}
-                  <Route path="/" component={NewHome} />
+                  <Route path="/" component={NewHomeV2} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
                   <Route path="/marketing" component={MarketingHome} />
