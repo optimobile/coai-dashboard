@@ -219,7 +219,7 @@ export function Header() {
                 {/* Mega Menu Dropdown */}
                 {activeDropdown === item.name && item.submenu && (
                   <div 
-                    className="absolute left-0 top-full mt-1 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                    className="absolute left-0 top-full mt-1 w-72 max-h-[80vh] overflow-y-auto bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
                     role="menu"
                     aria-label={`${item.name} submenu`}
                   >

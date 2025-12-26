@@ -48,6 +48,7 @@ import Blog from "./pages/Blog";
 import Recommendations from "./pages/Recommendations";
 import MarketingHome from "./pages/MarketingHome";
 import Standards from "./pages/Standards";
+import CouncilDetail from "./pages/CouncilDetail";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
 import NewHomeV2 from "./pages/NewHome-v2";
@@ -107,6 +108,7 @@ function App() {
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/compliance" component={Compliance} />
                   <Route path="/agent-council" component={AgentCouncil} />
+                  <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/watchdog" component={Watchdog} />
                   <Route path="/reports" component={Reports} />
                   <Route path="/settings" component={Settings} />

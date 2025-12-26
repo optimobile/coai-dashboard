@@ -5,8 +5,7 @@
  * with overlaid student data, QR codes, and CSOAI branding
  */
 
-import { createCanvas, loadImage, registerFont } from 'canvas';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import QRCode from 'qrcode';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -22,31 +21,90 @@ export interface CertificateDataV2 {
 
 export async function generateCertificatePDFV2(data: CertificateDataV2): Promise<Buffer> {
   try {
-    // Load the certificate template
-    const templatePath = path.join(process.cwd(), 'client/public/certificate-modern.png');
-    const template = await loadImage(templatePath);
+    // Create PDF document
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([842, 595]); // A4 landscape
+    const { width, height } = page.getSize();
 
-    // Create canvas with template dimensions
-    const canvas = createCanvas(template.width, template.height);
-    const ctx = canvas.getContext('2d');
+    // Embed fonts
+    const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    // Draw template
-    ctx.drawImage(template, 0, 0);
+    // Draw border
+    page.drawRectangle({
+      x: 30,
+      y: 30,
+      width: width - 60,
+      height: height - 60,
+      borderColor: rgb(0.067, 0.533, 0.329), // emerald-600
+      borderWidth: 3,
+    });
 
-    // Configure text rendering
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    // Draw inner border
+    page.drawRectangle({
+      x: 40,
+      y: 40,
+      width: width - 80,
+      height: height - 80,
+      borderColor: rgb(0.067, 0.533, 0.329),
+      borderWidth: 1,
+    });
+
+    // Title
+    page.drawText('CERTIFICATE OF COMPLETION', {
+      x: width / 2 - 200,
+      y: height - 100,
+      size: 32,
+      font: helveticaBoldFont,
+      color: rgb(0.067, 0.533, 0.329),
+    });
+
+    // CSOAI Logo text
+    page.drawText('CSOAI', {
+      x: width / 2 - 40,
+      y: height - 140,
+      size: 24,
+      font: helveticaBoldFont,
+      color: rgb(0, 0, 0),
+    });
+
+    // This certifies that
+    page.drawText('This certifies that', {
+      x: width / 2 - 80,
+      y: height - 200,
+      size: 18,
+      font: helveticaFont,
+      color: rgb(0.2, 0.2, 0.2),
+    });
 
     // Student Name (large, elegant)
-    ctx.font = 'italic 72px serif';
-    ctx.fillStyle = '#000000';
-    ctx.fillText(data.studentName, canvas.width / 2, canvas.height * 0.42);
+    page.drawText(data.studentName, {
+      x: width / 2 - (data.studentName.length * 15),
+      y: height - 250,
+      size: 48,
+      font: timesRomanFont,
+      color: rgb(0, 0, 0),
+    });
 
-    // Course Name
-    ctx.font = '32px sans-serif';
-    ctx.fillStyle = '#1f2937';
-    const courseText = `For successfully completing ${data.courseName}`;
-    ctx.fillText(courseText, canvas.width / 2, canvas.height * 0.58);
+    // Course completion text
+    const courseText = `has successfully completed ${data.courseName}`;
+    page.drawText(courseText, {
+      x: width / 2 - (courseText.length * 4.5),
+      y: height - 310,
+      size: 16,
+      font: helveticaFont,
+      color: rgb(0.2, 0.2, 0.2),
+    });
+
+    // Framework
+    page.drawText(`Framework: ${data.framework}`, {
+      x: width / 2 - 80,
+      y: height - 350,
+      size: 14,
+      font: helveticaFont,
+      color: rgb(0.3, 0.3, 0.3),
+    });
 
     // Completion Date
     const formattedDate = data.completionDate.toLocaleDateString('en-US', {
@@ -54,14 +112,22 @@ export async function generateCertificatePDFV2(data: CertificateDataV2): Promise
       month: 'long',
       day: 'numeric',
     });
-    ctx.font = 'bold 24px sans-serif';
-    ctx.fillStyle = '#000000';
-    ctx.textAlign = 'left';
-    ctx.fillText(`Completion Date: ${formattedDate}`, canvas.width * 0.12, canvas.height * 0.72);
+    page.drawText(`Completion Date: ${formattedDate}`, {
+      x: 80,
+      y: 120,
+      size: 12,
+      font: helveticaBoldFont,
+      color: rgb(0, 0, 0),
+    });
 
     // Certificate ID
-    ctx.textAlign = 'right';
-    ctx.fillText(`Certificate ID: ${data.certificateId}`, canvas.width * 0.88, canvas.height * 0.72);
+    page.drawText(`Certificate ID: ${data.certificateId}`, {
+      x: width - 280,
+      y: 120,
+      size: 12,
+      font: helveticaBoldFont,
+      color: rgb(0, 0, 0),
+    });
 
     // Generate QR Code
     const qrCodeDataURL = await QRCode.toDataURL(data.verificationUrl, {
@@ -72,25 +138,26 @@ export async function generateCertificatePDFV2(data: CertificateDataV2): Promise
         light: '#ffffff',
       },
     });
-    const qrCodeImage = await loadImage(qrCodeDataURL);
     
-    // Draw QR code (bottom right)
-    const qrSize = 150;
-    ctx.drawImage(qrCodeImage, canvas.width * 0.85, canvas.height * 0.78, qrSize, qrSize);
-
-    // Convert canvas to PNG buffer
-    const pngBuffer = canvas.toBuffer('image/png');
-
-    // Create PDF from PNG
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([canvas.width, canvas.height]);
+    // Embed QR code
+    const qrCodeImageBytes = Buffer.from(qrCodeDataURL.split(',')[1], 'base64');
+    const qrCodeImage = await pdfDoc.embedPng(qrCodeImageBytes);
     
-    const pngImage = await pdfDoc.embedPng(pngBuffer);
-    page.drawImage(pngImage, {
-      x: 0,
-      y: 0,
-      width: canvas.width,
-      height: canvas.height,
+    // Draw QR code
+    page.drawImage(qrCodeImage, {
+      x: width - 150,
+      y: 180,
+      width: 100,
+      height: 100,
+    });
+
+    // Verification text
+    page.drawText('Scan to verify', {
+      x: width - 145,
+      y: 165,
+      size: 10,
+      font: helveticaFont,
+      color: rgb(0.4, 0.4, 0.4),
     });
 
     // Add metadata
