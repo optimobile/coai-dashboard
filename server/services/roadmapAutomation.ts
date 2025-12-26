@@ -6,7 +6,7 @@
 import { db } from '../db';
 import { notifications } from '../../drizzle/schema';
 import { wsManager } from './websocketManager';
-import { EmailService } from './emailService';
+import { sendgridService } from './sendgridService';
 
 interface RoadmapPhase {
   phase: number;
@@ -29,11 +29,7 @@ interface RoadmapData {
 }
 
 export class RoadmapAutomationService {
-  private emailService: EmailService;
-
-  constructor() {
-    this.emailService = new EmailService();
-  }
+  constructor() {}
 
   /**
    * Check and auto-progress phases based on action completion
@@ -112,14 +108,18 @@ export class RoadmapAutomationService {
     // Save notification to database
     await db.insert(notifications).values(notification);
 
-    // Send email notification
+    // Send email notification (placeholder - would need user email from database)
     try {
-      await this.emailService.sendPhaseCompletionEmail({
-        userId,
-        phaseName: phase.name,
-        phaseNumber: phase.phase,
-        completedAt: phase.completedAt!,
-      });
+      // TODO: Get user email from database
+      // await sendgridService.sendPhaseCompletionEmail({
+      //   recipientEmail: userEmail,
+      //   phaseName: phase.name,
+      //   phaseNumber: phase.phase,
+      //   completedAt: phase.completedAt!,
+      //   organizationName: 'Organization Name',
+      //   dashboardUrl: 'https://dashboard.example.com',
+      // });
+      console.log('[Roadmap] Phase completion email would be sent via SendGrid');
     } catch (error) {
       console.error('[Roadmap] Error sending phase completion email:', error);
     }

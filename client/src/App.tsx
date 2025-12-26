@@ -87,6 +87,8 @@ import RegionSettings from "./pages/RegionSettings";
 import { DashboardIntegrated } from "./pages/DashboardIntegrated";
 import { ComplianceRoadmapPage } from "./pages/ComplianceRoadmapPage";
 import { AlertManagementPage } from "./pages/AlertManagementPage";
+import { WebhookManagementPage } from "./pages/WebhookManagementPage";
+import { AlertToastProvider } from "./components/AlertToastProvider";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -103,7 +105,8 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <AuthProvider>
-          <TooltipProvider>
+          <AlertToastProvider>
+            <TooltipProvider>
             <div className="flex flex-col min-h-screen">
               <ScrollToTop />
               <Header />
@@ -123,6 +126,7 @@ function App() {
                   <Route path="/dashboard/executive" component={DashboardIntegrated} />
                   <Route path="/dashboard/roadmap" component={ComplianceRoadmapPage} />
                   <Route path="/dashboard/alerts" component={AlertManagementPage} />
+                  <Route path="/settings/webhooks" component={WebhookManagementPage} />
                   <Route path="/ai-systems" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/compliance" component={Compliance} />
@@ -206,7 +210,8 @@ function App() {
                 },
               }}
             />
-          </TooltipProvider>
+            </TooltipProvider>
+          </AlertToastProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
