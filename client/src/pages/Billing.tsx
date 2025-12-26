@@ -130,12 +130,12 @@ export default function Billing() {
         </div>
 
         {/* Current Plan Status */}
-        <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+        <Card className="border-2 border-green-600/20 bg-gradient-to-br from-green-600/5 to-transparent">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <CreditCard className="h-6 w-6 text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-green-600/10 flex items-center justify-center">
+                  <CreditCard className="h-6 w-6 text-green-600" />
                 </div>
                 <div>
                   <CardTitle>Current Plan</CardTitle>
@@ -207,12 +207,12 @@ export default function Billing() {
               >
                 <Card className={cn(
                   "relative h-full flex flex-col",
-                  isPro && "border-2 border-primary shadow-lg",
+                  isPro && "border-2 border-green-600 shadow-lg",
                   isCurrentTier && "ring-2 ring-green-500"
                 )}>
                   {isPro && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-primary text-primary-foreground">
+                      <Badge className="bg-green-600 text-green-600-foreground">
                         Most Popular
                       </Badge>
                     </div>
@@ -229,14 +229,14 @@ export default function Billing() {
                     <div className={cn(
                       "w-14 h-14 mx-auto rounded-xl flex items-center justify-center mb-4",
                       tierKey === "free" && "bg-muted",
-                      tierKey === "pro" && "bg-primary/10",
-                      tierKey === "enterprise" && "bg-purple-100 dark:bg-purple-900"
+                      tierKey === "pro" && "bg-green-600/10",
+                      tierKey === "enterprise" && "bg-gray-100 dark:bg-gray-900"
                     )}>
                       <TierIcon className={cn(
                         "h-7 w-7",
                         tierKey === "free" && "text-muted-foreground",
-                        tierKey === "pro" && "text-primary",
-                        tierKey === "enterprise" && "text-purple-600 dark:text-purple-400"
+                        tierKey === "pro" && "text-green-600",
+                        tierKey === "enterprise" && "text-gray-600 dark:text-gray-400"
                       )} />
                     </div>
                     <CardTitle className="text-xl">{tier.name}</CardTitle>
@@ -284,8 +284,8 @@ export default function Billing() {
                       <Button 
                         className={cn(
                           "w-full",
-                          isPro && "bg-primary hover:bg-primary/90",
-                          isEnterprise && "bg-purple-600 hover:bg-purple-700"
+                          isPro && "bg-green-600 hover:bg-green-600/90",
+                          isEnterprise && "bg-gray-600 hover:bg-gray-700"
                         )}
                         onClick={() => handleSubscribe(tierKey as "pro" | "enterprise")}
                         disabled={checkoutMutation.isPending}

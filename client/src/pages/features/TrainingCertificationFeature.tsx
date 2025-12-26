@@ -241,9 +241,9 @@ export default function TrainingCertificationFeature() {
                 <Card className="h-full text-center">
                   <CardHeader>
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900/30 dark:to-green-900/30 flex items-center justify-center mx-auto mb-4">
-                      <process.icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                      <process.icon className="h-8 w-8 text-green-600 dark:text-green-400" />
                     </div>
-                    <div className="absolute top-4 left-4 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                    <div className="absolute top-4 left-4 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm">
                       {process.step}
                     </div>
                     <CardTitle className="text-lg">{process.title}</CardTitle>
@@ -291,7 +291,7 @@ export default function TrainingCertificationFeature() {
                   <CardHeader>
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900/30 dark:to-green-900/30 flex items-center justify-center flex-shrink-0">
-                        <benefit.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                        <benefit.icon className="h-6 w-6 text-green-600 dark:text-green-400" />
                       </div>
                       <div>
                         <CardTitle className="mb-2">{benefit.title}</CardTitle>
@@ -329,12 +329,12 @@ export default function TrainingCertificationFeature() {
           >
             <Card className="p-8 bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-950/30 dark:to-green-950/30 border-2">
               <div className="text-center space-y-4">
-                <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">🏆</div>
+                <div className="text-4xl font-bold text-green-600 dark:text-green-400">🏆</div>
                 <h3 className="text-2xl font-bold">Certificate of Completion</h3>
                 <p className="text-lg">This certifies that</p>
                 <p className="text-3xl font-bold">Your Name</p>
                 <p className="text-lg">has successfully completed</p>
-                <p className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                <p className="text-2xl font-semibold text-green-600 dark:text-green-400">
                   EU AI Act Fundamentals
                 </p>
                 <div className="flex justify-center gap-8 pt-4">

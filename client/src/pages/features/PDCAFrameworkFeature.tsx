@@ -153,10 +153,10 @@ export default function PDCAFrameworkFeature() {
           <div className="grid md:grid-cols-2 gap-8">
             {pdcaPhases.map((phase, idx) => {
               const colorClasses = {
-                blue: "from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 border-blue-200 dark:border-blue-800",
+                blue: "from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 border-green-200 dark:border-green-800",
                 green: "from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 border-green-200 dark:border-green-800",
-                purple: "from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 border-purple-200 dark:border-purple-800",
-                orange: "from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-orange-200 dark:border-orange-800"
+                purple: "from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 border-gray-200 dark:border-gray-800",
+                orange: "from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-green-200 dark:border-green-800"
               }[phase.color];
 
               return (
@@ -203,8 +203,8 @@ export default function PDCAFrameworkFeature() {
             viewport={{ once: true }}
             className="flex justify-center mt-8"
           >
-            <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500/20 to-orange-500/20 border border-blue-500/30">
-              <RefreshCw className="h-5 w-5 text-blue-600 dark:text-blue-400 animate-spin" style={{ animationDuration: "3s" }} />
+            <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500/20 to-orange-500/20 border border-green-500/30">
+              <RefreshCw className="h-5 w-5 text-green-600 dark:text-green-400 animate-spin" style={{ animationDuration: "3s" }} />
               <span className="font-semibold">Continuous Cycle</span>
             </div>
           </motion.div>
@@ -271,7 +271,7 @@ export default function PDCAFrameworkFeature() {
             <CardContent className="space-y-6">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <Target className="h-5 w-5 text-blue-600" />
+                  <Target className="h-5 w-5 text-green-600" />
                   <h4 className="font-semibold">PLAN</h4>
                 </div>
                 <p className="text-sm text-muted-foreground ml-7">
@@ -293,7 +293,7 @@ export default function PDCAFrameworkFeature() {
 
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle className="h-5 w-5 text-purple-600" />
+                  <CheckCircle className="h-5 w-5 text-gray-600" />
                   <h4 className="font-semibold">CHECK</h4>
                 </div>
                 <p className="text-sm text-muted-foreground ml-7">
@@ -304,7 +304,7 @@ export default function PDCAFrameworkFeature() {
 
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <TrendingUp className="h-5 w-5 text-orange-600" />
+                  <TrendingUp className="h-5 w-5 text-green-600" />
                   <h4 className="font-semibold">ACT</h4>
                 </div>
                 <p className="text-sm text-muted-foreground ml-7">

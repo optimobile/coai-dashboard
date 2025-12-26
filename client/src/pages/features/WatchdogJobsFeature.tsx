@@ -184,7 +184,7 @@ export default function WatchdogJobsFeature() {
                   <CardHeader>
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900/30 dark:to-green-900/30 flex items-center justify-center flex-shrink-0">
-                        <highlight.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                        <highlight.icon className="h-6 w-6 text-green-600 dark:text-green-400" />
                       </div>
                       <div>
                         <CardTitle className="mb-2">{highlight.title}</CardTitle>
@@ -353,8 +353,8 @@ export default function WatchdogJobsFeature() {
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="text-center">
               <CardHeader>
-                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">1</span>
+                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-green-600 dark:text-green-400">1</span>
                 </div>
                 <CardTitle className="text-lg">Get Certified</CardTitle>
               </CardHeader>
@@ -381,8 +381,8 @@ export default function WatchdogJobsFeature() {
 
             <Card className="text-center">
               <CardHeader>
-                <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">3</span>
+                <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-900/30 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-gray-600 dark:text-gray-400">3</span>
                 </div>
                 <CardTitle className="text-lg">Start Working</CardTitle>
               </CardHeader>

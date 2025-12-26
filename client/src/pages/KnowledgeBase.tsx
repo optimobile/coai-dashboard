@@ -24,7 +24,7 @@ import {
 
 // Scenario categories based on real AI safety incidents
 const SCENARIO_CATEGORIES = [
-  { id: 'bias', name: 'Algorithmic Bias', icon: Users, color: 'text-purple-400', bgColor: 'bg-purple-500/20' },
+  { id: 'bias', name: 'Algorithmic Bias', icon: Users, color: 'text-gray-400', bgColor: 'bg-gray-500/20' },
   { id: 'privacy', name: 'Privacy Violations', icon: Shield, color: 'text-blue-400', bgColor: 'bg-blue-500/20' },
   { id: 'misinformation', name: 'Misinformation', icon: AlertTriangle, color: 'text-orange-400', bgColor: 'bg-orange-500/20' },
   { id: 'safety', name: 'Safety Failures', icon: Zap, color: 'text-red-400', bgColor: 'bg-red-500/20' },
@@ -192,8 +192,8 @@ export default function KnowledgeBase() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-purple-500/20">
-                  <Users className="h-5 w-5 text-purple-400" />
+                <div className="p-2 rounded-lg bg-gray-500/20">
+                  <Users className="h-5 w-5 text-gray-400" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{councilStats?.totalSessions || 0}</p>
@@ -274,7 +274,7 @@ export default function KnowledgeBase() {
                 return (
                   <Card 
                     key={scenario.id}
-                    className="cursor-pointer hover:border-primary/50 transition-colors"
+                    className="cursor-pointer hover:border-green-600/50 transition-colors"
                     onClick={() => setSelectedScenario(scenario)}
                   >
                     <CardContent className="p-4">
@@ -389,7 +389,7 @@ export default function KnowledgeBase() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-purple-500" />
+                  <Brain className="h-5 w-5 text-gray-500" />
                   AI-Generated Recommendations
                 </CardTitle>
                 <CardDescription>
@@ -413,7 +413,7 @@ export default function KnowledgeBase() {
                   
                   <div className="p-4 rounded-lg border bg-card">
                     <h4 className="font-semibold mb-2 flex items-center gap-2">
-                      <Users className="h-4 w-4 text-purple-500" />
+                      <Users className="h-4 w-4 text-gray-500" />
                       For Consumer-Facing AI
                     </h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
@@ -473,7 +473,7 @@ export default function KnowledgeBase() {
                   <ul className="space-y-2">
                     {selectedScenario.lessons.map((lesson, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm">
-                        <span className="text-primary">•</span>
+                        <span className="text-green-600">•</span>
                         {lesson}
                       </li>
                     ))}

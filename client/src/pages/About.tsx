@@ -74,10 +74,10 @@ export default function About() {
           <div className="max-w-3xl mx-auto text-center">
             <Badge className="mb-4 bg-white/20 text-white border-white/30">About CSOAI</Badge>
             <h1 className="text-5xl font-bold mb-6">Council of AI</h1>
-            <p className="text-2xl text-blue-100 mb-8">
+            <p className="text-2xl text-green-100 mb-8">
               The Western Standard for AI Safety Governance
             </p>
-            <p className="text-lg text-blue-200">
+            <p className="text-lg text-green-200">
               Established in 2024, the Council of AI (CSOAI) provides a comprehensive framework for AI safety
               governance, serving as the Western equivalent to China's TC260. We combine Byzantine consensus,
               public oversight, and continuous improvement to ensure responsible AI development.

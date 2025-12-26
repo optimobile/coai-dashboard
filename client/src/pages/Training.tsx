@@ -123,11 +123,11 @@ export default function Training() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <Card className="bg-gradient-to-r from-primary/5 to-purple-500/5 border-primary/20">
+          <Card className="bg-gradient-to-r from-green-50 to-gray-50 border-green-200">
             <CardContent className="p-6">
               <div className="flex items-center gap-6">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                  <GraduationCap className="h-8 w-8 text-primary" />
+                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                  <GraduationCap className="h-8 w-8 text-green-600" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">

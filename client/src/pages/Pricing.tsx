@@ -93,9 +93,9 @@ const PRICING_TIERS = [
     monthlyPrice: 199,
     yearlyPrice: 159,
     icon: Building2,
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/20',
-    borderColor: 'border-purple-500/50',
+    color: 'text-gray-400',
+    bgColor: 'bg-gray-500/20',
+    borderColor: 'border-gray-500/50',
     features: {
       aiSystems: 'Unlimited',
       assessments: 'Unlimited',

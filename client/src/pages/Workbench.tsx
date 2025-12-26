@@ -113,7 +113,7 @@ export default function Workbench() {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
         </div>
       </DashboardLayout>
     );
@@ -227,8 +227,8 @@ export default function Workbench() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                  <Timer className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+                  <Timer className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{performance?.avgResponseTimeMinutes || "N/A"}</p>
@@ -266,7 +266,7 @@ export default function Workbench() {
               <TabsContent value="queue" className="space-y-3 mt-4">
                 {casesLoading ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    <Loader2 className="h-6 w-6 animate-spin text-green-600" />
                   </div>
                 ) : pendingCases.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
@@ -341,7 +341,7 @@ export default function Workbench() {
           <div className="col-span-2">
             {detailsLoading ? (
               <Card className="h-full flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <Loader2 className="h-8 w-8 animate-spin text-green-600" />
               </Card>
             ) : selectedCase ? (
               <Card className="h-full">

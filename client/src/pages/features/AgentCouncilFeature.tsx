@@ -110,8 +110,8 @@ export default function AgentCouncilFeature() {
             >
               <Card className="h-full">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4">
-                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">1</span>
+                  <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
+                    <span className="text-2xl font-bold text-green-600 dark:text-green-400">1</span>
                   </div>
                   <CardTitle>AI Analysis</CardTitle>
                 </CardHeader>
@@ -132,8 +132,8 @@ export default function AgentCouncilFeature() {
             >
               <Card className="h-full">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-4">
-                    <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">2</span>
+                  <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-900/30 flex items-center justify-center mb-4">
+                    <span className="text-2xl font-bold text-gray-600 dark:text-gray-400">2</span>
                   </div>
                   <CardTitle>Collaborative Deliberation</CardTitle>
                 </CardHeader>
@@ -199,7 +199,7 @@ export default function AgentCouncilFeature() {
                   <CardHeader>
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900/30 dark:to-green-900/30 flex items-center justify-center flex-shrink-0">
-                        <benefit.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                        <benefit.icon className="h-6 w-6 text-green-600 dark:text-green-400" />
                       </div>
                       <div>
                         <CardTitle className="mb-2">{benefit.title}</CardTitle>
@@ -239,7 +239,7 @@ export default function AgentCouncilFeature() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
               >
-                <Card className="hover:border-blue-500 transition-colors">
+                <Card className="hover:border-green-500 transition-colors">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base">{role.name}</CardTitle>
                     <p className="text-sm text-muted-foreground">{role.focus}</p>
