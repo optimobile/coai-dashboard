@@ -1,11 +1,11 @@
 /**
  * Certificate Verification Service
- * Handles CEASA certificate generation, verification, and blockchain registration
+ * Handles CEASAI certificate generation, verification, and blockchain registration
  */
 
 import crypto from 'crypto';
 
-export interface CEASACertificate {
+export interface CEASAICertificate {
   certificateId: string;
   organizationId: number;
   analystName: string;
@@ -21,7 +21,7 @@ export interface CEASACertificate {
 
 export interface VerificationResult {
   valid: boolean;
-  certificate: CEASACertificate | null;
+  certificate: CEASAICertificate | null;
   verificationDate: Date;
   blockchainVerified: boolean;
   governmentPortalVerified: boolean;
@@ -33,16 +33,16 @@ export class CertificateVerificationService {
   private blockchainNetwork = 'ethereum-mainnet'; // In production: actual blockchain
 
   /**
-   * Generate CEASA Certificate
+   * Generate CEASAI Certificate
    */
   async generateCertificate(
     organizationId: number,
     analystName: string,
     certificationLevel: 'fundamentals' | 'professional' | 'expert',
     score: number
-  ): Promise<CEASACertificate> {
+  ): Promise<CEASAICertificate> {
     try {
-      console.log('[Certificate] Generating CEASA certificate for', analystName);
+      console.log('[Certificate] Generating CEASAI certificate for', analystName);
 
       // Validate score
       if (score < 70) {
@@ -57,7 +57,7 @@ export class CertificateVerificationService {
       const expiryDate = this.calculateExpiryDate(certificationLevel, issuanceDate);
 
       // Create certificate object
-      const certificate: CEASACertificate = {
+      const certificate: CEASAICertificate = {
         certificateId,
         organizationId,
         analystName,
@@ -91,7 +91,7 @@ export class CertificateVerificationService {
   }
 
   /**
-   * Verify CEASA Certificate
+   * Verify CEASAI Certificate
    */
   async verifyCertificate(certificateId: string): Promise<VerificationResult> {
     try {
@@ -171,7 +171,7 @@ export class CertificateVerificationService {
   /**
    * Register certificate on blockchain
    */
-  private async registerOnBlockchain(certificate: CEASACertificate): Promise<string> {
+  private async registerOnBlockchain(certificate: CEASAICertificate): Promise<string> {
     try {
       console.log('[Blockchain] Registering certificate on blockchain');
 
@@ -203,7 +203,7 @@ export class CertificateVerificationService {
   /**
    * Verify blockchain registration
    */
-  private async verifyBlockchain(certificate: CEASACertificate): Promise<boolean> {
+  private async verifyBlockchain(certificate: CEASAICertificate): Promise<boolean> {
     try {
       console.log('[Blockchain Verify] Verifying blockchain registration');
 
@@ -227,7 +227,7 @@ export class CertificateVerificationService {
   /**
    * Verify government portal registration
    */
-  private async verifyGovernmentPortal(certificate: CEASACertificate): Promise<boolean> {
+  private async verifyGovernmentPortal(certificate: CEASAICertificate): Promise<boolean> {
     try {
       console.log('[Government Verify] Verifying government portal registration');
 
@@ -247,7 +247,7 @@ export class CertificateVerificationService {
   /**
    * Generate verification hash
    */
-  private generateVerificationHash(certificate: CEASACertificate): string {
+  private generateVerificationHash(certificate: CEASAICertificate): string {
     const hashInput = JSON.stringify({
       certificateId: certificate.certificateId,
       organizationId: certificate.organizationId,
@@ -265,7 +265,7 @@ export class CertificateVerificationService {
   /**
    * Verify hash integrity
    */
-  private verifyHash(certificate: CEASACertificate): boolean {
+  private verifyHash(certificate: CEASAICertificate): boolean {
     const expectedHash = this.generateVerificationHash(certificate);
     return expectedHash === certificate.verificationHash;
   }
@@ -282,7 +282,7 @@ export class CertificateVerificationService {
       .digest('hex')
       .substring(0, 8);
 
-    return `CEASA-${organizationId}-${nameHash}-${timestamp}-${random}`.toUpperCase();
+    return `CEASAI-${organizationId}-${nameHash}-${timestamp}-${random}`.toUpperCase();
   }
 
   /**
@@ -319,7 +319,7 @@ export class CertificateVerificationService {
   /**
    * Retrieve certificate (mock implementation)
    */
-  private async retrieveCertificate(certificateId: string): Promise<CEASACertificate | null> {
+  private async retrieveCertificate(certificateId: string): Promise<CEASAICertificate | null> {
     // In production, retrieve from database
     // For demo, return null (would be populated from DB)
     console.log('[Certificate Retrieval] Retrieving certificate from database');
@@ -329,7 +329,7 @@ export class CertificateVerificationService {
   /**
    * Export certificate as PDF
    */
-  async exportCertificatePDF(certificate: CEASACertificate): Promise<Buffer> {
+  async exportCertificatePDF(certificate: CEASAICertificate): Promise<Buffer> {
     try {
       console.log('[PDF Export] Exporting certificate as PDF');
 
@@ -369,14 +369,14 @@ export class CertificateVerificationService {
   /**
    * Renew certificate
    */
-  async renewCertificate(certificateId: string): Promise<CEASACertificate> {
+  async renewCertificate(certificateId: string): Promise<CEASAICertificate> {
     try {
       console.log('[Renewal] Renewing certificate:', certificateId);
 
       // In production, retrieve old certificate and generate new one
       // Copy data from old certificate
 
-      const renewedCertificate: CEASACertificate = {
+      const renewedCertificate: CEASAICertificate = {
         certificateId: `${certificateId}-RENEWED`,
         organizationId: 0,
         analystName: '',

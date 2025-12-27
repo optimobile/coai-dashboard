@@ -250,7 +250,7 @@ ${referralUrl}
 #AISafety #Certification #Jobs
       `,
       linkedinTemplate: `
-I'm excited to share that I'm pursuing my CEASA (Certified EU AI Safety Analyst) certification with CSOAI.
+I'm excited to share that I'm pursuing my CEASAI (Certified EU AI Safety Analyst) certification with CSOAI.
 
 If you're interested in joining the fastest-growing AI safety profession, use my referral link:
 ${referralUrl}

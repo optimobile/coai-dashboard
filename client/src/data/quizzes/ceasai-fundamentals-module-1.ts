@@ -1,6 +1,6 @@
 import type { QuizQuestion } from '@/types/quiz';
 
-export const ceasaFundamentalsModule1Quiz: QuizQuestion[] = [
+export const ceasaiFundamentalsModule1Quiz: QuizQuestion[] = [
   {
     id: 1,
     question: 'When did the EU AI Act enter into force?',

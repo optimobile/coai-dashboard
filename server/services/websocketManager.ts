@@ -4,7 +4,7 @@
  */
 
 import { WebSocket, WebSocketServer } from 'ws';
-import { db } from '../db';
+import { getDb } from '../db.js';
 import { websocketConnections } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 
@@ -30,11 +30,13 @@ export class WebSocketManager {
   private clients: Map<string, SubscribedClient> = new Map();
   private userConnections: Map<number, Set<string>> = new Map();
   private heartbeatInterval: NodeJS.Timeout | null = null;
+  private db: any = null;
 
   /**
    * Initialize WebSocket server
    */
-  public initialize(server: any) {
+  public async initialize(server: any) {
+    this.db = await getDb();
     this.wss = new WebSocketServer({ server, path: '/ws' });
 
     this.wss.on('connection', (ws: WebSocket, req: any) => {
@@ -269,7 +271,9 @@ export class WebSocketManager {
    */
   private async saveConnection(userId: number, connectionId: string) {
     try {
-      await db.insert(websocketConnections).values({
+      if (!this.db) this.db = await getDb();
+      if (!this.db) return;
+      await this.db.insert(websocketConnections).values({
         userId,
         connectionId,
         isActive: 1,
@@ -284,7 +288,9 @@ export class WebSocketManager {
    */
   private async removeConnection(connectionId: string) {
     try {
-      await db.delete(websocketConnections).where(eq(websocketConnections.connectionId, connectionId));
+      if (!this.db) this.db = await getDb();
+      if (!this.db) return;
+      await this.db.delete(websocketConnections).where(eq(websocketConnections.connectionId, connectionId));
     } catch (error) {
       console.error('[WS] Error removing connection:', error);
     }

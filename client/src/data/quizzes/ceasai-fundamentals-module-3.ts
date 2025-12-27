@@ -1,6 +1,6 @@
 import type { QuizQuestion } from '@/types/quiz';
 
-export const ceasaFundamentalsModule3Quiz: QuizQuestion[] = [
+export const ceasaiFundamentalsModule3Quiz: QuizQuestion[] = [
   { id: 1, question: 'What is the primary criterion for classifying an AI system as high-risk?', options: ['It uses machine learning', 'It could cause significant harm to fundamental rights or safety', 'It processes large amounts of data', 'It is used by government'], correctAnswer: 1, explanation: 'High-risk classification is based on the potential for significant harm to fundamental rights or safety, not on technical characteristics.' },
   { id: 2, question: 'Which of the following is an example of a high-risk AI system?', options: ['Email spam filter', 'AI for criminal justice risk assessment', 'Weather prediction', 'Product recommendation system'], correctAnswer: 1, explanation: 'AI systems for criminal justice (risk assessment, recidivism prediction) are high-risk because they directly affect fundamental rights and freedoms.' },
   { id: 3, question: 'What is Annex III of the EU AI Act?', options: ['A list of prohibited practices', 'A list of high-risk AI use cases', 'Technical specifications', 'Penalty guidelines'], correctAnswer: 1, explanation: 'Annex III contains the list of high-risk AI use cases that require strict compliance with EU AI Act requirements.' },

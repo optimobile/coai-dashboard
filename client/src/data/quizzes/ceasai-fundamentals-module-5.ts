@@ -1,5 +1,5 @@
 import type { QuizQuestion } from '@/types/quiz';
-export const ceasaFundamentalsModule5Quiz: QuizQuestion[] = [
+export const ceasaiFundamentalsModule5Quiz: QuizQuestion[] = [
   { id: 1, question: 'What is the first step in conducting a risk assessment for high-risk AI systems?', options: ['Testing the system', 'Identifying potential harms and affected groups', 'Implementing safeguards', 'Documenting results'], correctAnswer: 1, explanation: 'Risk assessment begins by identifying potential harms, who could be affected, and the severity of potential impacts.' },
   { id: 2, question: 'What should be included in a risk assessment?', options: ['Only technical specifications', 'Identification of harms, affected groups, likelihood, severity, and mitigation measures', 'Only user feedback', 'Marketing analysis'], correctAnswer: 1, explanation: 'A comprehensive risk assessment identifies potential harms, affected populations, probability and severity of harms, and planned mitigation measures.' },
   { id: 3, question: 'What is a mitigation measure?', options: ['Ignoring risks', 'An action taken to reduce the likelihood or severity of a potential harm', 'Transferring risk to users', 'Accepting all risks'], correctAnswer: 1, explanation: 'Mitigation measures are specific actions designed to reduce the likelihood or severity of identified risks.' },

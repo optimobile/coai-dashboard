@@ -1,6 +1,6 @@
 import type { QuizQuestion } from '@/types/quiz';
 
-export const ceasaFundamentalsModule4Quiz: QuizQuestion[] = [
+export const ceasaiFundamentalsModule4Quiz: QuizQuestion[] = [
   {
     id: 1,
     question: 'What is the primary purpose of data governance in high-risk AI systems?',

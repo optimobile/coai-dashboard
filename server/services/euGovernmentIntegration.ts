@@ -81,7 +81,7 @@ export class EUGovernmentIntegrationService {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
-          'X-Request-ID': `ceasa-${Date.now()}`,
+          'X-Request-ID': `ceasai-${Date.now()}`,
         },
         body: JSON.stringify(payload),
       });
@@ -254,7 +254,7 @@ export class EUGovernmentIntegrationService {
   }
 
   /**
-   * Submit CEASA Certificate to government systems
+   * Submit CEASAI Certificate to government systems
    */
   async submitCertificate(
     organizationId: number,
@@ -266,7 +266,7 @@ export class EUGovernmentIntegrationService {
     verificationUrl: string;
   }> {
     try {
-      console.log('[Certificate Integration] Registering CEASA certificate');
+      console.log('[Certificate Integration] Registering CEASAI certificate');
 
       const payload = {
         organizationId,

@@ -194,7 +194,7 @@ export function ExamProctoring() {
       >
         <div>
           <h1 className="text-3xl font-bold">Proctored Exam</h1>
-          <p className="text-gray-600">CEASA Fundamentals Certification</p>
+          <p className="text-gray-600">CEASAI Fundamentals Certification</p>
         </div>
         <Badge variant="outline" className="text-lg px-4 py-2">
           Session ID: {status.sessionId}

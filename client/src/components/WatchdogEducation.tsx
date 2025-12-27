@@ -173,7 +173,7 @@ export function EducationalModuleCard({ module, onStart, onUpgrade }: Educationa
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-10">
             <div className="text-center">
               <Lock className="w-8 h-8 text-white mx-auto mb-2" />
-              <p className="text-white font-semibold">Upgrade to CEASA</p>
+              <p className="text-white font-semibold">Upgrade to CEASAI</p>
               <p className="text-white/80 text-sm">Professional to unlock</p>
             </div>
           </div>
@@ -251,7 +251,7 @@ export function EducationalModuleCard({ module, onStart, onUpgrade }: Educationa
             {module.isLocked ? (
               <>
                 <Unlock className="w-4 h-4 mr-2" />
-                Upgrade to CEASA
+                Upgrade to CEASAI
               </>
             ) : module.completed ? (
               <>
@@ -285,7 +285,7 @@ export function WatchdogEducation() {
   };
 
   const handleUpgrade = () => {
-    toast.info('Redirecting to CEASA Professional...');
+    toast.info('Redirecting to CEASAI Professional...');
   };
 
   return (
@@ -358,11 +358,11 @@ export function WatchdogEducation() {
       >
         <h3 className="text-2xl font-bold mb-2">Ready to Become a Certified AI Safety Analyst?</h3>
         <p className="text-gray-700 mb-6">
-          Complete the free Watchdog modules, then upgrade to CEASA Professional for industry-recognized
+          Complete the free Watchdog modules, then upgrade to CEASAI Professional for industry-recognized
           certification and government integration.
         </p>
         <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
-          Explore CEASA Professional
+          Explore CEASAI Professional
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </motion.div>

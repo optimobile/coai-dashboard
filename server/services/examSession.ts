@@ -180,7 +180,7 @@ export class ExamSessionService {
   ) {
     try {
       // Generate unique certificate number
-      const certificateNumber = `CEASA-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      const certificateNumber = `CEASAI-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
       // Determine certificate type based on test
       let certificationType: 'fundamentals' | 'professional' | 'expert' = 'fundamentals';

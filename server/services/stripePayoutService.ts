@@ -11,7 +11,7 @@ import { eq, and, lte } from 'drizzle-orm';
 import { ReferralEmailService } from './referralEmailService.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-12-15.clover',
 });
 
 export class StripePayoutService {
@@ -23,8 +23,9 @@ export class StripePayoutService {
     failed: number;
     totalAmount: number;
   }> {
-    const db = getDb();
-    let successCount = 0;
+    const db = await getDb();
+    if (!db) throw new Error('Database connection failed');
+    let successCount = 0;;
     let failedCount = 0;
     let totalAmount = 0;
 
@@ -196,7 +197,8 @@ export class StripePayoutService {
    * Handle Stripe payout webhook
    */
   static async handlePayoutWebhook(event: any): Promise<void> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) throw new Error('Database connection failed');
 
     try {
       if (event.type === 'payout.paid') {
@@ -248,7 +250,8 @@ export class StripePayoutService {
    * Get payout history for a referrer
    */
   static async getPayoutHistory(referrerId: number): Promise<any[]> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) throw new Error('Database connection failed');
 
     return db
       .select()

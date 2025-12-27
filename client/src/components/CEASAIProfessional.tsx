@@ -1,5 +1,5 @@
 /**
- * CEASA Professional & Expert Programs
+ * CEASAI Professional & Expert Programs
  * Advanced certifications for industry practitioners and regulators
  */
 
@@ -43,7 +43,7 @@ interface ProgramTier {
 const programTiers: ProgramTier[] = [
   {
     name: 'fundamentals',
-    title: 'CEASA Fundamentals',
+    title: 'CEASAI Fundamentals',
     subtitle: 'Entry-level certification',
     duration: '6 weeks',
     modules: 10,
@@ -69,7 +69,7 @@ const programTiers: ProgramTier[] = [
   },
   {
     name: 'professional',
-    title: 'CEASA Professional',
+    title: 'CEASAI Professional',
     subtitle: 'Industry-recognized certification',
     duration: '12 weeks',
     modules: 20,
@@ -94,14 +94,14 @@ const programTiers: ProgramTier[] = [
       'Enterprise architects',
       'Regulatory consultants',
     ],
-    prerequisites: 'CEASA Fundamentals or equivalent experience',
+    prerequisites: 'CEASAI Fundamentals or equivalent experience',
     governmentIntegration: true,
     blockchainCertificate: true,
     validityPeriod: '2 years',
   },
   {
     name: 'expert',
-    title: 'CEASA Expert',
+    title: 'CEASAI Expert',
     subtitle: 'Regulatory-level expertise',
     duration: '16 weeks',
     modules: 30,
@@ -129,7 +129,7 @@ const programTiers: ProgramTier[] = [
       'Academic researchers',
       'Government officials',
     ],
-    prerequisites: 'CEASA Professional or 5+ years AI governance experience',
+    prerequisites: 'CEASAI Professional or 5+ years AI governance experience',
     governmentIntegration: true,
     blockchainCertificate: true,
     validityPeriod: '3 years',
@@ -246,9 +246,9 @@ function ProgramTierCard({ tier, isPopular, onSelect }: TierCardProps) {
   );
 }
 
-export function CEASAProfessionalTiers() {
+export function CEASAIProfessionalTiers() {
   const handleSelectTier = (tierName: string) => {
-    toast.success(`Enrolled in CEASA ${tierName.charAt(0).toUpperCase() + tierName.slice(1)}!`);
+    toast.success(`Enrolled in CEASAI ${tierName.charAt(0).toUpperCase() + tierName.slice(1)}!`);
   };
 
   return (
@@ -260,7 +260,7 @@ export function CEASAProfessionalTiers() {
         transition={{ duration: 0.3 }}
         className="text-center space-y-4"
       >
-        <h2 className="text-4xl font-bold">CEASA Certification Programs</h2>
+        <h2 className="text-4xl font-bold">CEASAI Certification Programs</h2>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Choose your path to becoming a certified EU AI safety analyst. From fundamentals to
           expert-level regulatory expertise.
@@ -455,7 +455,7 @@ export function CEASAProfessionalTiers() {
           <div>
             <h4 className="font-semibold mb-2">Is the certificate recognized by governments?</h4>
             <p className="text-sm text-gray-600">
-              CEASA certificates are blockchain-verified and integrated with EU government portals,
+              CEASAI certificates are blockchain-verified and integrated with EU government portals,
               making them officially recognized for compliance purposes.
             </p>
           </div>

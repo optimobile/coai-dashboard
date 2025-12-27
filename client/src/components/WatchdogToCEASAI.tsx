@@ -1,5 +1,5 @@
 /**
- * Watchdog → CEASA Conversion Funnel
+ * Watchdog → CEASAI Conversion Funnel
  * Guides users from free public forum to paid certification
  */
 
@@ -62,13 +62,13 @@ const conversionSteps: ConversionStep[] = [
   },
   {
     step: 3,
-    title: 'Upgrade to CEASA Fundamentals',
+    title: 'Upgrade to CEASAI Fundamentals',
     description: 'Get certified with legal rigor and industry recognition',
     icon: <Award className="w-8 h-8 text-purple-600" />,
     action: 'Paid',
     cta: 'Get Certified',
     benefits: [
-      'CEASA certificate',
+      'CEASAI certificate',
       'Government integration',
       'Career advancement',
     ],
@@ -158,7 +158,7 @@ function ConversionStepCard({ step, isActive, onSelect }: any) {
   );
 }
 
-export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFunnelProps) {
+export function WatchdogToCEASAIFunnel({ userStep = 1, onProgress }: ConversionFunnelProps) {
   const [selectedStep, setSelectedStep] = useState(userStep);
   const progressPercentage = (userStep / conversionSteps.length) * 100;
 
@@ -233,7 +233,7 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
           {/* Fundamentals ROI */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">CEASA Fundamentals</CardTitle>
+              <CardTitle className="text-lg">CEASAI Fundamentals</CardTitle>
               <CardDescription>Entry-level certification</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -259,7 +259,7 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
           <Card className="border-2 border-purple-600">
             <CardHeader>
               <Badge className="w-fit mb-2">Most Popular</Badge>
-              <CardTitle className="text-lg">CEASA Professional</CardTitle>
+              <CardTitle className="text-lg">CEASAI Professional</CardTitle>
               <CardDescription>Industry-recognized certification</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -282,7 +282,7 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
           {/* Expert ROI */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">CEASA Expert</CardTitle>
+              <CardTitle className="text-lg">CEASAI Expert</CardTitle>
               <CardDescription>Regulatory-level expertise</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -322,7 +322,7 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
               role: 'Compliance Officer → AI Safety Analyst',
               company: 'TechCorp EU',
               testimonial:
-                'CEASA Fundamentals gave me the knowledge to identify compliance gaps. Now I lead our AI safety team.',
+                'CEASAI Fundamentals gave me the knowledge to identify compliance gaps. Now I lead our AI safety team.',
               tier: 'Professional',
             },
             {
@@ -369,7 +369,7 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
           </Button>
           <Button size="lg" variant="outline">
             <Award className="w-4 h-4 mr-2" />
-            View CEASA Programs
+            View CEASAI Programs
           </Button>
         </div>
       </motion.div>

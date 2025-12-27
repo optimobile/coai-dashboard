@@ -1,5 +1,5 @@
 /**
- * CEASA Fundamentals Program
+ * CEASAI Fundamentals Program
  * Legal, industry-recognized certification based on EU AI Act
  * Converts free Watchdog modules into paid certification
  */
@@ -24,7 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 
-interface CEASAModule {
+interface CEASAIModule {
   id: number;
   title: string;
   description: string;
@@ -49,7 +49,7 @@ interface CertificateData {
   qrCodeUrl: string;
 }
 
-const ceasaModules: CEASAModule[] = [
+const ceasaiModules: CEASAIModule[] = [
   {
     id: 1,
     title: 'EU AI Act Essentials & Risk Framework',
@@ -196,7 +196,7 @@ const ceasaModules: CEASAModule[] = [
   },
   {
     id: 10,
-    title: 'CEASA Fundamentals Capstone Exam',
+    title: 'CEASAI Fundamentals Capstone Exam',
     description: 'Comprehensive assessment and certification',
     duration: '2-3 days',
     lessons: 1,
@@ -204,7 +204,7 @@ const ceasaModules: CEASAModule[] = [
     complianceRequirements: [
       'Pass 100-question exam (70% required)',
       'Demonstrate comprehensive knowledge',
-      'Receive CEASA certificate',
+      'Receive CEASAI certificate',
     ],
     examQuestions: 100,
     realWorldCaseStudies: ['Multi-scenario compliance assessment'],
@@ -213,11 +213,11 @@ const ceasaModules: CEASAModule[] = [
 ];
 
 interface ModuleCardProps {
-  module: CEASAModule;
+  module: CEASAIModule;
   onStart: (moduleId: number) => void;
 }
 
-function CEASAModuleCard({ module, onStart }: ModuleCardProps) {
+function CEASAIModuleCard({ module, onStart }: ModuleCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -306,20 +306,20 @@ function CEASAModuleCard({ module, onStart }: ModuleCardProps) {
   );
 }
 
-export function CEASAFundamentals() {
+export function CEASAIFundamentals() {
   const [showCertificate, setShowCertificate] = useState(false);
-  const completedModules = ceasaModules.filter((m) => m.completed).length;
-  const progress = (completedModules / ceasaModules.length) * 100;
+  const completedModules = ceasaiModules.filter((m) => m.completed).length;
+  const progress = (completedModules / ceasaiModules.length) * 100;
 
   const mockCertificate: CertificateData = {
-    certificateId: 'CEASA-12345-ABC123-DEMO',
+    certificateId: 'CEASAI-12345-ABC123-DEMO',
     analystName: 'John Analyst',
     certificationLevel: 'fundamentals',
     issuanceDate: new Date(),
     expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
     score: 85,
     blockchainHash: 'abc123def456...',
-    qrCodeUrl: 'https://csoai.org/verify/CEASA-12345',
+    qrCodeUrl: 'https://csoai.org/verify/CEASAI-12345',
   };
 
   const handleStartModule = (moduleId: number) => {
@@ -339,7 +339,7 @@ export function CEASAFundamentals() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Award className="w-8 h-8" />
-              <h2 className="text-3xl font-bold">CEASA Fundamentals</h2>
+              <h2 className="text-3xl font-bold">CEASAI Fundamentals</h2>
             </div>
             <p className="text-blue-100 mb-4">
               Certified EU AI Safety Analyst - Fundamentals Program
@@ -357,7 +357,7 @@ export function CEASAFundamentals() {
           <div className="flex justify-between items-center text-sm">
             <span>Program Progress</span>
             <span className="font-semibold">
-              {completedModules}/{ceasaModules.length} modules
+              {completedModules}/{ceasaiModules.length} modules
             </span>
           </div>
           <Progress value={progress} className="h-3" />
@@ -370,7 +370,7 @@ export function CEASAFundamentals() {
           <CardContent className="pt-6">
             <div className="text-center">
               <BookOpen className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{ceasaModules.length}</p>
+              <p className="text-2xl font-bold">{ceasaiModules.length}</p>
               <p className="text-sm text-gray-600">Modules</p>
             </div>
           </CardContent>
@@ -408,8 +408,8 @@ export function CEASAFundamentals() {
       <div>
         <h3 className="text-2xl font-bold mb-6">Program Modules</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ceasaModules.map((module) => (
-            <CEASAModuleCard
+          {ceasaiModules.map((module) => (
+            <CEASAIModuleCard
               key={module.id}
               module={module}
               onStart={handleStartModule}
@@ -426,7 +426,7 @@ export function CEASAFundamentals() {
         className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg p-8"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-2xl font-bold">Your CEASA Certificate</h3>
+          <h3 className="text-2xl font-bold">Your CEASAI Certificate</h3>
           <Award className="w-8 h-8 text-purple-600" />
         </div>
 
