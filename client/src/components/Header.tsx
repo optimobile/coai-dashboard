@@ -86,6 +86,22 @@ export function Header() {
         { name: 'Blog', href: '/blog', description: 'News' },
       ]
     },
+    { 
+      name: 'Analytics', 
+      href: '/analytics',
+      submenu: [
+        { name: 'Dashboard', href: '/analytics', description: 'Compliance trends' },
+        { name: 'Reports', href: '/analytics', description: 'Custom reports' },
+      ]
+    },
+    { 
+      name: 'Audit', 
+      href: '/audit',
+      submenu: [
+        { name: 'Audit Trail', href: '/audit', description: 'Security events' },
+        { name: 'Logs', href: '/audit', description: 'Event logs' },
+      ]
+    },
   ];
 
   const isActive = (href: string) => {

@@ -111,6 +111,10 @@ import { ComplianceRoadmapPage } from "./pages/ComplianceRoadmapPage";
 import { AlertManagementPage } from "./pages/AlertManagementPage";
 import { WebhookManagementPage } from "./pages/WebhookManagementPage";
 import { AlertToastProvider } from "./components/AlertToastProvider";
+import { Analytics } from "./pages/Analytics";
+import { AuditTrail } from "./pages/AuditTrail";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -125,8 +129,9 @@ function ScrollToTop() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
-        <AuthProvider>
+      <LanguageProvider>
+        <ThemeProvider defaultTheme="light">
+          <AuthProvider>
           <AlertToastProvider>
             <TooltipProvider>
             <div className="flex flex-col min-h-screen">
@@ -225,6 +230,8 @@ function App() {
                   <Route path="/compliance-assessment" component={ComplianceAssessmentWizard} />
                   <Route path="/regulatory-portal" component={RegulatoryPortal} />
                   <Route path="/council-voting" component={CouncilVotingEngine} />
+                  <Route path="/analytics" component={Analytics} />
+                  <Route path="/audit" component={AuditTrail} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
@@ -245,7 +252,8 @@ function App() {
             </TooltipProvider>
           </AlertToastProvider>
         </AuthProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </LanguageProvider>
     </ErrorBoundary>
   );
 }
