@@ -1,4 +1,4 @@
-/**
+/*
  * Enhanced Header Component with Comprehensive Mega Menu
  * Showcases all CSOAI features, systems, and compliance frameworks
  */
@@ -25,6 +25,8 @@ import {
   Briefcase,
   Award,
   HelpCircle,
+  FileText,
+  Info,
 } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
@@ -99,17 +101,17 @@ export function EnhancedHeader() {
         },
         {
           title: 'Assessment',
-          icon: <AlertTriangle className="h-5 w-5 text-emerald-600" />,
+          icon: <FileCheck className="h-5 w-5 text-emerald-600" />,
           items: [
             {
               name: 'Run Assessment',
               href: '/compliance/assessment',
-              description: 'Assess your AI systems',
+              description: 'Start compliance evaluation',
             },
             {
-              name: 'View Results',
-              href: '/compliance/results',
-              description: 'Assessment outcomes',
+              name: 'Assessment History',
+              href: '/compliance/history',
+              description: 'View past assessments',
             },
             {
               name: 'Generate Reports',
@@ -118,161 +120,52 @@ export function EnhancedHeader() {
             },
           ],
         },
+      ],
+    },
+    {
+      name: 'AI Systems',
+      href: '/ai-systems',
+      icon: <Shield className="h-4 w-4" />,
+      sections: [
         {
-          title: 'Systems',
-          icon: <Zap className="h-5 w-5 text-emerald-600" />,
+          title: 'Management',
+          icon: <Shield className="h-5 w-5 text-emerald-600" />,
           items: [
             {
-              name: 'My AI Systems',
+              name: 'All Systems',
               href: '/ai-systems',
-              description: 'Manage your AI systems',
+              description: 'View all registered systems',
             },
             {
-              name: 'Risk Classification',
+              name: 'Add New System',
+              href: '/ai-systems/add',
+              description: 'Register a new AI system',
+            },
+            {
+              name: 'System Details',
+              href: '/ai-systems/details',
+              description: 'View system information',
+            },
+          ],
+        },
+        {
+          title: 'Risk Management',
+          icon: <AlertTriangle className="h-5 w-5 text-emerald-600" />,
+          items: [
+            {
+              name: 'Risk Assessment',
               href: '/ai-systems/risk',
-              description: 'Classify system risks',
+              description: 'Assess system risks',
             },
             {
-              name: 'Compliance Scoring',
-              href: '/ai-systems/scoring',
-              description: 'View compliance scores',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'Training',
-      href: '/training',
-      icon: <BookOpen className="h-4 w-4" />,
-      sections: [
-        {
-          title: 'Courses',
-          icon: <BookOpen className="h-5 w-5 text-emerald-600" />,
-          items: [
-            {
-              name: 'EU AI Act Fundamentals',
-              href: '/courses/eu-ai-act',
-              description: '8 modules, 77 hours',
-              badge: 'NEW',
+              name: 'Incident Reports',
+              href: '/ai-systems/incidents',
+              description: 'View reported incidents',
             },
             {
-              name: 'NIST AI RMF Fundamentals',
-              href: '/courses/nist',
-              description: '8 modules, comprehensive',
-            },
-            {
-              name: 'ISO 42001 Fundamentals',
-              href: '/courses/iso-42001',
-              description: '8 modules, practical',
-            },
-            {
-              name: 'Specialization Tracks',
-              href: '/courses/specializations',
-              description: '8 advanced specializations',
-            },
-          ],
-        },
-        {
-          title: 'Your Learning',
-          icon: <Award className="h-5 w-5 text-emerald-600" />,
-          items: [
-            {
-              name: 'My Courses',
-              href: '/my-courses',
-              description: 'Enrolled courses',
-            },
-            {
-              name: 'Progress Dashboard',
-              href: '/dashboard/progress',
-              description: 'Learning analytics',
-            },
-            {
-              name: 'My Certificates',
-              href: '/certificates',
-              description: 'Earned certifications',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'Certification',
-      href: '/certification',
-      icon: <Award className="h-4 w-4" />,
-      sections: [
-        {
-          title: 'CEASAI Exams',
-          icon: <Award className="h-5 w-5 text-emerald-600" />,
-          items: [
-            {
-              name: 'Fundamentals Exam',
-              href: '/exam',
-              description: '50 questions, 90 minutes',
-            },
-            {
-              name: 'Professional Exam',
-              href: '/exam/professional',
-              description: 'Advanced certification',
-            },
-            {
-              name: 'Expert Exam',
-              href: '/exam/expert',
-              description: 'Highest certification level',
-            },
-          ],
-        },
-        {
-          title: 'Certification Info',
-          icon: <FileCheck className="h-5 w-5 text-emerald-600" />,
-          items: [
-            {
-              name: 'Certification Path',
-              href: '/ceasai',
-              description: 'Learn about CEASAI',
-            },
-            {
-              name: 'My Certificates',
-              href: '/certificates',
-              description: 'View earned certs',
-            },
-            {
-              name: 'Verify Certificate',
-              href: '/verify-certificate',
-              description: 'Validate a certificate',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'Council',
-      href: '/council',
-      icon: <Users className="h-4 w-4" />,
-      sections: [
-        {
-          title: '33-Agent Byzantine Council',
-          icon: <Users className="h-5 w-5 text-emerald-600" />,
-          items: [
-            {
-              name: 'How It Works',
-              href: '/council-detail',
-              description: 'Byzantine consensus explained',
-            },
-            {
-              name: 'Live Voting',
-              href: '/council/voting',
-              description: 'Active council sessions',
-            },
-            {
-              name: 'Council Decisions',
-              href: '/council/decisions',
-              description: 'Historical decisions',
-            },
-            {
-              name: 'Agent Performance',
-              href: '/council/analytics',
-              description: 'Agent voting patterns',
+              name: 'Mitigation Plans',
+              href: '/ai-systems/mitigation',
+              description: 'Risk mitigation strategies',
             },
           ],
         },
@@ -284,18 +177,13 @@ export function EnhancedHeader() {
       icon: <Eye className="h-4 w-4" />,
       sections: [
         {
-          title: 'Report Incidents',
-          icon: <AlertTriangle className="h-5 w-5 text-emerald-600" />,
+          title: 'Public Database',
+          icon: <Eye className="h-5 w-5 text-emerald-600" />,
           items: [
             {
-              name: 'Submit Report',
-              href: '/watchdog/submit',
-              description: 'Report AI incident',
-            },
-            {
-              name: 'Public Reports',
-              href: '/watchdog-hub',
-              description: 'Browse all reports',
+              name: 'Incident Database',
+              href: '/watchdog/incidents',
+              description: 'Search all incidents',
             },
             {
               name: 'Report Statistics',
@@ -450,35 +338,35 @@ export function EnhancedHeader() {
               description: 'Real-time metrics',
             },
             {
-              name: 'Compliance Trends',
-              href: '/analytics',
-              description: 'Historical analysis',
+              name: 'Compliance Analytics',
+              href: '/analytics/compliance',
+              description: 'Compliance trends',
             },
             {
-              name: 'Risk Analytics',
-              href: '/analytics/risk',
-              description: 'Risk insights',
+              name: 'Incident Analytics',
+              href: '/analytics/incidents',
+              description: 'Incident patterns',
             },
           ],
         },
         {
-          title: 'Reports & Export',
-          icon: <FileCheck className="h-5 w-5 text-emerald-600" />,
+          title: 'Reports',
+          icon: <FileText className="h-5 w-5 text-emerald-600" />,
           items: [
             {
-              name: 'Custom Reports',
-              href: '/reports',
-              description: 'Generate reports',
+              name: 'Generate Report',
+              href: '/analytics/reports/generate',
+              description: 'Create custom reports',
+            },
+            {
+              name: 'Saved Reports',
+              href: '/analytics/reports/saved',
+              description: 'Your reports',
             },
             {
               name: 'Export Data',
-              href: '/reports/export',
-              description: 'PDF, CSV, JSON',
-            },
-            {
-              name: 'Audit Trail',
-              href: '/audit',
-              description: 'Security events',
+              href: '/analytics/export',
+              description: 'Download datasets',
             },
           ],
         },
@@ -487,16 +375,65 @@ export function EnhancedHeader() {
     {
       name: 'Resources',
       href: '/resources',
-      icon: <HelpCircle className="h-4 w-4" />,
+      icon: <BookOpen className="h-4 w-4" />,
       sections: [
         {
-          title: 'Learn',
+          title: 'Documentation',
           icon: <BookOpen className="h-5 w-5 text-emerald-600" />,
+          items: [
+            {
+              name: 'Getting Started',
+              href: '/docs/getting-started',
+              description: 'Quick start guide',
+            },
+            {
+              name: 'User Guide',
+              href: '/docs/user-guide',
+              description: 'Complete documentation',
+            },
+            {
+              name: 'FAQ',
+              href: '/docs/faq',
+              description: 'Frequently asked questions',
+            },
+          ],
+        },
+        {
+          title: 'Community',
+          icon: <Users className="h-5 w-5 text-emerald-600" />,
+          items: [
+            {
+              name: 'Blog & News',
+              href: '/blog',
+              description: 'Latest updates',
+            },
+            {
+              name: 'Events & Webinars',
+              href: '/events',
+              description: 'Upcoming events',
+            },
+            {
+              name: 'Newsletter',
+              href: '/newsletter',
+              description: 'Subscribe for updates',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'About',
+      href: '/about',
+      icon: <Info className="h-4 w-4" />,
+      sections: [
+        {
+          title: 'Company',
+          icon: <Info className="h-5 w-5 text-emerald-600" />,
           items: [
             {
               name: 'About CSOAI',
               href: '/about',
-              description: 'Our mission & vision',
+              description: 'Our mission and vision',
             },
             {
               name: 'Advisory Board',
@@ -555,22 +492,22 @@ export function EnhancedHeader() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-18">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity flex-shrink-0">
             <img
               src="/csoai-icon.svg.png"
               alt="CSOAI"
               className="h-10 w-10"
             />
-            <div className="flex flex-col">
+            <div className="flex flex-col hidden sm:flex">
               <span className="text-2xl font-bold text-slate-900">CSOAI</span>
               <span className="text-xs text-emerald-600 font-semibold">Open Public Regulatory Authority</span>
             </div>
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-0.5 flex-1 justify-center">
             {navigation.map((item) => (
               <div
                 key={item.name}
@@ -580,7 +517,7 @@ export function EnhancedHeader() {
               >
                 <a
                   href={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors flex items-center gap-1 whitespace-nowrap ${
                     isActive(item.href)
                       ? 'text-emerald-600 bg-emerald-50'
                       : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
@@ -637,21 +574,32 @@ export function EnhancedHeader() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <LanguageSelector />
+          <div className="hidden lg:flex items-center space-x-1">
+            {/* Language Selector Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-gray-700 px-2 h-8">
+                  <Globe className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Language</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <LanguageSelector />
+              </DropdownMenuContent>
+            </DropdownMenu>
             {user ? (
               <>
                 <NotificationCenter />
                 <Link href="/dashboard">
-                  <Button variant="ghost" size="sm" className="text-gray-700">
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    Dashboard
+                  <Button variant="ghost" size="sm" className="text-gray-700 px-2 h-8">
+                    <BarChart3 className="h-4 w-4" />
                   </Button>
                 </Link>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="text-gray-700 px-2 h-8">
                       <User className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -675,10 +623,10 @@ export function EnhancedHeader() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">Sign In</Button>
+                  <Button variant="ghost" size="sm" className="px-2 h-8">Sign In</Button>
                 </Link>
                 <Link href="/signup">
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 h-8">
                     Get Started
                   </Button>
                 </Link>
@@ -688,7 +636,6 @@ export function EnhancedHeader() {
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center gap-2">
-            <LanguageSelector />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg hover:bg-gray-100"
@@ -734,5 +681,5 @@ export function EnhancedHeader() {
         )}
       </nav>
     </header>
-  );
+   );
 }

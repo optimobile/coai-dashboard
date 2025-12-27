@@ -5476,3 +5476,13 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add Reports routes (/reports/export, /audit)
 - [x] Add Blog routes (/events, /newsletter, /research)
 - [x] Add PDCA routes (/pdca/active, /pdca/completed, /pdca/reports, /soai-pdca/templates)
+
+
+## Phase 13 - Header Spacing, Framework Pages & Watchdog Database
+- [x] Fix dashboard header spacing issues (reduce nav cramping, optimize language selector placement)
+- [x] Create dedicated framework pages (/compliance/eu-ai-act, /nist, /iso-42001, /tc260)
+- [x] Add framework-specific guidance and compliance checklists
+- [x] Implement breadcrumb navigation for nested routes
+- [x] Build public Watchdog database UI (/watchdog/incidents)
+- [x] Add search and filtering to Watchdog incidents
+- [x] Add real-time stats and severity trends to Watchdog

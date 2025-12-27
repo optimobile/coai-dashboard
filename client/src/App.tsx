@@ -98,6 +98,8 @@ import NISTRecognition from "./pages/NISTRecognition";
 import TC260Alignment from "./pages/TC260Alignment";
 import APIKeyManagement from "./pages/APIKeyManagement";
 import WebhookMonitoring from "./pages/WebhookMonitoring";
+import ComplianceFrameworkPage from "./pages/ComplianceFrameworkPages";
+import WatchdogIncidents from "./pages/WatchdogIncidents";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
 import ComplianceAssessmentWizard from "./pages/ComplianceAssessmentWizard";
@@ -163,10 +165,14 @@ function App() {
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/compliance" component={Compliance} />
                   {/* Compliance Framework Routes */}
-                  <Route path="/compliance/eu-ai-act" component={Compliance} />
-                  <Route path="/compliance/nist" component={Compliance} />
-                  <Route path="/compliance/iso-42001" component={Compliance} />
-                  <Route path="/compliance/tc260" component={Compliance} />
+                  <Route path="/compliance/eu-ai-act/:framework" component={ComplianceFrameworkPage} />
+                  <Route path="/compliance/eu-ai-act" component={ComplianceFrameworkPage} />
+                  <Route path="/compliance/nist/:framework" component={ComplianceFrameworkPage} />
+                  <Route path="/compliance/nist" component={ComplianceFrameworkPage} />
+                  <Route path="/compliance/iso-42001/:framework" component={ComplianceFrameworkPage} />
+                  <Route path="/compliance/iso-42001" component={ComplianceFrameworkPage} />
+                  <Route path="/compliance/tc260/:framework" component={ComplianceFrameworkPage} />
+                  <Route path="/compliance/tc260" component={ComplianceFrameworkPage} />
                   <Route path="/compliance/assessment" component={Compliance} />
                   <Route path="/compliance/results" component={Compliance} />
                   <Route path="/compliance/reports" component={Compliance} />
@@ -177,6 +183,7 @@ function App() {
                   <Route path="/council/voting" component={AgentCouncil} />
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/watchdog" component={Watchdog} />
+                  <Route path="/watchdog/incidents" component={WatchdogIncidents} />
                   <Route path="/watchdog/stats" component={Watchdog} />
                   <Route path="/referral-program" component={Watchdog} />
       <Route path="/watchdog-hub" component={WatchdogPublic} />
