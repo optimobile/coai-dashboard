@@ -3,13 +3,15 @@
  * Comprehensive analytics for referral program performance
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Download, TrendingUp, Users, DollarSign, ClickIcon } from 'lucide-react';
+import { Download, TrendingUp, Users, DollarSign, ClickIcon, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 interface AnalyticsData {
   totalClicks: number;
@@ -80,31 +82,82 @@ const mockAnalyticsData: AnalyticsData = {
 
 export default function ReferralAnalyticsDashboard() {
   const [dateRange, setDateRange] = useState<'week' | 'month' | 'quarter'>('month');
-  const [analyticsData] = useState<AnalyticsData>(mockAnalyticsData);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>(mockAnalyticsData);
+  const [isExporting, setIsExporting] = useState(false);
 
-  const handleExportCSV = () => {
-    const csv = [
-      ['Metric', 'Value'],
-      ['Total Clicks', analyticsData.totalClicks],
-      ['Total Conversions', analyticsData.totalConversions],
-      ['Total Earnings', `$${analyticsData.totalEarnings}`],
-      ['Conversion Rate', `${analyticsData.conversionRate.toFixed(2)}%`],
-      ['Average Commission', `$${analyticsData.averageCommissionPerConversion}`],
-    ]
-      .map((row) => row.join(','))
-      .join('\n');
+  // Fetch analytics data from API
+  const { data: analyticsResponse, isLoading: isFetching } = trpc.referral.getReferralAnalytics.useQuery(
+    { dateRange },
+    {
+      onSuccess: (response) => {
+        if (response.success && response.data) {
+          setAnalyticsData(response.data);
+        }
+      },
+      onError: (error) => {
+        toast.error('Failed to load analytics data');
+        console.error('Analytics error:', error);
+      },
+    }
+  );
 
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `referral-analytics-${dateRange}.csv`;
-    a.click();
+  // Export CSV mutation
+  const exportCsvMutation = trpc.referral.exportAnalyticsAsCSV.useMutation({
+    onSuccess: (response) => {
+      if (response.success && response.data) {
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = response.filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        toast.success('CSV exported successfully');
+      }
+      setIsExporting(false);
+    },
+    onError: (error) => {
+      toast.error('Failed to export CSV');
+      console.error('Export error:', error);
+      setIsExporting(false);
+    },
+  });
+
+  // Export PDF mutation
+  const exportPdfMutation = trpc.referral.exportAnalyticsAsPDF.useMutation({
+    onSuccess: (response) => {
+      if (response.success && response.data) {
+        const binaryString = atob(response.data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = response.filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        toast.success('PDF exported successfully');
+      }
+      setIsExporting(false);
+    },
+    onError: (error) => {
+      toast.error('Failed to export PDF');
+      console.error('Export error:', error);
+      setIsExporting(false);
+    },
+  });
+
+  const handleExportCSV = async () => {
+    setIsExporting(true);
+    await exportCsvMutation.mutateAsync({ dateRange });
   };
 
-  const handleExportPDF = () => {
-    // TODO: Implement PDF export using jsPDF
-    console.log('Exporting to PDF...');
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    await exportPdfMutation.mutateAsync({ dateRange });
   };
 
   return (
@@ -147,18 +200,28 @@ export default function ReferralAnalyticsDashboard() {
               variant="outline"
               size="sm"
               onClick={handleExportCSV}
+              disabled={isExporting}
               className="flex items-center gap-2"
             >
-              <Download className="h-4 w-4" />
+              {isExporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
               Export CSV
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleExportPDF}
+              disabled={isExporting}
               className="flex items-center gap-2"
             >
-              <Download className="h-4 w-4" />
+              {isExporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
               Export PDF
             </Button>
           </div>
@@ -171,6 +234,13 @@ export default function ReferralAnalyticsDashboard() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
         >
+          {isFetching && (
+            <div className="col-span-full flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+              <span className="ml-2 text-gray-600">Loading analytics...</span>
+            </div>
+          )}
+
           {/* Total Clicks */}
           <Card>
             <CardHeader className="pb-3">

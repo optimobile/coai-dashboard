@@ -483,4 +483,165 @@ export const referralRouter = router({
         });
       }
     }),
+
+  /**
+   * Get pending commission approvals
+   */
+  getPendingApprovals: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const { CommissionApprovalService } = await import('../services/commissionApprovalService.js');
+        const approvals = await CommissionApprovalService.getPendingApprovals(ctx.user.id);
+
+        return {
+          success: true,
+          data: approvals,
+        };
+      } catch (error) {
+        console.error('Error fetching pending approvals:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch pending approvals',
+        });
+      }
+    }),
+
+  /**
+   * Approve a commission
+   */
+  approveCommission: protectedProcedure
+    .input(z.object({ conversionId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const { CommissionApprovalService } = await import('../services/commissionApprovalService.js');
+        const result = await CommissionApprovalService.approveCommission(input.conversionId, ctx.user.id);
+
+        if (!result.success) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: result.error || 'Failed to approve commission',
+          });
+        }
+
+        return {
+          success: true,
+          message: result.message,
+        };
+      } catch (error) {
+        console.error('Error approving commission:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to approve commission',
+        });
+      }
+    }),
+
+  /**
+   * Reject a commission
+   */
+  rejectCommission: protectedProcedure
+    .input(z.object({ conversionId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const { CommissionApprovalService } = await import('../services/commissionApprovalService.js');
+        const result = await CommissionApprovalService.rejectCommission(input.conversionId, ctx.user.id);
+
+        if (!result.success) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: result.error || 'Failed to reject commission',
+          });
+        }
+
+        return {
+          success: true,
+          message: result.message,
+        };
+      } catch (error) {
+        console.error('Error rejecting commission:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to reject commission',
+        });
+      }
+    }),
+
+  /**
+   * Get payout history
+   */
+  getPayoutHistory: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const { CommissionApprovalService } = await import('../services/commissionApprovalService.js');
+        const payouts = await CommissionApprovalService.getPayoutHistory(ctx.user.id);
+
+        return {
+          success: true,
+          data: payouts,
+        };
+      } catch (error) {
+        console.error('Error fetching payout history:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch payout history',
+        });
+      }
+    }),
+
+  /**
+   * Get commission statistics
+   */
+  getCommissionStats: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const { CommissionApprovalService } = await import('../services/commissionApprovalService.js');
+        const stats = await CommissionApprovalService.getCommissionStats(ctx.user.id);
+
+        return {
+          success: true,
+          data: stats,
+        };
+      } catch (error) {
+        console.error('Error fetching commission stats:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch commission stats',
+        });
+      }
+    }),
 });
