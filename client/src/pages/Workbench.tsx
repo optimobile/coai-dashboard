@@ -128,8 +128,8 @@ export default function Workbench() {
             <div className="w-20 h-20 mx-auto bg-muted rounded-full flex items-center justify-center mb-6">
               <Briefcase className="h-10 w-10 text-muted-foreground" />
             </div>
-            <h1 className="text-2xl font-bold mb-2">Certification Required</h1>
-            <p className="text-muted-foreground mb-6">
+            <h1 className="text-2xl font-bold mb-3 leading-relaxed">Certification Required</h1>
+            <p className="text-muted-foreground mb-6 leading-relaxed">
               You need to complete the Watchdog Analyst certification before accessing the workbench.
             </p>
             <div className="flex justify-center gap-4">
@@ -203,8 +203,8 @@ export default function Workbench() {
                   <Target className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{performance?.totalCasesCompleted || 0}</p>
-                  <p className="text-xs text-muted-foreground">Cases Reviewed</p>
+                  <p className="text-2xl font-bold leading-tight">{performance?.totalCasesCompleted || 0}</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Cases Reviewed</p>
                 </div>
               </div>
             </CardContent>
@@ -217,8 +217,8 @@ export default function Workbench() {
                   <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{performance?.accuracyRate || "N/A"}%</p>
-                  <p className="text-xs text-muted-foreground">Accuracy Rate</p>
+                  <p className="text-2xl font-bold leading-tight">{performance?.accuracyRate || "N/A"}%</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Accuracy Rate</p>
                 </div>
               </div>
             </CardContent>
@@ -231,8 +231,8 @@ export default function Workbench() {
                   <Timer className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{performance?.avgResponseTimeMinutes || "N/A"}</p>
-                  <p className="text-xs text-muted-foreground">Avg Response (min)</p>
+                  <p className="text-2xl font-bold leading-tight">{performance?.avgResponseTimeMinutes || "N/A"}</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Avg Response (min)</p>
                 </div>
               </div>
             </CardContent>
@@ -245,8 +245,8 @@ export default function Workbench() {
                   <Trophy className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">#{performance?.rank || "—"}</p>
-                  <p className="text-xs text-muted-foreground">Leaderboard Rank</p>
+                  <p className="text-2xl font-bold leading-tight">#{performance?.rank || "—"}</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Leaderboard Rank</p>
                 </div>
               </div>
             </CardContent>
@@ -271,8 +271,8 @@ export default function Workbench() {
                 ) : pendingCases.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <Briefcase className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p className="text-sm">No cases assigned yet</p>
-                    <p className="text-xs mt-1">Check back later for new cases</p>
+                    <p className="text-sm leading-relaxed">No cases assigned yet</p>
+                    <p className="text-xs mt-2 leading-relaxed">Check back later for new cases</p>
                   </div>
                 ) : (
                   pendingCases.map((caseItem) => (

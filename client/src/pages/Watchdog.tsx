@@ -123,8 +123,8 @@ export default function Watchdog() {
             return (
               <Card key={idx} className="p-6 text-center border-2 border-gray-100">
                 <Icon className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
-                <div className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
+                <div className="text-4xl font-bold text-gray-900 mb-3 leading-tight">{stat.value}</div>
+                <div className="text-sm text-gray-600 leading-relaxed">{stat.label}</div>
               </Card>
             );
           })}
@@ -144,22 +144,22 @@ export default function Watchdog() {
                 <div className="flex items-start gap-4">
                   <CheckCircle2 className="h-6 w-6 text-emerald-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Submit AI Safety Reports</h3>
-                    <p className="text-gray-600">Report issues with AI systems you encounter</p>
+                    <h3 className="font-semibold text-gray-900 leading-relaxed">Submit AI Safety Reports</h3>
+                    <p className="text-gray-600 mt-1 leading-relaxed">Report issues with AI systems you encounter</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <CheckCircle2 className="h-6 w-6 text-emerald-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Access Free Training</h3>
-                    <p className="text-gray-600">Learn AI safety fundamentals with our open-source courses</p>
+                    <h3 className="font-semibold text-gray-900 leading-relaxed">Access Free Training</h3>
+                    <p className="text-gray-600 mt-1 leading-relaxed">Learn AI safety fundamentals with our open-source courses</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <CheckCircle2 className="h-6 w-6 text-emerald-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Become an Analyst</h3>
-                    <p className="text-gray-600">Get certified and start earning reviewing AI systems</p>
+                    <h3 className="font-semibold text-gray-900 leading-relaxed">Become an Analyst</h3>
+                    <p className="text-gray-600 mt-1 leading-relaxed">Get certified and start earning reviewing AI systems</p>
                   </div>
                 </div>
               </div>
@@ -177,9 +177,9 @@ export default function Watchdog() {
               
               <Card className="p-6 border-2 border-emerald-200">
                 <Badge className="mb-3 bg-emerald-100 text-emerald-700">Fundamentals</Badge>
-                <h4 className="font-bold text-lg mb-2">EU AI Act Basics</h4>
-                <p className="text-gray-600 mb-4">Learn the fundamentals of EU AI Act compliance</p>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <h4 className="font-bold text-lg mb-3 leading-relaxed">EU AI Act Basics</h4>
+                <p className="text-gray-600 mb-4 leading-relaxed">Learn the fundamentals of EU AI Act compliance</p>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-relaxed">
                   <BookOpen className="h-4 w-4" />
                   <span>3 hours • Free</span>
                 </div>
@@ -187,9 +187,9 @@ export default function Watchdog() {
 
               <Card className="p-6 border-2 border-emerald-200">
                 <Badge className="mb-3 bg-emerald-100 text-emerald-700">Fundamentals</Badge>
-                <h4 className="font-bold text-lg mb-2">AI Risk Assessment</h4>
-                <p className="text-gray-600 mb-4">Identify and evaluate AI system risks</p>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <h4 className="font-bold text-lg mb-3 leading-relaxed">AI Risk Assessment</h4>
+                <p className="text-gray-600 mb-4 leading-relaxed">Identify and evaluate AI system risks</p>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-relaxed">
                   <BookOpen className="h-4 w-4" />
                   <span>4 hours • Free</span>
                 </div>
@@ -197,9 +197,9 @@ export default function Watchdog() {
 
               <Card className="p-6 border-2 border-emerald-200">
                 <Badge className="mb-3 bg-emerald-100 text-emerald-700">Fundamentals</Badge>
-                <h4 className="font-bold text-lg mb-2">Bias Detection Methods</h4>
-                <p className="text-gray-600 mb-4">Detect and mitigate bias in AI systems</p>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <h4 className="font-bold text-lg mb-3 leading-relaxed">Bias Detection Methods</h4>
+                <p className="text-gray-600 mb-4 leading-relaxed">Detect and mitigate bias in AI systems</p>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-relaxed">
                   <BookOpen className="h-4 w-4" />
                   <span>3.5 hours • Free</span>
                 </div>

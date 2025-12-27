@@ -52,8 +52,8 @@ export default function Settings() {
     <DashboardLayout>
       <div className="p-6 space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold font-primary">Settings</h1>
-          <p className="text-muted-foreground text-sm">
+          <h1 className="text-2xl font-semibold font-primary leading-relaxed">Settings</h1>
+          <p className="text-muted-foreground text-sm mt-2 leading-relaxed">
             Manage your account and preferences
           </p>
         </div>
@@ -77,8 +77,8 @@ export default function Settings() {
                   >
                     <Icon className="h-4 w-4" />
                     <div className="text-left">
-                      <p className="font-medium">{section.title}</p>
-                      <p className="text-xs text-muted-foreground">{section.description}</p>
+                      <p className="font-medium leading-relaxed">{section.title}</p>
+                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{section.description}</p>
                     </div>
                   </Button>
                 </motion.div>
@@ -136,8 +136,8 @@ export default function Settings() {
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium">Email Notifications</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm font-medium leading-relaxed">Email Notifications</p>
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                           Receive email alerts for compliance updates
                         </p>
                       </div>
@@ -146,8 +146,8 @@ export default function Settings() {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium">Council Vote Alerts</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm font-medium leading-relaxed">Council Vote Alerts</p>
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                           Get notified when votes require attention
                         </p>
                       </div>
@@ -156,8 +156,8 @@ export default function Settings() {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium">Watchdog Reports</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm font-medium leading-relaxed">Watchdog Reports</p>
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                           Alerts for new public incident reports
                         </p>
                       </div>

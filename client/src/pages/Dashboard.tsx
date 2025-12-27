@@ -179,13 +179,13 @@ export default function Dashboard() {
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <p className="text-sm text-muted-foreground font-medium">
+                        <p className="text-sm text-muted-foreground font-medium leading-relaxed">
                           {metric.title}
                         </p>
-                        <p className="text-3xl font-bold mt-1 tracking-tight">
+                        <p className="text-3xl font-bold mt-3 tracking-tight leading-tight">
                           {metric.value}
                         </p>
-                        <div className="flex items-center gap-1 mt-2">
+                        <div className="flex items-center gap-1 mt-3">
                           {metric.changeType === "positive" ? (
                             <ArrowUpRight className="h-3 w-3 text-emerald-600" />
                           ) : metric.changeType === "negative" ? (

@@ -211,8 +211,8 @@ export default function AgentCouncil() {
             >
               <Card className="bg-card border-border">
                 <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className={`text-2xl font-semibold mt-1 ${stat.color}`}>{stat.value}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{stat.label}</p>
+                  <p className={`text-2xl font-semibold mt-2 leading-tight ${stat.color}`}>{stat.value}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -237,8 +237,8 @@ export default function AgentCouncil() {
                         <Icon className={`h-5 w-5 ${group.color}`} />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium">{group.name}</h3>
-                        <p className="text-xs text-muted-foreground">{group.description}</p>
+                        <h3 className="font-medium leading-relaxed">{group.name}</h3>
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{group.description}</p>
                       </div>
                       <div className="text-2xl font-semibold">{group.count}</div>
                     </div>

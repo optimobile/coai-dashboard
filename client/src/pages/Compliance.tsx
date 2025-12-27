@@ -235,26 +235,26 @@ export default function Compliance() {
           <div className="grid grid-cols-4 gap-4">
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold">{summary.totalSystems}</div>
-                <div className="text-sm text-muted-foreground">Total Systems</div>
+                <div className="text-2xl font-bold leading-tight">{summary.totalSystems}</div>
+                <div className="text-sm text-muted-foreground mt-2 leading-relaxed">Total Systems</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-green-600">{summary.compliantSystems}</div>
-                <div className="text-sm text-muted-foreground">Compliant</div>
+                <div className="text-2xl font-bold text-green-600 leading-tight">{summary.compliantSystems}</div>
+                <div className="text-sm text-muted-foreground mt-2 leading-relaxed">Compliant</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-amber-600">{summary.pendingAssessments}</div>
-                <div className="text-sm text-muted-foreground">Pending Reviews</div>
+                <div className="text-2xl font-bold text-amber-600 leading-tight">{summary.pendingAssessments}</div>
+                <div className="text-sm text-muted-foreground mt-2 leading-relaxed">Pending Reviews</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold">{summary.overallScore}%</div>
-                <div className="text-sm text-muted-foreground">Overall Score</div>
+                <div className="text-2xl font-bold leading-tight">{summary.overallScore}%</div>
+                <div className="text-sm text-muted-foreground mt-2 leading-relaxed">Overall Score</div>
               </CardContent>
             </Card>
           </div>
@@ -277,10 +277,10 @@ export default function Compliance() {
                         <FileCheck className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div>
-                        <CardTitle className="text-base font-medium">
+                        <CardTitle className="text-base font-medium leading-relaxed">
                           {fw.name}
                         </CardTitle>
-                        <p className="text-xs text-muted-foreground">{fw.fullName}</p>
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{fw.fullName}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">

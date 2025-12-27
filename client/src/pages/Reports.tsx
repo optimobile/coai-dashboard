@@ -124,8 +124,8 @@ export default function Reports() {
 
                     {/* Main Info */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate">{report.title}</h3>
-                      <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                      <h3 className="font-medium truncate text-base leading-relaxed">{report.title}</h3>
+                      <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground leading-relaxed">
                         <span>{report.framework}</span>
                         <span>•</span>
                         <span>{report.pages} pages</span>

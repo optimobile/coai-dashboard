@@ -591,11 +591,11 @@ export function EnhancedHeader() {
             {user ? (
               <>
                 <NotificationCenter />
-                <Link href="/dashboard">
+                <a href="/dashboard" className="inline-flex">
                   <Button variant="ghost" size="sm" className="text-gray-700 px-2 h-8">
                     <BarChart3 className="h-4 w-4" />
                   </Button>
-                </Link>
+                </a>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -607,10 +607,10 @@ export function EnhancedHeader() {
                     <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/settings">
+                      <a href="/settings" className="flex items-center cursor-pointer">
                         <Settings className="h-4 w-4 mr-2" />
                         Settings
-                      </Link>
+                      </a>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout}>
@@ -622,14 +622,14 @@ export function EnhancedHeader() {
               </>
             ) : (
               <>
-                <Link href="/login">
+                <a href="/login" className="inline-flex">
                   <Button variant="ghost" size="sm" className="px-2 h-8">Sign In</Button>
-                </Link>
-                <Link href="/signup">
+                </a>
+                <a href="/signup" className="inline-flex">
                   <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 h-8">
                     Get Started
                   </Button>
-                </Link>
+                </a>
               </>
             )}
           </div>

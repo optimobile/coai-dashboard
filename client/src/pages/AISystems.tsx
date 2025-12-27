@@ -331,10 +331,10 @@ export default function AISystems() {
                         {/* Main Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <h3 className="font-medium truncate">{system.name}</h3>
+                            <h3 className="font-medium truncate leading-relaxed">{system.name}</h3>
                             {getStatusIcon(system.status)}
                           </div>
-                          <p className="text-sm text-muted-foreground truncate">
+                          <p className="text-sm text-muted-foreground truncate mt-1 leading-relaxed">
                             {system.description || `${systemTypeLabels[system.systemType]} system`}
                           </p>
                         </div>

@@ -123,8 +123,8 @@ export default function Billing() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Billing & Subscription</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-3xl font-bold tracking-tight leading-relaxed">Billing & Subscription</h1>
+          <p className="text-muted-foreground mt-3 leading-relaxed">
             Manage your subscription plan and billing settings
           </p>
         </div>
@@ -138,8 +138,8 @@ export default function Billing() {
                   <CreditCard className="h-6 w-6 text-green-600" />
                 </div>
                 <div>
-                  <CardTitle>Current Plan</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="leading-relaxed">Current Plan</CardTitle>
+                  <CardDescription className="mt-1 leading-relaxed">
                     {statusLoading ? "Loading..." : `You are on the ${currentTier.charAt(0).toUpperCase() + currentTier.slice(1)} plan`}
                   </CardDescription>
                 </div>
@@ -239,18 +239,18 @@ export default function Billing() {
                         tierKey === "enterprise" && "text-gray-600 dark:text-gray-400"
                       )} />
                     </div>
-                    <CardTitle className="text-xl">{tier.name}</CardTitle>
-                    <CardDescription>{tier.description}</CardDescription>
+                    <CardTitle className="text-xl leading-relaxed">{tier.name}</CardTitle>
+                    <CardDescription className="mt-1 leading-relaxed">{tier.description}</CardDescription>
                   </CardHeader>
 
                   <CardContent className="flex-1">
                     <div className="text-center mb-6">
                       <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-4xl font-bold">${price}</span>
-                        <span className="text-muted-foreground">/mo</span>
+                        <span className="text-4xl font-bold leading-tight">${price}</span>
+                        <span className="text-muted-foreground leading-relaxed">/mo</span>
                       </div>
                       {billingPeriod === "yearly" && totalPrice > 0 && (
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                           ${totalPrice} billed annually
                         </p>
                       )}
@@ -264,7 +264,7 @@ export default function Billing() {
                             <div className="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0 mt-0.5">
                               <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
                             </div>
-                            <span className="text-sm">{feature}</span>
+                            <span className="text-sm leading-relaxed">{feature}</span>
                           </li>
                         );
                       })}

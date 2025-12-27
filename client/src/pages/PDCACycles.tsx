@@ -344,8 +344,8 @@ export default function PDCACycles() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">PDCA Cycles</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-3xl font-bold tracking-tight leading-relaxed">PDCA Cycles</h1>
+            <p className="text-muted-foreground mt-2 leading-relaxed">
               Plan-Do-Check-Act continuous improvement management
             </p>
           </div>
@@ -378,8 +378,8 @@ export default function PDCACycles() {
                     <Play className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold">{stats.activeCycles}</div>
-                    <div className="text-xs text-muted-foreground">Active</div>
+                    <div className="text-2xl font-bold leading-tight">{stats.activeCycles}</div>
+                    <div className="text-xs text-muted-foreground mt-1 leading-relaxed">Active</div>
                   </div>
                 </div>
               </CardContent>
@@ -391,8 +391,8 @@ export default function PDCACycles() {
                     <CheckCircle2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold">{stats.completedCycles}</div>
-                    <div className="text-xs text-muted-foreground">Completed</div>
+                    <div className="text-2xl font-bold leading-tight">{stats.completedCycles}</div>
+                    <div className="text-xs text-muted-foreground mt-1 leading-relaxed">Completed</div>
                   </div>
                 </div>
               </CardContent>
@@ -404,8 +404,8 @@ export default function PDCACycles() {
                     <Pause className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold">{stats.pausedCycles}</div>
-                    <div className="text-xs text-muted-foreground">Paused</div>
+                    <div className="text-2xl font-bold leading-tight">{stats.pausedCycles}</div>
+                    <div className="text-xs text-muted-foreground mt-1 leading-relaxed">Paused</div>
                   </div>
                 </div>
               </CardContent>
@@ -438,8 +438,8 @@ export default function PDCACycles() {
                         "h-6 w-6 mx-auto mb-2",
                         count > 0 ? `text-${phase.color}-600` : "text-muted-foreground"
                       )} />
-                      <div className="text-2xl font-bold">{count}</div>
-                      <div className="text-sm text-muted-foreground">{phase.label}</div>
+                      <div className="text-2xl font-bold leading-tight">{count}</div>
+                      <div className="text-sm text-muted-foreground mt-1 leading-relaxed">{phase.label}</div>
                     </div>
                   );
                 })}
