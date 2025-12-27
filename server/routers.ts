@@ -65,6 +65,21 @@ const frameworksRouter = router({
 
 const watchdogRouter = router({
   // Get all public watchdog reports
+  getPublicReports: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const reports = await db
+      .select()
+      .from(watchdogReports)
+      .where(eq(watchdogReports.isPublic, true))
+      .orderBy(desc(watchdogReports.createdAt))
+      .limit(50);
+    
+    return reports;
+  }),
+
+  // Get all public watchdog reports (alias for compatibility)
   list: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];

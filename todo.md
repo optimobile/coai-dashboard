@@ -4574,3 +4574,41 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Launch CEASA as authoritative training body
 - [ ] Public announcement and marketing
 - [ ] Ongoing monitoring and optimization
+
+
+## Phase 5 - CSOAI/CEASAI Restructuring & Watchdog Hub
+
+### Website Structure Fixes
+- [x] Fix header CEASAI branding (now shows clean CEASAI box with blue gradient)
+- [x] Remove fake reviews from homepage (removed from Watchdog page)
+- [x] Fix Enroll Now button errors on Courses page (requires login - working as designed)
+- [x] Separate CSOAI (free) and CEASAI (paid) branding throughout (header updated)
+
+### Watchdog Public Reporting Hub
+- [x] Convert Watchdog page to public reporting hub (no AI Safety Analyst signup)
+- [x] Add "Sign Up for Free" section to Watchdog page
+- [x] Create free training courses section on Watchdog page
+- [ ] Implement public report viewing (no login required)
+- [ ] Add free signup flow for report submission
+- [ ] Add free signup flow for analyst training
+
+### CEASAI Paid Courses Integration
+- [x] Create CEASAI dedicated pages for paid courses (Courses page now CEASAI-focused)
+- [x] Move 8 EU AI Act modules to CEASAI pages with pricing (courses page shows pricing)
+- [ ] Add module-specific landing pages with curriculum overview
+- [ ] Add learning outcomes and case study previews
+- [ ] Create specialization track selection interface
+- [ ] Add prerequisites and duration info to specialization tracks
+- [ ] Build specialization certificates system
+
+### Advisory Board Tier 1 Recruitment
+- [ ] Create outreach templates for Chair candidates
+- [ ] Create outreach templates for Regulatory Expert candidates
+- [ ] Create outreach templates for Academic Expert candidates
+- [ ] Build board member onboarding materials
+- [ ] Schedule exploratory conversation system
+
+### Legal Structure
+- [ ] Confirm both CSOAI and CEASAI can operate under Loop Factory AI Limited
+- [ ] Set up CEASAI as trading name/division under Loop Factory AI Limited
+- [ ] Document compliance with ISO 17024 requirements for paid certifications

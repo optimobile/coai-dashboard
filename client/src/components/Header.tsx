@@ -174,9 +174,11 @@ export function Header() {
           </a>
           
           {/* CEASAI Tagline */}
-          <div className="hidden md:flex flex-col items-center">
-            <span className="text-sm font-semibold text-slate-700">CEASAI</span>
-            <span className="text-xs text-gray-500">Training and Certification in AI Safety Analysts</span>
+          <div className="hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <div className="flex flex-col">
+              <span className="text-sm font-bold text-blue-900">CEASAI</span>
+              <span className="text-xs text-blue-700">Certification in AI Safety</span>
+            </div>
           </div>
 
           {/* Desktop Navigation with Mega Menu */}

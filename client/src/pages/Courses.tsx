@@ -48,10 +48,10 @@ export default function Courses() {
           <div className="max-w-3xl">
             <Badge className="mb-3 bg-white/20 text-white border-white/30">
               <Award className="w-4 h-4 mr-2" />
-              Professional Certification
+              CEASAI Certification
             </Badge>
             <h1 className="text-4xl font-bold mb-4">
-              AI Safety & Compliance Training
+              Professional AI Safety Analyst Certification
             </h1>
             <p className="text-lg text-emerald-100 mb-6">
               Master AI regulations worldwide. Get certified. Earn from home.

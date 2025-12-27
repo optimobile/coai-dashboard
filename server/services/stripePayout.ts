@@ -4,12 +4,12 @@
  */
 
 import Stripe from 'stripe';
-import { db } from '@/server/db';
-import { commissions } from '@/drizzle/schema';
+import { getDb } from '../db';
+import { commissions } from '../../drizzle/schema';
 import { eq, and, gte } from 'drizzle-orm';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-12-15.clover',
 });
 
 export interface PayoutConfig {
@@ -23,14 +23,13 @@ export interface PayoutConfig {
 export interface PayoutResult {
   payoutId: string;
   amount: number;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  status: 'processing' | 'completed' | 'failed';
   scheduledDate: Date;
-  completedDate?: Date;
 }
 
 /**
- * Stripe Payout Service
- * Manages monthly commission payouts via Stripe Connect
+ * Stripe Referral Payout Service
+ * Handles commission tracking and monthly payouts to referrers
  */
 export class StripePayoutService {
   private static readonly PAYOUT_THRESHOLD_CENTS = 5000; // $50 minimum
@@ -41,6 +40,8 @@ export class StripePayoutService {
    */
   static async createCommission(config: PayoutConfig): Promise<number> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       const result = await db.insert(commissions).values({
         referrerId: config.referrerId,
         referralId: config.referralId,
@@ -63,6 +64,8 @@ export class StripePayoutService {
    */
   static async calculatePendingCommissions(referrerId: string): Promise<number> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       const pendingCommissions = await db.query.commissions.findMany({
         where: and(
           eq(commissions.referrerId, referrerId),
@@ -70,7 +73,7 @@ export class StripePayoutService {
         ),
       });
 
-      return pendingCommissions.reduce((sum, c) => sum + (c.commissionAmount || 0), 0);
+      return pendingCommissions.reduce((sum: number, c: typeof pendingCommissions[0]) => sum + (c.commissionAmount || 0), 0);
     } catch (error) {
       console.error('Failed to calculate pending commissions:', error);
       throw new Error('Failed to calculate pending commissions');
@@ -82,6 +85,8 @@ export class StripePayoutService {
    */
   static async processMonthlyPayouts(): Promise<PayoutResult[]> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       const results: PayoutResult[] = [];
 
       // Get all unique referrers with pending commissions
@@ -90,7 +95,7 @@ export class StripePayoutService {
       });
 
       const referrerMap = new Map<string, number>();
-      allCommissions.forEach((c) => {
+      allCommissions.forEach((c: typeof allCommissions[0]) => {
         const current = referrerMap.get(c.referrerId) || 0;
         referrerMap.set(c.referrerId, current + (c.commissionAmount || 0));
       });
@@ -115,6 +120,8 @@ export class StripePayoutService {
    */
   static async processPayout(referrerId: string, amount: number): Promise<PayoutResult> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       // Create Stripe payout
       const payout = await stripe.payouts.create({
         amount,
@@ -145,7 +152,8 @@ export class StripePayoutService {
       };
     } catch (error) {
       console.error('Failed to process payout:', error);
-
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       // Update commissions to failed status
       await db
         .update(commissions)
@@ -162,26 +170,21 @@ export class StripePayoutService {
   }
 
   /**
-   * Handle Stripe payout webhook events
+   * Handle Stripe payout webhook
    */
   static async handlePayoutWebhook(event: Stripe.Event): Promise<void> {
-    try {
-      switch (event.type) {
-        case 'payout.paid':
-          await this.handlePayoutPaid(event.data.object as Stripe.Payout);
-          break;
-        case 'payout.failed':
-          await this.handlePayoutFailed(event.data.object as Stripe.Payout);
-          break;
-        case 'payout.canceled':
-          await this.handlePayoutCanceled(event.data.object as Stripe.Payout);
-          break;
-        default:
-          console.log(`Unhandled payout event: ${event.type}`);
-      }
-    } catch (error) {
-      console.error('Failed to handle payout webhook:', error);
-      throw new Error('Failed to handle payout webhook');
+    const payout = event.data.object as Stripe.Payout;
+
+    switch (event.type) {
+      case 'payout.paid':
+        await this.handlePayoutPaid(payout);
+        break;
+      case 'payout.failed':
+        await this.handlePayoutFailed(payout);
+        break;
+      case 'payout.canceled':
+        await this.handlePayoutCanceled(payout);
+        break;
     }
   }
 
@@ -190,6 +193,8 @@ export class StripePayoutService {
    */
   private static async handlePayoutPaid(payout: Stripe.Payout): Promise<void> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       // Update all commissions for this payout to processed
       await db
         .update(commissions)
@@ -210,6 +215,8 @@ export class StripePayoutService {
    */
   private static async handlePayoutFailed(payout: Stripe.Payout): Promise<void> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       // Update all commissions for this payout to failed
       await db
         .update(commissions)
@@ -229,6 +236,8 @@ export class StripePayoutService {
    */
   private static async handlePayoutCanceled(payout: Stripe.Payout): Promise<void> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       // Reset commissions back to earned status
       await db
         .update(commissions)
@@ -249,13 +258,15 @@ export class StripePayoutService {
    */
   static async getPayoutHistory(referrerId: string) {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       const commissionRecords = await db.query.commissions.findMany({
         where: eq(commissions.referrerId, referrerId),
       });
 
       // Group by payout ID
       const payoutMap = new Map<string | null, typeof commissionRecords>();
-      commissionRecords.forEach((c) => {
+      commissionRecords.forEach((c: typeof commissionRecords[0]) => {
         const payoutId = c.payoutId || 'unpaid';
         if (!payoutMap.has(payoutId)) {
           payoutMap.set(payoutId, []);
@@ -264,7 +275,7 @@ export class StripePayoutService {
       });
 
       const history = Array.from(payoutMap.entries()).map(([payoutId, records]) => {
-        const totalAmount = records.reduce((sum, r) => sum + (r.commissionAmount || 0), 0);
+        const totalAmount = records.reduce((sum: number, r: typeof records[0]) => sum + (r.commissionAmount || 0), 0);
         const status = records[0]?.status || 'unknown';
 
         return {
@@ -281,34 +292,6 @@ export class StripePayoutService {
     } catch (error) {
       console.error('Failed to get payout history:', error);
       throw new Error('Failed to get payout history');
-    }
-  }
-
-  /**
-   * Schedule next monthly payout
-   */
-  static getNextPayoutDate(): Date {
-    const today = new Date();
-    const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, this.PAYOUT_DAY_OF_MONTH);
-
-    // If today is already past the payout day, schedule for next month
-    if (today.getDate() > this.PAYOUT_DAY_OF_MONTH) {
-      nextMonth.setMonth(nextMonth.getMonth() + 1);
-    }
-
-    return nextMonth;
-  }
-
-  /**
-   * Verify Stripe webhook signature
-   */
-  static verifyWebhookSignature(body: string, signature: string): Stripe.Event {
-    try {
-      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
-      return stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } catch (error) {
-      console.error('Failed to verify webhook signature:', error);
-      throw new Error('Invalid webhook signature');
     }
   }
 }
