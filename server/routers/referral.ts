@@ -8,6 +8,8 @@ import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { ReferralService } from '../services/referralService.js';
 import { ReferralEmailService } from '../services/referralEmailService.js';
+import { ReferralAnalyticsService } from '../services/referralAnalyticsService.js';
+import { ReferralExportService } from '../services/referralExportService.js';
 
 export const referralRouter = router({
   /**
@@ -289,23 +291,18 @@ export const referralRouter = router({
             message: 'User not authenticated',
           });
         }
-
         const code = await ReferralService.getUserReferralCode(ctx.user.id);
-
         if (!code) {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'No referral code found',
           });
         }
-
         const baseUrl = process.env.VITE_APP_URL || 'https://csoai.com';
         const sharingUrl = `${baseUrl}/signup?ref=${code.code}`;
-
         // In a real implementation, send email via Resend
         // For now, just log it
         console.log('Referral email would be sent to:', input.recipientEmail);
-
         return {
           success: true,
           message: 'Referral email sent successfully',
@@ -315,6 +312,174 @@ export const referralRouter = router({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to send referral email',
+        });
+      }
+    }),
+
+  /**
+   * Get comprehensive referral analytics
+   */
+  getReferralAnalytics: protectedProcedure
+    .input(
+      z.object({
+        dateRange: z.enum(['week', 'month', 'quarter']).default('month'),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const analytics = await ReferralAnalyticsService.getReferralAnalytics(
+          ctx.user.id,
+          input.dateRange
+        );
+
+        return {
+          success: true,
+          data: analytics,
+        };
+      } catch (error) {
+        console.error('Error fetching referral analytics:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch referral analytics',
+        });
+      }
+    }),
+
+  /**
+   * Get referral program summary
+   */
+  getReferralSummary: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const summary = await ReferralAnalyticsService.getReferralSummary(ctx.user.id);
+
+        return {
+          success: true,
+          data: summary,
+        };
+      } catch (error) {
+        console.error('Error fetching referral summary:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch referral summary',
+        });
+      }
+    }),
+
+  /**
+   * Export analytics as CSV
+   */
+  exportAnalyticsAsCSV: protectedProcedure
+    .input(
+      z.object({
+        dateRange: z.enum(['week', 'month', 'quarter']).default('month'),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const csv = await ReferralExportService.exportAsCSV(ctx.user.id, input.dateRange);
+
+        return {
+          success: true,
+          data: csv,
+          filename: `referral-analytics-${input.dateRange}-${new Date().toISOString().split('T')[0]}.csv`,
+        };
+      } catch (error) {
+        console.error('Error exporting analytics as CSV:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to export analytics',
+        });
+      }
+    }),
+
+  /**
+   * Export analytics as PDF
+   */
+  exportAnalyticsAsPDF: protectedProcedure
+    .input(
+      z.object({
+        dateRange: z.enum(['week', 'month', 'quarter']).default('month'),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const pdf = await ReferralExportService.exportAsPDF(ctx.user.id, input.dateRange);
+
+        return {
+          success: true,
+          data: pdf.toString('base64'),
+          filename: `referral-analytics-${input.dateRange}-${new Date().toISOString().split('T')[0]}.pdf`,
+        };
+      } catch (error) {
+        console.error('Error exporting analytics as PDF:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to export analytics as PDF',
+        });
+      }
+    }),
+
+  /**
+   * Get report summary text
+   */
+  getReportSummary: protectedProcedure
+    .input(
+      z.object({
+        dateRange: z.enum(['week', 'month', 'quarter']).default('month'),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const summary = await ReferralExportService.generateReportSummary(
+          ctx.user.id,
+          input.dateRange
+        );
+
+        return {
+          success: true,
+          data: summary,
+        };
+      } catch (error) {
+        console.error('Error generating report summary:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to generate report summary',
         });
       }
     }),
