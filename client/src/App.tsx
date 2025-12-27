@@ -119,6 +119,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { LegalFlagsPage } from "./pages/LegalFlags";
 import { LegalCaseQueuePage } from "./pages/LegalCaseQueue";
+import ComplianceHistory from "./pages/ComplianceHistory";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -177,6 +178,7 @@ function App() {
                   <Route path="/compliance/assessment" component={Compliance} />
                   <Route path="/compliance/results" component={Compliance} />
                   <Route path="/compliance/reports" component={Compliance} />
+                  <Route path="/compliance/history" component={ComplianceHistory} />
                   <Route path="/agent-council" component={AgentCouncil} />
                   <Route path="/council" component={AgentCouncil} />
                   <Route path="/council/analytics" component={AgentCouncil} />

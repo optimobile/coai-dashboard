@@ -48,7 +48,11 @@
 
 ## Bug Fixes Needed
 
-- [x] None currently identified
+- [x] Fix /compliance/history route 404 error
+- [x] Implement collapsible sidebar with drag-to-close
+- [x] Add hamburger toggle button for sidebar
+- [x] Implement full-screen mode for main content area
+- [x] Add smooth animations for sidebar transitions
 
 ## Notes
 
