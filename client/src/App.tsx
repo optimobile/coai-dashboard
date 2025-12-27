@@ -121,6 +121,11 @@ import { LegalFlagsPage } from "./pages/LegalFlags";
 import { LegalCaseQueuePage } from "./pages/LegalCaseQueue";
 import ComplianceHistory from "./pages/ComplianceHistory";
 import AISystemDetails from "./pages/AISystemDetails";
+import WatchdogTraining from "./pages/WatchdogTraining";
+import WatchdogHub from "./pages/WatchdogHub";
+import ComplianceWizard from "./pages/ComplianceWizard";
+import CEASAICertification from "./pages/CEASAICertification";
+import RegulatorySandbox from "./pages/RegulatorySandbox";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -275,7 +280,12 @@ function App() {
                   <Route path="/payment-success" component={PaymentSuccess} />
                   <Route path="/payment-failure" component={PaymentFailure} />
                   <Route path="/compliance-assessment" component={ComplianceAssessmentWizard} />
+                  <Route path="/compliance-wizard" component={ComplianceWizard} />
                   <Route path="/regulatory-portal" component={RegulatoryPortal} />
+                  <Route path="/regulatory-sandboxes" component={RegulatorySandbox} />
+                  <Route path="/watchdog-training" component={WatchdogTraining} />
+                  <Route path="/watchdog-hub" component={WatchdogHub} />
+                  <Route path="/ceasai-certification" component={CEASAICertification} />
                   <Route path="/council-voting" component={CouncilVotingEngine} />                  <Route path="/analytics" component={Analytics} />
                   <Route path="/analytics/risk" component={Analytics} />
                   <Route path="/audit-trail" component={AuditTrail} />
