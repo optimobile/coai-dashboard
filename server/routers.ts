@@ -2808,7 +2808,6 @@ export const appRouter = router({
   reports: reportsRouter,
   webhooks: webhooksRouter,
   onboarding: onboardingRouter,
-  compliance: complianceRouter,
   enterprise: enterpriseRouter,
   referral: referralRouter,
 });

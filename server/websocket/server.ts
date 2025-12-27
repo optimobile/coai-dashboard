@@ -62,7 +62,7 @@ async function handleConnection(ws: WebSocket, req: any): Promise<void> {
       await dbInstance.insert(websocketConnections).values({
         userId,
         connectionId,
-        isActive: true,
+        isActive: 1,
       });
     }
   } catch (error) {
@@ -140,7 +140,7 @@ async function handleDisconnection(ws: WebSocket, userId: number) {
       if (dbInstance) {
         await dbInstance
           .update(websocketConnections)
-          .set({ isActive: false })
+          .set({ isActive: 0 })
           .where(eq(websocketConnections.connectionId, metadata.connectionId));
       }
     } catch (error) {
@@ -259,8 +259,8 @@ async function cleanupStaleConnections() {
 
     await dbInstance
       .update(websocketConnections)
-      .set({ isActive: false })
-      .where(eq(websocketConnections.isActive, true));
+      .set({ isActive: 0 })
+      .where(eq(websocketConnections.isActive, 1));
     // Add condition for lastHeartbeat < fiveMinutesAgo when available
   } catch (error) {
     console.error('Failed to cleanup stale connections:', error);

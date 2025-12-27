@@ -645,7 +645,4 @@ export const referralRouter = router({
       }
     }),
 
-  /**
-   * Send approval notification
-   */
 });
