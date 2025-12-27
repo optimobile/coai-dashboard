@@ -2,10 +2,6 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
-import governmentRouter from "./api/government.js";
-import enterpriseRouter from "./api/enterprise.js";
-import { initializeWebSocketServer } from "./websocket/server.js";
-import { registerOAuthRoutes } from "./_core/oauth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,34 +9,6 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const server = createServer(app);
-  
-  // Store server reference for WebSocket
-  (app as any).server = server;
-
-  // Middleware
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
-  // Health check
-  app.get("/health", (_req, res) => {
-    res.json({ status: "ok", timestamp: new Date() });
-  });
-
-  // OAuth Routes
-  registerOAuthRoutes(app);
-
-  // API Routes
-  app.use("/api/government", governmentRouter);
-  app.use("/api/v1", enterpriseRouter);
-
-  // API Documentation
-  app.get("/api/docs", (_req, res) => {
-    res.json({
-      version: "1.0.0",
-      title: "CSOAI API",
-      description: "Global AI Safety Governance Platform"
-    });
-  });
 
   // Serve static files from dist/public in production
   const staticPath =
@@ -57,13 +25,8 @@ async function startServer() {
 
   const port = process.env.PORT || 3000;
 
-  // Initialize WebSocket server
-  const wss = initializeWebSocketServer(server);
-  console.log('WebSocket server initialized');
-
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
-    console.log(`WebSocket server available at ws://localhost:${port}/ws`);
   });
 }
 
