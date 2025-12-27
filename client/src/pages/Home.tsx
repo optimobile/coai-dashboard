@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Link } from "wouter";
+import { FeatureShowcase } from "@/components/FeatureShowcase";
 
 interface FAQItem {
   question: string;
@@ -336,6 +337,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Feature Showcase */}
+      <FeatureShowcase />
+
       {/* Audience-Specific CTAs */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
         <div className="max-w-7xl mx-auto">
@@ -351,7 +355,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 audience: "👤 Individuals",

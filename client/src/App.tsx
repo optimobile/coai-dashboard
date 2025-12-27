@@ -158,19 +158,41 @@ function App() {
                   <Route path="/dashboard/alerts" component={AlertManagementPage} />
                   <Route path="/settings/webhooks" component={WebhookManagementPage} />
                   <Route path="/ai-systems" component={AISystems} />
+                  <Route path="/ai-systems/risk" component={AISystems} />
+                  <Route path="/ai-systems/scoring" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/compliance" component={Compliance} />
+                  {/* Compliance Framework Routes */}
+                  <Route path="/compliance/eu-ai-act" component={Compliance} />
+                  <Route path="/compliance/nist" component={Compliance} />
+                  <Route path="/compliance/iso-42001" component={Compliance} />
+                  <Route path="/compliance/tc260" component={Compliance} />
+                  <Route path="/compliance/assessment" component={Compliance} />
+                  <Route path="/compliance/results" component={Compliance} />
+                  <Route path="/compliance/reports" component={Compliance} />
                   <Route path="/agent-council" component={AgentCouncil} />
+                  <Route path="/council" component={AgentCouncil} />
+                  <Route path="/council/analytics" component={AgentCouncil} />
+                  <Route path="/council/decisions" component={AgentCouncil} />
+                  <Route path="/council/voting" component={AgentCouncil} />
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/watchdog" component={Watchdog} />
+                  <Route path="/watchdog/stats" component={Watchdog} />
+                  <Route path="/referral-program" component={Watchdog} />
       <Route path="/watchdog-hub" component={WatchdogPublic} />
                   <Route path="/reports" component={Reports} />
+                  <Route path="/reports/export" component={Reports} />
+                  <Route path="/audit" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/watchdog/report" component={WatchdogPublic} />
                   <Route path="/training" component={TrainingV2} />
+                  <Route path="/courses/eu-ai-act" component={CoursesRedesigned} />
+                  <Route path="/courses/nist" component={CoursesRedesigned} />
+                  <Route path="/courses/iso-42001" component={CoursesRedesigned} />
+                  <Route path="/courses/specializations" component={CoursesRedesigned} />
                   <Route path="/courses" component={CoursesRedesigned} />
                   <Route path="/course/:id" component={CourseDetail} />
                   <Route path="/ceasai" component={CEASAI} />
@@ -186,6 +208,8 @@ function App() {
                   <Route path="/features/watchdog-jobs" component={WatchdogJobsFeature} />
                   <Route path="/certification" component={CertificationV2} />
                   <Route path="/exam" component={CertificationExam} />
+                  <Route path="/exam/professional" component={CertificationExam} />
+                  <Route path="/exam/expert" component={CertificationExam} />
                   <Route path="/certification/exam" component={CertificationExam} />
                   <Route path="/certification/results" component={CertificationResults} />
                   <Route path="/certificates" component={MyCertificates} />
@@ -198,6 +222,10 @@ function App() {
                   <Route path="/api-docs" component={ApiDocs} />
                   <Route path="/api-keys" component={ApiKeys} />
                   <Route path="/pdca" component={PDCACycles} />
+                  <Route path="/pdca/active" component={PDCACycles} />
+                  <Route path="/pdca/completed" component={PDCACycles} />
+                  <Route path="/pdca/reports" component={PDCACycles} />
+                  <Route path="/soai-pdca/templates" component={PDCACycles} />
                   <Route path="/transparency" component={PublicDashboard} />
                   <Route path="/scorecard/:systemId" component={ComplianceScorecard} />
                   <Route path="/knowledge-base" component={KnowledgeBase} />
@@ -206,6 +234,9 @@ function App() {
              <Route path="/watchdog-leaderboard" component={WatchdogLeaderboard} />
       <Route path="/public-watchdog" component={WatchdogPublic} />               <Route path="/regulator" component={RegulatorDashboard} />
                   <Route path="/blog" component={Blog} />
+                  <Route path="/events" component={Blog} />
+                  <Route path="/newsletter" component={Blog} />
+                  <Route path="/research" component={Blog} />
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
@@ -232,6 +263,7 @@ function App() {
                   <Route path="/compliance-assessment" component={ComplianceAssessmentWizard} />
                   <Route path="/regulatory-portal" component={RegulatoryPortal} />
                   <Route path="/council-voting" component={CouncilVotingEngine} />                  <Route path="/analytics" component={Analytics} />
+                  <Route path="/analytics/risk" component={Analytics} />
                   <Route path="/audit-trail" component={AuditTrail} />
                   <Route path="/legal/flags" component={LegalFlagsPage} />
                   <Route path="/legal/case-queue" component={LegalCaseQueuePage} />              <Route path="/404" component={NotFound} />
