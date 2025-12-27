@@ -34,7 +34,7 @@ export default function Signup() {
   }, [user, setLocation, search]);
 
   const handleSignup = () => {
-    // Pass referral code to OAuth signup endpoint
+    // Pass referral code to server-side OAuth signup endpoint
     const signupUrl = referralCode 
       ? `/api/auth/signup?ref=${encodeURIComponent(referralCode)}`
       : '/api/auth/signup';

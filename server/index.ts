@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import governmentRouter from "./api/government.js";
 import enterpriseRouter from "./api/enterprise.js";
 import { initializeWebSocketServer } from "./websocket/server.js";
+import { registerOAuthRoutes } from "./_core/oauth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,9 @@ async function startServer() {
   app.get("/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date() });
   });
+
+  // OAuth Routes
+  registerOAuthRoutes(app);
 
   // API Routes
   app.use("/api/government", governmentRouter);

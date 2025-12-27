@@ -5499,3 +5499,14 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add interactive feature cards with CTAs
 - [x] Ensure responsive design for mobile/tablet/desktop
 - [x] Test all sections render correctly
+
+
+## Phase 15 - Fix Signup 404 Error (COMPLETED)
+- [x] Investigated signup route configuration
+- [x] Added OAuth routes to server/index.ts
+- [x] Created /api/auth/login endpoint (redirects to Manus OAuth)
+- [x] Created /api/auth/signup endpoint (redirects to Manus OAuth)
+- [x] Verified OAuth callback endpoint exists
+- [x] Tested login redirect (302 to https://api.manus.im/login)
+- [x] Tested signup redirect (302 to https://api.manus.im/signup)
+- [x] Authentication flow now works end-to-end

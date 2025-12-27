@@ -10,6 +10,38 @@ function getQueryParam(req: Request, key: string): string | undefined {
 }
 
 export function registerOAuthRoutes(app: Express) {
+  // Login endpoint - redirects to OAuth portal
+  app.get("/api/auth/login", (req: Request, res: Response) => {
+    const oauthPortalUrl = process.env.OAUTH_SERVER_URL;
+    const appId = process.env.VITE_APP_ID;
+    const redirectUri = `${req.protocol}://${req.get('host')}/api/oauth/callback`;
+    
+    const params = new URLSearchParams({
+      app_id: appId || '',
+      redirect_uri: redirectUri,
+    });
+    
+    res.redirect(302, `${oauthPortalUrl}/login?${params.toString()}`);
+  });
+
+  // Signup endpoint - redirects to OAuth portal signup
+  app.get("/api/auth/signup", (req: Request, res: Response) => {
+    const oauthPortalUrl = process.env.OAUTH_SERVER_URL;
+    const appId = process.env.VITE_APP_ID;
+    const redirectUri = `${req.protocol}://${req.get('host')}/api/oauth/callback`;
+    const ref = getQueryParam(req, 'ref');
+    
+    const state = ref ? JSON.stringify({ ref }) : undefined;
+    const params = new URLSearchParams({
+      app_id: appId || '',
+      redirect_uri: redirectUri,
+      ...(state && { state }),
+    });
+    
+    res.redirect(302, `${oauthPortalUrl}/signup?${params.toString()}`);
+  });
+
+  // OAuth callback endpoint
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
     const state = getQueryParam(req, "state");
