@@ -193,6 +193,7 @@ function App() {
                   <Route path="/audit" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
+                  <Route path="/billing" component={Billing} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/watchdog/report" component={WatchdogPublic} />
@@ -230,6 +231,7 @@ function App() {
                   <Route path="/api-docs" component={ApiDocs} />
                   <Route path="/api-keys" component={ApiKeys} />
                   <Route path="/pdca" component={PDCACycles} />
+                  <Route path="/pdca-cycles" component={PDCACycles} />
                   <Route path="/pdca/active" component={PDCACycles} />
                   <Route path="/pdca/completed" component={PDCACycles} />
                   <Route path="/pdca/reports" component={PDCACycles} />
