@@ -8,9 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Table, TableBody, TableCell, TableHead, TableRow } from 'recharts';
-import { Users, TrendingUp, DollarSign, CheckCircle2, Clock, AlertCircle, Download, Filter } from 'lucide-react';
+import { Users, TrendingUp, DollarSign, CheckCircle2, Clock, AlertCircle, Download, Filter, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 interface TeamMember {
   id: number;
@@ -25,11 +26,12 @@ interface TeamMember {
 
 interface CommissionApproval {
   id: number;
-  memberName: string;
-  amount: number;
-  status: 'pending' | 'approved' | 'rejected';
+  referredUserEmail: string;
+  referredUserName?: string;
+  certificationName: string;
+  commissionAmount: number;
+  status: string;
   submittedDate: string;
-  approvalDate?: string;
 }
 
 const mockTeamMembers: TeamMember[] = [
@@ -63,47 +65,70 @@ const mockTeamMembers: TeamMember[] = [
     conversionRate: 6.0,
     status: 'active',
   },
-  {
-    id: 4,
-    name: 'James Park',
-    email: 'james@example.com',
-    totalClicks: 170,
-    totalConversions: 9,
-    totalEarnings: 450,
-    conversionRate: 5.29,
-    status: 'inactive',
-  },
-];
-
-const mockCommissionApprovals: CommissionApproval[] = [
-  {
-    id: 1,
-    memberName: 'Sarah Chen',
-    amount: 1750,
-    status: 'pending',
-    submittedDate: '2024-12-26',
-  },
-  {
-    id: 2,
-    memberName: 'Michael Rodriguez',
-    amount: 1400,
-    status: 'approved',
-    submittedDate: '2024-12-25',
-    approvalDate: '2024-12-26',
-  },
-  {
-    id: 3,
-    memberName: 'Emily Watson',
-    amount: 750,
-    status: 'pending',
-    submittedDate: '2024-12-26',
-  },
 ];
 
 export default function ReferralManagerDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [dateRange, setDateRange] = useState<'week' | 'month' | 'quarter'>('month');
+  const [approvingId, setApprovingId] = useState<number | null>(null);
+  const [rejectingId, setRejectingId] = useState<number | null>(null);
+
+  // Fetch pending approvals
+  const { data: approvalsResponse, isLoading: isFetchingApprovals, refetch: refetchApprovals } = trpc.referral.getPendingApprovals.useQuery(undefined, {
+    onError: (error) => {
+      toast.error('Failed to load pending approvals');
+      console.error('Approvals error:', error);
+    },
+  });
+
+  const pendingApprovals = approvalsResponse?.data || [];
+
+  // Approve commission mutation
+  const approveMutation = trpc.referral.approveCommission.useMutation({
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success('Commission approved successfully');
+        refetchApprovals();
+      }
+      setApprovingId(null);
+    },
+    onError: (error) => {
+      toast.error('Failed to approve commission');
+      console.error('Approve error:', error);
+      setApprovingId(null);
+    },
+  });
+
+  // Reject commission mutation
+  const rejectMutation = trpc.referral.rejectCommission.useMutation({
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success('Commission rejected successfully');
+        refetchApprovals();
+      }
+      setRejectingId(null);
+    },
+    onError: (error) => {
+      toast.error('Failed to reject commission');
+      console.error('Reject error:', error);
+      setRejectingId(null);
+    },
+  });
+
+  // Get commission stats
+  const { data: statsResponse, isLoading: isFetchingStats } = trpc.referral.getCommissionStats.useQuery(undefined, {
+    onError: (error) => {
+      console.error('Stats error:', error);
+    },
+  });
+
+  const stats = statsResponse?.data || {
+    totalEarned: 0,
+    totalProcessed: 0,
+    totalPending: 0,
+    totalFailed: 0,
+    averageCommission: 0,
+  };
 
   // Filter team members
   const filteredMembers = useMemo(() => {
@@ -126,21 +151,19 @@ export default function ReferralManagerDashboard() {
       totalClicks: mockTeamMembers.reduce((sum, m) => sum + m.totalClicks, 0),
       totalConversions: mockTeamMembers.reduce((sum, m) => sum + m.totalConversions, 0),
       totalEarnings: mockTeamMembers.reduce((sum, m) => sum + m.totalEarnings, 0),
-      pendingApprovals: mockCommissionApprovals.filter((a) => a.status === 'pending').length,
-      pendingAmount: mockCommissionApprovals
-        .filter((a) => a.status === 'pending')
-        .reduce((sum, a) => sum + a.amount, 0),
+      pendingApprovals: pendingApprovals.length,
+      pendingAmount: pendingApprovals.reduce((sum, a) => sum + a.commissionAmount, 0),
     };
-  }, []);
+  }, [pendingApprovals]);
 
-  const handleApproveCommission = (id: number) => {
-    console.log('Approving commission:', id);
-    // TODO: Call API to approve commission
+  const handleApproveCommission = async (id: number) => {
+    setApprovingId(id);
+    await approveMutation.mutateAsync({ conversionId: id });
   };
 
-  const handleRejectCommission = (id: number) => {
-    console.log('Rejecting commission:', id);
-    // TODO: Call API to reject commission
+  const handleRejectCommission = async (id: number) => {
+    setRejectingId(id);
+    await rejectMutation.mutateAsync({ conversionId: id });
   };
 
   return (
@@ -211,7 +234,7 @@ export default function ReferralManagerDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gray-900">${teamTotals.pendingAmount}</div>
+              <div className="text-3xl font-bold text-gray-900">${teamTotals.pendingAmount.toFixed(2)}</div>
               <p className="text-xs text-gray-500 mt-1">{teamTotals.pendingApprovals} pending</p>
             </CardContent>
           </Card>
@@ -230,58 +253,99 @@ export default function ReferralManagerDashboard() {
               <CardDescription>Review and approve pending commission requests</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {mockCommissionApprovals.map((approval) => (
-                  <div key={approval.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-900">{approval.memberName}</div>
-                      <div className="text-sm text-gray-500">
-                        Submitted: {new Date(approval.submittedDate).toLocaleDateString()}
+              {isFetchingApprovals ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+                  <span className="ml-2 text-gray-600">Loading approvals...</span>
+                </div>
+              ) : pendingApprovals.length === 0 ? (
+                <div className="text-center py-8">
+                  <CheckCircle2 className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
+                  <p className="text-gray-600">No pending commissions to approve</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {pendingApprovals.map((approval) => (
+                    <div key={approval.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                      <div className="flex-1">
+                        <div className="font-medium text-gray-900">{approval.referredUserEmail}</div>
+                        <div className="text-sm text-gray-500">{approval.certificationName}</div>
+                        <div className="text-xs text-gray-400 mt-1">Submitted: {new Date(approval.submittedDate).toLocaleDateString()}</div>
                       </div>
-                    </div>
 
-                    <div className="text-right mr-6">
-                      <div className="font-semibold text-gray-900">${approval.amount}</div>
-                      <div className={`text-xs font-medium ${
-                        approval.status === 'pending'
-                          ? 'text-amber-600'
-                          : approval.status === 'approved'
-                            ? 'text-emerald-600'
-                            : 'text-red-600'
-                      }`}>
-                        {approval.status.charAt(0).toUpperCase() + approval.status.slice(1)}
+                      <div className="text-right mr-6">
+                        <div className="font-semibold text-emerald-600">${approval.commissionAmount.toFixed(2)}</div>
+                        <div className="text-xs text-amber-600 font-medium">Pending</div>
                       </div>
-                    </div>
 
-                    {approval.status === 'pending' && (
                       <div className="flex gap-2">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleRejectCommission(approval.id)}
+                          disabled={rejectingId === approval.id}
                           className="text-red-600 hover:text-red-700"
                         >
-                          Reject
+                          {rejectingId === approval.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            'Reject'
+                          )}
                         </Button>
                         <Button
                           size="sm"
                           onClick={() => handleApproveCommission(approval.id)}
+                          disabled={approvingId === approval.id}
                           className="bg-emerald-600 hover:bg-emerald-700"
                         >
-                          Approve
+                          {approvingId === approval.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            'Approve'
+                          )}
                         </Button>
                       </div>
-                    )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
 
-                    {approval.status === 'approved' && (
-                      <div className="flex items-center gap-2 text-emerald-600">
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span className="text-sm">Approved</span>
-                      </div>
-                    )}
+        {/* Commission Statistics */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+          className="mb-8"
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle>Commission Statistics</CardTitle>
+              <CardDescription>Overview of commission status and performance</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isFetchingStats ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-4 bg-emerald-50 rounded-lg">
+                    <div className="text-sm text-gray-600 mb-1">Total Earned</div>
+                    <div className="text-2xl font-bold text-emerald-600">${stats.totalEarned.toFixed(2)}</div>
                   </div>
-                ))}
-              </div>
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <div className="text-sm text-gray-600 mb-1">Total Processed</div>
+                    <div className="text-2xl font-bold text-blue-600">${stats.totalProcessed.toFixed(2)}</div>
+                  </div>
+                  <div className="p-4 bg-amber-50 rounded-lg">
+                    <div className="text-sm text-gray-600 mb-1">Total Pending</div>
+                    <div className="text-2xl font-bold text-amber-600">${stats.totalPending.toFixed(2)}</div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
@@ -290,7 +354,7 @@ export default function ReferralManagerDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.3 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
         >
           <Card>
             <CardHeader>
