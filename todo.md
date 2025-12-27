@@ -53,6 +53,7 @@
 - [x] Add hamburger toggle button for sidebar
 - [x] Implement full-screen mode for main content area
 - [x] Add smooth animations for sidebar transitions
+- [x] Fix /ai-systems/details route 404 error
 
 ## Notes
 

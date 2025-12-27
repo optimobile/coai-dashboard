@@ -120,6 +120,7 @@ import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { LegalFlagsPage } from "./pages/LegalFlags";
 import { LegalCaseQueuePage } from "./pages/LegalCaseQueue";
 import ComplianceHistory from "./pages/ComplianceHistory";
+import AISystemDetails from "./pages/AISystemDetails";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -162,6 +163,7 @@ function App() {
                   <Route path="/dashboard/alerts" component={AlertManagementPage} />
                   <Route path="/settings/webhooks" component={WebhookManagementPage} />
                   <Route path="/ai-systems" component={AISystems} />
+                  <Route path="/ai-systems/details" component={AISystemDetails} />
                   <Route path="/ai-systems/risk" component={AISystems} />
                   <Route path="/ai-systems/scoring" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
