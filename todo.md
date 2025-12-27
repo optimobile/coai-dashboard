@@ -4612,3 +4612,152 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Confirm both CSOAI and CEASAI can operate under Loop Factory AI Limited
 - [ ] Set up CEASAI as trading name/division under Loop Factory AI Limited
 - [ ] Document compliance with ISO 17024 requirements for paid certifications
+
+
+## Phase 6 - Courses Enhancement & Strategic Pages
+
+### Courses Database Cleanup
+- [ ] Identify and remove duplicate courses from database
+- [ ] Remove courses with no modules (incomplete courses)
+- [ ] Consolidate course variants into single canonical versions
+- [ ] Verify all courses have complete module information
+
+### Courses Page Redesign
+- [ ] Change grid layout from 2-column to 3-column
+- [ ] Add generous whitespace and padding between course cards
+- [ ] Improve card visual hierarchy with better typography
+- [ ] Add course preview images/icons
+- [ ] Implement better filtering and search
+- [ ] Add course difficulty badges
+- [ ] Show estimated completion time prominently
+
+### Individual Course Detail Pages
+- [ ] Create CourseDetail.tsx component
+- [ ] Build course curriculum overview section
+- [ ] Add learning outcomes list
+- [ ] Display prerequisites and target audience
+- [ ] Show instructor/author information
+- [ ] Add student reviews and ratings section
+- [ ] Implement "Enroll Now" CTA with payment options
+- [ ] Add related courses recommendations
+
+### Course Bundles & Deals
+- [ ] Create course bundles in database
+- [ ] Design bundle cards showing savings
+- [ ] Add bundle comparison table
+- [ ] Feature bundles prominently on courses page
+- [ ] Show "Save X% with bundle" badges
+- [ ] Implement bundle selection in payment flow
+
+### Payment Flow Enhancement
+- [ ] Add monthly installment option to payment form
+- [ ] Show payment breakdown (monthly vs one-time)
+- [ ] Create payment plan comparison UI
+- [ ] Add upsell opportunities in checkout
+- [ ] Implement payment success/failure pages
+- [ ] Add invoice generation
+
+### CEASAI Landing Page
+- [ ] Create /ceasai page
+- [ ] Build certification pathway visualization
+- [ ] Show specialization tracks (Fundamentals, Advanced, Specialist)
+- [ ] Display prerequisites for each track
+- [ ] Add ROI metrics for enterprises
+- [ ] Show job placement statistics
+- [ ] Create comparison table vs other certifications
+- [ ] Add testimonials from certified analysts
+- [ ] Build CTA for enrollment
+
+### Watchdog Report Submission Form
+- [ ] Create /watchdog/submit page
+- [ ] Build structured incident report form
+- [ ] Add category selection (bias, privacy, safety, etc.)
+- [ ] Implement severity level selector
+- [ ] Add evidence/attachment upload
+- [ ] Create rich text editor for description
+- [ ] Add optional reporter contact info
+- [ ] Implement form validation
+- [ ] Create submission confirmation page
+- [ ] Add report tracking system
+
+### Advisory Board Recruitment Portal
+- [ ] Create /advisory-board page
+- [ ] Build position descriptions (Chair, Regulatory Expert, Academic Expert)
+- [ ] Create application forms for each position
+- [ ] Add outreach email templates
+- [ ] Build board member onboarding materials
+- [ ] Create timeline for Q1 2026 launch
+- [ ] Add FAQ section
+- [ ] Implement application status tracking
+
+
+## Phase 6 - COMPLETED DELIVERABLES
+
+✅ **Courses Page Redesign** - CoursesRedesigned.tsx
+- 3-column grid layout with generous whitespace
+- Enhanced card design with better visual hierarchy
+- Course filtering by region, level, and framework
+- Duplicate course removal logic
+- Course bundles section with savings display
+- Stats section showing program metrics
+
+✅ **Individual Course Detail Pages** - CourseDetail.tsx
+- Comprehensive course information with tabs (Overview, Curriculum, Outcomes, Reviews)
+- Multiple payment plan options (one-time, 3-month, 6-month, 12-month)
+- Monthly payment breakdown display
+- Enrollment CTA with payment selection
+- Learning outcomes and prerequisites display
+- Student reviews section
+
+✅ **CEASAI Landing Page** - CEASAI.tsx
+- Certification pathway visualization (Fundamentals → Advanced → Specialist → Advisory Board)
+- Three specialization tracks with full details
+- Track selector with dynamic content
+- Enterprise ROI metrics section
+- Career opportunities and salary information
+- Enrollment CTA
+
+✅ **Watchdog Report Submission Form** - WatchdogSubmit.tsx
+- 5-section structured form (Details, Classification, AI System Info, Evidence, Reporter Info)
+- Incident type selection (bias, privacy, safety, misinformation, manipulation, other)
+- Severity level selector with color-coded badges
+- File upload functionality for evidence
+- Form validation with Zod schema
+- Submission confirmation page with report ID
+
+✅ **Advisory Board Recruitment Portal** - AdvisoryBoard.tsx
+- Three position types: Chair, Regulatory Expert, Academic Expert
+- Detailed position descriptions with responsibilities and qualifications
+- Benefits and commitment information
+- Q1 2026 recruitment timeline visualization
+- FAQ accordion with common questions
+- Application CTA for each position
+
+✅ **Route Integration** - App.tsx
+- /courses → CoursesRedesigned
+- /course/:id → CourseDetail
+- /ceasai → CEASAI landing page
+- /watchdog/submit → WatchdogSubmit form
+- /advisory-board → AdvisoryBoard portal
+
+## Next Steps Required
+
+1. **Database Integration**
+   - Add getCourseBundles endpoint to courses router
+   - Add getCourseById endpoint for detail page
+   - Add course bundle data to database
+
+2. **Payment Processing**
+   - Connect CourseDetail payment plans to Stripe
+   - Implement monthly installment billing
+   - Add payment success/failure handling
+
+3. **Form Backends**
+   - Connect WatchdogSubmit to watchdog.submit mutation
+   - Add file upload to S3
+   - Create advisory board application endpoint
+
+4. **Testing**
+   - Test all new pages in browser
+   - Verify form submissions
+   - Test payment flow with Stripe test mode

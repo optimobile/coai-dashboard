@@ -78,6 +78,11 @@ import PDCAFrameworkFeature from "./pages/features/PDCAFrameworkFeature";
 import TrainingCertificationFeature from "./pages/features/TrainingCertificationFeature";
 import WatchdogJobsFeature from "./pages/features/WatchdogJobsFeature";
 import StudentProgress from "./pages/StudentProgress";
+import CoursesRedesigned from "./pages/CoursesRedesigned";
+import CourseDetail from "./pages/CourseDetail";
+import CEASAI from "./pages/CEASAI";
+import WatchdogSubmit from "./pages/WatchdogSubmit";
+import AdvisoryBoard from "./pages/AdvisoryBoard";
 import Accreditation from "./pages/Accreditation";
 import SOAIPDCAFramework from "./pages/SOAIPDCAFramework";
 import PDCASimulator from "./pages/PDCASimulator";
@@ -154,7 +159,11 @@ function App() {
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/watchdog/report" component={WatchdogPublic} />
                   <Route path="/training" component={TrainingV2} />
-                  <Route path="/courses" component={Courses} />
+                  <Route path="/courses" component={CoursesRedesigned} />
+                  <Route path="/course/:id" component={CourseDetail} />
+                  <Route path="/ceasai" component={CEASAI} />
+                  <Route path="/watchdog/submit" component={WatchdogSubmit} />
+                  <Route path="/advisory-board" component={AdvisoryBoard} />
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/dashboard/progress" component={StudentProgress} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
