@@ -32,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { useLocation, Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
+import { ReferralWidget } from "@/components/ReferralWidget";
 
 const frameworkCompliance = [
   { name: "EU AI Act", score: 72, status: "In Progress", deadline: "Aug 2026", articles: 113 },
@@ -542,6 +543,15 @@ export default function Dashboard() {
             </Card>
           </motion.div>
         )}
+
+        {/* Referral Widget */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: 0.38 }}
+        >
+          <ReferralWidget />
+        </motion.div>
 
         {/* LOI Banner */}
         <motion.div

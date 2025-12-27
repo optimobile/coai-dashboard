@@ -4116,3 +4116,33 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Create email template for commission earned notification
 - [ ] Implement email sending on referral events
 
+
+
+## Phase 33 - tRPC Integration, Dashboard & Stripe Payouts (Completed)
+
+### tRPC Referral Routers
+- [ ] Create referralRouter with tRPC procedures
+- [ ] Add generateCode procedure
+- [ ] Add getReferralCode procedure
+- [ ] Add getReferralStats procedure
+- [ ] Add trackClick procedure
+- [ ] Add recordConversion procedure
+- [ ] Add getPendingCommissions procedure
+- [ ] Wire up router to main tRPC app router
+
+### Dashboard Widget Integration
+- [ ] Import ReferralWidget into Dashboard component
+- [ ] Add widget to dashboard grid layout
+- [ ] Test widget data loading
+- [ ] Add responsive styling
+- [ ] Test on mobile devices
+
+### Stripe Payout Integration
+- [ ] Create Stripe Connect account setup
+- [ ] Build payout calculation logic
+- [ ] Create monthly payout scheduler
+- [ ] Implement Stripe transfer API calls
+- [ ] Add webhook handler for payout events
+- [ ] Trigger email notifications on payout
+- [ ] Add payout history to dashboard
+
