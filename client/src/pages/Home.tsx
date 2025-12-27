@@ -20,6 +20,12 @@ import {
   Play,
   BookOpen,
   Zap,
+  Eye,
+  Network,
+  Layers,
+  Gauge,
+  Code,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -133,25 +139,220 @@ export default function Home() {
               </Button>
             </div>
           </motion.div>
+        </div>
+      </section>
 
-          {/* Key Stats */}
+      {/* Feature Showcase Grid */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Core Features</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Explore the complete AI safety ecosystem built to protect humanity while creating meaningful careers.
+            </p>
+          </motion.div>
+
+          {/* 33-Agent Council Feature */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-16"
+            className="mb-8 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-8 border border-emerald-200"
           >
-            {[
-              { label: "Certified Analysts", value: "2,400+" },
-              { label: "AI Systems Audited", value: "890+" },
-              { label: "Countries Covered", value: "120+" },
-              { label: "Avg Analyst Earnings", value: "$6,000/mo" },
-            ].map((stat, idx) => (
-              <div key={idx} className="bg-white rounded-lg p-6 border border-gray-200 text-center">
-                <div className="text-3xl font-bold text-emerald-600 mb-2">{stat.value}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
+            <div className="flex items-start gap-6">
+              <div className="flex-shrink-0">
+                <Network className="h-12 w-12 text-emerald-600" />
               </div>
-            ))}
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">33-Agent Byzantine Council</h3>
+                <p className="text-slate-700 mb-4">
+                  An impartial voting system of 33 independent AI and human experts that makes compliance decisions using Byzantine fault-tolerant consensus. Impossible to bias or manipulate—the same technology used in blockchain and military systems.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {["Tamper-proof voting", "Multi-provider AI", "Human oversight", "Public audit trail"].map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                      <span className="text-sm text-slate-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/council">
+                  <Button variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+                    Explore Council <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Watchdog Feature */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-8 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-8 border border-blue-200"
+          >
+            <div className="flex items-start gap-6">
+              <div className="flex-shrink-0">
+                <Eye className="h-12 w-12 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">The Watchdog Program</h3>
+                <p className="text-slate-700 mb-4">
+                  Public incident reporting system where anyone can anonymously report AI safety concerns. Investigated by certified analysts and reviewed by the Council. Creates transparency around AI incidents and identifies systemic safety issues.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {["Anonymous reporting", "Public database", "Analyst investigation", "Council review"].map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                      <span className="text-sm text-slate-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/watchdog">
+                  <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                    View Watchdog <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* SOAI-PDCA Feature */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mb-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-8 border border-purple-200"
+          >
+            <div className="flex items-start gap-6">
+              <div className="flex-shrink-0">
+                <Layers className="h-12 w-12 text-purple-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">SOAI-PDCA Framework</h3>
+                <p className="text-slate-700 mb-4">
+                  Combines Safety Oversight AI with the Deming Cycle for continuous AI governance improvement. Plan → Do → Check → Act, powered by the Council. Creates a perpetual cycle of improvement for your AI systems.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {["Continuous improvement", "Deming methodology", "Council oversight", "Automated workflows"].map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0" />
+                      <span className="text-sm text-slate-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/soai-pdca">
+                  <Button variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
+                    Learn SOAI-PDCA <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Multi-Framework Compliance Feature */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mb-8 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-8 border border-amber-200"
+          >
+            <div className="flex items-start gap-6">
+              <div className="flex-shrink-0">
+                <Gauge className="h-12 w-12 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">Multi-Framework Compliance</h3>
+                <p className="text-slate-700 mb-4">
+                  Single platform for EU AI Act, NIST AI RMF, ISO 42001, and TC260 compliance. Assess once, report to all regulators. Ensure your AI systems are compliant globally across all major frameworks.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {["4 global frameworks", "Single assessment", "Multi-report export", "Regulatory ready"].map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+                      <span className="text-sm text-slate-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/compliance">
+                  <Button variant="outline" className="border-amber-600 text-amber-600 hover:bg-amber-50">
+                    Start Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Training & Certification Feature */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-8 border border-green-200"
+          >
+            <div className="flex items-start gap-6">
+              <div className="flex-shrink-0">
+                <BookOpen className="h-12 w-12 text-green-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">Training & Certification</h3>
+                <p className="text-slate-700 mb-4">
+                  Professional certification program covering EU AI Act, NIST RMF, ISO 42001, and TC260. Learn at your own pace, pass the rigorous exam, and earn credentials recognized globally. Start your career as an AI Safety Analyst.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {["Expert instructors", "Rigorous exams", "Global recognition", "Career support"].map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <span className="text-sm text-slate-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/training">
+                  <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                    Explore Training <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Enterprise API Feature */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-lg p-8 border border-slate-200"
+          >
+            <div className="flex items-start gap-6">
+              <div className="flex-shrink-0">
+                <Code className="h-12 w-12 text-slate-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">Enterprise API & Integration</h3>
+                <p className="text-slate-700 mb-4">
+                  REST APIs, webhooks, and SDKs for Python and JavaScript. Integrate compliance assessments into your CI/CD pipeline, connect to SIEM/SOAR platforms, and receive real-time alerts for compliance violations. Enterprise plans include dedicated integration support.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {["REST APIs", "Webhooks", "SDKs", "Real-time alerts"].map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-slate-600 flex-shrink-0" />
+                      <span className="text-sm text-slate-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/api-docs">
+                  <Button variant="outline" className="border-slate-600 text-slate-600 hover:bg-slate-50">
+                    View API Docs <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -228,56 +429,61 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">What We've Built</h2>
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Why Choose CSOAI</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              A complete AI safety ecosystem that combines training, certification, employment, and global governance.
+              We're building the global standard for AI safety governance with transparency, independence, and democratic decision-making at our core.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
-                title: "33-Agent Byzantine Council",
+                title: "Vendor-Independent",
                 description:
-                  "An impartial voting system of 33 AI and human experts that makes compliance decisions using Byzantine fault-tolerant consensus. Impossible to bias or manipulate.",
-                features: ["Tamper-proof voting", "Multi-provider AI agents", "Human expert oversight", "Public audit trail"],
+                  "We have no conflicts of interest. Unlike compliance platforms owned by AI vendors, we're independent and serve all stakeholders equally.",
+                icon: <Lock className="h-8 w-8 text-emerald-600" />,
               },
               {
-                title: "The Watchdog Program",
+                title: "Truly Impartial Decisions",
                 description:
-                  "Public incident reporting system where anyone can anonymously report AI safety concerns. Investigated by certified analysts and reviewed by the Council.",
-                features: ["Anonymous reporting", "Public database", "Analyst investigation", "Council review"],
+                  "Byzantine consensus means 22 out of 33 agents must agree. Impossible to bias or manipulate—the same technology used in blockchain.",
+                icon: <Shield className="h-8 w-8 text-emerald-600" />,
               },
               {
-                title: "SOAI-PDCA Framework",
+                title: "Creates Meaningful Jobs",
                 description:
-                  "Combines Safety Oversight AI with the Deming Cycle for continuous AI governance improvement. Plan → Do → Check → Act, powered by the Council.",
-                features: ["Continuous improvement", "Deming methodology", "Council oversight", "Automated workflows"],
+                  "We're not just building compliance tools—we're creating a career path for thousands of AI Safety Analysts earning $45-150/hour.",
+                icon: <Briefcase className="h-8 w-8 text-emerald-600" />,
               },
               {
-                title: "Multi-Framework Compliance",
+                title: "Complete Transparency",
                 description:
-                  "Single platform for EU AI Act, NIST AI RMF, ISO 42001, and TC260 compliance. Assess once, report to all regulators.",
-                features: ["4 global frameworks", "Single assessment", "Multi-report export", "Regulatory ready"],
+                  "All incident reports are public. All council votes are auditable. All compliance decisions are documented. No hidden agendas.",
+                icon: <Eye className="h-8 w-8 text-emerald-600" />,
+              },
+              {
+                title: "Global Framework Coverage",
+                description:
+                  "Single platform for EU AI Act, NIST RMF, ISO 42001, and TC260. Assess once, comply everywhere.",
+                icon: <Globe className="h-8 w-8 text-emerald-600" />,
+              },
+              {
+                title: "Building the Global Standard",
+                description:
+                  "We're creating the equivalent of the FAA for AI—a trusted, independent authority that regulators and enterprises can rely on.",
+                icon: <TrendingUp className="h-8 w-8 text-emerald-600" />,
               },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                transition={{ duration: 0.6, delay: idx * 0.05 }}
                 className="bg-white rounded-lg p-8 border border-gray-200"
               >
+                <div className="mb-4">{item.icon}</div>
                 <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                <p className="text-slate-600 mb-6">{item.description}</p>
-                <ul className="space-y-2">
-                  {item.features.map((feature, fidx) => (
-                    <li key={fidx} className="flex items-center gap-2 text-sm text-slate-700">
-                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-slate-600">{item.description}</p>
               </motion.div>
             ))}
           </div>
@@ -302,24 +508,28 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
-                title: "🛡️ Protects Humanity from AI Risks",
+                title: "Protects Humanity from AI Risks",
                 description:
-                  "AI systems are becoming more powerful and harder to understand. CSOAI provides independent oversight through certified analysts and the 33-Agent Council, catching safety issues before they harm people.",
+                  "The Watchdog program surfaces AI safety issues before they become crises. The 33-Agent Council ensures impartial review. Continuous PDCA cycles prevent systemic failures.",
+                icon: <Shield className="h-8 w-8 text-red-600" />,
               },
               {
-                title: "💼 Creates High-Paying Jobs",
+                title: "Creates High-Quality Jobs",
                 description:
-                  "AI Safety Analysts are projected to be a top-10 job by 2045. CSOAI trains people from any background, certifies their expertise, and connects them to $45-150/hour work—democratizing access to this emerging profession.",
+                  "AI Safety Analyst is projected to be a top-10 job by 2045. We're creating 10,000+ positions globally, paying $45-150/hour, mostly remote. Career growth path from Fundamentals → Professional → Expert → Advisory Board.",
+                icon: <Briefcase className="h-8 w-8 text-green-600" />,
               },
               {
-                title: "✅ Ensures Regulatory Compliance",
+                title: "Ensures Regulatory Compliance",
                 description:
-                  "The EU AI Act enforcement deadline is Feb 2, 2026. CSOAI helps enterprises and governments meet compliance requirements across all major frameworks, avoiding fines and legal liability.",
+                  "EU AI Act enforcement starts Feb 2, 2026. NIST RMF is US standard. ISO 42001 is international. TC260 is China's requirement. We provide single platform for all four.",
+                icon: <CheckCircle className="h-8 w-8 text-blue-600" />,
               },
               {
-                title: "🗳️ Builds Democratic AI Governance",
+                title: "Builds Democratic AI Governance",
                 description:
-                  "Instead of letting AI companies regulate themselves, CSOAI creates independent, transparent, impartial governance. The 33-Agent Council ensures no single entity can control AI safety decisions.",
+                  "No single company controls AI safety decisions. The 33-Agent Council includes diverse AI providers and human experts. All decisions are public. Regulators have real-time visibility.",
+                icon: <Users className="h-8 w-8 text-purple-600" />,
               },
             ].map((item, idx) => (
               <motion.div
@@ -327,18 +537,16 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-lg p-8 border border-emerald-200"
+                className="bg-slate-50 rounded-lg p-8 border border-gray-200"
               >
-                <h3 className="text-lg font-bold text-slate-900 mb-3">{item.title}</h3>
-                <p className="text-slate-700">{item.description}</p>
+                <div className="mb-4">{item.icon}</div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                <p className="text-slate-600">{item.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Feature Showcase */}
-      <FeatureShowcase />
 
       {/* Audience-Specific CTAs */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
@@ -349,45 +557,37 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Find Your Path</h2>
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">What's Your Role?</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Whether you're an individual, enterprise, government, or researcher, CSOAI has a solution for you.
+              Choose your path and get started today.
             </p>
           </motion.div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                audience: "👤 Individuals",
-                title: "Become an AI Safety Analyst",
-                description: "Free training, certification, and $45-150/hour jobs. No prior experience required.",
+                title: "Individual",
+                description: "Become an AI Safety Analyst",
+                details: "Learn compliance frameworks, pass certification, earn $45-150/hour investigating AI safety incidents.",
                 cta: "Start Training",
-                link: "/training",
-                color: "from-blue-500 to-blue-600",
+                href: "/training",
+                color: "emerald",
               },
               {
-                audience: "🏢 Enterprises",
-                title: "Ensure Compliance & Reduce Risk",
-                description: "Multi-framework compliance assessments, continuous monitoring, and audit support.",
-                cta: "Get Started",
-                link: "/enterprise",
-                color: "from-purple-500 to-purple-600",
+                title: "Enterprise",
+                description: "Ensure AI Compliance",
+                details: "Audit your AI systems across EU AI Act, NIST, ISO 42001, and TC260. Get certified and stay compliant.",
+                cta: "Start Assessment",
+                href: "/compliance",
+                color: "blue",
               },
               {
-                audience: "🏛️ Governments",
-                title: "Regulatory Authority Portal",
-                description: "Real-time AI system compliance monitoring, enforcement tracking, and trend analysis.",
-                cta: "Learn More",
-                link: "/government-portal",
-                color: "from-amber-500 to-amber-600",
-              },
-              {
-                audience: "🔬 Researchers",
-                title: "Public API & Data Access",
-                description: "Access anonymized incident data, voting patterns, and compliance trends for research.",
-                cta: "Explore API",
-                link: "/api-docs",
-                color: "from-green-500 to-green-600",
+                title: "Government",
+                description: "Monitor AI Safety",
+                details: "Real-time compliance visibility across your jurisdiction. Access to Watchdog incident database and council decisions.",
+                cta: "Government Portal",
+                href: "/government-portal",
+                color: "purple",
               },
             ].map((item, idx) => (
               <motion.div
@@ -395,13 +595,13 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className={`bg-gradient-to-br ${item.color} rounded-lg p-8 text-white`}
+                className="bg-white rounded-lg p-8 border border-gray-200"
               >
-                <div className="text-3xl mb-2">{item.audience}</div>
-                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                <p className="text-white/90 mb-6 text-sm">{item.description}</p>
-                <Link href={item.link}>
-                  <Button size="sm" variant="secondary" className="w-full">
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">{item.title}</h3>
+                <p className={`text-lg font-semibold text-${item.color}-600 mb-4`}>{item.description}</p>
+                <p className="text-slate-600 mb-6">{item.details}</p>
+                <Link href={item.href}>
+                  <Button className={`w-full bg-${item.color}-600 hover:bg-${item.color}-700`}>
                     {item.cta} <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -411,71 +611,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Evidence & How It Works */}
+      {/* FAQ Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Evidence & Proof</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              CSOAI is built on transparent, verifiable systems. All decisions, votes, and incident reports are public and auditable.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Public Watchdog Database",
-                description: "Browse thousands of publicly reported AI safety incidents. See real-world AI risks and how they're being addressed.",
-                link: "/watchdog-hub",
-              },
-              {
-                title: "Council Voting Records",
-                description: "View all 33-Agent Council voting sessions, decisions, and confidence scores. Complete transparency in AI governance.",
-                link: "/council-voting",
-              },
-              {
-                title: "Compliance Scorecards",
-                description: "See how AI systems are performing across EU AI Act, NIST, ISO 42001, and TC260 frameworks. Benchmark against peers.",
-                link: "/compliance-scorecards",
-              },
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="bg-slate-50 rounded-lg p-8 border border-gray-200"
-              >
-                <h3 className="text-lg font-bold text-slate-900 mb-3">{item.title}</h3>
-                <p className="text-slate-600 mb-6">{item.description}</p>
-                <Link href={item.link}>
-                  <Button variant="outline" size="sm" className="w-full">
-                    Explore <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
             <h2 className="text-4xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
             <p className="text-lg text-slate-600">
-              Everything you need to know about CEASAI, CSOAI, and how to get started.
+              Have questions? We've got answers.
             </p>
           </motion.div>
 
@@ -485,14 +632,14 @@ export default function Home() {
                 key={idx}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                className="bg-slate-50 rounded-lg border border-gray-200 overflow-hidden"
               >
                 <button
                   onClick={() => setExpandedFAQ(expandedFAQ === idx ? null : idx)}
-                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
+                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-100 transition-colors"
                 >
-                  <h3 className="font-semibold text-slate-900 text-left">{item.question}</h3>
+                  <span className="font-semibold text-slate-900 text-left">{item.question}</span>
                   <ChevronDown
                     className={`h-5 w-5 text-slate-600 transition-transform ${
                       expandedFAQ === idx ? "rotate-180" : ""
@@ -500,14 +647,9 @@ export default function Home() {
                   />
                 </button>
                 {expandedFAQ === idx && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="px-6 py-4 border-t border-gray-200 bg-slate-50"
-                  >
+                  <div className="px-6 py-4 bg-white border-t border-gray-200">
                     <p className="text-slate-700 leading-relaxed">{item.answer}</p>
-                  </motion.div>
+                  </div>
                 )}
               </motion.div>
             ))}
@@ -516,16 +658,16 @@ export default function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-emerald-600 to-blue-600">
-        <div className="max-w-4xl mx-auto text-center text-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-emerald-600 to-teal-600">
+        <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold mb-4">Ready to Join the AI Safety Revolution?</h2>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Start your free CEASAI training today. No credit card required. Join thousands of analysts building the future of AI governance.
+            <h2 className="text-4xl font-bold text-white mb-6">Ready to Join the AI Safety Movement?</h2>
+            <p className="text-xl text-emerald-100 mb-8">
+              Whether you want to become an analyst, ensure compliance, or oversee AI safety—CSOAI is your platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/signup">
@@ -533,64 +675,13 @@ export default function Home() {
                   Start Free Training <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10"
-              >
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 Schedule Demo
               </Button>
             </div>
           </motion.div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="font-bold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/training"><a className="hover:text-white">Training</a></Link></li>
-                <li><Link href="/certification"><a className="hover:text-white">Certification</a></Link></li>
-                <li><Link href="/jobs"><a className="hover:text-white">Jobs</a></Link></li>
-                <li><Link href="/enterprise"><a className="hover:text-white">Enterprise</a></Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about"><a className="hover:text-white">About</a></Link></li>
-                <li><Link href="/blog"><a className="hover:text-white">Blog</a></Link></li>
-                <li><Link href="/careers"><a className="hover:text-white">Careers</a></Link></li>
-                <li><Link href="/contact"><a className="hover:text-white">Contact</a></Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/api-docs"><a className="hover:text-white">API Docs</a></Link></li>
-                <li><Link href="/watchdog-hub"><a className="hover:text-white">Watchdog</a></Link></li>
-                <li><Link href="/council-voting"><a className="hover:text-white">Council</a></Link></li>
-                <li><Link href="/standards"><a className="hover:text-white">Standards</a></Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white">Privacy</a></li>
-                <li><a href="#" className="hover:text-white">Terms</a></li>
-                <li><a href="#" className="hover:text-white">Compliance</a></li>
-                <li><a href="#" className="hover:text-white">Security</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; 2026 CSOAI - The Global Standard for AI Safety. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
