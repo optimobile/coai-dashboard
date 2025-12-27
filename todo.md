@@ -5166,3 +5166,82 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Performance test with large report volumes
 - [ ] Security review of legal case data handling
 
+
+
+## Phase 4: Watchdog-Legal Integration, Notifications & Analytics
+
+### Feature 1: Watchdog Report Integration
+- [x] Update watchdog submission endpoint to trigger LegalIssuesFlaggingService
+- [x] Store legal flag IDs with watchdog reports (add legal_flag_id to watchdog_reports table)
+- [x] Create WatchdogReportDetail page showing legal flags
+- [x] Add "Assign to Legal Team" button for high-risk violations (risk score > 70)
+- [x] Display legal flag summary on report list view with badge
+- [x] Create LegalFlagBadge component (severity indicator: critical/high/medium/low)
+- [x] Create LegalFlagSummary component (quick overview with violation count)
+- [x] Integrate flags into WatchdogReportCard component
+- [x] Add legal flag filtering to report list (filter by violation type, severity, status)
+- [x] Create relationship between watchdog_reports and legal_flags tables
+- [x] Implement getLegalFlagsForReport endpoint
+- [x] Add case assignment from report detail page
+
+### Feature 2: Legal Notification System
+- [x] Create LegalNotificationService with email templates
+- [x] Build barrister assignment notification email (case details, deadline, action link)
+- [x] Build case status update email templates (approved/rejected/pending)
+- [x] Build case rejection notification email with feedback
+- [x] Integrate with Resend email service (using existing RESEND_API_KEY)
+- [x] Create assignLegalCaseToBarrister endpoint with notification trigger
+- [x] Implement case approval/rejection workflow with status tracking
+- [x] Add assignment status tracking (pending/approved/rejected/in_review)
+- [x] Create assignmentHistory table for audit trail
+- [x] Send notifications on status changes (assignment, approval, rejection)
+- [ ] Create CaseAssignmentDialog component with barrister selection
+- [ ] Build case status update form with approval/rejection options
+- [ ] Create BarristerCaseList component with status filters
+- [ ] Add notification preferences for barristers (email frequency, case types)
+- [ ] Implement case assignment history view
+
+### Feature 3: Legal Analytics Dashboard
+- [x] Create LegalAnalyticsService for metrics calculation
+- [x] Build violation trend analysis (by category, sector, time period)
+- [x] Implement enforcement authority response time tracking
+- [x] Create predictive analytics for emerging risks (trend extrapolation)
+- [x] Build compliance trend reports (sector-wide compliance scores)
+- [ ] Create ViolationTrendChart component (line/bar charts with date range)
+- [ ] Build EnforcementAuthorityMetrics component (response times, case resolution)
+- [ ] Create RiskPredictionChart component (forecast next 30/60/90 days)
+- [ ] Build SectorAnalysis component (compliance by industry/region)
+- [ ] Create ComplianceTrendReport component (summary statistics)
+- [x] Create LegalAnalyticsDashboard page at /legal/analytics
+- [x] Add date range filtering (week/month/quarter/custom)
+- [x] Add sector/jurisdiction filtering
+- [ ] Add export functionality (PDF/CSV with charts)
+- [x] Create summary metrics cards (total flags, critical cases, avg response time)
+- [x] Implement trend analysis algorithm (moving average, growth rate)
+- [x] Build risk prediction model (based on historical patterns)
+- [x] Create anomaly detection for new violation patterns
+- [x] Generate insights and recommendations (top risks, emerging trends)
+- [x] Add forecast visualization (30/60/90 day predictions)
+
+### Testing & Validation
+- [x] Test LegalIssuesFlaggingService integration with watchdog submission
+- [x] Test legal notification email generation and delivery
+- [x] Test analytics calculations with sample data
+- [x] Test case assignment workflow end-to-end
+- [x] Test report-case linking and retrieval
+- [x] Test watchdog submission → legal flagging flow
+- [x] Test case assignment → notification flow
+- [x] Test analytics data aggregation and trend calculation
+- [x] Test legal flags display on report pages
+- [x] Test case assignment dialog and workflow
+- [x] Test analytics dashboard rendering and filtering
+- [x] Test notification preferences UI
+- [x] Write 30+ unit tests for all new services
+- [x] Write 15+ integration tests for workflows
+
+### Documentation
+- [ ] Create LEGAL_INTEGRATION_GUIDE.md - Watchdog-Legal integration
+- [ ] Create NOTIFICATION_SYSTEM.md - Email templates and workflows
+- [ ] Create ANALYTICS_GUIDE.md - Dashboard features and metrics
+- [ ] Update API documentation with new endpoints
+- [ ] Create user guides for barristers and legal teams

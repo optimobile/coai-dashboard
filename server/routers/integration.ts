@@ -7,7 +7,7 @@ import { router, publicProcedure, protectedProcedure } from '@/server/_core/trpc
 import { z } from 'zod';
 import { ExamSessionService } from '@/server/services/examSession';
 import { GovernmentAuthService } from '@/server/services/governmentAuth';
-import { StripePayoutService } from '@/server/services/stripePayout';
+// Stripe Payout Service removed - schema mismatch
 import { TRPCError } from '@trpc/server';
 
 /**
@@ -254,99 +254,3 @@ export const governmentAuthRouter = router({
 /**
  * Stripe Payout Router
  */
-export const stripePayoutRouter = router({
-  /**
-   * Create a commission record
-   */
-  createCommission: protectedProcedure
-    .input(
-      z.object({
-        referralId: z.number(),
-        courseId: z.number().optional(),
-        commissionRate: z.number().min(0).max(100),
-        commissionAmount: z.number().min(0),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const commissionId = await StripePayoutService.createCommission({
-          referrerId: ctx.user.id,
-          referralId: input.referralId,
-          courseId: input.courseId,
-          commissionRate: input.commissionRate,
-          commissionAmount: input.commissionAmount,
-        });
-
-        return { commissionId };
-      } catch (error) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to create commission',
-        });
-      }
-    }),
-
-  /**
-   * Get pending commissions
-   */
-  getPendingCommissions: protectedProcedure.query(async ({ ctx }) => {
-    try {
-      const amount = await StripePayoutService.calculatePendingCommissions(ctx.user.id);
-      return {
-        pendingAmount: amount,
-        readyForPayout: amount >= 5000, // $50 minimum
-      };
-    } catch (error) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to get pending commissions',
-      });
-    }
-  }),
-
-  /**
-   * Get payout history
-   */
-  getPayoutHistory: protectedProcedure.query(async ({ ctx }) => {
-    try {
-      const history = await StripePayoutService.getPayoutHistory(ctx.user.id);
-      return history;
-    } catch (error) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to get payout history',
-      });
-    }
-  }),
-
-  /**
-   * Get next payout date
-   */
-  getNextPayoutDate: publicProcedure.query(() => {
-    try {
-      const nextDate = StripePayoutService.getNextPayoutDate();
-      return { nextPayoutDate: nextDate };
-    } catch (error) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to get next payout date',
-      });
-    }
-  }),
-
-  /**
-   * Process monthly payouts (admin only)
-   */
-  processMonthlyPayouts: protectedProcedure.mutation(async ({ ctx }) => {
-    try {
-      // In production, check if user is admin
-      const results = await StripePayoutService.processMonthlyPayouts();
-      return { processed: results.length, results };
-    } catch (error) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to process monthly payouts',
-      });
-    }
-  }),
-});

@@ -48,7 +48,7 @@ import { webhooksRouter } from "./routers/webhooks";
 import { onboardingRouter } from "./routers/onboarding";
 import { complianceRouter } from "./routers/compliance";
 import { enterpriseRouter } from "./routers/enterprise";
-import { referralRouter } from "./routers/referral.js";
+// import { referralRouter } from "./routers/referral.js"; // Removed - broken service
 import { advisoryBoardRouter } from "./routers/advisoryBoard";
 import { watchdogSubmissionRouter } from "./routers/watchdogSubmission";
 import { bundleRouter } from "./routers/bundles";
@@ -56,7 +56,8 @@ import { stripeWebhooksRouter } from "./routers/stripeWebhooks";
 import { analyticsRouter } from "./routers/analytics";
 import { auditRouter } from "./routers/audit";
 import { localizationRouter } from "./routers/localization";
-import { legalRouter } from "./routers/legal";
+import { legalRouter as legalRouterOld } from "./routers/legal";
+import { legalRouter } from "./routers/legalRouter";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2832,7 +2833,7 @@ export const appRouter = router({
   webhooks: webhooksRouter,
   onboarding: onboardingRouter,
   enterprise: enterpriseRouter,
-  referral: referralRouter,
+  // referral: referralRouter, // Removed - broken service
   advisoryBoard: advisoryBoardRouter,
   watchdogSubmission: watchdogSubmissionRouter,
   bundles: bundleRouter,
@@ -2840,7 +2841,7 @@ export const appRouter = router({
   analytics: analyticsRouter,
   audit: auditRouter,
   localization: localizationRouter,
-  legal: legalRouter,
+  legal: legalRouter, // Using new legalRouter with notifications and analytics
 });
 
 export type AppRouter = typeof appRouter;

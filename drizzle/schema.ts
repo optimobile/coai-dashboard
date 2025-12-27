@@ -1,4 +1,4 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, tinyint, bigint } from "drizzle-orm/mysql-core";
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, tinyint, bigint, date } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm"
 
 export const agentVotes = mysqlTable("agent_votes", {
@@ -940,3 +940,73 @@ export type InsertLegalCaseQueueItem = typeof legalCaseQueue.$inferInsert;
 
 export type LegalEnforcementAuthority = typeof legalEnforcementAuthorities.$inferSelect;
 export type InsertLegalEnforcementAuthority = typeof legalEnforcementAuthorities.$inferInsert;
+
+// Case Assignment History and Notifications
+export const caseAssignmentHistory = mysqlTable("case_assignment_history", {
+	id: int().autoincrement().primaryKey().notNull(),
+	caseId: int().notNull(), // legalCaseQueue.id
+	assignedBy: int().notNull(), // User ID who made the assignment
+	assignedTo: int().notNull(), // User ID of barrister
+	previousAssignee: int(), // Previous assignee if reassigned
+	status: mysqlEnum(['pending', 'approved', 'rejected', 'in_review']).default('pending').notNull(),
+	feedback: text(), // Approval/rejection feedback
+	notificationSent: tinyint().default(0).notNull(),
+	notificationSentAt: timestamp({ mode: 'string' }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+	caseIdx: index("idx_assignment_history_case").on(table.caseId),
+	assignedToIdx: index("idx_assignment_history_assigned").on(table.assignedTo),
+	statusIdx: index("idx_assignment_history_status").on(table.status),
+}));
+
+export const legalNotifications = mysqlTable("legal_notifications", {
+	id: int().autoincrement().primaryKey().notNull(),
+	userId: int().notNull(), // Recipient (barrister/legal team)
+	caseId: int(), // Related case ID
+	type: mysqlEnum(['case_assigned', 'case_approved', 'case_rejected', 'status_update', 'urgent_alert']).notNull(),
+	title: varchar({ length: 255 }).notNull(),
+	message: text().notNull(),
+	data: json(), // Additional context data
+	isRead: tinyint().default(0).notNull(),
+	emailSent: tinyint().default(0).notNull(),
+	emailSentAt: timestamp({ mode: 'string' }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+	userIdx: index("idx_legal_notifications_user").on(table.userId),
+	caseIdx: index("idx_legal_notifications_case").on(table.caseId),
+	typeIdx: index("idx_legal_notifications_type").on(table.type),
+}));
+
+export const legalAnalyticsMetrics = mysqlTable("legal_analytics_metrics", {
+	id: int().autoincrement().primaryKey().notNull(),
+	metricType: varchar({ length: 100 }).notNull(), // 'violation_trend', 'response_time', 'risk_prediction'
+	jurisdiction: varchar({ length: 100 }),
+	sector: varchar({ length: 100 }),
+	violationType: varchar({ length: 100 }),
+	period: varchar({ length: 50 }).notNull(), // 'daily', 'weekly', 'monthly'
+	periodDate: date().notNull(),
+	value: decimal({ precision: 10, scale: 2 }).notNull(),
+	count: int().default(0),
+	average: decimal({ precision: 10, scale: 2 }),
+	trend: varchar({ length: 20 }), // 'up', 'down', 'stable'
+	prediction: decimal({ precision: 10, scale: 2 }), // Predicted value for forecasting
+	confidence: decimal({ precision: 5, scale: 2 }), // Confidence score for predictions
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+	metricTypeIdx: index("idx_analytics_metric_type").on(table.metricType),
+	jurisdictionIdx: index("idx_analytics_jurisdiction").on(table.jurisdiction),
+	periodDateIdx: index("idx_analytics_period_date").on(table.periodDate),
+}));
+
+// Type exports for new tables
+export type CaseAssignmentHistory = typeof caseAssignmentHistory.$inferSelect;
+export type InsertCaseAssignmentHistory = typeof caseAssignmentHistory.$inferInsert;
+
+export type LegalNotification = typeof legalNotifications.$inferSelect;
+export type InsertLegalNotification = typeof legalNotifications.$inferInsert;
+
+export type LegalAnalyticsMetric = typeof legalAnalyticsMetrics.$inferSelect;
+export type InsertLegalAnalyticsMetric = typeof legalAnalyticsMetrics.$inferInsert;
