@@ -4091,3 +4091,28 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add referral tracking pixel for analytics
 - [x] Build mobile-responsive design
 
+
+
+## Phase 32 - Backend Referral System (Completed)
+
+### Referral Tracking Database
+- [ ] Add referral_codes table to schema (code, creator_id, status, created_at)
+- [ ] Add referral_conversions table (referral_code_id, referred_user_id, conversion_date, commission_amount)
+- [ ] Create referral tracking API endpoints (create code, track click, record conversion)
+- [ ] Implement commission calculation logic (20% of certification price)
+- [ ] Add referral code validation on signup
+
+### Dashboard Referral Widget
+- [ ] Create ReferralWidget component showing stats
+- [ ] Display total referrals, conversions, earnings
+- [ ] Show recent referral activity timeline
+- [ ] Add referral code copy/share buttons
+- [ ] Integrate with dashboard layout
+
+### Email Notifications
+- [ ] Set up Resend API integration
+- [ ] Create email template for referral signup notification
+- [ ] Create email template for conversion notification
+- [ ] Create email template for commission earned notification
+- [ ] Implement email sending on referral events
+
