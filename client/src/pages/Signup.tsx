@@ -3,27 +3,42 @@
  * OAuth-based registration with CSOAI branding
  */
 
-import { useEffect } from 'react';
-import { useLocation } from 'wouter';
+import { useEffect, useState } from 'react';
+import { useLocation, useSearch } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Shield, ArrowRight, CheckCircle2, Star } from 'lucide-react';
+import { Shield, ArrowRight, CheckCircle2, Star, Gift } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Signup() {
   const [, setLocation] = useLocation();
+  const search = useSearch();
   const { user } = useAuth();
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [referrerName, setReferrerName] = useState<string | null>(null);
 
-  // Redirect if already logged in
+  // Extract referral code from URL and redirect if already logged in
   useEffect(() => {
     if (user) {
       setLocation('/dashboard');
     }
-  }, [user, setLocation]);
+
+    // Extract referral code from query parameters
+    const params = new URLSearchParams(search);
+    const ref = params.get('ref');
+    const referrer = params.get('referrer');
+    if (ref) {
+      setReferralCode(ref);
+      setReferrerName(referrer || 'A CSOAI Member');
+    }
+  }, [user, setLocation, search]);
 
   const handleSignup = () => {
-    // Redirect to OAuth signup endpoint
-    window.location.href = '/api/auth/signup';
+    // Pass referral code to OAuth signup endpoint
+    const signupUrl = referralCode 
+      ? `/api/auth/signup?ref=${encodeURIComponent(referralCode)}`
+      : '/api/auth/signup';
+    window.location.href = signupUrl;
   };
 
   return (
@@ -116,6 +131,18 @@ export default function Signup() {
               </ul>
             </div>
 
+            {referralCode && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Gift className="h-5 w-5 text-amber-600" />
+                  <span className="font-semibold text-amber-900">Referral Bonus!</span>
+                </div>
+                <p className="text-sm text-amber-800">
+                  {referrerName} referred you. Complete your certification and earn rewards together!
+                </p>
+              </div>
+            )}
+
             <Button
               size="lg"
               className="w-full bg-green-600 hover:bg-green-700 text-white"
@@ -142,6 +169,12 @@ export default function Signup() {
             >
               Sign In Instead
             </Button>
+
+            {referralCode && (
+              <p className="text-xs text-center text-amber-600 font-medium">
+                Referral Code: <code className="bg-amber-100 px-2 py-1 rounded">{referralCode}</code>
+              </p>
+            )}
 
             <p className="text-xs text-center text-gray-500">
               By creating an account, you agree to our{' '}

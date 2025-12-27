@@ -8,6 +8,17 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+
+// Add Plausible analytics script
+if (typeof window !== 'undefined' && !window.plausible) {
+  const script = document.createElement('script');
+  script.async = true;
+  script.defer = true;
+  script.src = 'https://plausible.io/js/script.js';
+  script.setAttribute('data-domain', window.location.hostname);
+  document.head.appendChild(script);
+  (window as any).plausible = (window as any).plausible || function() { (window as any).plausible.q = (window as any).plausible.q || []; (window as any).plausible.q.push(arguments); };
+}
 import Home from "./pages/Home";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
@@ -58,6 +69,7 @@ import Signup from "./pages/Signup";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
+import ReferralLandingPage from "./pages/ReferralLandingPage";
 import NotificationSettings from "./pages/NotificationSettings";
 import MyApplications from "./pages/MyApplications";
 import VerifyCertificate from "./pages/VerifyCertificate";
@@ -116,6 +128,7 @@ function App() {
                   <Route path="/" component={NewHomeV2} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
+                  <Route path="/referral" component={ReferralLandingPage} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
