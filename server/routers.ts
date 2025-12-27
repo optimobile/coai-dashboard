@@ -53,6 +53,9 @@ import { advisoryBoardRouter } from "./routers/advisoryBoard";
 import { watchdogSubmissionRouter } from "./routers/watchdogSubmission";
 import { bundleRouter } from "./routers/bundles";
 import { stripeWebhooksRouter } from "./routers/stripeWebhooks";
+import { analyticsRouter } from "./routers/analytics";
+import { auditRouter } from "./routers/audit";
+import { localizationRouter } from "./routers/localization";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2833,6 +2836,9 @@ export const appRouter = router({
   watchdogSubmission: watchdogSubmissionRouter,
   bundles: bundleRouter,
   stripeWebhooks: stripeWebhooksRouter,
+  analytics: analyticsRouter,
+  audit: auditRouter,
+  localization: localizationRouter,
 });
 
 export type AppRouter = typeof appRouter;

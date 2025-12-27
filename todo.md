@@ -4871,3 +4871,133 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Create audit trail viewer
 - [ ] Implement data encryption at rest
 - [ ] Add compliance audit reports
+
+
+## Phase 7: Analytics & Reporting Dashboard (IN PROGRESS)
+
+### Backend Services
+- [x] Create ComplianceTrendAnalysisService with historical data aggregation
+- [x] Build CustomReportBuilderService with template system
+- [x] Create DataExportService for PDF/CSV/JSON exports
+- [ ] Build ComplianceMetricsService with KPI calculations
+- [ ] Create ReportSchedulingService for automated reports
+- [ ] Implement caching layer for analytics queries
+
+### Frontend Components
+- [ ] Build AnalyticsDashboard main component
+- [ ] Create ComplianceTrendChart component (line/area charts)
+- [ ] Create MetricsCards widget component
+- [ ] Build CustomReportBuilder form interface
+- [ ] Create ReportPreview component
+- [ ] Build ExportDialog component
+- [ ] Add date range picker and filtering UI
+
+### tRPC Routers
+- [x] Create localizationRouter with endpoints:- getComplianceTrends (date range, framework filtering)
+  - getMetricsSnapshot (current KPIs)
+  - generateCustomReport (template, filters, format)
+  - exportReport (PDF/CSV/JSON)
+  - getScheduledReports
+  - createScheduledReport
+  - deleteScheduledReport
+
+### Testing
+- [ ] Write tests for trend analysis calculations
+- [ ] Test report generation with various templates
+- [ ] Test export functionality (PDF, CSV, JSON)
+- [ ] Test date range filtering and comparisons
+
+## Phase 8: Audit Logging System (IN PROGRESS)
+
+### Database Schema
+- [x] Create audit_logs table with fields (in-memory implementation):
+  - id, userId, action, resource, resourceId, changes, timestamp, ipAddress, userAgent
+- [ ] Create audit_events table for event types
+- [ ] Add indexes for userId, timestamp, resource
+- [ ] Create audit_retention_policy table
+
+### Backend Services
+- [x] Create AuditLoggingService with event capture
+- [x] Build AuditTrailService for log retrieval and filtering
+- [x] Create AuditReportService for compliance reports
+- [x] Build LogRetentionService for archival
+- [x] Create AuditSearchService with full-text search
+
+### Frontend Components
+- [ ] Build AuditTrailViewer page component
+- [ ] Create AuditLogTable with sorting/filtering
+- [ ] Build AuditEventDetail modal
+- [ ] Create AuditReportGenerator component
+- [ ] Build SearchBar for audit log search
+- [ ] Add DateRangeFilter component
+- [ ] Create ExportAuditReport button
+
+### tRPC Routers
+- [x] Create auditRouter with endpoints:
+  - getAuditLogs (filtering, pagination)
+  - getAuditLog (single log detail)
+  - searchAuditLogs (full-text search)
+  - generateAuditReport (date range, resource type)
+  - exportAuditLogs (CSV/JSON)
+  - getAuditStats (summary statistics)
+
+### Testing
+- [ ] Test audit event logging for all actions
+- [ ] Test audit log retrieval and filtering
+- [ ] Test search functionality
+- [ ] Test report generation
+- [ ] Test export functionality
+
+## Phase 9: Multi-Language Support (IN PROGRESS)
+
+### i18n Infrastructure
+- [x] Install i18next and react-i18next (LocalizationService ready)
+- [x] Create language configuration (13 languages: EN, FR, DE, ES, IT, NL, PL, PT, RU, ZH, JA, KO, AR)
+- [x] Set up language detection (browser locale, user preference)
+- [ ] Create LanguageProvider component
+- [ ] Build LanguageSwitcher component
+- [ ] Add language persistence to localStorage
+
+### Translation Files
+- [ ] Create translation files for all UI strings (core.json, pages.json, errors.json)
+- [ ] Translate compliance frameworks (EU AI Act, NIST, TC260, ISO 42001)
+- [ ] Translate course content and modules
+- [ ] Translate form labels and validation messages
+- [ ] Translate navigation and menu items
+
+### Localization Features
+- [ ] Implement currency formatting (EUR, USD, GBP, CNY, JPY, KRW)
+- [ ] Add date/time localization
+- [ ] Implement RTL support for Arabic/Hebrew
+- [ ] Create locale-specific number formatting
+- [ ] Add timezone support
+
+### Compliance Framework Localization
+- [ ] Create EU AI Act localized versions
+- [ ] Create NIST AI RMF localized versions
+- [ ] Create TC260 localized versions
+- [ ] Create ISO 42001 localized versions
+- [ ] Add jurisdiction-specific requirements
+
+### Frontend Integration
+- [ ] Add LanguageSwitcher to Header component
+- [ ] Update all pages with i18n hooks
+- [ ] Create useTranslation custom hook
+- [ ] Add language selector to Settings page
+- [ ] Implement language-specific content pages
+
+### Backend Support
+- [x] Create LocalizationService for dynamic translations
+- [ ] Add language preference to user profile
+- [x] Create endpoint for fetching localized content (localizationRouter)
+- [x] Build language-specific compliance frameworks API
+- [x] Add locale parameter to API endpoints
+
+### Testing
+- [ ] Test language switching functionality
+- [ ] Verify all translations are present
+- [ ] Test RTL rendering for Arabic/Hebrew
+- [ ] Test currency and date formatting
+- [ ] Test locale-specific compliance content
+- [ ] Test API responses with locale parameter
+
