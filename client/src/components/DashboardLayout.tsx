@@ -38,6 +38,7 @@ import {
   BookOpen,
   FolderOpen,
   Info,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -81,6 +83,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location] = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { logout } = useAuth();
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -156,15 +159,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </nav>
 
         {/* User Menu at Bottom */}
-        <div className="p-2 border-t border-sidebar-border">
+        <div className="p-2 border-t border-sidebar-border space-y-1">
           <Button
             variant="ghost"
             className="w-full justify-start gap-3 px-3 py-2 text-sm hover:bg-accent"
           >
-            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-amber-500 text-white font-medium text-xs">
+            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-500 text-white font-medium text-xs">
               AD
             </div>
             <span className="truncate">Admin User</span>
+          </Button>
+          <Button
+            onClick={logout}
+            variant="ghost"
+            className="w-full justify-start gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Sign Out</span>
           </Button>
         </div>
       </motion.aside>
