@@ -158,15 +158,26 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
-          {/* Logo */}
-          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <img
-              src="/csoai-icon.svg.png"
-              alt="CSOAI"
-              className="h-10 w-10"
-            />
-            <span className="text-2xl font-bold text-slate-900">CSOAI</span>
+          {/* Logo with Tagline and Mission */}
+          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity group">
+            <div className="flex flex-col">
+              <img
+                src="/csoai-icon.svg.png"
+                alt="CSOAI"
+                className="h-10 w-10"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-slate-900">CSOAI</span>
+              <span className="text-xs text-emerald-600 font-semibold tracking-wide">Open Public Regulatory Authority for AI Safety</span>
+            </div>
           </a>
+          
+          {/* CEASAI Tagline */}
+          <div className="hidden md:flex flex-col items-center">
+            <span className="text-sm font-semibold text-slate-700">CEASAI</span>
+            <span className="text-xs text-gray-500">Training and Certification in AI Safety Analysts</span>
+          </div>
 
           {/* Desktop Navigation with Mega Menu */}
           <div className="hidden lg:flex items-center space-x-1">
