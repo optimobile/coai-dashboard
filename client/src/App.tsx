@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
-import { Header } from "./components/Header";
+import { EnhancedHeader } from "./components/EnhancedHeader";
 import { Footer } from "./components/Footer";
 
 // Add Plausible analytics script
@@ -138,7 +138,7 @@ function App() {
             <TooltipProvider>
             <div className="flex flex-col min-h-screen">
               <ScrollToTop />
-              <Header />
+              <EnhancedHeader />
               <main className="flex-1">
                 <Switch>
                   {/* Main routes */}
