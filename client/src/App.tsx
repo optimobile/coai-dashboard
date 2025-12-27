@@ -142,7 +142,7 @@ function App() {
               <main className="flex-1">
                 <Switch>
                   {/* Main routes */}
-                  <Route path="/" component={NewHomeV2} />
+                  <Route path="/" component={Home} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
                   <Route path="/referral" component={ReferralLandingPage} />

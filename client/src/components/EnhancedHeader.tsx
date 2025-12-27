@@ -593,7 +593,7 @@ export function EnhancedHeader() {
 
                 {/* Mega Menu */}
                 {item.sections && activeDropdown === item.name && (
-                  <div className="absolute left-0 top-full mt-0 w-screen max-w-6xl bg-white rounded-lg shadow-xl border border-gray-200 py-6 px-8 z-50">
+                  <div className="absolute left-0 top-full mt-0 w-screen max-w-6xl bg-white rounded-lg shadow-xl border border-gray-200 py-6 px-8 z-50 max-h-[70vh] overflow-y-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {item.sections.map((section) => (
                         <div key={section.title}>
@@ -704,7 +704,7 @@ export function EnhancedHeader() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden pb-4 space-y-2">
+          <div className="lg:hidden pb-4 space-y-2 max-h-[calc(100vh-80px)] overflow-y-auto">
             {navigation.map((item) => (
               <div key={item.name}>
                 <a
