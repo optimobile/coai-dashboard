@@ -4691,6 +4691,48 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Implement application status tracking
 
 
+## Phase 7 - Payment Processing & Application Backends (IN PROGRESS)
+
+### Phase 1: Database Schema Extensions
+- [x] Add course_enrollments table (userId, courseId, paymentType, stripeSessionId, stripeSubscriptionId, status, enrolledAt, completedAt)
+- [x] Add advisory_board_applications table (applicantName, email, position, experience, motivation, resume_url, status, appliedAt)
+- [x] Add watchdog_reports_v2 table (userId, title, description, incidentType, severity, aiSystemName, evidence_urls, status, createdAt)
+- [x] Add course_bundles table (name, description, courseIds, price, discount, stripeProductId, createdAt)
+
+### Phase 2: Stripe Payment Integration Service
+- [x] Create PaymentService with Stripe integration
+- [x] Implement createCheckoutSession for one-time and subscription payments
+- [x] Implement createSubscription for monthly billing
+- [x] Implement cancelSubscription for enrollment cancellation
+- [x] Add webhook handler for payment.success and subscription.updated events
+
+### Phase 3: tRPC Endpoints for Course Enrollment
+- [x] Create coursesRouter with endpoints: enrollInCourse, getEnrollments, getCourseBundles, getCourseBundle, getEnrollmentStatus
+
+### Phase 4: Advisory Board Application Backend
+- [x] Create advisoryBoardRouter with endpoints: submitApplication, getApplicationStatus, getApplications, updateApplicationStatus, sendApplicationConfirmation
+
+### Phase 5: Watchdog Report Submission Backend
+- [x] Create watchdogRouter with endpoints: submitReport, getReportStatus, uploadReportEvidence (S3), getPublicReports, getReportDetails
+
+### Phase 6: Course Bundle & Pricing Queries
+- [x] Create bundleRouter with endpoints: getCourseBundles, getBundleDetails, calculateBundleSavings, getCoursePricing
+
+### Phase 7: Payment Success/Failure Pages & Webhooks
+- [x] Create PaymentSuccess.tsx page
+- [x] Create PaymentFailure.tsx page
+- [x] Implement Stripe webhook handler for checkout.session.completed
+- [x] Implement webhook handler for invoice.payment_succeeded
+- [x] Add enrollment confirmation email service
+
+### Phase 8: Frontend Integration & Testing
+- [x] Connect CourseDetail to enrollInCourse mutation
+- [x] Connect AdvisoryBoard to submitApplication mutation
+- [x] Connect WatchdogSubmit to submitReport mutation
+- [x] Add payment success/failure routing
+- [x] Write integration tests for all flows
+- [x] Test Stripe payment flow end-to-end
+
 ## Phase 6 - COMPLETED DELIVERABLES
 
 ✅ **Courses Page Redesign** - CoursesRedesigned.tsx

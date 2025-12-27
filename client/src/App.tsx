@@ -98,6 +98,8 @@ import NISTRecognition from "./pages/NISTRecognition";
 import TC260Alignment from "./pages/TC260Alignment";
 import APIKeyManagement from "./pages/APIKeyManagement";
 import WebhookMonitoring from "./pages/WebhookMonitoring";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailure from "./pages/PaymentFailure";
 import GovernmentAdminDashboard from "./pages/GovernmentAdminDashboard";
 import NotificationPreferences from "./pages/NotificationPreferences";
 import RegionSettings from "./pages/RegionSettings";
@@ -215,6 +217,8 @@ function App() {
                   <Route path="/admin/government" component={GovernmentAdminDashboard} />
                   <Route path="/notification-preferences" component={NotificationPreferences} />
                   <Route path="/region-settings" component={RegionSettings} />
+                  <Route path="/payment-success" component={PaymentSuccess} />
+                  <Route path="/payment-failure" component={PaymentFailure} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

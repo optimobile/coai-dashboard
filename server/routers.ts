@@ -49,6 +49,10 @@ import { onboardingRouter } from "./routers/onboarding";
 import { complianceRouter } from "./routers/compliance";
 import { enterpriseRouter } from "./routers/enterprise";
 import { referralRouter } from "./routers/referral.js";
+import { advisoryBoardRouter } from "./routers/advisoryBoard";
+import { watchdogSubmissionRouter } from "./routers/watchdogSubmission";
+import { bundleRouter } from "./routers/bundles";
+import { stripeWebhooksRouter } from "./routers/stripeWebhooks";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2825,6 +2829,10 @@ export const appRouter = router({
   onboarding: onboardingRouter,
   enterprise: enterpriseRouter,
   referral: referralRouter,
+  advisoryBoard: advisoryBoardRouter,
+  watchdogSubmission: watchdogSubmissionRouter,
+  bundles: bundleRouter,
+  stripeWebhooks: stripeWebhooksRouter,
 });
 
 export type AppRouter = typeof appRouter;

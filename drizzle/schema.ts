@@ -815,3 +815,34 @@ export const websocketConnections = mysqlTable("websocket_connections", {
 
 export type WebsocketConnection = typeof websocketConnections.$inferSelect;
 export type InsertWebsocketConnection = typeof websocketConnections.$inferInsert;
+
+
+// ============================================
+// ADVISORY BOARD APPLICATIONS
+// ============================================
+
+export const advisoryBoardApplications = mysqlTable("advisory_board_applications", {
+	id: int().autoincrement().notNull(),
+	applicantName: varchar({ length: 255 }).notNull(),
+	email: varchar({ length: 320 }).notNull(),
+	position: mysqlEnum(['chair','regulatory_expert','academic_expert']).notNull(),
+	yearsOfExperience: int().notNull(),
+	currentRole: varchar({ length: 255 }).notNull(),
+	organization: varchar({ length: 255 }).notNull(),
+	motivation: text().notNull(),
+	resumeUrl: varchar({ length: 500 }),
+	linkedinUrl: varchar({ length: 500 }),
+	status: mysqlEnum(['submitted','under_review','shortlisted','accepted','rejected']).default('submitted').notNull(),
+	reviewNotes: text(),
+	appliedAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	reviewedAt: timestamp({ mode: 'string' }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+	emailIdx: index("idx_advisory_email").on(table.email),
+	statusIdx: index("idx_advisory_status").on(table.status),
+	positionIdx: index("idx_advisory_position").on(table.position),
+}));
+
+export type AdvisoryBoardApplication = typeof advisoryBoardApplications.$inferSelect;
+export type InsertAdvisoryBoardApplication = typeof advisoryBoardApplications.$inferInsert;
