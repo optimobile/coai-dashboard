@@ -115,6 +115,8 @@ import { Analytics } from "./pages/Analytics";
 import { AuditTrail } from "./pages/AuditTrail";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
+import { LegalFlagsPage } from "./pages/LegalFlags";
+import { LegalCaseQueuePage } from "./pages/LegalCaseQueue";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -229,10 +231,10 @@ function App() {
                   <Route path="/payment-failure" component={PaymentFailure} />
                   <Route path="/compliance-assessment" component={ComplianceAssessmentWizard} />
                   <Route path="/regulatory-portal" component={RegulatoryPortal} />
-                  <Route path="/council-voting" component={CouncilVotingEngine} />
-                  <Route path="/analytics" component={Analytics} />
-                  <Route path="/audit" component={AuditTrail} />
-                  <Route path="/404" component={NotFound} />
+                  <Route path="/council-voting" component={CouncilVotingEngine} />                  <Route path="/analytics" component={Analytics} />
+                  <Route path="/audit-trail" component={AuditTrail} />
+                  <Route path="/legal/flags" component={LegalFlagsPage} />
+                  <Route path="/legal/case-queue" component={LegalCaseQueuePage} />              <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
                 </Switch>

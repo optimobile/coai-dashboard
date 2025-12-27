@@ -846,3 +846,97 @@ export const advisoryBoardApplications = mysqlTable("advisory_board_applications
 
 export type AdvisoryBoardApplication = typeof advisoryBoardApplications.$inferSelect;
 export type InsertAdvisoryBoardApplication = typeof advisoryBoardApplications.$inferInsert;
+
+
+// ============================================
+// LEGAL ISSUES FLAGGING SYSTEM TABLES
+// ============================================
+
+export const legalViolationCategories = mysqlTable("legal_violation_categories", {
+	id: varchar({ length: 100 }).primaryKey().notNull(),
+	categoryName: varchar({ length: 255 }).notNull(),
+	articleReference: varchar({ length: 100 }).notNull(),
+	description: text().notNull(),
+	legalBasis: text(),
+	enforcementAuthority: varchar({ length: 255 }).notNull(),
+	severityLevel: mysqlEnum(['critical', 'high', 'medium', 'low']).notNull(),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+});
+
+export const legalFlags = mysqlTable("legal_flags", {
+	id: int().autoincrement().primaryKey().notNull(),
+	reportId: int().notNull(),
+	violationTypes: json().$type<string[]>().notNull(), // Array of violation category IDs
+	riskScore: int().notNull(), // 0-100
+	summary: text().notNull(),
+	legalActions: json().$type<string[]>().notNull(), // Array of recommended actions
+	status: mysqlEnum(['flagged', 'assigned', 'under_review', 'resolved', 'dismissed']).default('flagged').notNull(),
+	flaggedAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+	reportIdx: index("idx_legal_flags_report").on(table.reportId),
+	statusIdx: index("idx_legal_flags_status").on(table.status),
+	riskScoreIdx: index("idx_legal_flags_risk").on(table.riskScore),
+}));
+
+export const legalFlagDetails = mysqlTable("legal_flag_details", {
+	id: int().autoincrement().primaryKey().notNull(),
+	flagId: int().notNull(),
+	violationCategoryId: varchar({ length: 100 }).notNull(),
+	categoryName: varchar({ length: 255 }).notNull(),
+	articleReference: varchar({ length: 100 }).notNull(),
+	severity: mysqlEnum(['critical', 'high', 'medium', 'low']).notNull(),
+	description: text().notNull(),
+	evidence: json().$type<string[]>().notNull(), // Array of evidence strings
+	enforcementAuthority: varchar({ length: 255 }).notNull(),
+	recommendedActions: json().$type<string[]>().notNull(), // Array of actions
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+}, (table) => ({
+	flagIdx: index("idx_legal_flag_details_flag").on(table.flagId),
+	categoryIdx: index("idx_legal_flag_details_category").on(table.violationCategoryId),
+	severityIdx: index("idx_legal_flag_details_severity").on(table.severity),
+}));
+
+export const legalCaseQueue = mysqlTable("legal_case_queue", {
+	id: int().autoincrement().primaryKey().notNull(),
+	flagId: int().notNull(),
+	status: mysqlEnum(['pending', 'assigned', 'in_progress', 'under_review', 'resolved', 'closed']).default('pending').notNull(),
+	assignedTo: int(), // User ID of barrister/legal team member
+	assignedAt: timestamp({ mode: 'string' }),
+	notes: text(),
+	caseFileUrl: varchar({ length: 500 }), // URL to generated case file
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+	flagIdx: index("idx_legal_case_queue_flag").on(table.flagId),
+	statusIdx: index("idx_legal_case_queue_status").on(table.status),
+	assignedIdx: index("idx_legal_case_queue_assigned").on(table.assignedTo),
+}));
+
+export const legalEnforcementAuthorities = mysqlTable("legal_enforcement_authorities", {
+	id: varchar({ length: 100 }).primaryKey().notNull(),
+	authorityName: varchar({ length: 255 }).notNull(),
+	jurisdiction: varchar({ length: 100 }).notNull(),
+	authorityType: mysqlEnum(['eu_body', 'national_authority', 'sector_regulator']).notNull(),
+	contactInfo: text(),
+	website: varchar({ length: 500 }),
+	email: varchar({ length: 255 }),
+	phone: varchar({ length: 50 }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+});
+
+// Type exports for legal tables
+export type LegalViolationCategory = typeof legalViolationCategories.$inferSelect;
+export type InsertLegalViolationCategory = typeof legalViolationCategories.$inferInsert;
+
+export type LegalFlag = typeof legalFlags.$inferSelect;
+export type InsertLegalFlag = typeof legalFlags.$inferInsert;
+
+export type LegalFlagDetail = typeof legalFlagDetails.$inferSelect;
+export type InsertLegalFlagDetail = typeof legalFlagDetails.$inferInsert;
+
+export type LegalCaseQueueItem = typeof legalCaseQueue.$inferSelect;
+export type InsertLegalCaseQueueItem = typeof legalCaseQueue.$inferInsert;
+
+export type LegalEnforcementAuthority = typeof legalEnforcementAuthorities.$inferSelect;
+export type InsertLegalEnforcementAuthority = typeof legalEnforcementAuthorities.$inferInsert;

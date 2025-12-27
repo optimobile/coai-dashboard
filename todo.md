@@ -5062,3 +5062,107 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Verify all translations load
 - [ ] Test persistence across sessions
 - [ ] Verify RTL rendering
+
+
+## Phase 3: Legal Issues Flagging System (NEW - PRIORITY)
+
+### EU AI Act Legal Classification Research
+- [x] Research and document 15+ legal violation categories from EU AI Act
+- [ ] Map each violation to specific articles and enforcement authority
+- [ ] Create legal violation patterns and indicators document
+- [ ] Document legal risk scoring methodology (0-100 scale)
+- [ ] Create decision tree for legal violation classification
+
+### Legal Violation Categories (15+)
+- [ ] Prohibited AI practices violations (Article 5)
+- [ ] High-risk system requirements violations (Article 8)
+- [ ] Transparency requirement violations (Article 13)
+- [ ] GPAI regulation violations (Article 53)
+- [ ] Provider obligation violations (Article 15)
+- [ ] Deployer obligation violations (Article 26)
+- [ ] Governance structure violations (Article 55)
+- [ ] Biometric system violations (Article 10)
+- [ ] Critical infrastructure violations (Article 52)
+- [ ] Employment discrimination violations (sector-specific)
+- [ ] Healthcare system violations (sector-specific)
+- [ ] Law enforcement violations (sector-specific)
+- [ ] Financial services violations (sector-specific)
+- [ ] Consumer protection violations (GDPR/sector overlap)
+- [ ] Data protection violations (GDPR Article 5-6)
+
+### LegalIssuesFlaggingService Backend
+- [x] Create server/services/LegalIssuesFlaggingService.ts with:
+  - [ ] analyzeReportForLegalIssues(report) - Main analysis function
+  - [ ] classifyViolationType(report, violations) - Classify violation types
+  - [ ] calculateLegalRiskScore(violations) - Risk scoring algorithm
+  - [ ] generateLegalSummary(violations) - Human-readable summary
+  - [ ] suggestLegalActions(violations) - Recommended actions for each violation
+  - [ ] mapToEnforcementAuthority(violation) - Identify responsible authority
+  - [ ] generateLegalCaseFile(report, violations) - Create case documentation
+
+### Database Schema Extensions
+- [x] Add legal_flags table:
+  - [ ] id, report_id, violation_types (JSON array), risk_score, summary, legal_actions, flagged_at, updated_at
+- [ ] Add legal_violation_categories table:
+  - [ ] id, category_name, article_reference, description, legal_basis, enforcement_authority, severity_level
+- [ ] Add legal_case_queue table:
+  - [ ] id, flag_id, status (pending/assigned/reviewed/closed), assigned_to, notes, created_at, updated_at
+- [ ] Add legal_enforcement_authorities table:
+  - [ ] id, authority_name, jurisdiction, contact_info, website, authority_type
+
+#### tRPC Legal Router (server/routers/legal.ts)
+- [x] flagReportForLegalIssues(reportId) - Analyze report and create flagsflags
+- [ ] getLegalFlags(filters) - Retrieve flagged reports with filtering
+- [ ] getLegalFlagDetails(flagId) - Get full flag details with violations
+- [ ] updateLegalFlagStatus(flagId, status, notes) - Update flag status
+- [ ] getLegalCaseQueue(filters) - Get pending legal cases
+- [ ] assignLegalCase(flagId, assignedTo) - Assign to barrister/legal team
+- [ ] getLegalViolationCategories() - Get all violation types
+- [ ] getEnforcementAuthorities(jurisdiction) - Get relevant authorities
+- [ ] exportLegalCase(flagId, format) - Export case as PDF/JSON
+
+### Fr### Frontend Components
+- [x] LegalFlagsWidget component (dashboard widget showing flagged reports)
+- [x] LegalFlagsPage (full legal flags management interface)
+- [x] LegalFlagDetails component (detailed violation analysis)
+- [x] LegalCaseQueue component (pending cases for barristers)ter assignment
+- [ ] LegalViolationBadge.tsx - Visual indicator for violation types
+- [ ] LegalRiskScore.tsx - Risk score display with color coding
+
+### Frontend Pages
+- [x] Create /legal/flags page (main legal flags dashboard)
+- [x] Create /legal/case-queue page (pending cases for barristers)
+- [ ] Create /legal/case/:id page (detailed case view)
+- [ ] Add Legal menu item to main navigation
+
+### Integration with Watchdog
+- [ ] Auto-flag reports when submitted (trigger LegalIssuesFlaggingService)
+- [ ] Display legal flags on Watchdog report detail view
+- [ ] Add "Legal Issues" tab to report details
+- [ ] Show risk score and violation types prominently
+- [ ] Add "Assign to Legal Team" button for high-risk reports
+
+### Testing (20+ tests)
+- [ ] Test legal violation classification accuracy
+- [ ] Test risk scoring algorithm with various scenarios
+- [ ] Test legal action suggestion generation
+- [ ] Test enforcement authority mapping
+- [ ] Test database schema and queries
+- [ ] Test tRPC endpoints with various inputs
+- [ ] Test edge cases and error handling
+- [ ] Integration tests with Watchdog reports
+
+### Documentation
+- [ ] Create LEGAL_VIOLATIONS.md - All 15+ violation categories with examples
+- [ ] Create LEGAL_CLASSIFICATION_GUIDE.md - Decision tree and methodology
+- [ ] Create BARRISTER_INTEGRATION.md - Guide for legal team integration
+- [ ] Create ENFORCEMENT_AUTHORITIES.md - List of EU authorities and contacts
+- [ ] Add legal flagging to API documentation
+
+### Deployment Readiness
+- [ ] Verify all legal categories are accurate per EU AI Act
+- [ ] Test with sample Watchdog reports
+- [ ] Validate risk scoring with legal experts
+- [ ] Performance test with large report volumes
+- [ ] Security review of legal case data handling
+

@@ -56,6 +56,7 @@ import { stripeWebhooksRouter } from "./routers/stripeWebhooks";
 import { analyticsRouter } from "./routers/analytics";
 import { auditRouter } from "./routers/audit";
 import { localizationRouter } from "./routers/localization";
+import { legalRouter } from "./routers/legal";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2839,6 +2840,7 @@ export const appRouter = router({
   analytics: analyticsRouter,
   audit: auditRouter,
   localization: localizationRouter,
+  legal: legalRouter,
 });
 
 export type AppRouter = typeof appRouter;
