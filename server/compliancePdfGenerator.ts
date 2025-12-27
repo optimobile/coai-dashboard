@@ -148,14 +148,14 @@ function drawCoverPage(doc: PDFKit.PDFDocument, data: ComplianceReportData) {
   doc
     .fontSize(36)
     .font("Helvetica-Bold")
-    .fillColor(COLORS.primary)
-    .text("CSOAI", 50, 80, { align: "center", width: pageWidth });
+    .fillColor(COLORS.primary);
+  doc.text("CSOAI", 50, 80, { align: "center", width: pageWidth });
 
   doc
     .fontSize(14)
     .font("Helvetica")
-    .fillColor(COLORS.secondary)
-    .text("Council of AIs - AI Safety & Compliance Platform", 50, 125, { align: "center", width: pageWidth });
+    .fillColor(COLORS.secondary);
+  doc.text("Council of AIs - AI Safety & Compliance Platform", 50, 125, { align: "center", width: pageWidth });
 
   // Decorative line
   doc
@@ -169,8 +169,8 @@ function drawCoverPage(doc: PDFKit.PDFDocument, data: ComplianceReportData) {
   doc
     .fontSize(28)
     .font("Helvetica-Bold")
-    .fillColor(COLORS.primary)
-    .text("Compliance Assessment Report", 50, 220, { align: "center", width: pageWidth });
+    .fillColor(COLORS.primary);
+  doc.text("Compliance Assessment Report", 50, 220, { align: "center", width: pageWidth });
 
   // Framework Badge
   const frameworkBadgeY = 280;
@@ -185,13 +185,13 @@ function drawCoverPage(doc: PDFKit.PDFDocument, data: ComplianceReportData) {
   doc
     .fontSize(18)
     .font("Helvetica-Bold")
-    .fillColor("#ffffff")
-    .text(data.framework.name, badgeX, frameworkBadgeY + 12, { align: "center", width: badgeWidth });
+    .fillColor("#ffffff");
+  doc.text(data.framework.name, badgeX, frameworkBadgeY + 12, { align: "center", width: badgeWidth });
 
   doc
     .fontSize(12)
-    .font("Helvetica")
-    .text(data.framework.version ? `Version ${data.framework.version}` : "", badgeX, frameworkBadgeY + 38, { align: "center", width: badgeWidth });
+    .font("Helvetica");
+  doc.text(data.framework.version ? `Version ${data.framework.version}` : "", badgeX, frameworkBadgeY + 38, { align: "center", width: badgeWidth });
 
   // AI System Info Box
   const infoBoxY = 380;
@@ -205,8 +205,8 @@ function drawCoverPage(doc: PDFKit.PDFDocument, data: ComplianceReportData) {
   doc
     .fontSize(14)
     .font("Helvetica-Bold")
-    .fillColor(COLORS.primary)
-    .text("AI System Under Assessment", 70, infoBoxY + 15);
+    .fillColor(COLORS.primary);
+  doc.text("AI System Under Assessment", 70, infoBoxY + 15);
 
   doc
     .fontSize(12)
@@ -231,12 +231,12 @@ function drawCoverPage(doc: PDFKit.PDFDocument, data: ComplianceReportData) {
   doc
     .fontSize(20)
     .font("Helvetica-Bold")
-    .fillColor("#ffffff")
-    .text(`${Math.round(score)}%`, scoreX - 25, scoreY - 12, { width: 50, align: "center" });
+    .fillColor("#ffffff");
+  doc.text(`${Math.round(score)}%`, scoreX - 25, scoreY - 12, { width: 50, align: "center" });
 
   doc
-    .fontSize(8)
-    .text("SCORE", scoreX - 25, scoreY + 10, { width: 50, align: "center" });
+    .fontSize(8);
+  doc.text("SCORE", scoreX - 25, scoreY + 10, { width: 50, align: "center" });
 
   // Assessment Details
   const detailsY = 540;
@@ -244,10 +244,10 @@ function drawCoverPage(doc: PDFKit.PDFDocument, data: ComplianceReportData) {
   doc
     .fontSize(11)
     .font("Helvetica")
-    .fillColor(COLORS.secondary)
-    .text(`Assessment Date: ${formatDate(data.assessment.completedAt || data.assessment.createdAt)}`, 50, detailsY, { align: "center", width: pageWidth })
-    .text(`Assessment Status: ${formatAssessmentStatus(data.assessment.status)}`, 50, detailsY + 18, { align: "center", width: pageWidth })
-    .text(`Framework Jurisdiction: ${data.framework.jurisdiction || "Global"}`, 50, detailsY + 36, { align: "center", width: pageWidth });
+    .fillColor(COLORS.secondary);
+  doc.text(`Assessment Date: ${formatDate(data.assessment.completedAt || data.assessment.createdAt)}`, 50, detailsY, { align: "center", width: pageWidth });
+  doc.text(`Assessment Status: ${formatAssessmentStatus(data.assessment.status)}`, 50, detailsY + 18, { align: "center", width: pageWidth });
+  doc.text(`Framework Jurisdiction: ${data.framework.jurisdiction || "Global"}`, 50, detailsY + 36, { align: "center", width: pageWidth });
 
   // Confidentiality Notice
   doc
@@ -310,22 +310,22 @@ function drawComplianceSummary(doc: PDFKit.PDFDocument, data: ComplianceReportDa
     doc
       .fontSize(28)
       .font("Helvetica-Bold")
-      .fillColor(COLORS.primary)
-      .text(card.value.toString(), x + 15, cardY + 15, { width: cardWidth - 20 });
+      .fillColor(COLORS.primary);
+    doc.text(card.value.toString(), x + 15, cardY + 15, { width: cardWidth - 20 });
 
     doc
       .fontSize(10)
       .font("Helvetica")
-      .fillColor(COLORS.secondary)
-      .text(card.label, x + 15, cardY + 50, { width: cardWidth - 20 });
+      .fillColor(COLORS.secondary);
+    doc.text(card.label, x + 15, cardY + 50, { width: cardWidth - 20 });
   });
 
   // Compliance by Category
   doc
     .fontSize(14)
     .font("Helvetica-Bold")
-    .fillColor(COLORS.primary)
-    .text("Compliance by Category", 50, 210);
+    .fillColor(COLORS.primary);
+  doc.text("Compliance by Category", 50, 210);
 
   const categories = groupByCategory(data.items);
   let categoryY = 235;
@@ -338,8 +338,8 @@ function drawComplianceSummary(doc: PDFKit.PDFDocument, data: ComplianceReportDa
     doc
       .fontSize(10)
       .font("Helvetica")
-      .fillColor(COLORS.primary)
-      .text(category || "General", 50, categoryY, { width: 140 });
+      .fillColor(COLORS.primary);
+    doc.text(category || "General", 50, categoryY, { width: 140 });
 
     // Progress bar background
     doc
@@ -360,8 +360,8 @@ function drawComplianceSummary(doc: PDFKit.PDFDocument, data: ComplianceReportDa
     doc
       .fontSize(9)
       .font("Helvetica-Bold")
-      .fillColor(COLORS.primary)
-      .text(`${Math.round(complianceRate)}%`, 200 + barWidth + 10, categoryY + 3);
+      .fillColor(COLORS.primary);
+    doc.text(`${Math.round(complianceRate)}%`, 200 + barWidth + 10, categoryY + 3);
 
     categoryY += 28;
   });
@@ -460,10 +460,10 @@ function drawRequirementsDetail(doc: PDFKit.PDFDocument, data: ComplianceReportD
       doc
         .fontSize(10)
         .font("Helvetica-Bold")
-        .fillColor(COLORS.primary)
-        .text(req?.title || `Requirement #${item.requirementId}`, 60, currentY + (req?.articleNumber ? 18 : 8), {
-          width: pageWidth - 120,
-        });
+        .fillColor(COLORS.primary);
+      doc.text(req?.title || `Requirement #${item.requirementId}`, 60, currentY + (req?.articleNumber ? 18 : 8), {
+        width: pageWidth - 120,
+      });
 
       // Status badge
       const badgeX = pageWidth - 30;
@@ -475,8 +475,8 @@ function drawRequirementsDetail(doc: PDFKit.PDFDocument, data: ComplianceReportD
       doc
         .fontSize(8)
         .font("Helvetica-Bold")
-        .fillColor("#ffffff")
-        .text(statusInfo.label, badgeX, currentY + 21, { width: 70, align: "center" });
+        .fillColor("#ffffff");
+      doc.text(statusInfo.label, badgeX, currentY + 21, { width: 70, align: "center" });
 
       currentY += 55;
 
@@ -485,10 +485,10 @@ function drawRequirementsDetail(doc: PDFKit.PDFDocument, data: ComplianceReportD
         doc
           .fontSize(9)
           .font("Helvetica-Oblique")
-          .fillColor(COLORS.secondary)
-          .text(`Evidence: ${item.evidence}`, 60, currentY, {
-            width: pageWidth - 20,
-          });
+          .fillColor(COLORS.secondary);
+        doc.text(`Evidence: ${item.evidence}`, 60, currentY, {
+          width: pageWidth - 20,
+        });
 
         currentY += doc.heightOfString(`Evidence: ${item.evidence}`, { width: pageWidth - 20 }) + 10;
       }
@@ -498,10 +498,10 @@ function drawRequirementsDetail(doc: PDFKit.PDFDocument, data: ComplianceReportD
         doc
           .fontSize(9)
           .font("Helvetica")
-          .fillColor(COLORS.secondary)
-          .text(`Notes: ${item.notes}`, 60, currentY, {
-            width: pageWidth - 20,
-          });
+          .fillColor(COLORS.secondary);
+        doc.text(`Notes: ${item.notes}`, 60, currentY, {
+          width: pageWidth - 20,
+        });
 
         currentY += doc.heightOfString(`Notes: ${item.notes}`, { width: pageWidth - 20 }) + 10;
       }
@@ -555,9 +555,9 @@ function drawPageFooter(doc: PDFKit.PDFDocument, pageNum: number, totalPages: nu
     .fontSize(8)
     .font("Helvetica")
     .fillColor(COLORS.secondary)
-    .text(`CSOAI Compliance Report - ${frameworkCode}`, 50, footerY)
-    .text(`Page ${pageNum} of ${totalPages}`, 50, footerY, { align: "right", width: pageWidth })
-    .text(`Generated: ${formatDate(new Date())}`, 50, footerY + 12, { align: "center", width: pageWidth });
+    .text(`CSOAI Compliance Report - ${frameworkCode}`, 50, footerY);
+  doc.text(`Page ${pageNum} of ${totalPages}`, 50, footerY, { align: "right", width: pageWidth });
+  doc.text(`Generated: ${formatDate(new Date())}`, 50, footerY + 12, { align: "center", width: pageWidth });
 }
 
 // Helper functions

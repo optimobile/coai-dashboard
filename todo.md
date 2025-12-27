@@ -5245,3 +5245,115 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Create ANALYTICS_GUIDE.md - Dashboard features and metrics
 - [ ] Update API documentation with new endpoints
 - [ ] Create user guides for barristers and legal teams
+
+
+## Phase 5: Testing & Deployment (CURRENT)
+
+### Unit Tests for Phase 4 Components
+- [x] ViolationTrendChart.test.tsx - Complete with 5 test cases
+- [x] CaseAssignmentDialog.test.tsx - Complete with 6 test cases
+- [x] reportGenerator.test.ts - Complete with 8+ test cases
+- [ ] RiskPredictionChart.test.tsx - Create tests for prediction visualization
+- [ ] SectorAnalysis.test.tsx - Create tests for sector breakdown
+- [ ] BarristerCaseList.test.tsx - Create tests for case list management
+- [ ] ReportExportDialog.test.tsx - Create tests for export dialog
+
+### Integration Tests
+- [ ] Watchdog report → Legal flagging flow
+- [ ] Legal flagging → Case assignment flow
+- [ ] Case assignment → Barrister notification flow
+- [ ] Case approval/rejection → Analytics update flow
+- [ ] Report generation → Email delivery flow
+
+### End-to-End Testing
+- [ ] Complete Watchdog report submission workflow
+- [ ] Complete case assignment and approval workflow
+- [ ] Complete report generation and export workflow
+- [ ] Chart visualization with real data
+- [ ] Performance benchmarks (<1s chart render, <500ms case list)
+
+### Deployment Readiness
+- [ ] TypeScript compilation clean
+- [ ] All imports resolve correctly
+- [ ] Build succeeds without errors
+- [ ] Environment variables configured
+- [ ] Database migrations applied
+- [ ] Lovable platform deployment
+- [ ] Domain configuration (councilof.ai)
+- [ ] Production verification
+
+### Success Criteria
+- [ ] All unit tests passing (>95% coverage)
+- [ ] All integration tests passing
+- [ ] All end-to-end workflows functional
+- [ ] Performance benchmarks met
+- [ ] Zero critical security issues
+- [ ] Deployed to councilof.ai domain
+- [ ] All features working in production
+
+## Phase 6: Integration Testing (NEXT)
+
+### Full Workflow Testing
+- [ ] Watchdog report submission
+- [ ] Automatic legal flagging
+- [ ] Case assignment to barrister
+- [ ] Email notification delivery
+- [ ] Case approval/rejection workflow
+- [ ] Analytics dashboard updates
+- [ ] Report generation and export
+
+### Barrister Email Notifications
+- [ ] Case assignment email sent
+- [ ] Status update emails sent
+- [ ] Urgent alert emails sent
+- [ ] Email formatting correct
+- [ ] Resend API integration working
+
+### Legal Analytics
+- [ ] Violation trend calculations
+- [ ] Risk prediction accuracy
+- [ ] Enforcement authority tracking
+- [ ] Compliance trend reports
+- [ ] Dashboard metrics updating
+
+### Report Generation
+- [ ] PDF generation with charts
+- [ ] CSV export with proper formatting
+- [ ] Email delivery of reports
+- [ ] File download functionality
+
+## Phase 7: Portfolio Expansion (24+ Projects)
+
+### Project List
+- [ ] proofof.ai
+- [ ] transparencyof.ai
+- [ ] fishkeeper.ai
+- [ ] KoiKeeper.ai
+- [ ] grabhire.ai
+- [ ] And 19+ additional projects
+
+### Production Readiness for Each
+- [ ] Full testing (front-end, back-end, workflows)
+- [ ] Payment processing setup
+- [ ] Legal compliance integration
+- [ ] Red team testing
+- [ ] Blue team testing
+- [ ] Debugging and optimization
+
+## Phase 8: GPU Infrastructure Integration
+
+### Multi-Project Orchestration
+- [ ] Integrate all 24+ projects to GPU infrastructure
+- [ ] Set up domain routing
+- [ ] Configure shared authentication
+- [ ] Implement authorization system
+- [ ] Set up monitoring and logging
+
+## Phase 9: Complete AI Safety Ecosystem
+
+### Positioning
+- [ ] Position as Western equivalent to TC260
+- [ ] Establish regulatory authority status
+- [ ] Build advisory board governance
+- [ ] Create unified compliance dashboard
+- [ ] Implement PDCA methodology across all projects

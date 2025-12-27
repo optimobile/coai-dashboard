@@ -100,34 +100,34 @@ function drawHeader(doc: PDFKit.PDFDocument, cycle: PDCACycleData) {
   doc
     .fontSize(24)
     .font("Helvetica-Bold")
-    .fillColor(COLORS.primary)
-    .text("CSOAI", 50, 50, { continued: true })
+    .fillColor(COLORS.primary);
+  doc.text("CSOAI", 50, 50, { continued: true });
+  doc
     .fontSize(12)
     .font("Helvetica")
-    .fillColor(COLORS.secondary)
-    .text("  Council of AIs", { baseline: "bottom" });
+    .fillColor(COLORS.secondary);
+  doc.text("  Council of AIs");
 
   // Report Title
   doc
     .moveDown(1)
     .fontSize(20)
     .font("Helvetica-Bold")
-    .fillColor(COLORS.primary)
-    .text(`PDCA Cycle Report`, 50);
+    .fillColor(COLORS.primary);
+  doc.text(`PDCA Cycle Report`, 50);
 
   doc
     .fontSize(14)
     .font("Helvetica")
-    .fillColor(COLORS.secondary)
-    .text(`Cycle #${cycle.cycleNumber} - ${cycle.aiSystemName || "Unknown System"}`);
+    .fillColor(COLORS.secondary);
+  doc.text(`Cycle #${cycle.cycleNumber} - ${cycle.aiSystemName || "Unknown System"}`);
 
   // Status Badge
   const statusColor = cycle.status === "completed" ? COLORS.success : 
                       cycle.status === "active" ? COLORS.accent : COLORS.warning;
   
-  doc
-    .moveDown(0.5)
-    .fontSize(10)
+  doc.moveDown(0.5);
+  doc.fontSize(10)
     .font("Helvetica-Bold")
     .fillColor(statusColor)
     .text(cycle.status.toUpperCase(), 50);
