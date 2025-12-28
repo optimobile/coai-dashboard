@@ -65,7 +65,11 @@ import PublicWatchdogHub from "./pages/PublicWatchdogHub";
 import CouncilDetail from "./pages/CouncilDetail";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
+import HowItWorks from "./pages/HowItWorks";
+import FAQ from "./pages/FAQ";
+import CEASAITraining from "./pages/CEASAITraining";
 import NewHomeV2 from "./pages/NewHome-v2";
+import HomepageMaster from "./pages/HomepageMaster";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
@@ -127,7 +131,7 @@ function App() {
               <main className="flex-1">
                 <Switch>
                   {/* Main routes */}
-                  <Route path="/" component={NewHomeV2} />
+                  <Route path="/" component={HomepageMaster} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
                   <Route path="/referral" component={ReferralLandingPage} />
@@ -135,6 +139,9 @@ function App() {
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
                   <Route path="/about" component={About} />
+                  <Route path="/how-it-works" component={HowItWorks} />
+                  <Route path="/faq" component={FAQ} />
+                  <Route path="/ceasai-training" component={CEASAITraining} />
                   <Route path="/old-home" component={Home} />
                   <Route path="/landing" component={Landing} />
                   <Route path="/dashboard" component={MembersDashboard} />

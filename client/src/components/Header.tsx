@@ -42,16 +42,18 @@ export function Header() {
       name: 'Training', 
       href: '/training',
       submenu: [
-        { name: 'Courses', href: '/courses', description: 'Browse courses' },
-        { name: 'My Courses', href: '/my-courses', description: 'Your courses' },
+        { name: 'CEASAI Training', href: '/ceasai-training', description: 'Comprehensive AI safety training' },
+        { name: 'Browse Courses', href: '/courses', description: 'All available courses' },
+        { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses' },
       ]
     },
     { 
       name: 'Certification', 
       href: '/certification',
       submenu: [
-        { name: 'Exam', href: '/exam', description: 'Take exam' },
-        { name: 'My Certs', href: '/certificates', description: 'Your certificates' },
+        { name: 'Certification Exam', href: '/exam', description: 'Take the exam' },
+        { name: 'My Certificates', href: '/certificates', description: 'Your certificates' },
+        { name: 'Review Past Exams', href: '/certification/review', description: 'Review attempts' },
       ]
     },
     { 
@@ -66,24 +68,38 @@ export function Header() {
       name: 'Watchdog', 
       href: '/watchdog',
       submenu: [
-        { name: 'Report', href: '/watchdog', description: 'Report incident' },
-        { name: 'Jobs', href: '/jobs', description: 'Analyst jobs' },
+        { name: 'Report Incident', href: '/watchdog', description: 'Report AI safety incident' },
+        { name: 'Analyst Jobs', href: '/jobs', description: 'Available positions' },
+        { name: 'Leaderboard', href: '/watchdog-leaderboard', description: 'Top analysts' },
+      ]
+    },
+    { 
+      name: 'Compliance', 
+      href: '/compliance',
+      submenu: [
+        { name: 'Frameworks', href: '/standards', description: 'EU AI Act, NIST, ISO' },
+        { name: 'Assessment', href: '/compliance', description: 'Run assessment' },
+        { name: 'Scorecard', href: '/transparency', description: 'Public compliance data' },
       ]
     },
     { 
       name: 'Enterprise', 
       href: '/enterprise',
       submenu: [
-        { name: 'Pricing', href: '/pricing', description: 'Plans' },
-        { name: 'API', href: '/api-docs', description: 'Developers' },
+        { name: 'Pricing', href: '/pricing', description: 'Plans & pricing' },
+        { name: 'API Docs', href: '/api-docs', description: 'Developer docs' },
+        { name: 'Onboarding', href: '/enterprise-onboarding', description: 'Get started' },
       ]
     },
     { 
       name: 'Resources', 
       href: '/resources',
       submenu: [
-        { name: 'About', href: '/about', description: 'About us' },
-        { name: 'Blog', href: '/blog', description: 'News' },
+        { name: 'How It Works', href: '/how-it-works', description: 'Our process' },
+        { name: 'About CSOAI', href: '/about', description: 'Our mission' },
+        { name: 'FAQ', href: '/faq', description: 'Common questions' },
+        { name: 'Knowledge Base', href: '/knowledge-base', description: 'Learning resources' },
+        { name: 'Blog', href: '/blog', description: 'News & updates' },
       ]
     },
   ];

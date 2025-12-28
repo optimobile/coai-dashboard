@@ -4433,3 +4433,209 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Test subscription cancellation and refunds
 - [ ] Add course bundle pricing and discounts
 - [ ] Test complete user journey: Enroll → Pay → Access → Complete → Exam
+
+
+## Phase 28 - Navigation Restructuring & Missing Pages (URGENT - Jan 1 Launch)
+
+### Navigation Audit
+- [ ] Audit all built pages vs current nav links
+- [ ] Identify missing pages not linked in navigation
+- [ ] Document page structure and hierarchy
+- [ ] Create navigation map showing current vs desired state
+
+### Missing Pages to Add to Nav
+- [ ] Add "How It Works" page link
+- [ ] Add "About CSOAI" page link  
+- [ ] Add "FAQ" page link under Resources
+- [ ] Create Training submenu with:
+  - [ ] CEASAI Training link
+  - [ ] Certification Exam link
+  - [ ] My Certificates link
+- [ ] Add any other built but unlinked pages
+
+### Navigation Restructuring
+- [ ] Reorganize main nav menu for clarity
+- [ ] Create submenu structure for Training section
+- [ ] Create submenu structure for Resources section
+- [ ] Mobile-optimize nav (hamburger menu for <768px)
+- [ ] Ensure all CTAs are accessible and prominent
+- [ ] Test nav on mobile (390px, 768px, desktop)
+
+### Nav Component Updates
+- [ ] Update Header.tsx with new menu structure
+- [ ] Add submenu toggle functionality
+- [ ] Style mobile hamburger menu
+- [ ] Add active route indicators
+- [ ] Test keyboard navigation
+
+### Testing
+- [ ] Test all nav links work correctly
+- [ ] Test submenu expand/collapse
+- [ ] Test mobile hamburger menu
+- [ ] Test keyboard navigation (Tab, Enter, Escape)
+- [ ] Verify no broken links
+
+## Phase 29 - Comprehensive Mobile Testing (100% Coverage)
+
+### Mobile Test Environment Setup
+- [ ] Create mobile testing checklist (comprehensive)
+- [ ] Set up Chrome DevTools mobile emulation
+- [ ] Test on multiple viewport sizes (390px, 412px, 768px)
+- [ ] Test on iOS Safari (iPhone 12/14)
+- [ ] Test on Android Chrome (Pixel 6)
+
+### Public Pages Mobile Testing
+- [ ] Home page - hero, CTAs, content stacking
+- [ ] Training page - course cards, filters, enrollment
+- [ ] Certification page - exam details, CTAs
+- [ ] Watchdog page - report form, testimonials
+- [ ] About page - team section, content readability
+- [ ] Enterprise page - ROI calculator, pricing tiers
+- [ ] Pricing page - tier comparison, CTAs
+- [ ] How It Works page - step visualization
+- [ ] FAQ page - accordion, search functionality
+- [ ] Blog page - post list, readability
+
+### Authenticated Pages Mobile Testing
+- [ ] Dashboard - sidebar collapse, stats cards, charts
+- [ ] Training (Dashboard) - course list, progress bars
+- [ ] Certification (Dashboard) - exam interface, questions
+- [ ] Watchdog (Dashboard) - report form, leaderboard
+- [ ] Compliance - assessment wizard, forms
+- [ ] AI Systems - list view, CRUD operations
+- [ ] Reports - list, details, export
+- [ ] Settings - all form inputs, toggles
+- [ ] My Certificates - certificate display, download
+- [ ] My Certs - certificate list, sharing
+
+### Mobile Flow Testing
+- [ ] Signup flow end-to-end
+- [ ] Free training flow end-to-end
+- [ ] Paid course enrollment flow
+- [ ] Exam flow (start → questions → submit → results)
+- [ ] Report submission flow
+- [ ] Compliance assessment flow
+- [ ] Payment/Stripe flow
+
+### Mobile Accessibility
+- [ ] Touch targets ≥ 48px
+- [ ] Text readable (≥ 16px body)
+- [ ] Contrast ratios WCAG AA
+- [ ] Keyboard navigation works
+- [ ] Screen reader compatible
+
+### Mobile Performance
+- [ ] Page load times < 3s
+- [ ] Interaction response immediate
+- [ ] Scroll smooth (60fps)
+- [ ] No janky animations
+- [ ] Test on 4G/3G/WiFi
+
+### Mobile Orientation
+- [ ] Portrait to landscape works
+- [ ] Landscape to portrait works
+- [ ] No content loss on rotation
+- [ ] Layout adapts correctly
+
+### Mobile Forms & Input
+- [ ] Text inputs keyboard appears
+- [ ] Dropdowns work on mobile
+- [ ] Date pickers functional
+- [ ] File upload works
+- [ ] Checkboxes/radios tap-friendly
+- [ ] Form validation displays
+
+### Mobile Payment (Stripe)
+- [ ] Checkout page loads
+- [ ] Form fields accessible
+- [ ] Card input works
+- [ ] Payment processes
+- [ ] Success page displays
+- [ ] All payment plans work
+
+### Mobile Error Handling
+- [ ] Network error messages display
+- [ ] Form validation errors show
+- [ ] API errors handled gracefully
+- [ ] Retry functionality works
+- [ ] No crashes on errors
+
+### Issues Found & Fixed
+- [ ] (To be documented during testing)
+
+## Phase 30 - Backend Scalability Audit
+
+### Configuration Review
+- [ ] Check database connection pooling settings
+- [ ] Verify caching strategy (Redis/in-memory)
+- [ ] Review API rate limiting
+- [ ] Check database indexes for performance
+- [ ] Verify CDN configuration for static assets
+- [ ] Review load balancing setup
+
+### Scalability Testing
+- [ ] Load test with 100 concurrent users
+- [ ] Load test with 1,000 concurrent users
+- [ ] Load test with 10,000 concurrent users
+- [ ] Measure response times at each level
+- [ ] Identify bottlenecks
+- [ ] Document scaling limits
+
+### Database Performance
+- [ ] Check query performance (slow query log)
+- [ ] Verify index usage
+- [ ] Test connection pool limits
+- [ ] Measure transaction throughput
+- [ ] Test concurrent write operations
+
+### API Performance
+- [ ] Measure endpoint response times
+- [ ] Test API under load
+- [ ] Verify rate limiting works
+- [ ] Check error handling at scale
+- [ ] Measure memory usage
+
+### "Built by Manus" Attribution
+- [ ] Research Manus platform requirements for attribution
+- [ ] Check if attribution required at scale (10K+ users)
+- [ ] Document any branding/attribution obligations
+- [ ] Verify compliance with Manus terms
+- [ ] Plan implementation if required
+
+### Recommendations
+- [ ] Document scaling recommendations
+- [ ] Identify infrastructure upgrades needed
+- [ ] Plan for 100K+ users
+- [ ] Create disaster recovery plan
+
+## Phase 31 - Course Content Quality Audit
+
+### CEASAI Standards Verification
+- [ ] Research CEASAI training requirements
+- [ ] Review current course content
+- [ ] Verify EU AI Act coverage
+- [ ] Verify NIST AI RMF coverage
+- [ ] Verify ISO 42001 coverage
+- [ ] Check question quality and accuracy
+
+### Watchdog Training Standards
+- [ ] Research Watchdog analyst requirements
+- [ ] Verify incident analysis training
+- [ ] Verify compliance assessment training
+- [ ] Check case study quality
+- [ ] Verify practical exercise coverage
+
+### Content Gaps
+- [ ] Identify missing topics
+- [ ] Identify outdated content
+- [ ] Identify low-quality questions
+- [ ] Document improvements needed
+
+### Content Improvements
+- [ ] Update outdated content
+- [ ] Add missing topics
+- [ ] Improve question quality
+- [ ] Add more case studies
+- [ ] Add practical exercises
+- [ ] Add video content (if needed)
+
