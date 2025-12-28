@@ -42,8 +42,8 @@ export function Header() {
       name: 'Training', 
       href: '/training',
       submenu: [
-        { name: 'CEASAI Training', href: '/ceasai-training', description: 'Comprehensive AI safety training' },
-        { name: 'Browse Courses', href: '/courses', description: 'All available courses' },
+        { name: 'Free Courses', href: '/training', description: 'Foundation courses (no payment)' },
+        { name: 'Paid Courses', href: '/ceasai-training', description: 'CEASAI professional certification' },
         { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses' },
       ]
     },
@@ -69,6 +69,7 @@ export function Header() {
       href: '/watchdog',
       submenu: [
         { name: 'Report Incident', href: '/watchdog', description: 'Report AI safety incident' },
+        { name: 'Free Courses', href: '/training', description: 'Foundation analyst training' },
         { name: 'Analyst Jobs', href: '/jobs', description: 'Available positions' },
         { name: 'Leaderboard', href: '/watchdog-leaderboard', description: 'Top analysts' },
       ]

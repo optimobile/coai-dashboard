@@ -65,12 +65,12 @@ export default function Standards() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16">
+      <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white py-16">
         <div className="container">
           <div className="max-w-3xl">
             <Badge className="mb-4 bg-white/20 text-white border-white/30">Standards & Frameworks</Badge>
             <h1 className="text-4xl font-bold mb-4">AI Governance Standards</h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-emerald-50">
               Comprehensive implementation guides for global AI safety and compliance frameworks.
               CSOAI provides Western-adapted standards equivalent to China's TC260, ensuring your AI systems
               meet international regulatory requirements.
