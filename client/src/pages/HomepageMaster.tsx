@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -46,48 +46,143 @@ export default function HomepageMaster() {
   return (
     <div className="w-full bg-white">
       {/* ============================================
-          SECTION 1: HERO
+          SECTION 1: HERO - FOUR SOLUTIONS
           ============================================ */}
       <section className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex items-center justify-center px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+        <div className="max-w-6xl mx-auto w-full">
+          {/* Main Headline */}
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center mb-12">
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 leading-tight">
               AI is Growing.
               <br />
-              <span className="text-emerald-600">Humanity Needs Oversight.</span>
+              <span className="text-emerald-600">We Fixed the Problem.</span>
             </h1>
+            <p className="text-2xl text-gray-700 font-semibold mt-6">Four critical solutions. One unified platform.</p>
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed"
-          >
-            The first platform that creates jobs, ensures compliance, and protects people—all at once. We've built the infrastructure for safe, transparent AI governance.
-          </motion.p>
+          {/* Four Solutions Grid */}
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            {/* Solution 1: AI Safety */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl border-2 border-blue-300 shadow-lg"
+            >
+              <div className="flex items-start gap-4">
+                <Shield className="w-10 h-10 text-blue-600 flex-shrink-0" />
+                <div className="text-left">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">✓ AI Safety Oversight</h3>
+                  <p className="text-gray-700 mb-3"><strong>The Problem:</strong> 50,000+ EU enterprises need AI oversight by Feb 2, 2026. Current tools don't work.</p>
+                  <p className="text-blue-700 font-semibold"><strong>Our Fix:</strong> 33-Agent Byzantine Council + Watchdog program = vendor-independent, impartial AI safety decisions</p>
+                </div>
+              </div>
+            </motion.div>
 
+            {/* Solution 2: AI Analyst Jobs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-8 rounded-xl border-2 border-emerald-300 shadow-lg"
+            >
+              <div className="flex items-start gap-4">
+                <TrendingUp className="w-10 h-10 text-emerald-600 flex-shrink-0" />
+                <div className="text-left">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">✓ 250,000 New Jobs</h3>
+                  <p className="text-gray-700 mb-3"><strong>The Problem:</strong> AI is displacing workers. No new jobs are being created at scale.</p>
+                  <p className="text-emerald-700 font-semibold"><strong>Our Fix:</strong> CEASAI training program creates AI Safety Analysts earning $45-150/hr, remote, meaningful work</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Solution 3: Government Compliance */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl border-2 border-purple-300 shadow-lg"
+            >
+              <div className="flex items-start gap-4">
+                <Globe className="w-10 h-10 text-purple-600 flex-shrink-0" />
+                <div className="text-left">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">✓ Government Ready</h3>
+                  <p className="text-gray-700 mb-3"><strong>The Problem:</strong> EU AI Act enforcement starts Feb 2, 2026. Governments need compliance infrastructure.</p>
+                  <p className="text-purple-700 font-semibold"><strong>Our Fix:</strong> Government Portal + SOAI-PDCA framework = ready-to-deploy compliance monitoring for regulators</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Solution 4: Enterprise Compliance */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-xl border-2 border-orange-300 shadow-lg"
+            >
+              <div className="flex items-start gap-4">
+                <Briefcase className="w-10 h-10 text-orange-600 flex-shrink-0" />
+                <div className="text-left">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">✓ Enterprise Compliance</h3>
+                  <p className="text-gray-700 mb-3"><strong>The Problem:</strong> Enterprises spend €50K-500K/year on fragmented compliance tools. Still not compliant.</p>
+                  <p className="text-orange-700 font-semibold"><strong>Our Fix:</strong> Multi-framework compliance (EU AI Act, NIST, TC260, ISO 42001) for €99-499/month</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Key Facts Row */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="bg-emerald-600 text-white rounded-xl p-8 mb-12 shadow-xl"
           >
-            <Button onClick={() => openModal('loi')} size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 text-lg">
-              Get Free Course + Early Access
+            <div className="grid md:grid-cols-4 gap-6 text-center">
+              <div>
+                <p className="text-4xl font-bold mb-2">50,000</p>
+                <p className="text-emerald-100">EU Enterprises need compliance by Feb 2</p>
+              </div>
+              <div>
+                <p className="text-4xl font-bold mb-2">250,000</p>
+                <p className="text-emerald-100">AI Safety Analysts needed (0 exist today)</p>
+              </div>
+              <div>
+                <p className="text-4xl font-bold mb-2">33</p>
+                <p className="text-emerald-100">Agent Byzantine Council for impartial decisions</p>
+              </div>
+              <div>
+                <p className="text-4xl font-bold mb-2">10-100x</p>
+                <p className="text-emerald-100">Cheaper than competitors</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
+          >
+            <Button onClick={() => openModal('loi')} size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 text-lg font-semibold">
+              Become an AI Safety Analyst
             </Button>
-            <Button onClick={() => openModal('enterprise')} size="lg" variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-8 py-3 text-lg">
-              Enterprise Compliance
+            <Button onClick={() => openModal('enterprise')} size="lg" variant="outline" className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-8 py-4 text-lg font-semibold">
+              Enterprise Compliance Solution
+            </Button>
+            <Button onClick={() => openModal('government')} size="lg" variant="outline" className="border-2 border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-4 text-lg font-semibold">
+              Government Portal
             </Button>
           </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-sm text-gray-500 mb-8"
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="text-center text-sm text-gray-600 mb-8"
           >
-            Join 10,000+ early adopters • First 10,000 get free $499 course • EU AI Act enforcement: Feb 2, 2025
+            Join 10,000+ early adopters • First 10,000 get free $499 course • EU AI Act enforcement: Feb 2, 2026 • No credit card required
           </motion.p>
 
           <motion.div
