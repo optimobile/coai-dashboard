@@ -4811,3 +4811,13 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Set up email automation for conversions
 - [ ] Create customer success onboarding flows
 - [ ] Add analytics tracking for conversions
+
+
+## CRITICAL SALES OPTIMIZATION (Dec 28, 2025)
+
+- [x] Phase 1: Fix header spacing - prevent language selector from crushing navigation text
+- [x] Phase 2: Fix domain routing - ensure csoai.org is main domain (not ceasai.training)
+- [x] Phase 3: Redesign homepage CTAs - all buttons to Sign Up with source tracking
+- [ ] Phase 4: Implement dashboard upsell system - show paid feature gates with upgrade prompts
+- [ ] Phase 5: Test complete conversion flow - track user journey from homepage to paid features
+- [ ] Phase 6: Remove LOI-only modals - replace with direct signup flow to dashboard

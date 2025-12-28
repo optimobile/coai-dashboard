@@ -16,20 +16,28 @@ export default function Signup() {
   const { user } = useAuth();
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [referrerName, setReferrerName] = useState<string | null>(null);
+  const [signupSource, setSignupSource] = useState<string | null>(null);
 
   // Extract referral code from URL and redirect if already logged in
   useEffect(() => {
     if (user) {
+      // Auto-redirect to dashboard after successful signup
       setLocation('/dashboard');
     }
 
-    // Extract referral code from query parameters
+    // Extract referral code and signup source from query parameters
     const params = new URLSearchParams(search);
     const ref = params.get('ref');
     const referrer = params.get('referrer');
+    const source = params.get('source');
+    
     if (ref) {
       setReferralCode(ref);
       setReferrerName(referrer || 'A CSOAI Member');
+    }
+    
+    if (source) {
+      setSignupSource(source);
     }
   }, [user, setLocation, search]);
 
@@ -121,6 +129,23 @@ export default function Signup() {
           </CardHeader>
 
           <CardContent className="space-y-6">
+            {signupSource && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="font-semibold text-blue-900 mb-2">
+                  {signupSource === 'analyst' && '🎓 AI Safety Analyst Program'}
+                  {signupSource === 'enterprise' && '🏢 Enterprise Compliance Solution'}
+                  {signupSource === 'government' && '🏛️ Government Portal'}
+                  {signupSource === 'watchdog' && '👁️ Watchdog Program'}
+                </h3>
+                <p className="text-sm text-blue-800">
+                  {signupSource === 'analyst' && 'Get certified as an AI Safety Analyst. Earn $45-150/hr remote work.'}
+                  {signupSource === 'enterprise' && 'Access multi-framework compliance tools for EU AI Act, NIST, TC260, and ISO 42001.'}
+                  {signupSource === 'government' && 'Deploy real-time AI monitoring and compliance tracking infrastructure.'}
+                  {signupSource === 'watchdog' && 'Report AI incidents publicly and join our analyst network.'}
+                </p>
+              </div>
+            )}
+            
             <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
               <h3 className="font-semibold text-blue-900 mb-2">What's Included (Free):</h3>
               <ul className="space-y-1 text-sm text-emerald-800">
@@ -147,6 +172,7 @@ export default function Signup() {
               size="lg"
               className="w-full bg-green-600 hover:bg-green-700 text-white"
               onClick={handleSignup}
+              title="Sign up now and get instant access to your dashboard"
             >
               Sign Up with OAuth
               <ArrowRight className="ml-2 h-5 w-5" />

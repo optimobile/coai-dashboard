@@ -22,10 +22,10 @@ export function LanguageSelector() {
   const currentLangInfo = SUPPORTED_LANGUAGES[currentLanguage as keyof typeof SUPPORTED_LANGUAGES] || SUPPORTED_LANGUAGES['en-US'];
 
   return (
-    <div className="flex items-center gap-2">
-      <Globe className="w-4 h-4 text-emerald-600" />
+    <div className="flex items-center gap-1">
+      <Globe className="w-4 h-4 text-emerald-600 flex-shrink-0" />
       <Select value={currentLanguage} onValueChange={handleLanguageChange}>
-        <SelectTrigger className="w-[180px] border-emerald-200 hover:border-emerald-400">
+        <SelectTrigger className="w-[120px] border-emerald-200 hover:border-emerald-400 text-xs">
           <SelectValue placeholder="Select language" />
         </SelectTrigger>
         <SelectContent>
@@ -39,9 +39,6 @@ export function LanguageSelector() {
           ))}
         </SelectContent>
       </Select>
-      <span className="text-sm text-gray-600 ml-2">
-        {CURRENCY_SYMBOLS[currentLangInfo.currency as keyof typeof CURRENCY_SYMBOLS]}
-      </span>
     </div>
   );
 }
