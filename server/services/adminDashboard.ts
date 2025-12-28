@@ -55,7 +55,7 @@ export class AdminDashboard {
     const connectionsResult = await db
       .select({ count: count() })
       .from(websocketConnections)
-      .where(eq(websocketConnections.isActive, 1));
+      .where(eq(websocketConnections.isActive, '1' as any));
 
     const activeConnections = connectionsResult[0]?.count || 0;
 
@@ -65,7 +65,7 @@ export class AdminDashboard {
     const metricsResult = await db
       .select()
       .from(adminMetrics)
-      .where(gte(adminMetrics.recordedAt, fiveMinutesAgo))
+      .where(gte(adminMetrics.recordedAt, fiveMinutesAgo.toISOString() as any))
       .orderBy(desc(adminMetrics.recordedAt))
       .limit(100);
 

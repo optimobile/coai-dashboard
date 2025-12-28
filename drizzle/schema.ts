@@ -1,4 +1,4 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, tinyint, bigint, boolean } from "drizzle-orm/mysql-core";
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, int, bigint } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm"
 
 export const agentVotes = mysqlTable("agent_votes", {
@@ -85,7 +85,7 @@ export const apiKeys = mysqlTable("api_keys", {
 	rateLimit: int().default(100).notNull(),
 	lastUsedAt: timestamp({ mode: 'string' }),
 	expiresAt: timestamp({ mode: 'string' }),
-	isActive: tinyint().default(1).notNull(),
+	isActive: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 });
@@ -145,7 +145,7 @@ export const certificationTests = mysqlTable("certification_tests", {
 	passingScore: int().default(70).notNull(),
 	timeLimitMinutes: int().default(60).notNull(),
 	totalQuestions: int().default(50).notNull(),
-	isActive: tinyint().default(1).notNull(),
+	isActive: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 },
@@ -182,7 +182,7 @@ export const courseBundles = mysqlTable("course_bundles", {
 	bundlePrice: int().notNull(),
 	savings: int().notNull(),
 	stripePriceId: varchar({ length: 255 }),
-	active: tinyint().default(1).notNull(),
+	active: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 	bundlePrice3Month: int(),
@@ -215,11 +215,11 @@ export const courseEnrollments = mysqlTable("course_enrollments", {
 	enrolledAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	completedAt: timestamp({ mode: 'string' }),
 	score: int(),
-	certificateIssued: tinyint().default(0).notNull(),
+	certificateIssued: int().default(0).notNull(),
 	paidAmount: int().default(0).notNull(),
 	stripePaymentIntentId: varchar({ length: 255 }),
 	referredBySpecialistId: int(),
-	commissionPaid: tinyint().default(0).notNull(),
+	commissionPaid: int().default(0).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 	paymentType: mysqlEnum(['one_time','3_month','6_month','12_month']).default('one_time').notNull(),
@@ -239,8 +239,8 @@ export const courses = mysqlTable("courses", {
 	stripePriceId: varchar({ length: 255 }),
 	modules: json(),
 	prerequisites: json(),
-	certificationRequired: tinyint().default(0).notNull(),
-	active: tinyint().default(1).notNull(),
+	certificationRequired: int().default(0).notNull(),
+	active: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 	price3Month: int(),
@@ -256,7 +256,7 @@ export const foundingMembers = mysqlTable("founding_members", {
 	userId: int("user_id"),
 	membershipNumber: varchar("membership_number", { length: 50 }).notNull(),
 	purchasedAt: timestamp("purchased_at", { mode: 'string' }).default('CURRENT_TIMESTAMP'),
-	lifetimeAccess: tinyint("lifetime_access").default(1),
+	lifetimeAccess: int("lifetime_access").default(1),
 	equityAllocation: decimal("equity_allocation", { precision: 5, scale: 4 }),
 	referralCode: varchar("referral_code", { length: 50 }).notNull(),
 },
@@ -274,7 +274,7 @@ export const frameworks = mysqlTable("frameworks", {
 	jurisdiction: varchar({ length: 100 }),
 	description: text(),
 	effectiveDate: timestamp({ mode: 'string' }),
-	isActive: tinyint().default(1).notNull(),
+	isActive: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 },
 (table) => [
@@ -334,7 +334,7 @@ export const loiSignups = mysqlTable("loi_signups", {
 	ecosystem: varchar({ length: 50 }).notNull(),
 	source: varchar({ length: 500 }),
 	createdAt: timestamp("created_at", { mode: 'string' }).default('CURRENT_TIMESTAMP'),
-	converted: tinyint().default(0),
+	converted: int().default(0),
 	convertedAt: timestamp("converted_at", { mode: 'string' }),
 	conversionValue: decimal("conversion_value", { precision: 10, scale: 2 }),
 },
@@ -346,18 +346,18 @@ export const loiSignups = mysqlTable("loi_signups", {
 export const notificationPreferences = mysqlTable("notification_preferences", {
 	id: int().autoincrement().notNull(),
 	userId: int().notNull(),
-	emailEnabled: tinyint().default(1).notNull(),
-	slackEnabled: tinyint().default(0).notNull(),
+	emailEnabled: int().default(1).notNull(),
+	slackEnabled: int().default(0).notNull(),
 	slackWebhookUrl: varchar({ length: 500 }),
-	complianceAlerts: tinyint().default(1).notNull(),
-	systemUpdates: tinyint().default(1).notNull(),
-	jobApplications: tinyint().default(1).notNull(),
-	certificateIssued: tinyint().default(1).notNull(),
-	councilDecisions: tinyint().default(1).notNull(),
-	reportUpdates: tinyint().default(1).notNull(),
+	complianceAlerts: int().default(1).notNull(),
+	systemUpdates: int().default(1).notNull(),
+	jobApplications: int().default(1).notNull(),
+	certificateIssued: int().default(1).notNull(),
+	councilDecisions: int().default(1).notNull(),
+	reportUpdates: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
-	digestEnabled: tinyint("digest_enabled").default(0),
+	digestEnabled: int("digest_enabled").default(0),
 	digestFrequency: mysqlEnum("digest_frequency", ['daily','weekly']).default('daily'),
 	lastDigestSentAt: timestamp("last_digest_sent_at", { mode: 'string' }),
 },
@@ -373,7 +373,7 @@ export const notifications = mysqlTable("notifications", {
 	message: text().notNull(),
 	link: varchar({ length: 500 }),
 	priority: mysqlEnum(['low','medium','high','urgent']).default('medium').notNull(),
-	isRead: tinyint().default(0).notNull(),
+	isRead: int().default(0).notNull(),
 	readAt: timestamp({ mode: 'string' }),
 	metadata: json(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
@@ -457,7 +457,7 @@ export const recommendationPreferences = mysqlTable("recommendation_preferences"
 	riskMitigationWeight: int().default(90).notNull(),
 	bestPracticeWeight: int().default(50).notNull(),
 	regulatoryUpdateWeight: int().default(85).notNull(),
-	emailDigestEnabled: tinyint().default(0).notNull(),
+	emailDigestEnabled: int().default(0).notNull(),
 	emailDigestFrequency: mysqlEnum(['daily','weekly','monthly']).default('weekly').notNull(),
 	minPriorityForEmail: mysqlEnum(['critical','high','medium','low']).default('high').notNull(),
 	defaultLimit: int().default(10).notNull(),
@@ -490,7 +490,7 @@ export const regions = mysqlTable("regions", {
 	description: text(),
 	primaryFramework: varchar({ length: 100 }),
 	regulatoryBody: varchar({ length: 255 }),
-	active: tinyint().default(1).notNull(),
+	active: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 },
@@ -510,7 +510,7 @@ export const reportAssignments = mysqlTable("report_assignments", {
 	reviewedAt: timestamp({ mode: 'string' }),
 	qualityScore: int(),
 	specialistFeedback: text(),
-	escalated: tinyint().default(0).notNull(),
+	escalated: int().default(0).notNull(),
 	escalationReason: text(),
 	escalatedTo: mysqlEnum(['regional_specialist','council']),
 	paymentAmount: int(),
@@ -527,7 +527,7 @@ export const requirements = mysqlTable("requirements", {
 	description: text(),
 	category: varchar({ length: 100 }),
 	riskLevelApplicable: mysqlEnum(['all','minimal','limited','high','unacceptable']).default('all'),
-	isMandatory: tinyint().default(1).notNull(),
+	isMandatory: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 });
 
@@ -577,7 +577,7 @@ export const testQuestions = mysqlTable("test_questions", {
 	explanation: text(),
 	points: int().default(1).notNull(),
 	difficulty: mysqlEnum(['easy','medium','hard']).default('medium').notNull(),
-	isActive: tinyint().default(1).notNull(),
+	isActive: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 });
 
@@ -589,8 +589,8 @@ export const trainingModules = mysqlTable("training_modules", {
 	content: text().notNull(),
 	orderIndex: int().default(0).notNull(),
 	durationMinutes: int().default(30).notNull(),
-	isRequired: tinyint().default(1).notNull(),
-	isActive: tinyint().default(1).notNull(),
+	isRequired: int().default(1).notNull(),
+	isActive: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 },
@@ -607,7 +607,7 @@ export const userCertificates = mysqlTable("user_certificates", {
 	certificateType: mysqlEnum(['basic','advanced','expert']).default('basic').notNull(),
 	issuedAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	expiresAt: timestamp({ mode: 'string' }),
-	isRevoked: tinyint().default(0).notNull(),
+	isRevoked: int().default(0).notNull(),
 	revokedReason: text(),
 },
 (table) => [
@@ -621,7 +621,7 @@ export const userTestAttempts = mysqlTable("user_test_attempts", {
 	score: int().default(0).notNull(),
 	totalPoints: int().default(0).notNull(),
 	percentScore: decimal({ precision: 5, scale: 2 }),
-	passed: tinyint().default(0).notNull(),
+	passed: int().default(0).notNull(),
 	answers: json(),
 	startedAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	completedAt: timestamp({ mode: 'string' }),
@@ -655,7 +655,7 @@ export const users = mysqlTable("users", {
 	subscriptionTier: mysqlEnum(['free','pro','enterprise']).default('free').notNull(),
 	subscriptionStatus: mysqlEnum(['active','canceled','past_due','trialing','none']).default('none').notNull(),
 	brand: varchar({ length: 50 }).default('councilof.ai'),
-	foundingMember: tinyint("founding_member").default(0),
+	foundingMember: int("founding_member").default(0),
 	referralCode: varchar("referral_code", { length: 50 }),
 },
 (table) => [
@@ -682,7 +682,7 @@ export const watchdogComments = mysqlTable("watchdog_comments", {
 	userId: int(),
 	authorName: varchar({ length: 255 }),
 	content: text().notNull(),
-	isOfficial: tinyint().default(0).notNull(),
+	isOfficial: int().default(0).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 });
 
@@ -700,7 +700,7 @@ export const watchdogReports = mysqlTable("watchdog_reports", {
 	status: mysqlEnum(['submitted','under_review','investigating','resolved','dismissed']).default('submitted').notNull(),
 	upvotes: int().default(0).notNull(),
 	downvotes: int().default(0).notNull(),
-	isPublic: tinyint().default(1).notNull(),
+	isPublic: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 });
@@ -720,13 +720,13 @@ export const courseTranslations = mysqlTable("course_translations", {
 	learningObjectives: json().$type<string[]>(),
 	duration: int(),
 	difficulty: mysqlEnum(['beginner','intermediate','advanced']),
-	isPublished: tinyint().default(0).notNull(),
+	isPublished: int().default(0).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-	courseIdLanguageIdx: index("idx_courseId_language").on(table.courseId, table.language),
-	languageIdx: index("idx_language").on(table.language),
-}));
+}, (table) => [
+	index("idx_courseId_language").on(table.courseId, table.language),
+	index("idx_language").on(table.language),
+]);
 
 export type CourseTranslation = typeof courseTranslations.$inferSelect;
 export type InsertCourseTranslation = typeof courseTranslations.$inferInsert;
@@ -741,13 +741,13 @@ export const moduleTranslations = mysqlTable("module_translations", {
 	learningObjectives: json().$type<string[]>(),
 	keyTakeaways: json().$type<string[]>(),
 	duration: int(),
-	isPublished: tinyint().default(0).notNull(),
+	isPublished: int().default(0).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-	moduleIdLanguageIdx: index("idx_moduleId_language").on(table.moduleId, table.language),
-	moduleLanguageIdx: index("idx_module_language").on(table.language),
-}));
+}, (table) => [
+	index("idx_moduleId_language").on(table.moduleId, table.language),
+	index("idx_module_language").on(table.language),
+]);
 
 export type ModuleTranslation = typeof moduleTranslations.$inferSelect;
 export type InsertModuleTranslation = typeof moduleTranslations.$inferInsert;
@@ -762,13 +762,13 @@ export const lessonTranslations = mysqlTable("lesson_translations", {
 	videoUrl: varchar({ length: 500 }),
 	videoCaptions: text(),
 	resources: json().$type<Array<{ title: string; url: string; type: string }>>(),
-	isPublished: tinyint().default(0).notNull(),
+	isPublished: int().default(0).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-	lessonIdLanguageIdx: index("idx_lessonId_language").on(table.lessonId, table.language),
-	lessonLanguageIdx: index("idx_lesson_language").on(table.language),
-}));
+}, (table) => [
+	index("idx_lessonId_language").on(table.lessonId, table.language),
+	index("idx_lesson_language").on(table.language),
+]);
 
 export type LessonTranslation = typeof lessonTranslations.$inferSelect;
 export type InsertLessonTranslation = typeof lessonTranslations.$inferInsert;
@@ -787,16 +787,16 @@ export const realtimeEvents = mysqlTable("realtime_events", {
 	description: text(),
 	severity: mysqlEnum(['info','warning','critical']).default('info').notNull(),
 	data: json(),
-	isRead: tinyint().default(0).notNull(),
+	isRead: int().default(0).notNull(),
 	readAt: timestamp({ mode: 'string' }),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
-}, (table) => ({
-	userIdIdx: index("idx_userId_realtime").on(table.userId),
-	organizationIdIdx: index("idx_organizationId_realtime").on(table.organizationId),
-	aiSystemIdIdx: index("idx_aiSystemId_realtime").on(table.aiSystemId),
-	eventTypeIdx: index("idx_eventType").on(table.eventType),
-	createdAtIdx: index("idx_createdAt_realtime").on(table.createdAt),
-}));
+}, (table) => [
+	index("idx_userId_realtime").on(table.userId),
+	index("idx_organizationId_realtime").on(table.organizationId),
+	index("idx_aiSystemId_realtime").on(table.aiSystemId),
+	index("idx_eventType").on(table.eventType),
+	index("idx_createdAt_realtime").on(table.createdAt),
+]);
 
 export type RealtimeEvent = typeof realtimeEvents.$inferSelect;
 export type InsertRealtimeEvent = typeof realtimeEvents.$inferInsert;
@@ -805,13 +805,125 @@ export const websocketConnections = mysqlTable("websocket_connections", {
 	id: int().autoincrement().notNull(),
 	userId: int().notNull(),
 	connectionId: varchar({ length: 255 }).notNull(),
-	isActive: boolean().default(true).notNull(),
+	isActive: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	lastHeartbeat: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
-}, (table) => ({
-	userIdIdx: index("idx_userId_ws").on(table.userId),
-	connectionIdIdx: index("idx_connectionId_ws").on(table.connectionId),
-}));
+}, (table) => [
+	index("idx_userId_ws").on(table.userId),
+	index("idx_connectionId_ws").on(table.connectionId),
+]);
 
 export type WebsocketConnection = typeof websocketConnections.$inferSelect;
 export type InsertWebsocketConnection = typeof websocketConnections.$inferInsert;
+
+// Analytics & Conversion Tracking Tables
+export const analyticsEvents = mysqlTable("analytics_events", {
+	id: int().autoincrement().notNull(),
+	userId: int(),
+	eventType: varchar({ length: 50 }).notNull(), // signup, payment, course_start, course_complete, exam_start, exam_complete
+	metadata: json(),
+	timestamp: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+}, (table) => [index("idx_userId_analytics").on(table.userId), index("idx_eventType").on(table.eventType)]);
+
+export const conversionFunnels = mysqlTable("conversion_funnels", {
+	id: int().autoincrement().notNull(),
+	userId: int().notNull(),
+	step: varchar({ length: 50 }).notNull(), // signup, email_verified, course_selected, payment_started, payment_completed, course_started, course_completed
+	completed: int().default(0).notNull(),
+	timestamp: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	duration: int(), // seconds to complete this step
+}, (table) => [index("idx_userId_funnel").on(table.userId)]);
+
+export const paymentAnalytics = mysqlTable("payment_analytics", {
+	id: int().autoincrement().notNull(),
+	userId: int().notNull(),
+	courseId: int(),
+	amount: decimal({ precision: 10, scale: 2 }).notNull(),
+	currency: varchar({ length: 3 }).default('EUR').notNull(),
+	status: mysqlEnum(['pending','completed','failed','refunded']).default('pending').notNull(),
+	paymentMethod: varchar({ length: 50 }),
+	stripePaymentId: varchar({ length: 255 }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_userId_payment").on(table.userId), index("idx_status").on(table.status)]);
+
+export const courseCompletionTracking = mysqlTable("course_completion_tracking", {
+	id: int().autoincrement().notNull(),
+	userId: int().notNull(),
+	courseId: int().notNull(),
+	completionPercentage: int().default(0).notNull(),
+	score: decimal({ precision: 5, scale: 2 }),
+	certificateIssued: int().default(0).notNull(),
+	completionDate: timestamp({ mode: 'string' }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_userId_course").on(table.userId)]);
+
+export const userCohorts = mysqlTable("user_cohorts", {
+	id: int().autoincrement().notNull(),
+	cohortId: varchar({ length: 50 }).notNull(), // e.g., "2025-01-week1"
+	signupDate: timestamp({ mode: 'string' }).notNull(),
+	userCount: int().default(0).notNull(),
+	retentionRate: decimal({ precision: 5, scale: 2 }).default('0.00').notNull(),
+	engagementScore: decimal({ precision: 5, scale: 2 }).default('0.00').notNull(),
+	conversionRate: decimal({ precision: 5, scale: 2 }).default('0.00').notNull(),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_cohortId").on(table.cohortId)]);
+
+// Email Onboarding Tables
+export const emailSequences = mysqlTable("email_sequences", {
+	id: int().autoincrement().notNull(),
+	userId: int().notNull(),
+	sequenceId: varchar({ length: 50 }).notNull(), // "welcome_onboarding"
+	step: int().notNull(), // 1-7 for onboarding sequence
+	sentDate: timestamp({ mode: 'string' }),
+	openedDate: timestamp({ mode: 'string' }),
+	clickedDate: timestamp({ mode: 'string' }),
+	convertedDate: timestamp({ mode: 'string' }),
+	status: mysqlEnum(['pending','sent','opened','clicked','converted','bounced']).default('pending').notNull(),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+}, (table) => [index("idx_userId_sequence").on(table.userId), index("idx_sequenceId").on(table.sequenceId)]);
+
+export const emailTemplates = mysqlTable("email_templates", {
+	id: int().autoincrement().notNull(),
+	templateId: varchar({ length: 100 }).notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	subject: varchar({ length: 255 }).notNull(),
+	htmlContent: text().notNull(),
+	plainTextContent: text(),
+	variables: json(), // list of template variables
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_templateId").on(table.templateId)]);
+
+export const userEmailPreferences = mysqlTable("user_email_preferences", {
+	id: int().autoincrement().notNull(),
+	userId: int().notNull(),
+	optIn: int().default(1).notNull(),
+	marketingEmails: int().default(1).notNull(),
+	productUpdates: int().default(1).notNull(),
+	weeklyDigest: int().default(1).notNull(),
+	unsubscribeToken: varchar({ length: 255 }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_userId_prefs").on(table.userId)]);
+
+// Type exports
+export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
+export type InsertAnalyticsEvent = typeof analyticsEvents.$inferInsert;
+export type ConversionFunnel = typeof conversionFunnels.$inferSelect;
+export type InsertConversionFunnel = typeof conversionFunnels.$inferInsert;
+export type PaymentAnalytic = typeof paymentAnalytics.$inferSelect;
+export type InsertPaymentAnalytic = typeof paymentAnalytics.$inferInsert;
+export type CourseCompletionTracking = typeof courseCompletionTracking.$inferSelect;
+export type InsertCourseCompletionTracking = typeof courseCompletionTracking.$inferInsert;
+export type UserCohort = typeof userCohorts.$inferSelect;
+export type InsertUserCohort = typeof userCohorts.$inferInsert;
+export type EmailSequence = typeof emailSequences.$inferSelect;
+export type InsertEmailSequence = typeof emailSequences.$inferInsert;
+export type EmailTemplate = typeof emailTemplates.$inferSelect;
+export type InsertEmailTemplate = typeof emailTemplates.$inferInsert;
+export type UserEmailPreference = typeof userEmailPreferences.$inferSelect;
+export type InsertUserEmailPreference = typeof userEmailPreferences.$inferInsert;

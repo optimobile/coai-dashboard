@@ -4833,3 +4833,86 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add government integration link to SOAI-PDCA submenu
 - [ ] Test header on all screen sizes and verify visual fixes
 - [ ] Verify all navigation routes are accessible and working
+
+
+## PHASE 18: Analytics & Conversion Tracking Dashboard
+
+### Phase 1: Database Schema & Backend Services
+- [ ] Create analytics_events table (event_type, user_id, timestamp, metadata)
+- [ ] Create conversion_funnels table (step, user_id, timestamp, completed)
+- [ ] Create payment_analytics table (payment_id, amount, status, user_id, course_id)
+- [ ] Create course_completion_tracking table (user_id, course_id, completion_date, score)
+- [ ] Create user_cohorts table (cohort_id, signup_date, user_count, retention_rate)
+- [ ] Build AnalyticsService for event tracking and metrics calculation
+- [ ] Build ConversionFunnelService for funnel analysis
+- [ ] Build PaymentAnalyticsService for payment metrics
+
+### Phase 2: Analytics tRPC Router
+- [ ] Create analyticsRouter with endpoints:
+  - [ ] getSignupConversionRate (daily/weekly/monthly)
+  - [ ] getPaymentSuccessRate (by course, by tier)
+  - [ ] getCourseCompletionRate (by course, by cohort)
+  - [ ] getConversionFunnel (step-by-step analysis)
+  - [ ] getUserCohortAnalytics (retention, engagement)
+  - [ ] getRevenueMetrics (MRR, ARR, churn)
+  - [ ] getTopPerformingCourses (by enrollments, completions)
+  - [ ] getUserBehaviorTrends (time-series data)
+
+### Phase 3: Analytics Dashboard Frontend
+- [ ] Create AnalyticsDashboard.tsx main component
+- [ ] Create MetricsCard component (KPI display with trends)
+- [ ] Create ConversionFunnelChart component (funnel visualization)
+- [ ] Create PaymentMetricsChart component (payment trends)
+- [ ] Create CourseCompletionChart component (completion rates)
+- [ ] Create CohortAnalysisChart component (retention curves)
+- [ ] Create DateRangeSelector component (daily/weekly/monthly)
+- [ ] Create ExportDataButton component (CSV/PDF export)
+- [ ] Add /analytics route to App.tsx
+- [ ] Add Analytics link to header navigation
+
+## PHASE 19: Automated Email Onboarding Sequence
+
+### Phase 4: Email Service Setup
+- [ ] Configure Resend API integration (already available)
+- [ ] Create EmailService with send capabilities
+- [ ] Create email template system for dynamic content
+- [ ] Build template rendering engine
+
+### Phase 5: Email Automation Workflow Backend
+- [ ] Create email_sequences table (sequence_id, user_id, step, sent_date, opened, clicked)
+- [ ] Create email_templates table (template_id, name, subject, html_content)
+- [ ] Create user_email_preferences table (user_id, opt_in, preferences)
+- [ ] Build EmailSequenceService for workflow automation
+- [ ] Build EmailTemplateService for template management
+- [ ] Build EmailPreferenceService for user preferences
+
+### Phase 6: Email Onboarding Sequence
+- [ ] Email 1 (Day 0): Welcome email + free course recommendation
+- [ ] Email 2 (Day 2): "Here's what you can earn" + success stories
+- [ ] Email 3 (Day 5): Exam prep guide + study tips
+- [ ] Email 4 (Day 7): Limited-time discount offer
+- [ ] Email 5 (Day 14): Success story from certified analyst
+- [ ] Email 6 (Day 21): "Complete your certification" reminder
+- [ ] Email 7 (Day 30): Job board opportunities
+- [ ] Create EmailSequenceRouter with tRPC endpoints:
+  - [ ] triggerWelcomeSequence
+  - [ ] getSequenceStatus
+  - [ ] updateEmailPreferences
+  - [ ] trackEmailMetrics (opens, clicks, conversions)
+
+### Phase 7: Integration & Testing
+- [ ] Connect analytics events to user signup flow
+- [ ] Connect analytics events to payment flow
+- [ ] Connect analytics events to course completion flow
+- [ ] Trigger email sequences on user signup
+- [ ] Test email delivery and rendering
+- [ ] Create integration tests for analytics
+- [ ] Create integration tests for email sequences
+- [ ] Verify email metrics tracking
+
+### Phase 8: Deploy & Deliver
+- [ ] Add Analytics Dashboard to main navigation
+- [ ] Create analytics documentation
+- [ ] Create email sequence documentation
+- [ ] Save checkpoint with both features
+- [ ] Deliver to user with metrics and recommendations

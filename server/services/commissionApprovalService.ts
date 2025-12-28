@@ -22,7 +22,8 @@ export class CommissionApprovalService {
       submittedDate: string;
     }>
   > {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return [];
 
     try {
       const conversions = await db
@@ -57,7 +58,8 @@ export class CommissionApprovalService {
     message?: string;
     error?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return { success: false, error: 'Database not available' };
 
     try {
       // Get the conversion record
@@ -114,7 +116,8 @@ export class CommissionApprovalService {
     message?: string;
     error?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return { success: false, error: 'Database not available' };
 
     try {
       // Get the conversion record
@@ -176,7 +179,8 @@ export class CommissionApprovalService {
       createdAt: string;
     }>
   > {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return [];
 
     try {
       const payouts = await db
@@ -209,7 +213,8 @@ export class CommissionApprovalService {
     message?: string;
     error?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return { success: false, error: 'Database not available' };
 
     try {
       // Get all processed conversions that haven't been paid out
@@ -270,7 +275,8 @@ export class CommissionApprovalService {
     message?: string;
     error?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return { success: false, error: 'Database not available' };
 
     try {
       // Get the payout record
@@ -330,7 +336,8 @@ export class CommissionApprovalService {
     totalFailed: number;
     averageCommission: number;
   }> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return { totalEarned: 0, totalProcessed: 0, totalPending: 0, totalFailed: 0, averageCommission: 0 };
 
     try {
       const conversions = await db

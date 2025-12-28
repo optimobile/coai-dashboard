@@ -98,7 +98,7 @@ export class RulesEngine {
       .where(
         and(
           eq(complianceRules.jurisdiction, jurisdiction),
-          eq(complianceRules.isActive, 1)
+          eq(complianceRules.isActive, 1 as any)
         )
       );
 
@@ -123,7 +123,7 @@ export class RulesEngine {
     return await db
       .select()
       .from(complianceRules)
-      .where(eq(complianceRules.isActive, 1))
+      .where(eq(complianceRules.isActive, 1 as any))
       .orderBy(complianceRules.jurisdiction, complianceRules.framework);
   }
 

@@ -10,6 +10,52 @@ function getQueryParam(req: Request, key: string): string | undefined {
 }
 
 export function registerOAuthRoutes(app: Express) {
+  // Login endpoint - redirects to OAuth authorization URL
+  app.get("/api/auth/login", (req: Request, res: Response) => {
+    const signup = req.query.signup === 'true';
+    const ref = req.query.ref as string | undefined;
+    const redirectUri = encodeURIComponent(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
+    const state = btoa(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
+    
+    const params = new URLSearchParams({
+      client_id: process.env.VITE_FRONTEND_FORGE_API_KEY || '',
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      state,
+      scope: 'openid profile email',
+    });
+    
+    const authUrl = `${process.env.VITE_OAUTH_PORTAL_URL || 'https://oauth.example.com'}/authorize?${params.toString()}`;
+    res.redirect(302, authUrl);
+  });
+
+  // OAuth login endpoint - same as /api/auth/login but with query params support
+  app.get("/api/oauth/login", (req: Request, res: Response) => {
+    const signup = req.query.signup === 'true';
+    const ref = req.query.ref as string | undefined;
+    const redirectUri = encodeURIComponent(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
+    const state = btoa(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
+    
+    const params = new URLSearchParams({
+      client_id: process.env.VITE_FRONTEND_FORGE_API_KEY || '',
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      state,
+      scope: 'openid profile email',
+    });
+    
+    if (signup) {
+      params.append('signup', 'true');
+    }
+    
+    if (ref) {
+      params.append('ref', ref);
+    }
+    
+    const authUrl = `${process.env.VITE_OAUTH_PORTAL_URL || 'https://oauth.example.com'}/authorize?${params.toString()}`;
+    res.redirect(302, authUrl);
+  });
+
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
     const state = getQueryParam(req, "state");
