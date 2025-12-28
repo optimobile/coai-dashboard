@@ -2,6 +2,12 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import governmentRouter from "./api/government.js";
+import enterpriseRouter from "./api/enterprise.js";
+import watchdogIncidentsRouter from "./api/watchdog-incidents.js";
+import badgesRouter from "./api/badges.js";
+import { initializeWebSocketServer } from "./websocket/server.js";
+import { registerOAuthRoutes } from "./_core/oauth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,6 +15,46 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  
+  // Store server reference for WebSocket
+  (app as any).server = server;
+
+  // Middleware
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  // Register OAuth routes
+  registerOAuthRoutes(app);
+
+  // Health check
+  app.get("/health", (_req, res) => {
+    res.json({ status: "ok", timestamp: new Date() });
+  });
+
+  // API Routes
+  app.use("/api/government", governmentRouter);
+  app.use("/api/v1", enterpriseRouter);
+  app.use("/api/watchdog", watchdogIncidentsRouter);
+  app.use("/api/badges", badgesRouter);
+  
+  // tRPC routes (if available)
+  try {
+    const { appRouter } = await import("./routers.js");
+    const { createExpressMiddleware } = await import("@trpc/server/adapters/express");
+    const { createTRPCMsw } = await import("@trpc/server/adapters/express");
+    app.use("/api/trpc", createExpressMiddleware({ router: appRouter, createContext: () => ({}) }));
+  } catch (e) {
+    console.log("tRPC router not available, skipping");
+  }
+
+  // API Documentation
+  app.get("/api/docs", (_req, res) => {
+    res.json({
+      version: "1.0.0",
+      title: "CSOAI API",
+      description: "Global AI Safety Governance Platform"
+    });
+  });
 
   // Serve static files from dist/public in production
   const staticPath =
@@ -25,8 +71,13 @@ async function startServer() {
 
   const port = process.env.PORT || 3000;
 
+  // Initialize WebSocket server
+  const wss = initializeWebSocketServer(server);
+  console.log('WebSocket server initialized');
+
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    console.log(`WebSocket server available at ws://localhost:${port}/ws`);
   });
 }
 
