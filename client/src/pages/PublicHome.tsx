@@ -46,12 +46,8 @@ export default function PublicHome() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link href="/home">
-              <Button variant="ghost" size="sm">Sign In</Button>
-            </Link>
-            <Link href="/watchdog-signup">
-              <Button size="sm">Become a Watchdog</Button>
-            </Link>
+            <Button variant="ghost" size="sm" onClick={() => window.location.href = '/home'}>Sign In</Button>
+            <Button size="sm" onClick={() => window.location.href = '/watchdog-signup'}>Become a Watchdog</Button>
           </div>
         </div>
       </nav>
@@ -77,18 +73,14 @@ export default function PublicHome() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <Link href="/home">
-                <Button size="lg" className="gap-2">
-                  Start Compliance Check
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/watchdog-signup">
-                <Button size="lg" variant="outline" className="gap-2">
-                  <Eye className="w-4 h-4" />
-                  Become a Watchdog Analyst
-                </Button>
-              </Link>
+              <Button size="lg" className="gap-2" onClick={() => window.location.href = '/home'}>
+                Start Compliance Check
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+              <Button size="lg" variant="outline" className="gap-2" onClick={() => window.location.href = '/watchdog-signup'}>
+                <Eye className="w-4 h-4" />
+                Become a Watchdog Analyst
+              </Button>
             </div>
 
             {/* Social Proof */}
@@ -353,12 +345,10 @@ export default function PublicHome() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link href="/watchdog-signup">
-                    <Button size="lg" className="gap-2">
-                      Apply Now - It's Free
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </Link>
+                  <Button size="lg" className="gap-2" onClick={() => window.location.href = '/watchdog-signup'}>
+                    Apply Now - It's Free
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
                   <div className="text-sm text-muted-foreground">
                     <strong className="text-foreground">{loiCount?.count || 0}</strong> people have applied
                   </div>
@@ -409,11 +399,9 @@ export default function PublicHome() {
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">Goal: 1,000 LOIs for Series A</p>
                 </div>
-                <Link href="/watchdog-signup">
-                  <Button className="w-full gap-2">
-                    Add Your Voice <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
+                <Button className="w-full gap-2" onClick={() => window.location.href = '/watchdog-signup'}>
+                  Add Your Voice <ArrowRight className="w-4 h-4" />
+                </Button>
               </CardContent>
             </Card>
 
@@ -485,9 +473,7 @@ export default function PublicHome() {
                 Achieve compliance before the August 2026 EU AI Act deadline. 
                 Avoid €35M fines with proactive governance.
               </p>
-              <Link href="/home">
-                <Button variant="outline" size="sm">Start Assessment</Button>
-              </Link>
+              <Button variant="outline" size="sm" onClick={() => window.location.href = '/home'}>Start Assessment</Button>
             </div>
 
             <div className="text-center">
@@ -499,9 +485,7 @@ export default function PublicHome() {
                 Monitor AI systems in your jurisdiction. Access public Watchdog reports 
                 and council decisions for oversight.
               </p>
-              <Link href="/watchdog">
-                <Button variant="outline" size="sm">View Reports</Button>
-              </Link>
+              <Button variant="outline" size="sm" onClick={() => window.location.href = '/watchdog'}>View Reports</Button>
             </div>
 
             <div className="text-center">
@@ -513,9 +497,7 @@ export default function PublicHome() {
                 Report AI issues, become a Watchdog Analyst, or simply stay informed 
                 about AI safety in your community.
               </p>
-              <Link href="/watchdog-signup">
-                <Button variant="outline" size="sm">Get Involved</Button>
-              </Link>
+              <Button variant="outline" size="sm" onClick={() => window.location.href = '/watchdog-signup'}>Get Involved</Button>
             </div>
           </div>
         </div>
