@@ -20,99 +20,107 @@ import {
   Phone,
   MessageSquare,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  TrendingUp,
+  Award,
+  Headphones
 } from 'lucide-react';
 
+// Updated pricing tiers based on market research
 const PRICING_TIERS = [
   {
-    id: 'free',
-    name: 'Free',
-    description: 'For individuals exploring AI governance',
-    monthlyPrice: 0,
-    yearlyPrice: 0,
-    icon: Zap,
-    color: 'text-slate-400',
-    bgColor: 'bg-slate-500/20',
-    borderColor: 'border-slate-500/30',
-    features: {
-      aiSystems: 1,
-      assessments: 3,
-      teamMembers: 1,
-      frameworks: ['EU AI Act'],
-      support: 'Community',
-      apiAccess: false,
-      pdfReports: false,
-      emailDelivery: false,
-      bulkRegistration: false,
-      customIntegrations: false,
-      dedicatedSupport: false,
-      sla: 'None',
-      councilAccess: 'View only',
-      watchdogReports: 5,
-      pdcaCycles: 1,
-      knowledgeBase: 'Limited',
-    },
-    cta: 'Get Started Free',
-    popular: false,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    description: 'For growing teams with compliance needs',
-    monthlyPrice: 49,
-    yearlyPrice: 39,
+    id: 'startup',
+    name: 'Startup',
+    description: 'For early-stage companies and SMBs',
+    monthlyPrice: 299,
+    yearlyPrice: 2990,
     icon: Rocket,
-    color: 'text-emerald-500 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/20',
-    borderColor: 'border-emerald-500/50',
+    color: 'text-blue-500 dark:text-blue-400',
+    bgColor: 'bg-blue-500/20',
+    borderColor: 'border-blue-500/50',
     features: {
-      aiSystems: 10,
-      assessments: 'Unlimited',
-      teamMembers: 5,
+      users: '5',
+      aiSystems: '10',
+      assessments: '50/month',
       frameworks: ['EU AI Act', 'NIST RMF'],
-      support: 'Email',
-      apiAccess: true,
+      training: 'Basic (50 courses)',
+      certification: false,
+      watchdog: 'Community access',
+      apiAccess: false,
       pdfReports: true,
       emailDelivery: true,
       bulkRegistration: false,
       customIntegrations: false,
       dedicatedSupport: false,
-      sla: '48-hour response',
+      sla: 'None',
+      councilAccess: 'View only',
+      support: 'Email',
+      knowledgeBase: 'Limited',
+    },
+    cta: 'Start Free Trial',
+    popular: false,
+  },
+  {
+    id: 'growth',
+    name: 'Growth',
+    description: 'For scaling mid-market enterprises',
+    monthlyPrice: 1499,
+    yearlyPrice: 14990,
+    icon: TrendingUp,
+    color: 'text-emerald-500 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/20',
+    borderColor: 'border-emerald-500/50',
+    features: {
+      users: '25',
+      aiSystems: 'Unlimited',
+      assessments: 'Unlimited',
+      frameworks: ['EU AI Act', 'NIST RMF', 'ISO 42001'],
+      training: 'Full library (240+ courses)',
+      certification: true,
+      watchdog: 'Incident reporting + analytics',
+      apiAccess: true,
+      pdfReports: true,
+      emailDelivery: true,
+      bulkRegistration: true,
+      customIntegrations: true,
+      dedicatedSupport: false,
+      sla: '24-hour response',
       councilAccess: 'Full access',
-      watchdogReports: 'Unlimited',
-      pdcaCycles: 10,
+      support: 'Priority email + chat',
       knowledgeBase: 'Full',
     },
-    cta: 'Start Pro Trial',
+    cta: 'Start Free Trial',
     popular: true,
   },
   {
     id: 'enterprise',
     name: 'Enterprise',
-    description: 'For organizations requiring full compliance',
-    monthlyPrice: 199,
-    yearlyPrice: 159,
+    description: 'For Fortune 500 and regulated industries',
+    monthlyPrice: null,
+    yearlyPrice: null,
+    customPrice: 'Custom',
     icon: Building2,
-    color: 'text-gray-400',
-    bgColor: 'bg-gray-500/20',
-    borderColor: 'border-gray-500/50',
+    color: 'text-amber-500 dark:text-amber-400',
+    bgColor: 'bg-amber-500/20',
+    borderColor: 'border-amber-500/50',
     features: {
+      users: 'Unlimited',
       aiSystems: 'Unlimited',
       assessments: 'Unlimited',
-      teamMembers: 'Unlimited',
-      frameworks: ['EU AI Act', 'NIST RMF', 'TC260'],
-      support: 'Priority + Phone',
+      frameworks: 'All frameworks + custom',
+      training: 'Custom training programs',
+      certification: true,
+      watchdog: 'Advanced analytics + threat intelligence',
       apiAccess: true,
       pdfReports: true,
       emailDelivery: true,
       bulkRegistration: true,
       customIntegrations: true,
       dedicatedSupport: true,
-      sla: '4-hour response',
-      councilAccess: 'Full + Priority',
-      watchdogReports: 'Unlimited',
-      pdcaCycles: 'Unlimited',
-      knowledgeBase: 'Full + Custom',
+      sla: '4-hour response + SLA',
+      councilAccess: 'Priority + custom',
+      support: 'Dedicated account manager + phone',
+      knowledgeBase: 'Full + custom content',
     },
     cta: 'Contact Sales',
     popular: false,
@@ -123,10 +131,18 @@ const FEATURE_CATEGORIES = [
   {
     name: 'Core Features',
     features: [
+      { key: 'users', label: 'Team Members', description: 'Users in your organization' },
       { key: 'aiSystems', label: 'AI Systems', description: 'Number of AI systems you can register' },
       { key: 'assessments', label: 'Compliance Assessments', description: 'Monthly assessment limit' },
-      { key: 'teamMembers', label: 'Team Members', description: 'Users in your organization' },
       { key: 'frameworks', label: 'Compliance Frameworks', description: 'Supported regulatory frameworks' },
+    ],
+  },
+  {
+    name: 'Training & Certification',
+    features: [
+      { key: 'training', label: 'Training Modules', description: 'Access to compliance training' },
+      { key: 'certification', label: 'Certification Program', description: 'Formal certification exams' },
+      { key: 'watchdog', label: 'Watchdog Program', description: 'AI incident reporting and tracking' },
     ],
   },
   {
@@ -134,7 +150,6 @@ const FEATURE_CATEGORIES = [
     features: [
       { key: 'pdfReports', label: 'PDF Reports', description: 'Generate downloadable compliance reports' },
       { key: 'emailDelivery', label: 'Email Delivery', description: 'Send reports directly via email' },
-      { key: 'pdcaCycles', label: 'PDCA Cycles', description: 'Continuous improvement workflows' },
       { key: 'knowledgeBase', label: 'Knowledge Base', description: 'Access to AI safety scenarios' },
     ],
   },
@@ -158,35 +173,42 @@ const FEATURE_CATEGORIES = [
     name: 'CSOAI Ecosystem',
     features: [
       { key: 'councilAccess', label: '33-Agent Council', description: 'AI safety evaluation access' },
-      { key: 'watchdogReports', label: 'Watchdog Reports', description: 'Monthly incident reports' },
     ],
   },
 ];
 
 const FAQ = [
   {
-    question: 'What happens when I exceed my plan limits?',
-    answer: 'You\'ll receive a notification when approaching limits. You can upgrade anytime, or we\'ll pause new registrations until the next billing cycle.',
+    question: 'Why is CSOAI priced higher than competitors?',
+    answer: 'CSOAI combines multi-framework compliance (EU AI Act, NIST, ISO 42001), comprehensive training, certification programs, and the Watchdog incident tracking system in one platform. Competitors typically offer single-framework tools. Our pricing reflects the comprehensive value delivered.',
   },
   {
     question: 'Can I switch plans at any time?',
-    answer: 'Yes! Upgrades take effect immediately with prorated billing. Downgrades take effect at the next billing cycle.',
+    answer: 'Yes! Upgrades take effect immediately with prorated billing. Downgrades take effect at the next billing cycle. Contact our team for custom arrangements.',
   },
   {
     question: 'Is there a free trial for paid plans?',
-    answer: 'Yes, Pro plans include a 14-day free trial. Enterprise customers can request a custom pilot program.',
+    answer: 'Yes, both Startup and Growth plans include a 14-day free trial with full feature access. Enterprise customers can request a custom pilot program.',
   },
   {
-    question: 'What compliance frameworks are supported?',
-    answer: 'We support EU AI Act, NIST AI RMF, and TC260 standards. Additional frameworks are added based on customer demand.',
+    question: 'What happens when I exceed my plan limits?',
+    answer: 'For Startup plans, you\'ll receive a notification when approaching limits. You can upgrade anytime to Growth or Enterprise. Growth and Enterprise plans have unlimited assessments and systems.',
   },
   {
     question: 'How does the 33-Agent Council work?',
-    answer: 'Our AI council evaluates safety scenarios using 33 specialized agents representing different stakeholder perspectives. Results inform compliance recommendations.',
+    answer: 'Our AI council evaluates safety scenarios using 33 specialized agents representing different stakeholder perspectives. Growth and Enterprise tiers get full access to council evaluations.',
   },
   {
     question: 'Can I get a custom enterprise quote?',
-    answer: 'Absolutely! Contact our sales team for custom pricing based on your organization\'s specific needs and scale.',
+    answer: 'Absolutely! Contact our sales team at enterprise@coai.dev for custom pricing based on your organization\'s specific needs, scale, and compliance requirements.',
+  },
+  {
+    question: 'What\'s included in the Watchdog program?',
+    answer: 'Startup: Community access to public incident reports. Growth: Full incident reporting, analytics, and trend analysis. Enterprise: Advanced threat intelligence and custom threat modeling.',
+  },
+  {
+    question: 'Do you offer annual discounts?',
+    answer: 'Yes! Annual billing saves approximately 17% compared to monthly pricing across all tiers.',
   },
 ];
 
@@ -199,20 +221,14 @@ export default function Pricing() {
   const checkoutMutation = trpc.stripe.createCheckoutSession.useMutation();
   
   const handleSubscribe = async (tierId: string) => {
-    if (tierId === 'free') {
-      setLocation('/dashboard');
-      return;
-    }
-    
     if (tierId === 'enterprise') {
-      // Open contact form or email
-      window.location.href = 'mailto:enterprise@coai.dev?subject=Enterprise%20Inquiry';
+      window.location.href = 'mailto:enterprise@coai.dev?subject=Enterprise%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20CSOAI%20Enterprise%20pricing%20and%20features.';
       return;
     }
     
     try {
       const result = await checkoutMutation.mutateAsync({
-        tier: tierId as 'pro' | 'enterprise',
+        tier: tierId as 'startup' | 'growth' | 'enterprise',
         billingPeriod: isYearly ? 'yearly' : 'monthly',
       });
       if (result.url) {
@@ -226,9 +242,9 @@ export default function Pricing() {
   const renderFeatureValue = (value: any) => {
     if (typeof value === 'boolean') {
       return value ? (
-        <Check className="h-5 w-5 text-green-400" />
+        <Check className="h-5 w-5 text-green-500" />
       ) : (
-        <X className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+        <X className="h-5 w-5 text-gray-400 dark:text-gray-600" />
       );
     }
     if (Array.isArray(value)) {
@@ -245,110 +261,102 @@ export default function Pricing() {
           <Badge className="mb-4 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
             Pricing
           </Badge>
-          <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Simple, Transparent Pricing
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            Enterprise Pricing for AI Compliance
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Choose the plan that fits your AI governance needs. All plans include core compliance features.
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+            Simple, transparent pricing that scales with your organization. From startups to Fortune 500, we have a plan for you.
           </p>
           
           {/* Billing Toggle */}
-          <div className="flex items-center justify-center gap-4 mt-8">
-            <span className={`text-sm ${!isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>Monthly</span>
-            <Switch
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <span className={`text-sm font-medium ${!isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
+              Monthly
+            </span>
+            <Switch 
               checked={isYearly}
               onCheckedChange={setIsYearly}
+              className="data-[state=checked]:bg-emerald-500"
             />
-            <span className={`text-sm ${isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
-              Yearly <Badge className="ml-2 bg-green-500/20 text-green-400 border-green-500/30">Save 20%</Badge>
+            <span className={`text-sm font-medium ${isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
+              Annual <span className="text-emerald-500 font-semibold">(Save 17%)</span>
             </span>
           </div>
         </div>
-        
+
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
           {PRICING_TIERS.map((tier) => {
             const Icon = tier.icon;
             const price = isYearly ? tier.yearlyPrice : tier.monthlyPrice;
+            const displayPrice = tier.customPrice || (price ? `$${price}` : 'Custom');
+            const billingLabel = tier.customPrice ? '' : (isYearly ? '/year' : '/month');
             
             return (
               <Card 
                 key={tier.id}
-                className={`relative bg-white dark:bg-gray-900 border-2 ${tier.borderColor} ${
-                  tier.popular ? 'scale-105 shadow-xl shadow-emerald-500/20' : ''
+                className={`relative transition-all duration-300 ${
+                  tier.popular 
+                    ? 'md:scale-105 border-emerald-500 shadow-xl' 
+                    : 'border-gray-200 dark:border-gray-700'
                 }`}
               >
                 {tier.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-emerald-500 text-white border-0">Most Popular</Badge>
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-emerald-500 text-white">Most Popular</Badge>
                   </div>
                 )}
-                <CardHeader className="text-center pb-2">
-                  <div className={`mx-auto p-3 rounded-xl ${tier.bgColor} w-fit mb-4`}>
-                    <Icon className={`h-8 w-8 ${tier.color}`} />
-                  </div>
-                  <CardTitle className="text-lg sm:text-xl md:text-2xl text-white">{tier.name}</CardTitle>
-                  <CardDescription>{tier.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="mb-6">
-                    <span className="text-5xl font-bold text-gray-900 dark:text-white">${price}</span>
-                    <span className="text-gray-600 dark:text-gray-400">/month</span>
-                    {isYearly && tier.monthlyPrice > 0 && (
-                      <p className="text-sm text-gray-600 dark:text-gray-500 mt-1">
-                        Billed ${price * 12}/year
-                      </p>
-                    )}
+                
+                <CardHeader>
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <CardTitle className="flex items-center gap-2 mb-2">
+                        <Icon className={`h-5 w-5 ${tier.color}`} />
+                        {tier.name}
+                      </CardTitle>
+                      <CardDescription>{tier.description}</CardDescription>
+                    </div>
                   </div>
                   
+                  <div className="mt-4">
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white">
+                      {displayPrice}
+                      <span className="text-lg text-gray-600 dark:text-gray-400 font-normal">{billingLabel}</span>
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent>
                   <Button 
                     onClick={() => handleSubscribe(tier.id)}
                     className={`w-full mb-6 ${
-                      tier.popular 
-                        ? 'bg-cyan-600 hover:bg-cyan-700' 
-                        : 'bg-emerald-600 hover:bg-emerald-700'
+                      tier.popular
+                        ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                        : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white'
                     }`}
                   >
                     {tier.cta}
                   </Button>
                   
-                  <div className="text-left space-y-3">
-                    <p className="text-sm font-medium text-slate-300 mb-2">Includes:</p>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                        <span>{tier.features.aiSystems} AI System{tier.features.aiSystems !== 1 ? 's' : ''}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                        <span>{tier.features.assessments} Assessments</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                        <span>{tier.features.teamMembers} Team Member{tier.features.teamMembers !== 1 ? 's' : ''}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                        <span>{tier.features.frameworks.length} Framework{tier.features.frameworks.length !== 1 ? 's' : ''}</span>
-                      </div>
-                      {tier.features.apiAccess && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                          <span>API Access</span>
-                        </div>
-                      )}
-                      {tier.features.pdfReports && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                          <span>PDF Reports</span>
-                        </div>
-                      )}
-                      {tier.features.dedicatedSupport && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
-                          <span>Dedicated Support</span>
-                        </div>
-                      )}
+                  {/* Key Features */}
+                  <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Team Members</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">{tier.features.users}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">AI Systems</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">{tier.features.aiSystems}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Frameworks</span>
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                        {Array.isArray(tier.features.frameworks) ? tier.features.frameworks.length : 'All'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Support</span>
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">{tier.features.support}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -356,109 +364,107 @@ export default function Pricing() {
             );
           })}
         </div>
-        
-        {/* Feature Comparison Table */}
-        <div className="max-w-6xl mx-auto mb-16">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white text-center mb-8">Compare All Features</h2>
-          <Card className="bg-white dark:bg-gray-900 border-slate-700 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-700">
-                    <th className="text-left p-4 text-slate-400 font-medium">Feature</th>
-                    {PRICING_TIERS.map(tier => (
-                      <th key={tier.id} className="text-center p-4 text-white font-medium">
-                        {tier.name}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {FEATURE_CATEGORIES.map((category, catIndex) => (
-                    <>
-                      <tr key={`cat-${catIndex}`} className="bg-gray-50 dark:bg-gray-800">
-                        <td colSpan={4} className="p-3 text-sm font-semibold text-emerald-500 dark:text-emerald-400">
-                          {category.name}
-                        </td>
-                      </tr>
-                      {category.features.map((feature, featIndex) => (
-                        <tr key={`feat-${catIndex}-${featIndex}`} className="border-b border-slate-700/50">
-                          <td className="p-4">
-                            <div>
-                              <p className="text-white text-sm">{feature.label}</p>
-                              <p className="text-slate-500 text-xs">{feature.description}</p>
-                            </div>
-                          </td>
-                          {PRICING_TIERS.map(tier => (
-                            <td key={tier.id} className="text-center p-4">
-                              {renderFeatureValue((tier.features as any)[feature.key])}
-                            </td>
-                          ))}
-                        </tr>
+
+        {/* Detailed Comparison */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            Detailed Feature Comparison
+          </h2>
+          
+          {FEATURE_CATEGORIES.map((category) => (
+            <div key={category.name} className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{category.name}</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Feature</th>
+                      {PRICING_TIERS.map((tier) => (
+                        <th key={tier.id} className="text-center py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">
+                          {tier.name}
+                        </th>
                       ))}
-                    </>
-                  ))}
-                </tbody>
-              </table>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {category.features.map((feature) => (
+                      <tr key={feature.key} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                        <td className="py-4 px-4">
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">{feature.label}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{feature.description}</p>
+                          </div>
+                        </td>
+                        {PRICING_TIERS.map((tier) => (
+                          <td key={tier.id} className="text-center py-4 px-4">
+                            {renderFeatureValue((tier.features as any)[feature.key])}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </Card>
+          ))}
         </div>
-        
-        {/* FAQ Section */}
+
+        {/* FAQ */}
         <div className="max-w-3xl mx-auto mb-16">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            Frequently Asked Questions
+          </h2>
+          
           <div className="space-y-4">
             {FAQ.map((item, index) => (
               <Card 
                 key={index}
-                className="bg-white dark:bg-gray-900 border-slate-700 cursor-pointer"
+                className="cursor-pointer hover:shadow-md transition-shadow"
                 onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
               >
-                <CardContent className="p-4">
+                <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-medium text-white">{item.question}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">{item.question}</h3>
                     {expandedFaq === index ? (
-                      <ChevronUp className="h-5 w-5 text-slate-400" />
+                      <ChevronUp className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-slate-400" />
+                      <ChevronDown className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                     )}
                   </div>
-                  {expandedFaq === index && (
-                    <p className="mt-3 text-slate-400 text-sm">{item.answer}</p>
-                  )}
-                </CardContent>
+                </CardHeader>
+                {expandedFaq === index && (
+                  <CardContent className="pt-0">
+                    <p className="text-gray-600 dark:text-gray-400">{item.answer}</p>
+                  </CardContent>
+                )}
               </Card>
             ))}
           </div>
         </div>
-        
+
         {/* CTA Section */}
-        <div className="text-center">
-          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30">
-            <CardContent className="p-4 sm:p-6 md:p-8">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4">Need a Custom Solution?</h2>
-              <p className="text-slate-300 mb-6">
-                Large organizations and government agencies can get custom pricing, dedicated support, 
-                and tailored compliance workflows.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  onClick={() => window.location.href = 'mailto:enterprise@coai.dev'}
-                  className="bg-cyan-600 hover:bg-cyan-700"
-                >
-                  <Mail className="h-4 w-4 mr-2" />
-                  Contact Sales
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => setLocation('/enterprise-onboarding')}
-                >
-                  <Rocket className="h-4 w-4 mr-2" />
-                  Start Enterprise Trial
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 dark:from-emerald-500/20 dark:to-blue-500/20 rounded-lg border border-emerald-500/30 dark:border-emerald-500/50 p-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Ready to Secure Your AI?
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+            Join thousands of organizations using CSOAI to ensure compliance with EU AI Act, NIST RMF, and ISO 42001 standards.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              onClick={() => handleSubscribe('startup')}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white"
+            >
+              Start Free Trial
+            </Button>
+            <Button 
+              onClick={() => handleSubscribe('enterprise')}
+              variant="outline"
+              className="border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              Contact Sales
+            </Button>
+          </div>
         </div>
       </div>
     </div>

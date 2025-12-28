@@ -898,6 +898,19 @@ export const emailTemplates = mysqlTable("email_templates", {
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 }, (table) => [index("idx_templateId").on(table.templateId)]);
 
+export const userFeedback = mysqlTable("user_feedback", {
+	id: int().autoincrement().notNull(),
+	userId: int(),
+	category: mysqlEnum(['training', 'ui', 'features', 'other']).notNull(),
+	content: text().notNull(),
+	email: varchar({ length: 255 }),
+	status: mysqlEnum(['new', 'reviewed', 'actioned', 'archived']).default('new').notNull(),
+	adminResponse: text(),
+	respondedAt: timestamp({ mode: 'string' }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_userId_feedback").on(table.userId), index("idx_category_feedback").on(table.category)]);
+
 export const userEmailPreferences = mysqlTable("user_email_preferences", {
 	id: int().autoincrement().notNull(),
 	userId: int().notNull(),
@@ -927,3 +940,5 @@ export type EmailTemplate = typeof emailTemplates.$inferSelect;
 export type InsertEmailTemplate = typeof emailTemplates.$inferInsert;
 export type UserEmailPreference = typeof userEmailPreferences.$inferSelect;
 export type InsertUserEmailPreference = typeof userEmailPreferences.$inferInsert;
+export type UserFeedback = typeof userFeedback.$inferSelect;
+export type InsertUserFeedback = typeof userFeedback.$inferInsert;
