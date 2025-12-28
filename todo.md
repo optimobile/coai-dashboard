@@ -4940,3 +4940,173 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add badge statistics dashboard for analysts
 - [ ] Test end-to-end badge generation and sharing
 - [ ] Connect badge API to frontend
+
+
+## PHASE: Stripe Live Payment Infrastructure & Multi-Framework Training
+
+### Phase 1: Stripe Live Configuration & Product Setup
+- [ ] Verify Stripe live account is active and keys configured
+- [ ] Create Stripe products for 6 frameworks (EU AI Act, NIST AI RMF, TC260, UK AI Bill, Canada AI Act, Australia AI Governance)
+- [ ] Create pricing tiers for each framework (Fundamentals $99, Professional $199, Expert $499)
+- [ ] Set up Stripe webhooks for payment events (checkout.session.completed, payment_intent.succeeded)
+- [ ] Configure Stripe API keys in environment variables
+- [ ] Test Stripe live payment flow end-to-end
+
+### Phase 2: Multi-Framework Training Products & Pricing
+- [ ] Design 6 framework training product structure (each with 3 levels)
+- [ ] Create Stripe products with proper metadata (framework, level, region)
+- [ ] Set up pricing plans (one-time, 3-month, 6-month, 12-month subscriptions)
+- [ ] Document framework-to-product mapping for Q2 module launches
+- [ ] Create placeholder product descriptions showing "Coming Q2 2026"
+- [ ] Set up product images/branding for each framework
+
+### Phase 3: Payment Infrastructure & Liability Coverage
+- [ ] Implement Stripe webhook handler for payment success/failure
+- [ ] Create payment receipt generation system
+- [ ] Set up refund policy enforcement (14-day money-back guarantee)
+- [ ] Implement payment audit logging for compliance
+- [ ] Create payment reconciliation system
+- [ ] Add PCI DSS compliance documentation
+- [ ] Implement fraud detection and prevention
+
+### Phase 4: Training Catalog UI with Framework Selection
+- [ ] Create FrameworkSelector component showing all 6 frameworks
+- [ ] Build TrainingCatalog page with framework filtering
+- [ ] Create ProductCard component with pricing and payment options
+- [ ] Add "Coming Q2" badges for frameworks without modules
+- [ ] Implement payment flow (Stripe Checkout integration)
+- [ ] Create order confirmation page
+- [ ] Add payment history/receipts page
+
+### Phase 5: Webhook Integration & Payment Handling
+- [ ] Create webhookHandler for Stripe events
+- [ ] Implement order creation on payment success
+- [ ] Set up email receipt delivery
+- [ ] Create refund processing workflow
+- [ ] Implement subscription management (pause, cancel, upgrade)
+- [ ] Add payment failure retry logic
+- [ ] Create payment status dashboard
+
+### Phase 6: Compliance Documentation & Legal Coverage
+- [ ] Create Payment Terms & Conditions (Stripe compliance)
+- [ ] Add refund policy documentation
+- [ ] Create data processing agreement for payments
+- [ ] Document PCI DSS compliance measures
+- [ ] Add payment security documentation
+- [ ] Create GDPR-compliant payment privacy notice
+- [ ] Document liability coverage for payment processing
+
+### Phase 7: Testing & Launch Readiness Verification
+- [ ] Test all 6 framework products in Stripe live
+- [ ] Verify payment flow end-to-end (signup → payment → access)
+- [ ] Test webhook delivery and order creation
+- [ ] Verify email receipts are sent correctly
+- [ ] Test refund processing workflow
+- [ ] Validate compliance documentation is complete
+- [ ] Create launch checklist and sign-off
+
+
+
+## PHASE 2: AI-Powered Adaptive Training System Design
+
+### Training Gap Analysis
+- [ ] Document current training infrastructure (schema exists but no AI tutoring)
+- [ ] Identify missing components: practice mode, real-time feedback, spaced repetition
+- [ ] Map AI tutor capabilities needed for each framework
+- [ ] Design learning progression: Fundamentals → Professional → Expert
+
+### AI Tutor System Design
+- [ ] Design practice question interface with AI explanation
+- [ ] Create AI prompt template for explaining concepts
+- [ ] Design weakness detection algorithm (track wrong answers)
+- [ ] Design spaced repetition schedule (review weak areas)
+- [ ] Create learning analytics dashboard
+- [ ] Design adaptive difficulty (easier → harder questions)
+
+### Database Schema Extensions
+- [ ] Add `practiceAttempts` table (track practice question performance)
+- [ ] Add `learningWeaknesses` table (track weak topics)
+- [ ] Add `spaceRepetitionSchedule` table (when to review)
+- [ ] Add `aiTutorInteractions` table (track AI explanations)
+- [ ] Add `learningAnalytics` table (performance metrics)
+
+### Backend AI Tutor Implementation
+- [ ] Create `aiTutor` router for training endpoints
+- [ ] Implement `getPracticeQuestion` endpoint (get next question)
+- [ ] Implement `submitPracticeAnswer` endpoint (check answer + get AI explanation)
+- [ ] Implement `getWeaknesses` endpoint (show weak topics)
+- [ ] Implement `getRecommendations` endpoint (what to review next)
+- [ ] Implement `getProgressAnalytics` endpoint (learning dashboard)
+- [ ] Create LLM prompt for generating explanations
+- [ ] Add AI explanation caching (avoid duplicate LLM calls)
+
+
+
+## PHASE 3: AI-Powered Real-Time Training Implementation
+
+### Backend AI Tutor Router (COMPLETE)
+- [x] Create aiTutor router with 5 core endpoints
+- [x] Implement getPracticeQuestion (adaptive question selection)
+- [x] Implement submitPracticeAnswer (AI explanation generation)
+- [x] Implement getLearningAnalytics (progress tracking)
+- [x] Implement getRecommendations (personalized study plan)
+- [x] Implement getPracticeQuestionsByTopic (topic-focused practice)
+- [x] Register aiTutor router in main routers
+
+### Stripe Multi-Framework Products (COMPLETE)
+- [x] Create stripeProducts router for 6 frameworks
+- [x] Define 6 frameworks (EU AI Act, NIST, TC260, UK AI Bill, Canada, Australia)
+- [x] Define 3 pricing tiers (Fundamentals $99, Professional $199, Expert $499)
+- [x] Implement getFrameworks endpoint
+- [x] Implement createCheckoutSession (Stripe payment integration)
+- [x] Implement verifyPayment endpoint
+- [x] Implement getPricing endpoint
+- [x] Register stripeProducts router in main routers
+
+### Frontend Practice Mode UI (COMPLETE)
+- [x] Create PracticeMode component with real-time AI tutoring
+- [x] Display practice questions one at a time
+- [x] Show AI-generated explanations after each answer
+- [x] Display learning analytics dashboard
+- [x] Show personalized recommendations
+- [x] Track progress and weak areas
+- [x] Add "Ready for Exam" indicator
+
+### Training Catalog Page (COMPLETE)
+- [x] Create TrainingCatalog page showing all 6 frameworks
+- [x] Display pricing tiers for each framework
+- [x] Show "Coming Q2" badges for future modules
+- [x] Integrate Stripe checkout flow
+- [x] Add framework comparison table
+- [x] Add FAQ section
+- [x] Add key features section
+
+## PHASE 4: Integration & Testing
+
+### Integration Tasks
+- [ ] Connect TrainingCatalog page to main navigation
+- [ ] Add Training link to header menu
+- [ ] Create success page after payment
+- [ ] Create user dashboard showing purchased courses
+- [ ] Add practice mode to user dashboard
+- [ ] Integrate with existing certification system
+
+### Testing Tasks
+- [ ] Test all 6 framework products in Stripe
+- [ ] Test payment flow end-to-end
+- [ ] Test AI explanation generation
+- [ ] Test learning analytics calculations
+- [ ] Test recommendation algorithm
+- [ ] Test practice question selection (adaptive)
+- [ ] Test weakness detection
+- [ ] Test progress tracking
+
+### Compliance & Documentation
+- [ ] Create payment terms & conditions
+- [ ] Add refund policy documentation
+- [ ] Create data processing agreement for payments
+- [ ] Document PCI DSS compliance measures
+- [ ] Add payment security documentation
+- [ ] Create GDPR-compliant payment privacy notice
+- [ ] Document liability coverage for payment processing
+
