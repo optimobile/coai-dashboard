@@ -55,12 +55,17 @@ interface DashboardLayoutProps {
 const navItems = [
   { path: "/", label: "New Chat", icon: PenSquare, isAction: true },
   { path: "/dashboard", label: "Dashboard", icon: LayoutGrid },
+  { path: "/training", label: "Training", icon: GraduationCap },
+  { path: "/courses", label: "Courses", icon: BookOpen },
+  { path: "/certification", label: "Certification", icon: Trophy },
   { path: "/ai-systems", label: "AI Systems", icon: Shield },
   { path: "/compliance", label: "Compliance", icon: FileCheck },
   { path: "/agent-council", label: "33-Agent Council", icon: Users },
+  { path: "/watchdog", label: "Watchdog", icon: AlertTriangle },
   { path: "/reports", label: "Reports", icon: FileText },
   { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
   { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
+  { path: "/feedback", label: "Feedback Dashboard", icon: MessageSquare },
   { path: "/public", label: "Public Site", icon: Globe },
   { path: "/api-docs", label: "API Docs", icon: Code },
   { path: "/api-keys", label: "API Keys", icon: Key },
@@ -73,8 +78,7 @@ const navItems = [
   { path: "/about", label: "About", icon: Info },
 ];
 
-// Note: Watchdog, Training, Certification, and Regulatory are now integrated into the Members Dashboard
-// Access them via /dashboard with tab navigation
+// Training, Certification, Watchdog, and Feedback are now accessible from the sidebar
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location] = useLocation();

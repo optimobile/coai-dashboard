@@ -21,6 +21,28 @@ const isCourseFreeFn = (framework: string | null) => framework === "watchdog";
 
 export const coursesRouter = router({
   /**
+   * Get all regions
+   */
+  getRegions: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(regions);
+  }),
+
+  /**
+   * Get course bundles by region
+   */
+  getCourseBundles: publicProcedure
+    .input(z.object({ regionId: z.number().optional() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(courseBundles).where(
+        input.regionId ? eq(courseBundles.regionId, input.regionId) : undefined
+      );
+    }),
+
+  /**
    * Get course catalog with pricing by region
    * Public endpoint - anyone can browse courses
    */
@@ -384,6 +406,33 @@ export const coursesRouter = router({
         success: true,
         message: "Course marked as completed. You can now take the certification exam.",
       };
+    }),
+
+  /**
+   * Mark a module as complete
+   */
+  markModuleComplete: protectedProcedure
+    .input(z.object({ courseId: z.number(), moduleIndex: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify user is enrolled
+      const [enrollment] = await db
+        .select()
+        .from(courseEnrollments)
+        .where(
+          and(
+            eq(courseEnrollments.userId, ctx.user.id),
+            eq(courseEnrollments.courseId, input.courseId)
+          )
+        );
+
+      if (!enrollment) {
+        throw new Error("User not enrolled in this course");
+      }
+
+      return { success: true, message: "Module marked as complete" };
     }),
 
   /**

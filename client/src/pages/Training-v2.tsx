@@ -3,12 +3,13 @@
  * Clear course benefits, learning outcomes, and compelling content
  */
 
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { BookOpen, Clock, CheckCircle, Award, TrendingUp, Shield, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export default function TrainingV2() {
+  const [, setLocation] = useLocation();
   return (
     <div className="min-h-screen bg-white">
       
@@ -30,7 +31,11 @@ export default function TrainingV2() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold">
+              <Button 
+                size="lg" 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold"
+                onClick={() => setLocation('/courses')}
+              >
                 Start Training Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
