@@ -58,9 +58,7 @@ const navItems = [
   { path: "/ai-systems", label: "AI Systems", icon: Shield },
   { path: "/compliance", label: "Compliance", icon: FileCheck },
   { path: "/agent-council", label: "33-Agent Council", icon: Users },
-  { path: "/watchdog", label: "The Watchdog", icon: Eye },
   { path: "/reports", label: "Reports", icon: FileText },
-  { path: "/training", label: "Training", icon: GraduationCap },
   { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
   { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
   { path: "/public", label: "Public Site", icon: Globe },
@@ -69,13 +67,14 @@ const navItems = [
   { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
   { path: "/settings/billing", label: "Billing", icon: CreditCard },
   { path: "/knowledge-base", label: "Knowledge Base", icon: Brain },
-  { path: "/regulator", label: "Regulator View", icon: Building2 },
-  { path: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { path: "/recommendations", label: "Recommendations", icon: Lightbulb },
   { path: "/standards", label: "Standards", icon: BookOpen },
   { path: "/resources", label: "Resources", icon: FolderOpen },
   { path: "/about", label: "About", icon: Info },
 ];
+
+// Note: Watchdog, Training, Certification, and Regulatory are now integrated into the Members Dashboard
+// Access them via /dashboard with tab navigation
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location] = useLocation();

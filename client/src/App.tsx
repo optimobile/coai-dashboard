@@ -22,6 +22,7 @@ if (typeof window !== 'undefined' && !window.plausible) {
 import Home from "./pages/Home";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
+import MembersDashboard from "./pages/MembersDashboard";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
 import Compliance from "./pages/Compliance";
@@ -60,6 +61,7 @@ import Recommendations from "./pages/Recommendations";
 import MarketingHome from "./pages/MarketingHome";
 import Standards from "./pages/Standards";
 import WatchdogPublic from "./pages/WatchdogPublic";
+import PublicWatchdogHub from "./pages/PublicWatchdogHub";
 import CouncilDetail from "./pages/CouncilDetail";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
@@ -135,7 +137,7 @@ function App() {
                   <Route path="/about" component={About} />
                   <Route path="/old-home" component={Home} />
                   <Route path="/landing" component={Landing} />
-                  <Route path="/dashboard" component={Dashboard} />
+                  <Route path="/dashboard" component={MembersDashboard} />
                   <Route path="/dashboard/executive" component={DashboardIntegrated} />
                   <Route path="/dashboard/roadmap" component={ComplianceRoadmapPage} />
                   <Route path="/dashboard/alerts" component={AlertManagementPage} />
@@ -146,13 +148,14 @@ function App() {
                   <Route path="/agent-council" component={AgentCouncil} />
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/watchdog" component={Watchdog} />
-      <Route path="/watchdog-hub" component={WatchdogPublic} />
+                  <Route path="/public-watchdog" component={PublicWatchdogHub} />
                   <Route path="/reports" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
-      <Route path="/watchdog/report" component={WatchdogPublic} />
+      <Route path="/watchdog/report" component={PublicWatchdogHub} />
+                  <Route path="/watchdog-hub" component={PublicWatchdogHub} />
                   <Route path="/training" component={TrainingV2} />
                   <Route path="/courses" component={Courses} />
                   <Route path="/my-courses" component={MyCourses} />
