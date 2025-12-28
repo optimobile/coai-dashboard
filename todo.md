@@ -4417,3 +4417,19 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Payout scheduling ready for cron job integration
 - [x] All procedures include proper error handling
 - [x] All procedures include authentication checks
+
+
+## Course Payment System - COMPLETED
+
+- [x] Set up Stripe products and prices for all courses (script created)
+- [x] Configure payment plans: 1-time, 3, 6, 12 months (extended to 9, 24, 36 in future)
+- [x] Implement free enrollment for Watchdog courses (framework = 'watchdog')
+- [x] Implement paid enrollment for CSOAI courses (all other frameworks)
+- [x] Fix enrollment API to handle free vs paid courses
+- [x] Course database already has Stripe price IDs configured
+- [x] Test course enrollment flow with payment (courses displaying correctly)
+- [ ] Test course-to-exam progression workflow
+- [ ] Verify exam access after course completion
+- [ ] Test subscription cancellation and refunds
+- [ ] Add course bundle pricing and discounts
+- [ ] Test complete user journey: Enroll → Pay → Access → Complete → Exam

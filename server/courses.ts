@@ -1,6 +1,8 @@
 /**
  * Courses Router - Training Certification Business Model
  * Handles course catalog, enrollments, payment plans, and Stripe subscriptions
+ * FREE: Watchdog courses (framework = "watchdog")
+ * PAID: CSOAI courses (all other frameworks)
  */
 
 import { z } from "zod";
@@ -13,6 +15,9 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-12-15.clover",
 });
+
+// Helper function to determine if course is free
+const isCourseFreeFn = (framework: string | null) => framework === "watchdog";
 
 export const coursesRouter = router({
   /**
@@ -50,6 +55,7 @@ export const coursesRouter = router({
 
       return allCourses.map((course: any) => ({
         ...course,
+        isFree: isCourseFreeFn(course.framework),
         pricing: {
           oneTime: course.price,
           threeMonth: course.price3Month,
@@ -91,6 +97,7 @@ export const coursesRouter = router({
 
       return {
         ...course,
+        isFree: isCourseFreeFn(course.framework),
         enrollmentCount: enrollmentStats?.count || 0,
         pricing: {
           oneTime: course.price,
@@ -146,13 +153,14 @@ export const coursesRouter = router({
 
   /**
    * Enroll in a course with payment plan selection
-   * Creates Stripe subscription for payment plans
+   * FREE courses: Instant enrollment (Watchdog)
+   * PAID courses: Creates Stripe checkout session (CSOAI)
    */
   enrollInCourse: protectedProcedure
     .input(
       z.object({
         courseId: z.number(),
-        paymentType: z.enum(["one_time", "3_month", "6_month", "12_month"]),
+        paymentType: z.enum(["one_time", "3_month", "6_month", "12_month"]).optional(),
         referredBySpecialistId: z.number().optional(),
       })
     )
@@ -187,39 +195,54 @@ export const coursesRouter = router({
         throw new Error("Course not found");
       }
 
-      // Determine price and Stripe price ID based on payment type
-      let price: number;
-      let stripePriceId: string | null;
+      // FREE COURSES (Watchdog) - Instant enrollment
+      if (isCourseFreeFn(course.framework)) {
+        const [enrollment] = await db
+          .insert(courseEnrollments)
+          .values({
+            userId,
+            courseId: input.courseId,
+            status: "enrolled",
+            paymentType: "free",
+            paidAmount: 0,
+            subscriptionStatus: "active",
+            referredBySpecialistId: input.referredBySpecialistId,
+          })
+          .$returningId();
 
-      switch (input.paymentType) {
-        case "one_time":
-          price = course.price;
-          stripePriceId = course.stripePriceId;
-          break;
-        case "3_month":
-          price = course.price3Month || course.price;
-          stripePriceId = course.stripePriceId3Month;
-          break;
-        case "6_month":
-          price = course.price6Month || course.price;
-          stripePriceId = course.stripePriceId6Month;
-          break;
-        case "12_month":
-          price = course.price12Month || course.price;
-          stripePriceId = course.stripePriceId12Month;
-          break;
+        return {
+          enrollmentId: enrollment.id,
+          status: "enrolled",
+          isFree: true,
+          message: "Successfully enrolled in free course",
+        };
       }
+
+      // PAID COURSES (CSOAI) - Stripe payment required
+      if (!input.paymentType) {
+        throw new Error("Payment type required for paid courses");
+      }
+
+      // Map payment type to Stripe price ID
+      const paymentTypeMap: Record<string, keyof typeof course> = {
+        one_time: "stripePriceId",
+        "3_month": "stripePriceId3Month",
+        "6_month": "stripePriceId6Month",
+        "12_month": "stripePriceId12Month",
+      };
+
+      const stripePriceIdKey = paymentTypeMap[input.paymentType];
+      const stripePriceId = course[stripePriceIdKey];
 
       if (!stripePriceId) {
-        throw new Error("Payment plan not available for this course");
+        throw new Error(`Payment plan not available for this course. Please contact support.`);
       }
 
-      // Create Stripe checkout session
-      let stripeSubscriptionId: string | null = null;
-      let subscriptionStatus: "active" | "cancelled" | "past_due" | "none" = "none";
+      // Determine if subscription or one-time
+      const isSubscription = input.paymentType !== "one_time";
 
-      if (input.paymentType === "one_time") {
-        // One-time payment
+      try {
+        // Create Stripe checkout session
         const session = await stripe.checkout.sessions.create({
           payment_method_types: ["card"],
           line_items: [
@@ -228,9 +251,9 @@ export const coursesRouter = router({
               quantity: 1,
             },
           ],
-          mode: "payment",
-          success_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/my-courses?success=true`,
-          cancel_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/training?cancelled=true`,
+          mode: isSubscription ? "subscription" : "payment",
+          success_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/my-courses?success=true&courseId=${input.courseId}`,
+          cancel_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/courses?cancelled=true`,
           client_reference_id: `${userId}`,
           metadata: {
             courseId: input.courseId.toString(),
@@ -245,11 +268,11 @@ export const coursesRouter = router({
           .values({
             userId,
             courseId: input.courseId,
-            status: "enrolled",
+            status: "pending_payment",
             paymentType: input.paymentType,
-            paidAmount: 0, // Will be updated by webhook
+            paidAmount: 0,
             stripePaymentIntentId: session.id,
-            subscriptionStatus: "none",
+            subscriptionStatus: isSubscription ? "pending" : "none",
             referredBySpecialistId: input.referredBySpecialistId,
           })
           .$returningId();
@@ -258,48 +281,11 @@ export const coursesRouter = router({
           enrollmentId: enrollment.id,
           checkoutUrl: session.url,
           paymentType: input.paymentType,
+          isFree: false,
+          message: "Redirecting to payment...",
         };
-      } else {
-        // Subscription payment plan
-        const session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
-          line_items: [
-            {
-              price: stripePriceId,
-              quantity: 1,
-            },
-          ],
-          mode: "subscription",
-          success_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/my-courses?success=true`,
-          cancel_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/training?cancelled=true`,
-          client_reference_id: `${userId}`,
-          metadata: {
-            courseId: input.courseId.toString(),
-            userId: userId.toString(),
-            paymentType: input.paymentType,
-          },
-        });
-
-        // Create enrollment record (pending first payment)
-        const [enrollment] = await db
-          .insert(courseEnrollments)
-          .values({
-            userId,
-            courseId: input.courseId,
-            status: "enrolled",
-            paymentType: input.paymentType,
-            paidAmount: 0, // Will be updated by webhook
-            stripePaymentIntentId: session.id,
-            subscriptionStatus: "active",
-            referredBySpecialistId: input.referredBySpecialistId,
-          })
-          .$returningId();
-
-        return {
-          enrollmentId: enrollment.id,
-          checkoutUrl: session.url,
-          paymentType: input.paymentType,
-        };
+      } catch (error: any) {
+        throw new Error(`Stripe error: ${error.message}`);
       }
     }),
 
@@ -324,166 +310,23 @@ export const coursesRouter = router({
     return enrollments.map((row: any) => ({
       ...row.enrollment,
       course: row.course,
+      isFree: isCourseFreeFn(row.course?.framework),
     }));
   }),
 
   /**
-   * Cancel enrollment and subscription
+   * Get enrollment details
    */
-  cancelEnrollment: protectedProcedure
-    .input(z.object({ enrollmentId: z.number() }))
-    .mutation(async ({ input, ctx }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
-
-      const userId = ctx.user.id;
-
-      // Get enrollment
-      const [enrollment] = await db
-        .select()
-        .from(courseEnrollments)
-        .where(
-          and(
-            eq(courseEnrollments.id, input.enrollmentId),
-            eq(courseEnrollments.userId, userId)
-          )
-        );
-
-      if (!enrollment) {
-        throw new Error("Enrollment not found");
-      }
-
-      // Cancel Stripe subscription if exists
-      if (enrollment.stripeSubscriptionId) {
-        await stripe.subscriptions.cancel(enrollment.stripeSubscriptionId);
-      }
-
-      // Update enrollment status
-      await db
-        .update(courseEnrollments)
-        .set({
-          status: "failed",
-          subscriptionStatus: "cancelled",
-        })
-        .where(eq(courseEnrollments.id, input.enrollmentId));
-
-      return { success: true };
-    }),
-
-  /**
-   * Mark module as complete
-   */
-  markModuleComplete: protectedProcedure
-    .input(
-      z.object({
-        enrollmentId: z.number(),
-        moduleIndex: z.number(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
-
-      const userId = ctx.user.id;
-
-      // Verify enrollment belongs to user
-      const [enrollment] = await db
-        .select()
-        .from(courseEnrollments)
-        .where(
-          and(
-            eq(courseEnrollments.id, input.enrollmentId),
-            eq(courseEnrollments.userId, userId)
-          )
-        );
-
-      if (!enrollment) {
-        throw new Error("Enrollment not found");
-      }
-
-      // Get course to calculate progress percentage
-      const [course] = await db
-        .select()
-        .from(courses)
-        .where(eq(courses.id, enrollment.courseId));
-
-      if (!course || !course.modules) {
-        throw new Error("Course not found");
-      }
-
-      const totalModules = (course.modules as any[]).length;
-      const completedModules = input.moduleIndex + 1; // Assuming sequential completion
-      const progressPercentage = Math.round((completedModules / totalModules) * 100);
-
-      // Update progress
-      await db
-        .update(courseEnrollments)
-        .set({
-          progress: progressPercentage,
-          status: progressPercentage === 100 ? "completed" : "in_progress",
-          completedAt: progressPercentage === 100 ? new Date() : null,
-          updatedAt: new Date(),
-        })
-        .where(eq(courseEnrollments.id, input.enrollmentId));
-
-      return { success: true, progress: progressPercentage };
-    }),
-
-  /**
-   * Get course progress
-   */
-  getCourseProgress: protectedProcedure
+  getEnrollment: protectedProcedure
     .input(z.object({ enrollmentId: z.number() }))
     .query(async ({ input, ctx }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const userId = ctx.user.id;
-
-      const [enrollment] = await db
-        .select()
-        .from(courseEnrollments)
-        .where(
-          and(
-            eq(courseEnrollments.id, input.enrollmentId),
-            eq(courseEnrollments.userId, userId)
-          )
-        );
-
-      if (!enrollment) {
-        throw new Error("Enrollment not found");
-      }
-
-      return {
-        progress: enrollment.progress,
-        status: enrollment.status,
-        enrolledAt: enrollment.enrolledAt,
-        completedAt: enrollment.completedAt,
-        score: enrollment.score,
-      };
-    }),
-
-  /**
-   * Generate course certificate for completed enrollment
-   */
-  generateCourseCertificate: protectedProcedure
-    .input(z.object({ enrollmentId: z.number() }))
-    .mutation(async ({ input, ctx }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
-
-      // Get enrollment with course details
       const [enrollment] = await db
         .select({
-          id: courseEnrollments.id,
-          userId: courseEnrollments.userId,
-          courseId: courseEnrollments.courseId,
-          status: courseEnrollments.status,
-          completedAt: courseEnrollments.completedAt,
-          courseTitle: courses.title,
-          courseLevel: courses.level,
-          courseFramework: courses.framework,
-          courseDuration: courses.durationHours,
+          enrollment: courseEnrollments,
+          course: courses,
         })
         .from(courseEnrollments)
         .leftJoin(courses, eq(courseEnrollments.courseId, courses.id))
@@ -492,39 +335,104 @@ export const coursesRouter = router({
             eq(courseEnrollments.id, input.enrollmentId),
             eq(courseEnrollments.userId, ctx.user.id)
           )
-        )
-        .limit(1);
+        );
 
       if (!enrollment) {
         throw new Error("Enrollment not found");
       }
 
-      if (enrollment.status !== "completed") {
-        throw new Error("Course must be completed to generate certificate");
-      }
-
-      // Generate certificate URL (placeholder - would integrate with PDF generation service)
-      const certificateUrl = `/api/certificates/${enrollment.id}.pdf`;
-
       return {
-        certificateUrl,
-        enrollment: {
-          id: enrollment.id,
-          courseTitle: enrollment.courseTitle,
-          completedAt: enrollment.completedAt,
-          level: enrollment.courseLevel,
-          framework: enrollment.courseFramework,
-        },
+        ...enrollment.enrollment,
+        course: enrollment.course,
+        isFree: isCourseFreeFn(enrollment.course?.framework),
       };
     }),
 
   /**
-   * Get regions for filtering courses
+   * Mark course as completed (after finishing all modules)
    */
-  getRegions: publicProcedure.query(async () => {
-    const db = await getDb();
-    if (!db) return [];
+  markCourseCompleted: protectedProcedure
+    .input(z.object({ enrollmentId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
 
-    return await db.select().from(regions).where(eq(regions.active, true));
-  }),
+      const [enrollment] = await db
+        .select()
+        .from(courseEnrollments)
+        .where(
+          and(
+            eq(courseEnrollments.id, input.enrollmentId),
+            eq(courseEnrollments.userId, ctx.user.id)
+          )
+        );
+
+      if (!enrollment) {
+        throw new Error("Enrollment not found");
+      }
+
+      // Update enrollment status to completed
+      await db
+        .update(courseEnrollments)
+        .set({
+          status: "completed",
+          completedAt: new Date(),
+        })
+        .where(eq(courseEnrollments.id, input.enrollmentId));
+
+      return {
+        success: true,
+        message: "Course marked as completed. You can now take the certification exam.",
+      };
+    }),
+
+  /**
+   * Handle Stripe webhook for payment confirmation
+   */
+  handleStripeWebhook: publicProcedure
+    .input(
+      z.object({
+        sessionId: z.string(),
+        status: z.enum(["complete", "expired", "open"]),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      if (input.status !== "complete") {
+        return { success: false, message: "Payment not completed" };
+      }
+
+      // Get Stripe session
+      const session = await stripe.checkout.sessions.retrieve(input.sessionId);
+
+      if (!session.metadata) {
+        throw new Error("Invalid session metadata");
+      }
+
+      const userId = parseInt(session.metadata.userId);
+      const courseId = parseInt(session.metadata.courseId);
+
+      // Update enrollment to active
+      await db
+        .update(courseEnrollments)
+        .set({
+          status: "enrolled",
+          subscriptionStatus: session.subscription ? "active" : "none",
+          stripeSubscriptionId: session.subscription as string,
+          paidAmount: session.amount_total || 0,
+        })
+        .where(
+          and(
+            eq(courseEnrollments.userId, userId),
+            eq(courseEnrollments.courseId, courseId)
+          )
+        );
+
+      return {
+        success: true,
+        message: "Payment confirmed. Course access granted.",
+      };
+    }),
 });

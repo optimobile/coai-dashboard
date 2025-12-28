@@ -379,7 +379,7 @@ export default function About() {
                 Visionary leader driving the mission to protect humanity from AI risks while creating thousands of meaningful careers for displaced workers.
               </p>
               <div className="flex gap-4 justify-center">
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-2">
+                <a href="https://www.linkedin.com/in/nicktempleman/" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-2">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M16.338 16.338H13.67V12.16c0-.995-.017-2.292-1.194-2.292-1.195 0-1.38.932-1.38 1.893v4.577H8.368V9.892h2.519v.979h.037c.356-.674 1.228-1.387 2.528-1.387 2.699 0 3.199 1.774 3.199 4.085v4.171zM3.819 8.414a1.54 1.54 0 11.46-3.06 1.54 1.54 0 01-.46 3.06m1.32 7.924H2.5V9.892h2.639v6.446zM17.644 0H.356C.16 0 0 .156 0 .35v19.3c0 .194.16.35.356.35h17.288c.196 0 .356-.156.356-.35V.35c0-.194-.16-.35-.356-.35z"/></svg>
                   LinkedIn
                 </a>
