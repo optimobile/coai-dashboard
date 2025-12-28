@@ -435,7 +435,7 @@ const complianceRouter = router({
       ];
     }
 
-    return db.select().from(frameworks).where(eq(frameworks.isActive, 1));
+    return db.select().from(frameworks).where(eq(frameworks.isActive, true));
   }),
 
   // Get compliance summary for dashboard
@@ -1043,7 +1043,7 @@ const trainingRouter = router({
     return db
       .select()
       .from(trainingModules)
-      .where(eq(trainingModules.isActive, 1))
+      .where(eq(trainingModules.isActive, true))
       .orderBy(trainingModules.orderIndex);
   }),
 
@@ -1143,7 +1143,7 @@ const certificationRouter = router({
     return db
       .select()
       .from(certificationTests)
-      .where(eq(certificationTests.isActive, 1));
+      .where(eq(certificationTests.isActive, true));
   }),
 
   // Get test with questions (for taking the test)
@@ -1173,7 +1173,7 @@ const certificationRouter = router({
         .from(testQuestions)
         .where(and(
           eq(testQuestions.testId, input.testId),
-          eq(testQuestions.isActive, 1)
+          eq(testQuestions.isActive, true)
         ));
 
       return { test, questions };

@@ -1,4 +1,4 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, int, bigint } from "drizzle-orm/mysql-core";
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, bigint, boolean } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm"
 
 export const agentVotes = mysqlTable("agent_votes", {
@@ -85,7 +85,7 @@ export const apiKeys = mysqlTable("api_keys", {
 	rateLimit: int().default(100).notNull(),
 	lastUsedAt: timestamp({ mode: 'string' }),
 	expiresAt: timestamp({ mode: 'string' }),
-	isActive: int().default(1).notNull(),
+	isActive: boolean().default(true).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 });
@@ -145,7 +145,7 @@ export const certificationTests = mysqlTable("certification_tests", {
 	passingScore: int().default(70).notNull(),
 	timeLimitMinutes: int().default(60).notNull(),
 	totalQuestions: int().default(50).notNull(),
-	isActive: int().default(1).notNull(),
+	isActive: boolean().default(true).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 },
@@ -274,7 +274,7 @@ export const frameworks = mysqlTable("frameworks", {
 	jurisdiction: varchar({ length: 100 }),
 	description: text(),
 	effectiveDate: timestamp({ mode: 'string' }),
-	isActive: int().default(1).notNull(),
+	isActive: boolean().default(true).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 },
 (table) => [
@@ -577,7 +577,7 @@ export const testQuestions = mysqlTable("test_questions", {
 	explanation: text(),
 	points: int().default(1).notNull(),
 	difficulty: mysqlEnum(['easy','medium','hard']).default('medium').notNull(),
-	isActive: int().default(1).notNull(),
+	isActive: boolean().default(true).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 });
 
@@ -590,7 +590,7 @@ export const trainingModules = mysqlTable("training_modules", {
 	orderIndex: int().default(0).notNull(),
 	durationMinutes: int().default(30).notNull(),
 	isRequired: int().default(1).notNull(),
-	isActive: int().default(1).notNull(),
+	isActive: boolean().default(true).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 },
@@ -805,7 +805,7 @@ export const websocketConnections = mysqlTable("websocket_connections", {
 	id: int().autoincrement().primaryKey(),
 	userId: int().notNull(),
 	connectionId: varchar({ length: 255 }).notNull(),
-	isActive: int().default(1).notNull(),
+	isActive: boolean().default(true).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	lastHeartbeat: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 }, (table) => ({
