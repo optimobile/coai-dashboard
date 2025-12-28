@@ -7,6 +7,7 @@ import enterpriseRouter from "./api/enterprise.js";
 import watchdogIncidentsRouter from "./api/watchdog-incidents.js";
 import badgesRouter from "./api/badges.js";
 import { initializeWebSocketServer } from "./websocket/server.js";
+import { registerOAuthRoutes } from "./_core/oauth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +23,9 @@ async function startServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  // Register OAuth routes
+  registerOAuthRoutes(app);
+
   // Health check
   app.get("/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date() });
@@ -32,6 +36,16 @@ async function startServer() {
   app.use("/api/v1", enterpriseRouter);
   app.use("/api/watchdog", watchdogIncidentsRouter);
   app.use("/api/badges", badgesRouter);
+  
+  // tRPC routes (if available)
+  try {
+    const { appRouter } = await import("./routers.js");
+    const { createExpressMiddleware } = await import("@trpc/server/adapters/express");
+    const { createTRPCMsw } = await import("@trpc/server/adapters/express");
+    app.use("/api/trpc", createExpressMiddleware({ router: appRouter, createContext: () => ({}) }));
+  } catch (e) {
+    console.log("tRPC router not available, skipping");
+  }
 
   // API Documentation
   app.get("/api/docs", (_req, res) => {

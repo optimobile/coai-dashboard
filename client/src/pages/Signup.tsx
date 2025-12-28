@@ -56,10 +56,10 @@ export default function Signup() {
         <div className="hidden md:block">
           <div className="flex items-center gap-3 mb-8">
             <img src="/csoai-icon.svg.png" alt="CSOAI" className="h-12 w-12" />
-            <span className="text-3xl font-bold text-gray-900">CSOAI</span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">CSOAI</span>
           </div>
           
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Start Your AI Safety Career Today
           </h1>
           
@@ -122,7 +122,7 @@ export default function Signup() {
             <div className="mx-auto mb-4 h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
               <Shield className="h-8 w-8 text-green-600" />
             </div>
-            <CardTitle className="text-2xl">Create Your Free Account</CardTitle>
+            <CardTitle className="text-lg sm:text-xl md:text-2xl">Create Your Free Account</CardTitle>
             <CardDescription>
               Start learning in under 60 seconds
             </CardDescription>

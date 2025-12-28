@@ -245,7 +245,7 @@ export default function Pricing() {
           <Badge className="mb-4 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
             Pricing
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Simple, Transparent Pricing
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -266,7 +266,7 @@ export default function Pricing() {
         </div>
         
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
           {PRICING_TIERS.map((tier) => {
             const Icon = tier.icon;
             const price = isYearly ? tier.yearlyPrice : tier.monthlyPrice;
@@ -287,7 +287,7 @@ export default function Pricing() {
                   <div className={`mx-auto p-3 rounded-xl ${tier.bgColor} w-fit mb-4`}>
                     <Icon className={`h-8 w-8 ${tier.color}`} />
                   </div>
-                  <CardTitle className="text-2xl text-white">{tier.name}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl md:text-2xl text-white">{tier.name}</CardTitle>
                   <CardDescription>{tier.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="text-center">
@@ -359,7 +359,7 @@ export default function Pricing() {
         
         {/* Feature Comparison Table */}
         <div className="max-w-6xl mx-auto mb-16">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">Compare All Features</h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white text-center mb-8">Compare All Features</h2>
           <Card className="bg-white dark:bg-gray-900 border-slate-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -406,7 +406,7 @@ export default function Pricing() {
         
         {/* FAQ Section */}
         <div className="max-w-3xl mx-auto mb-16">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {FAQ.map((item, index) => (
               <Card 
@@ -435,8 +435,8 @@ export default function Pricing() {
         {/* CTA Section */}
         <div className="text-center">
           <Card className="max-w-2xl mx-auto bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold text-white mb-4">Need a Custom Solution?</h2>
+            <CardContent className="p-4 sm:p-6 md:p-8">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4">Need a Custom Solution?</h2>
               <p className="text-slate-300 mb-6">
                 Large organizations and government agencies can get custom pricing, dedicated support, 
                 and tailored compliance workflows.

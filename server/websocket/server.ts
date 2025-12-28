@@ -260,7 +260,7 @@ async function cleanupStaleConnections() {
     await dbInstance
       .update(websocketConnections)
       .set({ isActive: 0 })
-      .where(eq(websocketConnections.isActive, 1 as any));
+      .where(eq(websocketConnections.isActive, 1));
     // Add condition for lastHeartbeat < fiveMinutesAgo when available
   } catch (error) {
     console.error('Failed to cleanup stale connections:', error);

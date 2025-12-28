@@ -66,7 +66,7 @@ export default function Contact() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div {...fadeInUp}>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+            <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl md:text-5xl font-bold mb-6 text-gray-900">
               Get in Touch
             </h1>
             <p className="text-xl text-gray-600">
@@ -77,7 +77,7 @@ export default function Contact() {
       </section>
 
       {/* Contact Info Cards */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-4 sm:px-6 md:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
             {contactInfo.map((info, index) => (
@@ -102,7 +102,7 @@ export default function Contact() {
           {/* Contact Form */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <motion.div {...fadeInUp}>
-              <h2 className="text-3xl font-bold mb-8 text-gray-900">Send us a Message</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-gray-900">Send us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -169,7 +169,7 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h2 className="text-3xl font-bold mb-8 text-gray-900">Why Contact Us?</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-gray-900">Why Contact Us?</h2>
               <div className="space-y-6">
                 <Card className="p-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">Partnership Inquiries</h3>

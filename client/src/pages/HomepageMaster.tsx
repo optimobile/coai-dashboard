@@ -42,30 +42,30 @@ export default function HomepageMaster() {
       {/* ============================================
           SECTION 1: HERO - FOUR SOLUTIONS
           ============================================ */}
-      <section className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex items-center justify-center px-4 py-20">
+      <section className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex items-center justify-center px-3 sm:px-4 py-12 sm:py-20">
         <div className="max-w-6xl mx-auto w-full">
           {/* Urgency Banner with Countdown */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-xl p-6 mb-8 text-center"
+            className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-center"
           >
-            <p className="text-sm md:text-base font-semibold text-gray-800 mb-3">
-              🚨 <span className="text-red-600">EU AI Act Enforcement Deadline</span> — We need <span className="font-bold text-red-700">250,000 AI Safety Analysts</span> in:
+            <p className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 mb-2 sm:mb-3">
+              <span className="text-red-600">EU AI Act Enforcement Deadline</span> — We need <span className="font-bold text-red-700">250,000 AI Safety Analysts</span> in:
             </p>
             <CountdownTimer />
           </motion.div>
 
           {/* Main Headline */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-center mb-12">
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
               Securing AI's Future.
               <br />
               <span className="text-emerald-600">The Solution to AI Safety & Tomorrow's Challenges.</span>
             </h1>
-            <p className="text-2xl text-gray-700 font-semibold mt-6">Four critical solutions. One unified platform.</p>
-            <p className="text-lg text-red-600 font-semibold mt-4">Without 250,000 trained analysts by Feb 2, 2026, enterprises face compliance chaos. Our Byzantine Council ensures safety.</p>
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-700 font-semibold mt-4 sm:mt-6">Four critical solutions. One unified platform.</p>
+            <p className="text-sm sm:text-base md:text-lg text-red-600 font-semibold mt-3 sm:mt-4">Without 250,000 trained analysts by Feb 2, 2026, enterprises face compliance chaos. Our Byzantine Council ensures safety.</p>
           </motion.div>
 
           {/* Critical Weaknesses - Bullet Points */}
@@ -73,10 +73,10 @@ export default function HomepageMaster() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05 }}
-            className="bg-gradient-to-r from-red-50 to-pink-50 p-8 rounded-xl border-2 border-red-400 mb-12 shadow-md"
+            className="bg-gradient-to-r from-red-50 to-pink-50 p-4 sm:p-6 md:p-8 rounded-lg sm:rounded-xl border-2 border-red-400 mb-8 sm:mb-12 shadow-md"
           >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">🚨 Zero AI Safety Solutions Until Now</h3>
-            <div className="grid md:grid-cols-2 gap-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">Zero AI Safety Solutions Until Now</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="flex gap-3">
                 <span className="text-red-600 font-bold text-xl">•</span>
                 <div>
