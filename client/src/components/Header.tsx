@@ -34,6 +34,8 @@ export function Header() {
       name: 'Dashboard', 
       href: '/dashboard',
       submenu: [
+        { name: 'Overview', href: '/dashboard', description: 'Your dashboard' },
+        { name: 'How It Works', href: '/how-it-works/dashboard', description: 'Dashboard guide' },
         { name: 'Executive', href: '/dashboard/executive', description: 'Real-time metrics' },
         { name: 'Roadmap', href: '/dashboard/roadmap', description: 'Remediation timeline' },
         { name: 'Alerts', href: '/dashboard/alerts', description: 'Alert management' },
@@ -43,6 +45,7 @@ export function Header() {
       name: 'Training', 
       href: '/training',
       submenu: [
+        { name: 'How It Works', href: '/how-it-works/training', description: 'Training pipeline' },
         { name: 'Free Courses', href: '/training', description: 'Foundation courses (no payment)' },
         { name: 'Paid Courses', href: '/ceasai-training', description: 'CEASAI professional certification' },
         { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses' },
@@ -52,6 +55,7 @@ export function Header() {
       name: 'Certification', 
       href: '/certification',
       submenu: [
+        { name: 'How It Works', href: '/how-it-works/certification', description: 'Certification pathway' },
         { name: 'Certification Exam', href: '/exam', description: 'Take the exam' },
         { name: 'My Certificates', href: '/certificates', description: 'Your certificates' },
         { name: 'Review Past Exams', href: '/certification/review', description: 'Review attempts' },
@@ -70,6 +74,8 @@ export function Header() {
       name: 'Watchdog', 
       href: '/watchdog',
       submenu: [
+        { name: 'Help Protect Humanity', href: '/watchdog/help-protect-humanity', description: 'Join the movement' },
+        { name: 'How It Works', href: '/how-it-works/watchdog', description: 'Watchdog program' },
         { name: 'Report Incident', href: '/watchdog/incident', description: 'Report AI safety incident' },
         { name: 'Free Courses', href: '/training', description: 'Foundation analyst training' },
         { name: 'Analyst Jobs', href: '/jobs', description: 'Available positions' },
@@ -80,10 +86,13 @@ export function Header() {
       name: 'Compliance', 
       href: '/compliance',
       submenu: [
-        { name: 'All Frameworks', href: '/standards', description: 'EU AI Act, NIST, ISO' },
-        { name: 'UK AI Bill', href: '/frameworks/uk-ai-bill', description: 'Q2 2026 coming soon' },
-        { name: 'Australia AI', href: '/frameworks/australia-ai', description: 'Q2 2026 coming soon' },
-        { name: 'Canada AI Act', href: '/frameworks/canada-ai-act', description: 'Q2 2026 coming soon' },
+        { name: 'How It Works', href: '/how-it-works/compliance', description: 'Compliance methodology' },
+        { name: 'EU AI Act', href: '/compliance/eu-ai-act', description: 'EU regulation' },
+        { name: 'NIST AI RMF', href: '/compliance/nist-ai-rmf', description: 'US framework' },
+        { name: 'TC260', href: '/compliance/tc260', description: 'China standards' },
+        { name: 'UK AI Bill', href: '/compliance/uk-ai-bill', description: 'UK regulation' },
+        { name: 'Canada AI Act', href: '/compliance/canada-ai-act', description: 'Canada regulation' },
+        { name: 'Australia AI Governance', href: '/compliance/australia-ai-governance', description: 'Australia framework' },
         { name: 'Run Assessment', href: '/compliance', description: 'Run assessment' },
         { name: 'Public Scorecard', href: '/transparency', description: 'Public compliance data' },
       ]
@@ -92,6 +101,7 @@ export function Header() {
       name: 'Enterprise', 
       href: '/enterprise',
       submenu: [
+        { name: 'How It Works', href: '/how-it-works/enterprise', description: 'Enterprise solutions' },
         { name: 'Pricing', href: '/pricing', description: 'Plans & pricing' },
         { name: 'API Docs', href: '/api-docs', description: 'Developer docs' },
         { name: 'Onboarding', href: '/enterprise-onboarding', description: 'Get started' },
@@ -101,11 +111,12 @@ export function Header() {
       name: 'Resources', 
       href: '/resources',
       submenu: [
-        { name: 'How It Works', href: '/how-it-works', description: 'Our process' },
+        { name: 'Main How It Works', href: '/how-it-works', description: 'Complete pipeline' },
         { name: 'About CSOAI', href: '/about', description: 'Our mission' },
         { name: 'FAQ', href: '/faq', description: 'Common questions' },
         { name: 'Knowledge Base', href: '/knowledge-base', description: 'Learning resources' },
         { name: 'Blog', href: '/blog', description: 'News & updates' },
+        { name: 'Help Center', href: '/help-center', description: 'Support & guides' },
       ]
     },
   ];

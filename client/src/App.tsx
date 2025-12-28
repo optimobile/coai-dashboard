@@ -129,6 +129,18 @@ import UKAIBill from "./pages/UKAIBill";
 import AustraliaAIGovernance from "./pages/AustraliaAIGovernance";
 import CanadaAIAct from "./pages/CanadaAIAct";
 import WatchdogIncidentReport from "./pages/WatchdogIncidentReport";
+import DashboardHowItWorks from "./pages/DashboardHowItWorks";
+import TrainingHowItWorks from "./pages/TrainingHowItWorks";
+import CertificationHowItWorks from "./pages/CertificationHowItWorks";
+import WatchdogHelpProtectHumanity from "./pages/WatchdogHelpProtectHumanity";
+import ComplianceHowItWorks from "./pages/ComplianceHowItWorks";
+import EnterpriseHowItWorks from "./pages/EnterpriseHowItWorks";
+import EUAIActCompliance from "./pages/EUAIActCompliance";
+import NISTAIRMFCompliance from "./pages/NISTAIRMFCompliance";
+import TC260Compliance from "./pages/TC260Compliance";
+import UKAIBillCompliance from "./pages/UKAIBillCompliance";
+import CanadaAIActCompliance from "./pages/CanadaAIActCompliance";
+import AustraliaAIGovernanceCompliance from "./pages/AustraliaAIGovernanceCompliance";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -162,6 +174,18 @@ function App() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/about" component={About} />
                   <Route path="/how-it-works" component={HowItWorks} />
+                  <Route path="/how-it-works/dashboard" component={DashboardHowItWorks} />
+                  <Route path="/how-it-works/training" component={TrainingHowItWorks} />
+                  <Route path="/how-it-works/certification" component={CertificationHowItWorks} />
+                  <Route path="/how-it-works/compliance" component={ComplianceHowItWorks} />
+                  <Route path="/how-it-works/enterprise" component={EnterpriseHowItWorks} />
+                  <Route path="/watchdog/help-protect-humanity" component={WatchdogHelpProtectHumanity} />
+                  <Route path="/compliance/eu-ai-act" component={EUAIActCompliance} />
+                  <Route path="/compliance/nist-ai-rmf" component={NISTAIRMFCompliance} />
+                  <Route path="/compliance/tc260" component={TC260Compliance} />
+                  <Route path="/compliance/uk-ai-bill" component={UKAIBillCompliance} />
+                  <Route path="/compliance/canada-ai-act" component={CanadaAIActCompliance} />
+                  <Route path="/compliance/australia-ai-governance" component={AustraliaAIGovernanceCompliance} />
                   <Route path="/faq" component={FAQ} />
                   <Route path="/ceasai-training" component={CEASAITraining} />
                   <Route path="/old-home" component={Home} />

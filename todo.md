@@ -5161,3 +5161,58 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Integrate with trpc.watchdog.submitIncidentReport endpoint
 - [x] Integrate with trpc.watchdog.getPublicReports endpoint
 - [x] Support anonymous submissions to maximize data collection
+
+## Phase 16 - Navigation Restructuring & "How It Works" Pages
+
+### How It Works Pages (Separate Pages)
+- [x] Create HowItWorks.tsx - Main pipeline explanation (Training → Certification → Jobs → Oversight)
+- [x] Create DashboardHowItWorks.tsx - Dashboard features and navigation guide
+- [x] Create TrainingHowItWorks.tsx - Training pipeline and learning methodology
+- [x] Create CertificationHowItWorks.tsx - Certification pathway and exam process
+- [x] Create WatchdogHowItWorks.tsx - Incident reporting and analyst program
+- [x] Create ComplianceHowItWorks.tsx - Multi-framework compliance methodology
+- [x] Create EnterpriseHowItWorks.tsx - Enterprise integration and API usage
+- [x] Add routes to App.tsx for all "How It Works" pages
+
+### Regulatory Framework Compliance Pages
+- [x] Create EUAIActCompliance.tsx - Requirements, CSOAI/CEASAI compliance, SOAI-PDCA, FAQ
+- [x] Create NISTAIRMFCompliance.tsx - Requirements, compliance, SOAI-PDCA, FAQ
+- [x] Create TC260Compliance.tsx - Requirements, compliance, SOAI-PDCA, FAQ
+- [x] Create UKAIBillCompliance.tsx - Requirements, compliance, SOAI-PDCA, FAQ
+- [x] Create CanadaAIActCompliance.tsx - Requirements, compliance, SOAI-PDCA, FAQ
+- [x] Create AustraliaAIGovernanceCompliance.tsx - Requirements, compliance, SOAI-PDCA, FAQ
+- [x] Create ISO42001Compliance.tsx - Requirements, compliance, SOAI-PDCA, FAQ
+- [x] Add routes to App.tsx for all compliance pages
+
+### Watchdog "Help Protect Humanity" Page
+- [x] Create WatchdogHelpProtectHumanity.tsx - Recruitment + awareness + how it works
+- [x] Include: Why human oversight matters, how to get involved, free training courses, incident reporting
+- [x] Add FAQ section
+- [x] Add routes to App.tsx
+
+### Government & Resources Pages
+- [ ] Create GovernmentLinks.tsx - Centralized government regulatory links
+- [ ] Create ResourcesHub.tsx - Links to all government frameworks and regulatory bodies
+- [ ] Add routes to App.tsx
+
+### Enhanced Navigation Dropdowns
+- [x] Add Dashboard dropdown submenu (Overview, Training, Certification, Watchdog, Compliance, Analytics)
+- [x] Add "How It Works" link to each major dropdown
+- [x] Add Compliance framework links to Compliance dropdown
+- [x] Add Government links to Resources dropdown
+- [x] Update Header.tsx with enhanced mega-menus
+- [x] Test all dropdown links
+
+### Branding & Consistency
+- [x] Apply consistent emerald/white/black branding to all new pages
+- [x] Add "How It Works" section to each page
+- [x] Add FAQ accordion to each page
+- [x] Ensure responsive design on mobile/tablet/desktop
+- [x] Test all pages in light and dark modes
+
+### Testing & Validation
+- [ ] Test all navigation links
+- [ ] Verify all routes work correctly
+- [ ] Test dropdown menus on desktop and mobile
+- [ ] Verify page loading and content display
+- [ ] Check branding consistency across all pages
