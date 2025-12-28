@@ -186,7 +186,7 @@ export function Header() {
           </a>
 
           {/* Desktop Navigation with Mega Menu */}
-          <div className="hidden lg:flex items-center space-x-2">
+          <div className="hidden lg:flex items-center space-x-4 flex-1 ml-8">
             <a
               href="/"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -209,7 +209,7 @@ export function Header() {
               >
                 <a
                   href={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                  className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap ${
                     isActive(item.href)
                       ? 'text-emerald-600 bg-emerald-50'
                       : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
@@ -256,7 +256,7 @@ export function Header() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden lg:flex items-center space-x-2 ml-auto">
+          <div className="hidden lg:flex items-center space-x-4 ml-auto">
             <LanguageSelector />
             {user ? (
               <>
