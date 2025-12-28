@@ -146,12 +146,12 @@ export default function EnterpriseOnboarding() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="container mx-auto py-8 px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Enterprise Onboarding</h1>
-          <p className="text-slate-400">Set up your organization for AI compliance in minutes</p>
+          <p className="text-gray-600 dark:text-gray-400">Set up your organization for AI compliance in minutes</p>
         </div>
         
         {/* Progress Steps */}
@@ -166,13 +166,13 @@ export default function EnterpriseOnboarding() {
                 <div key={step.id} className="flex items-center">
                   <div className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                     isActive 
-                      ? 'bg-cyan-500/20 border border-cyan-500/50' 
+                      ? 'bg-emerald-500/20 border border-emerald-500/50' 
                       : isCompleted 
                         ? 'bg-green-500/20 border border-green-500/50'
-                        : 'bg-slate-800 border border-slate-700'
+                        : 'bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-700'
                   }`}>
                     <div className={`p-1.5 rounded-full ${
-                      isActive ? 'bg-cyan-500' : isCompleted ? 'bg-green-500' : 'bg-slate-700'
+                      isActive ? 'bg-emerald-500' : isCompleted ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-700'
                     }`}>
                       {isCompleted ? (
                         <Check className="h-4 w-4 text-white" />
@@ -181,13 +181,13 @@ export default function EnterpriseOnboarding() {
                       )}
                     </div>
                     <span className={`text-sm font-medium hidden md:block ${
-                      isActive ? 'text-cyan-400' : isCompleted ? 'text-green-400' : 'text-slate-400'
+                      isActive ? 'text-emerald-600 dark:text-emerald-400' : isCompleted ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'
                     }`}>
                       {step.title}
                     </span>
                   </div>
                   {index < STEPS.length - 1 && (
-                    <ChevronRight className="h-4 w-4 text-slate-600 mx-1" />
+                    <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-600 mx-1" />
                   )}
                 </div>
               );
@@ -196,9 +196,9 @@ export default function EnterpriseOnboarding() {
         </div>
         
         {/* Step Content */}
-        <Card className="max-w-2xl mx-auto bg-slate-800/50 border-slate-700">
+        <Card className="max-w-2xl mx-auto bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white">{STEPS[currentStep - 1].title}</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">{STEPS[currentStep - 1].title}</CardTitle>
             <CardDescription>{STEPS[currentStep - 1].description}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -212,7 +212,7 @@ export default function EnterpriseOnboarding() {
                     value={formData.companyName}
                     onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                     placeholder="Acme Corporation"
-                    className="bg-slate-900 border-slate-700"
+                    className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
                   />
                 </div>
                 <div className="space-y-2">
@@ -221,7 +221,7 @@ export default function EnterpriseOnboarding() {
                     value={formData.industry}
                     onValueChange={(value) => setFormData({ ...formData, industry: value })}
                   >
-                    <SelectTrigger className="bg-slate-900 border-slate-700">
+                    <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700">
                       <SelectValue placeholder="Select industry" />
                     </SelectTrigger>
                     <SelectContent>
@@ -237,13 +237,13 @@ export default function EnterpriseOnboarding() {
                 <div className="space-y-2">
                   <Label htmlFor="website">Website</Label>
                   <div className="relative">
-                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-600" />
                     <Input
                       id="website"
                       value={formData.website}
                       onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                       placeholder="https://example.com"
-                      className="pl-10 bg-slate-900 border-slate-700"
+                      className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
                     />
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export default function EnterpriseOnboarding() {
                     value={formData.employeeCount}
                     onValueChange={(value) => setFormData({ ...formData, employeeCount: value })}
                   >
-                    <SelectTrigger className="bg-slate-900 border-slate-700">
+                    <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700">
                       <SelectValue placeholder="Select size" />
                     </SelectTrigger>
                     <SelectContent>
@@ -271,10 +271,10 @@ export default function EnterpriseOnboarding() {
             {currentStep === 2 && (
               <div className="space-y-4">
                 {formData.aiSystems.map((system, index) => (
-                  <Card key={index} className="bg-slate-900 border-slate-700">
+                  <Card key={index} className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700">
                     <CardContent className="pt-4 space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-slate-400">AI System #{index + 1}</span>
+                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">AI System #{index + 1}</span>
                         {index > 0 && (
                           <Button
                             variant="ghost"
@@ -296,7 +296,7 @@ export default function EnterpriseOnboarding() {
                             value={system.name}
                             onChange={(e) => updateAISystem(index, 'name', e.target.value)}
                             placeholder="ChatBot Pro"
-                            className="bg-slate-800 border-slate-600"
+                            className="bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
                           />
                         </div>
                         <div className="space-y-2">
@@ -305,7 +305,7 @@ export default function EnterpriseOnboarding() {
                             value={system.type}
                             onValueChange={(value) => updateAISystem(index, 'type', value)}
                           >
-                            <SelectTrigger className="bg-slate-800 border-slate-600">
+                            <SelectTrigger className="bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                               <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
@@ -329,7 +329,7 @@ export default function EnterpriseOnboarding() {
                               className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                                 system.riskLevel === level.value
                                   ? 'border-cyan-500 bg-cyan-500/10'
-                                  : 'border-slate-600 hover:border-slate-500'
+                                  : 'border-gray-200 dark:border-gray-700 hover:border-slate-500'
                               }`}
                             >
                               <div className="flex items-center gap-2">
@@ -338,7 +338,7 @@ export default function EnterpriseOnboarding() {
                                 )}
                                 <span className="text-sm font-medium">{level.label}</span>
                               </div>
-                              <p className="text-xs text-slate-400 mt-1">{level.description}</p>
+                              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{level.description}</p>
                             </div>
                           ))}
                         </div>
@@ -349,7 +349,7 @@ export default function EnterpriseOnboarding() {
                           value={system.description}
                           onChange={(e) => updateAISystem(index, 'description', e.target.value)}
                           placeholder="Brief description of the AI system..."
-                          className="bg-slate-800 border-slate-600"
+                          className="bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
                         />
                       </div>
                     </CardContent>
@@ -364,7 +364,7 @@ export default function EnterpriseOnboarding() {
             {/* Step 3: Compliance Frameworks */}
             {currentStep === 3 && (
               <div className="space-y-4">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Select the compliance frameworks applicable to your organization:
                 </p>
                 <div className="space-y-3">
@@ -375,7 +375,7 @@ export default function EnterpriseOnboarding() {
                       className={`p-4 rounded-lg border cursor-pointer transition-colors ${
                         formData.frameworks.includes(framework.id)
                           ? 'border-cyan-500 bg-cyan-500/10'
-                          : 'border-slate-700 hover:border-slate-600'
+                          : 'border-slate-700 hover:border-gray-200 dark:border-gray-700'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -383,7 +383,7 @@ export default function EnterpriseOnboarding() {
                           <Checkbox checked={formData.frameworks.includes(framework.id)} />
                           <div>
                             <p className="font-medium">{framework.name}</p>
-                            <p className="text-sm text-slate-400">{framework.region}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{framework.region}</p>
                           </div>
                         </div>
                         <Badge variant="outline">{framework.region}</Badge>
@@ -397,19 +397,19 @@ export default function EnterpriseOnboarding() {
             {/* Step 4: Team Members */}
             {currentStep === 4 && (
               <div className="space-y-4">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Invite team members to collaborate on AI governance:
                 </p>
                 {formData.teamMembers.map((member, index) => (
                   <div key={index} className="flex gap-3">
                     <div className="flex-1">
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-600" />
                         <Input
                           value={member.email}
                           onChange={(e) => updateTeamMember(index, 'email', e.target.value)}
                           placeholder="colleague@company.com"
-                          className="pl-10 bg-slate-900 border-slate-700"
+                          className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
                         />
                       </div>
                     </div>
@@ -417,7 +417,7 @@ export default function EnterpriseOnboarding() {
                       value={member.role}
                       onValueChange={(value) => updateTeamMember(index, 'role', value)}
                     >
-                      <SelectTrigger className="w-32 bg-slate-900 border-slate-700">
+                      <SelectTrigger className="w-32 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -457,7 +457,7 @@ export default function EnterpriseOnboarding() {
                         <Check className="h-5 w-5 text-green-400" />
                         <span className="font-medium text-green-400">Setup Complete!</span>
                       </div>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
                         Your API key has been generated. Save it securely - it won't be shown again.
                       </p>
                     </div>
@@ -479,7 +479,7 @@ export default function EnterpriseOnboarding() {
                   <div className="space-y-4">
                     <div className="p-4 rounded-lg bg-slate-900 border border-slate-700">
                       <h4 className="font-medium mb-2">What happens next:</h4>
-                      <ul className="space-y-2 text-sm text-slate-400">
+                      <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                         <li className="flex items-center gap-2">
                           <Check className="h-4 w-4 text-cyan-400" />
                           Your AI systems will be registered
@@ -498,7 +498,7 @@ export default function EnterpriseOnboarding() {
                         </li>
                       </ul>
                     </div>
-                    <div className="p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+                    <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
                       <p className="text-sm">
                         <strong>Ready to complete setup?</strong> Click "Complete Setup" to create your 
                         enterprise account and get your API credentials.
@@ -511,7 +511,7 @@ export default function EnterpriseOnboarding() {
             
             {/* Navigation Buttons */}
             {!apiKey && (
-              <div className="flex justify-between pt-4 border-t border-slate-700">
+              <div className="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
                 <Button
                   variant="outline"
                   onClick={handleBack}
@@ -523,7 +523,7 @@ export default function EnterpriseOnboarding() {
                 <Button
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="bg-cyan-600 hover:bg-cyan-700"
+                  className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800"
                 >
                   {isSubmitting ? (
                     'Processing...'

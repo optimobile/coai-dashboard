@@ -220,7 +220,7 @@ export function CompliancePage() {
                   </div>
 
                   {/* Status */}
-                  <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 flex items-start gap-2">
+                  <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 flex items-start gap-2">
                     {complianceScore >= 70 ? (
                       <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5" />
                     ) : (
@@ -321,7 +321,7 @@ export function CompliancePage() {
               {gapAnalysis && (
                 <div className="space-y-4">
                   {/* Coverage */}
-                  <div className="p-4 bg-blue-50 rounded-lg">
+                  <div className="p-4 bg-emerald-50 dark:bg-emerald-950 rounded-lg">
                     <div className="flex justify-between items-center mb-2">
                       <span className="font-medium">Control Coverage</span>
                       <span className="text-2xl font-bold">{gapAnalysis.coverage}%</span>
@@ -427,7 +427,7 @@ export function CompliancePage() {
               )}
 
               {roadmapQuery.data && (
-                <div className="p-4 bg-blue-50 rounded-lg">
+                <div className="p-4 bg-emerald-50 dark:bg-emerald-950 rounded-lg">
                   <p className="text-sm font-medium">Total Duration</p>
                   <p className="text-2xl font-bold text-blue-600">{roadmapQuery.data.totalDuration}</p>
                 </div>

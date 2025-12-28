@@ -27,7 +27,7 @@ export default function NewHome() {
   return (
     <>
       <PlatformTour />
-      <div className="min-h-screen bg-gradient-to-b from-[#0A2540] via-[#1E3A5F] to-[#0A2540]">
+      <div className="min-h-screen bg-gradient-to-b from-white via-emerald-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
@@ -37,7 +37,7 @@ export default function NewHome() {
         />
         
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A2540]/90 via-[#0A2540]/70 to-[#0A2540]/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-emerald-50/70 to-white/80 dark:from-gray-900/90 dark:via-gray-800/70 dark:to-gray-900/90" />
         
         {/* Animated Particles */}
         <AnimatedParticles />
@@ -45,51 +45,51 @@ export default function NewHome() {
         {/* Content */}
         <div className="relative z-10 container mx-auto px-6 py-20 text-center">
           {/* Badge */}
-          <Badge className="mb-6 bg-green-500/20 text-emerald-300 border-blue-400/30 text-sm px-4 py-2">
+          <Badge className="mb-6 bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border-emerald-500/30 text-sm px-4 py-2">
             <span className="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse" />
             Leading AI Safety Certification Platform
           </Badge>
           
           {/* Hero Headline */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-tight">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
             AI is Taking Jobs.<br />
-            <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
               We're Creating Them.
             </span>
           </h1>
           
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-white mb-6 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-200 mb-6 max-w-3xl mx-auto leading-relaxed">
             <strong>Worried about AI safety?</strong> Turn that concern into a career. AI Safety Analyst is projected to become one of the <strong>top 10 jobs by 2045</strong> as AI systems proliferate globally.
           </p>
           
-          <p className="text-lg md:text-xl text-gray-100 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
             Join the global movement protecting humanity from AI risks while earning from home. Get ahead of the curve now—no coding required, just critical thinking and our comprehensive training.
           </p>
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/watchdog-signup">
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-6 text-lg font-semibold shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 transition-all duration-300 hover:-translate-y-1">
+              <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-6 text-lg font-semibold shadow-lg shadow-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/60 transition-all duration-300 hover:-translate-y-1">
                 Start Training (Free)
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="/pdca-simulator">
-              <Button size="lg" variant="outline" className="border-2 border-green-400/50 text-green-300 hover:bg-green-500/20 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
+              <Button size="lg" variant="outline" className="border-2 border-emerald-500/50 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500/20 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
                 <Play className="mr-2 h-5 w-5" />
                 Try Interactive Demo
               </Button>
             </Link>
             <Link href="/training">
-              <Button size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
+              <Button size="lg" variant="outline" className="border-2 border-emerald-500/30 text-gray-900 dark:text-white hover:bg-emerald-500/10 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
                 See Job Opportunities
               </Button>
             </Link>
           </div>
           
           {/* Mission Statement */}
-          <div className="flex flex-wrap justify-center gap-8 text-white/80 text-sm max-w-4xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-8 text-gray-800 dark:text-gray-200 text-sm max-w-4xl mx-auto">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-400" />
               <span>Transparent AI Governance</span>
@@ -135,7 +135,7 @@ export default function NewHome() {
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-2 border-green-100">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Shield className="h-8 w-8 text-white" />
+                <Shield className="h-8 w-8 text-gray-900 dark:text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Transparency</h3>
               <p className="text-gray-600">
@@ -144,8 +144,8 @@ export default function NewHome() {
             </Card>
 
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-2 border-gray-200">
-              <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="h-8 w-8 text-white" />
+              <div className="w-16 h-16 bg-emerald-100 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="h-8 w-8 text-gray-900 dark:text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Accountability</h3>
               <p className="text-gray-600">
@@ -155,7 +155,7 @@ export default function NewHome() {
 
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-2 border-green-100">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Globe className="h-8 w-8 text-white" />
+                <Globe className="h-8 w-8 text-gray-900 dark:text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">For Everyone</h3>
               <p className="text-gray-600">
@@ -192,7 +192,7 @@ export default function NewHome() {
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-2 border-green-100">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Award className="h-8 w-8 text-white" />
+                <Award className="h-8 w-8 text-gray-900 dark:text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Train</h3>
               <p className="text-gray-600 mb-6">
@@ -207,8 +207,8 @@ export default function NewHome() {
             </Card>
 
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-2 border-gray-200">
-              <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="h-8 w-8 text-white" />
+              <div className="w-16 h-16 bg-emerald-100 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-8 w-8 text-gray-900 dark:text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Certify</h3>
               <p className="text-gray-600 mb-6">
@@ -224,7 +224,7 @@ export default function NewHome() {
 
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-2 border-green-100">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <TrendingUp className="h-8 w-8 text-white" />
+                <TrendingUp className="h-8 w-8 text-gray-900 dark:text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">3. Earn</h3>
               <p className="text-gray-600 mb-6">
@@ -262,7 +262,7 @@ export default function NewHome() {
           {/* CTA */}
           <div className="text-center mt-12">
             <Link href="/watchdog-signup">
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-12 py-6 text-lg font-semibold shadow-lg">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-gray-900 dark:text-white px-12 py-6 text-lg font-semibold shadow-lg">
                 See Current Job Openings
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -275,7 +275,7 @@ export default function NewHome() {
       <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-green-600 text-white">
+            <Badge className="mb-4 bg-green-600 text-gray-900 dark:text-white">
               Trusted by Thousands
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -290,7 +290,7 @@ export default function NewHome() {
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <Card className="p-8 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-gray-900 dark:text-white text-2xl font-bold">
                   SC
                 </div>
                 <div>
@@ -311,7 +311,7 @@ export default function NewHome() {
 
             <Card className="p-8 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-gray-900 dark:text-white text-2xl font-bold">
                   MR
                 </div>
                 <div>
@@ -332,7 +332,7 @@ export default function NewHome() {
 
             <Card className="p-8 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-gray-900 dark:text-white text-2xl font-bold">
                   AP
                 </div>
                 <div>
@@ -353,26 +353,26 @@ export default function NewHome() {
           </div>
 
           {/* Platform Capabilities */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-white">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-gray-900 dark:text-white">
             <div className="grid md:grid-cols-4 gap-8 text-center">
               <div>
                 <div className="text-5xl font-black mb-2">3</div>
-                <div className="text-white">Major Frameworks</div>
+                <div className="text-gray-900 dark:text-white">Major Frameworks</div>
                 <div className="text-sm text-gray-100 mt-1">EU AI Act, NIST, ISO</div>
               </div>
               <div>
                 <div className="text-5xl font-black mb-2">33</div>
-                <div className="text-white">AI Agents</div>
+                <div className="text-gray-900 dark:text-white">AI Agents</div>
                 <div className="text-sm text-gray-100 mt-1">Byzantine Consensus</div>
               </div>
               <div>
                 <div className="text-5xl font-black mb-2">100%</div>
-                <div className="text-white">Transparent</div>
+                <div className="text-gray-900 dark:text-white">Transparent</div>
                 <div className="text-sm text-gray-100 mt-1">Public Dashboard</div>
               </div>
               <div>
                 <div className="text-5xl font-black mb-2">24/7</div>
-                <div className="text-white">Monitoring</div>
+                <div className="text-gray-900 dark:text-white">Monitoring</div>
                 <div className="text-sm text-gray-100 mt-1">Real-time Oversight</div>
               </div>
             </div>
@@ -394,7 +394,7 @@ export default function NewHome() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+            <Badge className="mb-4 bg-gradient-to-r from-blue-600 to-purple-600 text-gray-900 dark:text-white">
               Complete AI Safety Ecosystem
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -410,7 +410,7 @@ export default function NewHome() {
             <div className="grid md:grid-cols-5 gap-4">
               <Card className="p-6 text-center border-2 border-green-200 hover:shadow-xl transition-all">
                 <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Award className="h-8 w-8 text-white" />
+                  <Award className="h-8 w-8 text-gray-900 dark:text-white" />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Training</h4>
                 <p className="text-sm text-gray-600">EU AI Act, NIST AI RMF, ISO 42001 courses</p>
@@ -421,8 +421,8 @@ export default function NewHome() {
               </div>
 
               <Card className="p-6 text-center border-2 border-gray-200 hover:shadow-xl transition-all">
-                <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="h-8 w-8 text-white" />
+                <div className="w-16 h-16 bg-emerald-100 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="h-8 w-8 text-gray-900 dark:text-white" />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Certification</h4>
                 <p className="text-sm text-gray-600">Industry-recognized credentials</p>
@@ -434,7 +434,7 @@ export default function NewHome() {
 
               <Card className="p-6 text-center border-2 border-green-200 hover:shadow-xl transition-all">
                 <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-white" />
+                  <Users className="h-8 w-8 text-gray-900 dark:text-white" />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Employment</h4>
                 <p className="text-sm text-gray-600">Watchdog Analyst positions</p>
@@ -447,8 +447,8 @@ export default function NewHome() {
 
             <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
               <Card className="p-6 text-center border-2 border-gray-200 hover:shadow-xl transition-all">
-                <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Eye className="h-8 w-8 text-white" />
+                <div className="w-16 h-16 bg-emerald-100 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Eye className="h-8 w-8 text-gray-900 dark:text-white" />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Oversight</h4>
                 <p className="text-sm text-gray-600">33-Agent Council + Human Analysts</p>
@@ -456,7 +456,7 @@ export default function NewHome() {
 
               <Card className="p-6 text-center border-2 border-green-200 hover:shadow-xl transition-all">
                 <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="h-8 w-8 text-white" />
+                  <TrendingUp className="h-8 w-8 text-gray-900 dark:text-white" />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">PDCA Loop</h4>
                 <p className="text-sm text-gray-600">Continuous improvement cycles</p>
@@ -549,7 +549,7 @@ export default function NewHome() {
           <Card className="p-8 bg-gradient-to-br from-green-50 to-gray-50 border-2 border-green-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-white" />
+                <TrendingUp className="h-6 w-6 text-gray-900 dark:text-white" />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-gray-900">SOAI-PDCA: Continuous Safety Improvement</h3>
@@ -592,10 +592,10 @@ export default function NewHome() {
       <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Join the Founding Members
             </h2>
-            <p className="text-xl text-white mb-8">
+            <p className="text-xl text-gray-900 dark:text-white mb-8">
               Get 50% off your first year + priority job placement. 
               Limited to first 1,000 signups.
             </p>
@@ -606,12 +606,12 @@ export default function NewHome() {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-6 py-6 text-lg bg-white/10 border-white/30 text-white placeholder:text-white/60 backdrop-blur-sm"
+                className="flex-1 px-6 py-6 text-lg bg-white/10 border-white/30 text-gray-900 dark:text-white placeholder:text-gray-900 dark:text-white/60 backdrop-blur-sm"
               />
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="px-6 py-6 text-lg bg-white/10 border border-white/30 text-white backdrop-blur-sm rounded-md"
+                className="px-6 py-6 text-lg bg-white/10 border border-white/30 text-gray-900 dark:text-white backdrop-blur-sm rounded-md"
               >
                 <option value="individual" className="text-gray-900">Individual</option>
                 <option value="enterprise" className="text-gray-900">Enterprise</option>
@@ -634,7 +634,7 @@ export default function NewHome() {
       </section>
 
       {/* 33-Agent Council Transparency Section */}
-      <section className="py-24 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <section className="py-24 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-900 dark:text-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-400/30">
@@ -703,8 +703,8 @@ export default function NewHome() {
             </div>
 
             <div className="space-y-8">
-              <Card className="p-6 bg-gray-800/50 border-gray-700">
-                <h3 className="text-xl font-bold mb-4 text-white">Why Byzantine Consensus?</h3>
+              <Card className="p-6 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Why Byzantine Consensus?</h3>
                 <ul className="space-y-3 text-gray-300">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -728,7 +728,7 @@ export default function NewHome() {
               <Card className="p-6 bg-gradient-to-br from-emerald-900/50 to-cyan-900/50 border-emerald-700/50">
                 <div className="flex items-center gap-3 mb-4">
                   <Eye className="w-6 h-6 text-emerald-400" />
-                  <h3 className="text-xl font-bold text-white">Live Council Stats</h3>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Live Council Stats</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -890,7 +890,7 @@ export default function NewHome() {
 
           <div className="text-center">
             <Link href="/public-dashboard">
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-12 py-6 text-lg font-semibold shadow-lg">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-gray-900 dark:text-white px-12 py-6 text-lg font-semibold shadow-lg">
                 Explore Public Dashboard
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -900,7 +900,7 @@ export default function NewHome() {
       </section>
 
       {/* For Enterprises Section */}
-      <section className="py-24 bg-gray-900 text-white">
+      <section className="py-24 bg-emerald-50 dark:bg-gray-900 text-gray-900 dark:text-gray-900 dark:text-white">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -983,12 +983,12 @@ export default function NewHome() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-900 to-purple-900 text-white">
+      <section className="py-24 bg-gradient-to-r from-blue-900 to-purple-900 text-gray-900 dark:text-white">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to Protect Humanity?
           </h2>
-          <p className="text-xl text-white mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-900 dark:text-white mb-12 max-w-2xl mx-auto">
             Be among the first certified analysts earning while making AI safer for everyone
           </p>
 
@@ -1000,12 +1000,12 @@ export default function NewHome() {
               </Button>
             </Link>
             <Link href="/enterprise-onboarding">
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-12 py-6 text-lg font-semibold">
+              <Button size="lg" variant="outline" className="border-2 border-white text-gray-900 dark:text-white hover:bg-white/10 px-12 py-6 text-lg font-semibold">
                 Register AI System (Enterprises)
               </Button>
             </Link>
             <Link href="/about">
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-12 py-6 text-lg font-semibold">
+              <Button size="lg" variant="outline" className="border-2 border-white text-gray-900 dark:text-white hover:bg-white/10 px-12 py-6 text-lg font-semibold">
                 Request Demo (Governments)
               </Button>
             </Link>

@@ -80,9 +80,9 @@ export default function ReferralLandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-gray-900 dark:text-white">
       {/* Navigation */}
-      <nav className="border-b border-gray-800 sticky top-0 z-50 bg-gray-900/95 backdrop-blur">
+      <nav className="border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 bg-white dark:bg-white dark:bg-gray-900/95 backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <img src="/csoai-icon.svg.png" alt="CSOAI" className="h-8 w-8" />
@@ -116,7 +116,7 @@ export default function ReferralLandingPage() {
 
         {/* Stats */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-green-400" />
@@ -129,7 +129,7 @@ export default function ReferralLandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-blue-400" />
@@ -142,7 +142,7 @@ export default function ReferralLandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-purple-400" />
@@ -159,7 +159,7 @@ export default function ReferralLandingPage() {
 
       {/* Referral Code Section */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardHeader>
             <CardTitle>Your Referral Code</CardTitle>
             <CardDescription>Share this code with your network</CardDescription>
@@ -173,7 +173,7 @@ export default function ReferralLandingPage() {
                   type="text"
                   value={referralCode}
                   readOnly
-                  className="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white font-mono"
+                  className="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-gray-900 dark:text-white font-mono"
                 />
                 <Button
                   onClick={handleCopyCode}
@@ -193,7 +193,7 @@ export default function ReferralLandingPage() {
                   type="text"
                   value={referralLink}
                   readOnly
-                  className="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white text-sm truncate"
+                  className="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-gray-900 dark:text-white text-sm truncate"
                 />
                 <Button
                   onClick={handleCopyLink}
@@ -241,7 +241,7 @@ export default function ReferralLandingPage() {
 
       {/* Earnings Calculator */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardHeader>
             <CardTitle>Earnings Calculator</CardTitle>
             <CardDescription>See how much you could earn</CardDescription>
@@ -294,7 +294,7 @@ export default function ReferralLandingPage() {
         <h2 className="text-3xl font-bold mb-8">Why Join Our Referral Program?</h2>
         
         <div className="grid md:grid-cols-2 gap-6">
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-lg">Recurring Commissions</CardTitle>
             </CardHeader>
@@ -305,7 +305,7 @@ export default function ReferralLandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-lg">Easy Sharing</CardTitle>
             </CardHeader>
@@ -316,7 +316,7 @@ export default function ReferralLandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-lg">Real-Time Tracking</CardTitle>
             </CardHeader>
@@ -327,7 +327,7 @@ export default function ReferralLandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-lg">Monthly Payouts</CardTitle>
             </CardHeader>
@@ -360,7 +360,7 @@ export default function ReferralLandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 mt-20 py-12">
+      <footer className="border-t border-gray-200 dark:border-gray-800 mt-20 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
           <p>&copy; 2025 CSOAI. All rights reserved.</p>
         </div>

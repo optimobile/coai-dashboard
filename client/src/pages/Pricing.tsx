@@ -62,9 +62,9 @@ const PRICING_TIERS = [
     monthlyPrice: 49,
     yearlyPrice: 39,
     icon: Rocket,
-    color: 'text-cyan-400',
-    bgColor: 'bg-cyan-500/20',
-    borderColor: 'border-cyan-500/50',
+    color: 'text-emerald-500 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/20',
+    borderColor: 'border-emerald-500/50',
     features: {
       aiSystems: 10,
       assessments: 'Unlimited',
@@ -228,7 +228,7 @@ export default function Pricing() {
       return value ? (
         <Check className="h-5 w-5 text-green-400" />
       ) : (
-        <X className="h-5 w-5 text-slate-600" />
+        <X className="h-5 w-5 text-gray-600 dark:text-gray-400" />
       );
     }
     if (Array.isArray(value)) {
@@ -238,28 +238,28 @@ export default function Pricing() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Header */}
       <div className="container mx-auto py-16 px-4">
         <div className="text-center mb-12">
-          <Badge className="mb-4 bg-cyan-500/20 text-cyan-400 border-cyan-500/30">
+          <Badge className="mb-4 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
             Pricing
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Simple, Transparent Pricing
           </h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Choose the plan that fits your AI governance needs. All plans include core compliance features.
           </p>
           
           {/* Billing Toggle */}
           <div className="flex items-center justify-center gap-4 mt-8">
-            <span className={`text-sm ${!isYearly ? 'text-white' : 'text-slate-400'}`}>Monthly</span>
+            <span className={`text-sm ${!isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>Monthly</span>
             <Switch
               checked={isYearly}
               onCheckedChange={setIsYearly}
             />
-            <span className={`text-sm ${isYearly ? 'text-white' : 'text-slate-400'}`}>
+            <span className={`text-sm ${isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
               Yearly <Badge className="ml-2 bg-green-500/20 text-green-400 border-green-500/30">Save 20%</Badge>
             </span>
           </div>
@@ -274,13 +274,13 @@ export default function Pricing() {
             return (
               <Card 
                 key={tier.id}
-                className={`relative bg-slate-800/50 border-2 ${tier.borderColor} ${
-                  tier.popular ? 'scale-105 shadow-xl shadow-cyan-500/20' : ''
+                className={`relative bg-white dark:bg-gray-900 border-2 ${tier.borderColor} ${
+                  tier.popular ? 'scale-105 shadow-xl shadow-emerald-500/20' : ''
                 }`}
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-cyan-500 text-white border-0">Most Popular</Badge>
+                    <Badge className="bg-emerald-500 text-white border-0">Most Popular</Badge>
                   </div>
                 )}
                 <CardHeader className="text-center pb-2">
@@ -292,10 +292,10 @@ export default function Pricing() {
                 </CardHeader>
                 <CardContent className="text-center">
                   <div className="mb-6">
-                    <span className="text-5xl font-bold text-white">${price}</span>
-                    <span className="text-slate-400">/month</span>
+                    <span className="text-5xl font-bold text-gray-900 dark:text-white">${price}</span>
+                    <span className="text-gray-600 dark:text-gray-400">/month</span>
                     {isYearly && tier.monthlyPrice > 0 && (
-                      <p className="text-sm text-slate-500 mt-1">
+                      <p className="text-sm text-gray-600 dark:text-gray-500 mt-1">
                         Billed ${price * 12}/year
                       </p>
                     )}
@@ -306,7 +306,7 @@ export default function Pricing() {
                     className={`w-full mb-6 ${
                       tier.popular 
                         ? 'bg-cyan-600 hover:bg-cyan-700' 
-                        : 'bg-slate-700 hover:bg-slate-600'
+                        : 'bg-emerald-600 hover:bg-emerald-700'
                     }`}
                   >
                     {tier.cta}
@@ -360,7 +360,7 @@ export default function Pricing() {
         {/* Feature Comparison Table */}
         <div className="max-w-6xl mx-auto mb-16">
           <h2 className="text-2xl font-bold text-white text-center mb-8">Compare All Features</h2>
-          <Card className="bg-slate-800/50 border-slate-700 overflow-hidden">
+          <Card className="bg-white dark:bg-gray-900 border-slate-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -376,8 +376,8 @@ export default function Pricing() {
                 <tbody>
                   {FEATURE_CATEGORIES.map((category, catIndex) => (
                     <>
-                      <tr key={`cat-${catIndex}`} className="bg-slate-900/50">
-                        <td colSpan={4} className="p-3 text-sm font-semibold text-cyan-400">
+                      <tr key={`cat-${catIndex}`} className="bg-gray-50 dark:bg-gray-800">
+                        <td colSpan={4} className="p-3 text-sm font-semibold text-emerald-500 dark:text-emerald-400">
                           {category.name}
                         </td>
                       </tr>
@@ -411,7 +411,7 @@ export default function Pricing() {
             {FAQ.map((item, index) => (
               <Card 
                 key={index}
-                className="bg-slate-800/50 border-slate-700 cursor-pointer"
+                className="bg-white dark:bg-gray-900 border-slate-700 cursor-pointer"
                 onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
               >
                 <CardContent className="p-4">

@@ -13,46 +13,46 @@ export default function TrainingV2() {
     <div className="min-h-screen bg-white">
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-20">
+      <section className="bg-gradient-to-br from-white via-emerald-50 to-white dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-white py-20">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-2 mb-6">
-              <Award className="h-4 w-4 text-green-400" />
-              <span className="text-green-400 text-sm font-medium">100% Free Training</span>
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-2 mb-6">
+              <Award className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">100% Free Training</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               Become an AI Safety Analyst
             </h1>
             
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-800 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               Master the three major global AI safety frameworks—EU AI Act, NIST AI RMF, and ISO 42001. Get certified and start earning $45-150/hour monitoring AI systems for compliance.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold">
                 Start Training Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Link href="/certification">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold">
+                <Button size="lg" variant="outline" className="border-2 border-emerald-500 text-gray-900 dark:text-white hover:bg-emerald-500/10 px-8 py-6 text-lg font-semibold">
                   View Certification
                 </Button>
               </Link>
             </div>
             
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold mb-1">5 Modules</div>
-                <div className="text-gray-300">Comprehensive Curriculum</div>
+              <div className="bg-emerald-500/10 backdrop-blur-sm rounded-lg p-4 border border-emerald-500/20">
+                <div className="text-3xl font-bold mb-1 text-gray-900 dark:text-white">5 Modules</div>
+                <div className="text-gray-700 dark:text-gray-300">Comprehensive Curriculum</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold mb-1">~4 Hours</div>
-                <div className="text-gray-300">Total Learning Time</div>
+              <div className="bg-emerald-500/10 backdrop-blur-sm rounded-lg p-4 border border-emerald-500/20">
+                <div className="text-3xl font-bold mb-1 text-gray-900 dark:text-white">~4 Hours</div>
+                <div className="text-gray-700 dark:text-gray-300">Total Learning Time</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold mb-1">Self-Paced</div>
-                <div className="text-gray-300">Learn Anytime, Anywhere</div>
+              <div className="bg-emerald-500/10 backdrop-blur-sm rounded-lg p-4 border border-emerald-500/20">
+                <div className="text-3xl font-bold mb-1 text-gray-900 dark:text-white">Self-Paced</div>
+                <div className="text-gray-700 dark:text-gray-300">Learn Anytime, Anywhere</div>
               </div>
             </div>
           </div>
@@ -72,9 +72,9 @@ export default function TrainingV2() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 border-2 hover:border-green-500 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <TrendingUp className="h-7 w-7 text-green-600" />
+            <Card className="p-8 border-2 hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+                <TrendingUp className="h-7 w-7 text-emerald-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">High Demand</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -82,9 +82,9 @@ export default function TrainingV2() {
               </p>
             </Card>
 
-            <Card className="p-8 border-2 hover:border-green-500 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <Shield className="h-7 w-7 text-green-600" />
+            <Card className="p-8 border-2 hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+                <Shield className="h-7 w-7 text-emerald-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Industry Standards</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -92,9 +92,9 @@ export default function TrainingV2() {
               </p>
             </Card>
 
-            <Card className="p-8 border-2 hover:border-green-500 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <Users className="h-7 w-7 text-green-600" />
+            <Card className="p-8 border-2 hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="w-14 h-14 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+                <Users className="h-7 w-7 text-emerald-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Immediate Earnings</h3>
               <p className="text-gray-600 leading-relaxed">

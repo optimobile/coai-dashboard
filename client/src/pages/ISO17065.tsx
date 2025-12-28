@@ -18,7 +18,7 @@ export default function ISO17065() {
               CSOAI is ISO 17065 certified, making our training and audits recognized globally as credible third-party verification.
             </p>
             <div className="flex justify-center gap-4">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
                 Request Audit
               </Button>
               <Button size="lg" variant="outline" className="border-blue-600 text-blue-600">
@@ -39,7 +39,7 @@ export default function ISO17065() {
               ISO 17065 is the international standard for bodies certifying products, processes, and services. It's the framework that legitimizes accreditation bodies worldwide.
             </p>
 
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 mb-8">
+            <div className="bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-200 dark:border-emerald-800 rounded-lg p-8 mb-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">When CSOAI achieves ISO 17065 certification, it means:</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
@@ -72,7 +72,7 @@ export default function ISO17065() {
 
             <div className="grid md:grid-cols-3 gap-8">
               {/* For Regulators */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">For Regulators</h3>
                 <p className="text-gray-700 mb-4">
                   Regulators can trust CSOAI's certifications because they're verified against international standards.
@@ -86,7 +86,7 @@ export default function ISO17065() {
               </Card>
 
               {/* For Enterprises */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">For Enterprises</h3>
                 <p className="text-gray-700 mb-4">
                   Enterprises can cite CSOAI ISO 17065 certification in regulatory filings.
@@ -100,7 +100,7 @@ export default function ISO17065() {
               </Card>
 
               {/* For CSOAI */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">For CSOAI</h3>
                 <p className="text-gray-700 mb-4">
                   ISO 17065 certification is the foundation for all other regulatory recognitions.
@@ -125,7 +125,7 @@ export default function ISO17065() {
 
             <div className="space-y-8">
               {/* Requirement 1: Competence */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <div className="flex items-center gap-3 mb-4">
                   <Shield className="h-8 w-8 text-blue-600" />
                   <h3 className="text-2xl font-bold text-gray-900">1. Competence</h3>
@@ -133,7 +133,7 @@ export default function ISO17065() {
                 <p className="text-gray-700 mb-4">
                   CSOAI must demonstrate that trainers and examiners have documented expertise in AI safety, compliance frameworks, and audit methodologies.
                 </p>
-                <div className="bg-blue-50 p-6 rounded-lg mb-4">
+                <div className="bg-emerald-50 dark:bg-emerald-950 p-6 rounded-lg mb-4">
                   <h4 className="font-semibold text-gray-900 mb-3">What We Do:</h4>
                   <ul className="space-y-2 text-gray-700">
                     <li>✓ Maintain detailed trainer qualification profiles</li>
@@ -145,7 +145,7 @@ export default function ISO17065() {
               </Card>
 
               {/* Requirement 2: Impartiality */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <div className="flex items-center gap-3 mb-4">
                   <Shield className="h-8 w-8 text-blue-600" />
                   <h3 className="text-2xl font-bold text-gray-900">2. Impartiality</h3>
@@ -153,7 +153,7 @@ export default function ISO17065() {
                 <p className="text-gray-700 mb-4">
                   CSOAI must prove that decisions are made independently, without bias or conflicts of interest.
                 </p>
-                <div className="bg-blue-50 p-6 rounded-lg mb-4">
+                <div className="bg-emerald-50 dark:bg-emerald-950 p-6 rounded-lg mb-4">
                   <h4 className="font-semibold text-gray-900 mb-3">What We Do:</h4>
                   <ul className="space-y-2 text-gray-700">
                     <li>✓ Use 33-Agent Byzantine consensus for all audit decisions</li>
@@ -165,7 +165,7 @@ export default function ISO17065() {
               </Card>
 
               {/* Requirement 3: Consistency */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <div className="flex items-center gap-3 mb-4">
                   <Shield className="h-8 w-8 text-blue-600" />
                   <h3 className="text-2xl font-bold text-gray-900">3. Consistency</h3>
@@ -173,7 +173,7 @@ export default function ISO17065() {
                 <p className="text-gray-700 mb-4">
                   CSOAI must show that all analysts follow identical evaluation criteria.
                 </p>
-                <div className="bg-blue-50 p-6 rounded-lg mb-4">
+                <div className="bg-emerald-50 dark:bg-emerald-950 p-6 rounded-lg mb-4">
                   <h4 className="font-semibold text-gray-900 mb-3">What We Do:</h4>
                   <ul className="space-y-2 text-gray-700">
                     <li>✓ Document our audit methodology in detail</li>
@@ -185,7 +185,7 @@ export default function ISO17065() {
               </Card>
 
               {/* Requirement 4: Confidentiality */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <div className="flex items-center gap-3 mb-4">
                   <Shield className="h-8 w-8 text-blue-600" />
                   <h3 className="text-2xl font-bold text-gray-900">4. Confidentiality</h3>
@@ -193,7 +193,7 @@ export default function ISO17065() {
                 <p className="text-gray-700 mb-4">
                   CSOAI must protect client data while maintaining transparency.
                 </p>
-                <div className="bg-blue-50 p-6 rounded-lg mb-4">
+                <div className="bg-emerald-50 dark:bg-emerald-950 p-6 rounded-lg mb-4">
                   <h4 className="font-semibold text-gray-900 mb-3">What We Do:</h4>
                   <ul className="space-y-2 text-gray-700">
                     <li>✓ Encrypt all client data at rest and in transit</li>
@@ -205,7 +205,7 @@ export default function ISO17065() {
               </Card>
 
               {/* Requirement 5: Traceability */}
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <div className="flex items-center gap-3 mb-4">
                   <Shield className="h-8 w-8 text-blue-600" />
                   <h3 className="text-2xl font-bold text-gray-900">5. Traceability</h3>
@@ -213,7 +213,7 @@ export default function ISO17065() {
                 <p className="text-gray-700 mb-4">
                   Every certification decision must be documented and traceable.
                 </p>
-                <div className="bg-blue-50 p-6 rounded-lg mb-4">
+                <div className="bg-emerald-50 dark:bg-emerald-950 p-6 rounded-lg mb-4">
                   <h4 className="font-semibold text-gray-900 mb-3">What We Do:</h4>
                   <ul className="space-y-2 text-gray-700">
                     <li>✓ Maintain complete audit trails</li>
@@ -302,35 +302,35 @@ export default function ISO17065() {
             <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">Frequently Asked Questions</h2>
 
             <div className="space-y-6">
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">What's the cost of ISO 17065 certification?</h3>
                 <p className="text-gray-700">
                   Approximately $50,000-75,000 including consultant fees, documentation, and external assessment. This is a one-time cost.
                 </p>
               </Card>
 
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">How long does ISO 17065 certification take?</h3>
                 <p className="text-gray-700">
                   Approximately 12 months from documentation to final certification. This includes internal audit, external assessment, and certification approval.
                 </p>
               </Card>
 
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Is ISO 17065 certification mandatory?</h3>
                 <p className="text-gray-700">
                   No, but it's the foundation for all other regulatory recognitions. Without ISO 17065, CSOAI cannot pursue EU Notified Body, NIST, or TC260 recognition.
                 </p>
               </Card>
 
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">How often must CSOAI be re-audited?</h3>
                 <p className="text-gray-700">
                   ISO 17065 certification requires annual surveillance audits and full re-certification every 3 years. This ensures ongoing compliance.
                 </p>
               </Card>
 
-              <Card className="p-8 border-2 border-blue-200">
+              <Card className="p-8 border-2 border-emerald-200 dark:border-emerald-800">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">What happens if CSOAI fails the audit?</h3>
                 <p className="text-gray-700">
                   Non-conformances must be addressed within a specified timeframe. Major non-conformances could delay certification. CSOAI would need to remediate and re-audit.
@@ -342,7 +342,7 @@ export default function ISO17065() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600 text-white">
+      <section className="py-20 bg-emerald-600 dark:bg-emerald-700 text-white">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-4">Ready to Verify Your Compliance?</h2>

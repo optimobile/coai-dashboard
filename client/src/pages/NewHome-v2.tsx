@@ -17,44 +17,44 @@ export default function NewHomeV2() {
       <div className="min-h-screen bg-white">
         
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-emerald-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
           <div 
             className="absolute inset-0 bg-cover bg-center opacity-40"
             style={{ backgroundImage: "url(/hero-epic.png)" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/95 via-slate-900/90 to-slate-900/95" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-emerald-50/70 to-white/80 dark:from-slate-900/95 dark:via-slate-900/90 dark:to-slate-900/95" />
           <AnimatedParticles />
           
           <div className="relative z-10 container mx-auto px-6 py-20 text-center max-w-5xl">
-            <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-2 mb-8">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-green-400 text-sm font-medium">Leading AI Safety Certification Platform</span>
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-2 mb-8">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">Leading AI Safety Certification Platform</span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
               The Global Standard for<br />
-              <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
                 AI Safety Certification
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
               We train, certify, and employ AI Safety Analysts who monitor artificial intelligence systems for compliance and safety—protecting humanity while creating careers.
             </p>
             
-            <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-700 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
               As AI transforms every industry, the demand for safety oversight is exploding. Join the profession projected to become one of the top 10 jobs by 2045.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href="/training">
-                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all">
+                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all">
                   Start Free Training
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/about">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold rounded-lg">
+                <Button size="lg" variant="outline" className="border-2 border-emerald-500 text-gray-900 dark:text-white hover:bg-emerald-500/10 px-8 py-6 text-lg font-semibold rounded-lg">
                   Learn More
                 </Button>
               </Link>
@@ -62,16 +62,16 @@ export default function NewHomeV2() {
             
             <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">100% Free</div>
-                <div className="text-gray-400">Training & Certification</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">100% Free</div>
+                <div className="text-gray-700 dark:text-gray-400">Training & Certification</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">$45-150/hr</div>
-                <div className="text-gray-400">Analyst Earnings</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">$45-150/hr</div>
+                <div className="text-gray-700 dark:text-gray-400">Analyst Earnings</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">100% Remote</div>
-                <div className="text-gray-400">Work From Anywhere</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">100% Remote</div>
+                <div className="text-gray-700 dark:text-gray-400">Work From Anywhere</div>
               </div>
             </div>
           </div>

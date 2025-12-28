@@ -23,7 +23,7 @@ export default function About() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white">
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+        <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 text-gray-900 dark:text-white py-24">
           <div className="container max-w-4xl space-y-4">
             <Skeleton className="h-8 w-32 bg-white/10" />
             <Skeleton className="h-16 w-full bg-white/10" />
@@ -121,19 +121,19 @@ export default function About() {
         </script>
       </Helmet>
       {/* Hero Section - Origin Story */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+      <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 text-gray-900 dark:text-white py-24">
         <div className="container max-w-4xl">
-          <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Our Story</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
+          <Badge className="mb-6 bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border-emerald-500/30">Our Story</Badge>
+          <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight text-gray-900 dark:text-white">
             We're Building the Future of AI Safety—One Analyst at a Time
           </h1>
-          <p className="text-xl text-gray-300 leading-relaxed mb-8">
+          <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
             In 2024, as artificial intelligence began transforming every industry, a critical question emerged: 
-            <span className="text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate. 
+            <span className="text-emerald-600 dark:text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate. 
             Companies rushed to comply. But one thing was missing: <span className="font-semibold">trained professionals who could actually monitor AI systems for safety.</span>
           </p>
-          <p className="text-xl text-gray-300 leading-relaxed">
-            That's when CSOAI was born—not as another AI company, but as <span className="text-emerald-300 font-semibold">the solution to two problems at once</span>: 
+          <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+            That's when CSOAI was born—not as another AI comp            <span className="text-emerald-600 dark:text-emerald-300 font-semibold">the solution to two problems at once</span>: 
             protecting humanity from AI risks while creating thousands of meaningful jobs for people displaced by automation.
           </p>
         </div>
@@ -312,7 +312,7 @@ export default function About() {
         <div className="container max-w-4xl text-center">
           <Heart className="h-16 w-16 text-emerald-400 mx-auto mb-6" />
           <h2 className="text-4xl font-bold mb-6">Our Commitment to You</h2>
-          <p className="text-xl text-gray-300 leading-relaxed mb-8">
+          <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
             We're building CSOAI in public. Every decision, every framework update, every certification standard 
             is documented and transparent. We answer to the community, not shareholders. Our success is measured 
             by one metric: <span className="text-emerald-300 font-semibold">Are we making AI safer while creating meaningful jobs?</span>
@@ -355,6 +355,60 @@ export default function About() {
               </div>
             </div>
           </Card>
+        </div>
+      </div>
+
+      {/* Meet the Team */}
+      <div className="container py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border-emerald-500/30">Our Leadership</Badge>
+            <h2 className="text-4xl font-bold mb-6">Meet the Team Behind CSOAI</h2>
+            <p className="text-xl text-gray-600">Dedicated to building the future of AI safety and creating meaningful careers</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Team Member Card */}
+            <Card className="p-8 text-center border-2 border-emerald-200 hover:border-emerald-400 transition-colors">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 mx-auto mb-6 flex items-center justify-center">
+                <span className="text-white text-3xl font-bold">👤</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2">You</h3>
+              <p className="text-emerald-600 font-semibold mb-4">Founder & AI Safety Advocate</p>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Visionary leader driving the mission to protect humanity from AI risks while creating thousands of meaningful careers for displaced workers.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M16.338 16.338H13.67V12.16c0-.995-.017-2.292-1.194-2.292-1.195 0-1.38.932-1.38 1.893v4.577H8.368V9.892h2.519v.979h.037c.356-.674 1.228-1.387 2.528-1.387 2.699 0 3.199 1.774 3.199 4.085v4.171zM3.819 8.414a1.54 1.54 0 11.46-3.06 1.54 1.54 0 01-.46 3.06m1.32 7.924H2.5V9.892h2.639v6.446zM17.644 0H.356C.16 0 0 .156 0 .35v19.3c0 .194.16.35.356.35h17.288c.196 0 .356-.156.356-.35V.35c0-.194-.16-.35-.356-.35z"/></svg>
+                  LinkedIn
+                </a>
+              </div>
+            </Card>
+
+            {/* Mission Card */}
+            <Card className="p-8 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-white">
+              <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+              <ul className="space-y-4 text-gray-700">
+                <li className="flex gap-3">
+                  <span className="text-emerald-600 font-bold text-lg">✓</span>
+                  <span><strong>Protect humanity</strong> from AI risks through rigorous safety oversight</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-emerald-600 font-bold text-lg">✓</span>
+                  <span><strong>Create careers</strong> for workers displaced by automation</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-emerald-600 font-bold text-lg">✓</span>
+                  <span><strong>Build transparency</strong> in AI governance globally</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-emerald-600 font-bold text-lg">✓</span>
+                  <span><strong>Establish standards</strong> aligned with EU AI Act, NIST RMF, and ISO 42001</span>
+                </li>
+              </ul>
+            </Card>
+          </div>
         </div>
       </div>
 

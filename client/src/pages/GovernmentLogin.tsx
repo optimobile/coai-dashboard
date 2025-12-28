@@ -123,7 +123,7 @@ export function GovernmentLogin() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="border-emerald-600/20 bg-slate-800/50">
+            <Card className="border-emerald-600/20 bg-white dark:bg-gray-900">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lock className="w-5 h-5 text-emerald-400" />
@@ -139,10 +139,10 @@ export function GovernmentLogin() {
                     Select Your Jurisdiction
                   </label>
                   <Select value={selectedJurisdiction || ''} onValueChange={setSelectedJurisdiction}>
-                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                    <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-white">
                       <SelectValue placeholder="Choose jurisdiction..." />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-700 border-slate-600">
+                    <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700">
                       {JURISDICTIONS.map((j) => (
                         <SelectItem key={j.id} value={j.id} className="text-white">
                           {j.icon} {j.name}
@@ -184,7 +184,7 @@ export function GovernmentLogin() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="border-blue-600/20 bg-slate-800/50">
+            <Card className="border-blue-600/20 bg-white dark:bg-gray-900">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="w-5 h-5 text-blue-400" />
@@ -197,7 +197,7 @@ export function GovernmentLogin() {
                     <motion.div
                       key={j.id}
                       whileHover={{ x: 4 }}
-                      className="p-3 rounded-lg bg-slate-700/50 border border-slate-600/50 cursor-pointer hover:border-blue-600/50 transition-colors"
+                      className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-emerald-600/50 transition-colors"
                       onClick={() => {
                         setSelectedJurisdiction(j.id);
                       }}
