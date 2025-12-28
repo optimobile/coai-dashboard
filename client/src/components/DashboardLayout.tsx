@@ -38,6 +38,8 @@ import {
   BookOpen,
   FolderOpen,
   Info,
+  Award,
+  BookMarked,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -60,6 +62,9 @@ const navItems = [
   { path: "/agent-council", label: "33-Agent Council", icon: Users },
   { path: "/reports", label: "Reports", icon: FileText },
   { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
+  { path: "/training", label: "Training Courses", icon: BookMarked },
+  { path: "/my-courses", label: "My Courses", icon: GraduationCap },
+  { path: "/certificates", label: "My Certificates", icon: Award },
   { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
   { path: "/public", label: "Public Site", icon: Globe },
   { path: "/api-docs", label: "API Docs", icon: Code },

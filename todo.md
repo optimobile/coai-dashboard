@@ -399,6 +399,19 @@
 
 
 
+## Phase 11 - Dashboard Sidebar & Certificates UI (Dec 28, 2024)
+
+- [x] Add Training Courses menu item to sidebar
+- [x] Add My Courses menu item to sidebar
+- [x] Add My Certificates menu item to sidebar
+- [x] Create Certificates.tsx page with full UI (grid and list views)
+- [x] Fix CORS headers for OAuth routes
+- [x] Add error handling middleware for OAuth
+- [x] Test Training Courses page accessibility
+- [x] Test My Courses page accessibility
+- [x] Test Certificates page accessibility
+- [x] Verify signup page loads without 403 error
+
 ## Phase 10 - User Journeys & End-to-End Flows
 
 ### User Journey Documentation
