@@ -275,7 +275,7 @@ export function WatchdogEducation() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [completedCount] = useState(0);
 
-  const categories = ['All', ...new Set(watchdogModules.map((m) => m.category))];
+  const categories = ['All', ...Array.from(new Set(watchdogModules.map((m) => m.category)))];
   const filteredModules = selectedCategory
     ? watchdogModules.filter((m) => m.category === selectedCategory || selectedCategory === 'All')
     : watchdogModules;

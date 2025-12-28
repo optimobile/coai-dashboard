@@ -175,10 +175,18 @@ export function Footer() {
         <div className="border-t border-gray-200 pt-8 space-y-4">
           <div>
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2">
-              Legal Notice
+              CSOAI Legal Structure
             </h4>
             <p className="text-gray-600 text-xs">
-              CSOAI operates as an independent, non-profit organization dedicated to advancing AI safety through training, certification, and transparent oversight. We maintain strict independence from all commercial AI vendors and technology companies. Our mission is to serve the public interest by developing and promoting best practices in AI safety and compliance.
+              CSOAI is a Community Interest Company (CIC) and independent Standards Body registered in the United Kingdom. We are dedicated to advancing AI safety through independent training, certification, and transparent oversight. We maintain strict independence from all commercial AI vendors and technology companies. Our mission is to serve the public interest by developing and promoting best practices in AI safety and compliance.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2">
+              CEASAI Certification Standards
+            </h4>
+            <p className="text-gray-600 text-xs">
+              CEASAI (Certified Expert in AI Safety) is our professional certification program administered by CSOAI. CEASAI certification represents demonstrated competency in AI safety principles, compliance frameworks, and incident analysis. Certificates are valid for three years from issuance. CSOAI reserves the right to update certification requirements and may require recertification to maintain active status.
             </p>
           </div>
           <div>
@@ -194,7 +202,7 @@ export function Footer() {
               Data & Privacy
             </h4>
             <p className="text-gray-600 text-xs">
-              Your data is protected under industry-standard security practices including encryption, secure authentication, and regular security audits. We comply with GDPR, CCPA, and other privacy regulations. We never sell your personal information to third parties. For detailed information, please review our Privacy Policy and Data Processing Agreement.
+              Your data is protected under industry-standard security practices including encryption, secure authentication, and regular security audits. We comply with GDPR, CCPA, UK Data Protection Act 2018, and other privacy regulations. We never sell your personal information to third parties. For detailed information, please review our Privacy Policy, Cookie Policy, and Data Processing Agreement.
             </p>
           </div>
         </div>

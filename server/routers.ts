@@ -424,13 +424,13 @@ const complianceRouter = router({
     if (!db) {
       // Return default frameworks if DB not available
       return [
-        { id: 1, code: "EU_AI_ACT", name: "EU AI Act", version: "2024/1689", jurisdiction: "European Union", isActive: true },
-        { id: 2, code: "NIST_AI_RMF", name: "NIST AI RMF", version: "1.0", jurisdiction: "United States", isActive: true },
-        { id: 3, code: "TC260", name: "TC260 AI Safety Framework", version: "2.0", jurisdiction: "China", isActive: true },
+        { id: 1, code: "EU_AI_ACT", name: "EU AI Act", version: "2024/1689", jurisdiction: "European Union", isActive: 1 },
+        { id: 2, code: "NIST_AI_RMF", name: "NIST AI RMF", version: "1.0", jurisdiction: "United States", isActive: 1 },
+        { id: 3, code: "TC260", name: "TC260 AI Safety Framework", version: "2.0", jurisdiction: "China", isActive: 1 },
       ];
     }
 
-    return db.select().from(frameworks).where(eq(frameworks.isActive, true));
+    return db.select().from(frameworks).where(eq(frameworks.isActive, 1));
   }),
 
   // Get compliance summary for dashboard
@@ -1038,7 +1038,7 @@ const trainingRouter = router({
     return db
       .select()
       .from(trainingModules)
-      .where(eq(trainingModules.isActive, true))
+      .where(eq(trainingModules.isActive, 1))
       .orderBy(trainingModules.orderIndex);
   }),
 
@@ -1138,7 +1138,7 @@ const certificationRouter = router({
     return db
       .select()
       .from(certificationTests)
-      .where(eq(certificationTests.isActive, true));
+      .where(eq(certificationTests.isActive, 1));
   }),
 
   // Get test with questions (for taking the test)
@@ -1168,7 +1168,7 @@ const certificationRouter = router({
         .from(testQuestions)
         .where(and(
           eq(testQuestions.testId, input.testId),
-          eq(testQuestions.isActive, true)
+          eq(testQuestions.isActive, 1)
         ));
 
       return { test, questions };
@@ -2423,7 +2423,7 @@ const apiKeysRouter = router({
 
       await db
         .update(apiKeys)
-        .set({ isActive: false })
+        .set({ isActive: 0 })
         .where(eq(apiKeys.id, input.id));
 
       return { success: true };

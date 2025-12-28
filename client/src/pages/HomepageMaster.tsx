@@ -75,6 +75,53 @@ export default function HomepageMaster() {
             <p className="text-lg text-red-600 font-semibold mt-4">Without 250,000 trained analysts by Feb 2, 2026, enterprises face compliance chaos. Our Byzantine Council ensures safety.</p>
           </motion.div>
 
+          {/* Critical Weaknesses - Bullet Points */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="bg-gradient-to-r from-red-50 to-pink-50 p-8 rounded-xl border-2 border-red-400 mb-12 shadow-md"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">🚨 Zero AI Safety Solutions Until Now</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="flex gap-3">
+                <span className="text-red-600 font-bold text-xl">•</span>
+                <div>
+                  <p className="font-semibold text-gray-900">No AI Safety Standards Body</p>
+                  <p className="text-sm text-gray-700">→ NOW: CSOAI.org</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-red-600 font-bold text-xl">•</span>
+                <div>
+                  <p className="font-semibold text-gray-900">No Government Platform</p>
+                  <p className="text-sm text-gray-700">→ NOW: CSOAI-PDCA</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-red-600 font-bold text-xl">•</span>
+                <div>
+                  <p className="font-semibold text-gray-900">No Public Incident Database</p>
+                  <p className="text-sm text-gray-700">→ NOW: Public Watchdog</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-red-600 font-bold text-xl">•</span>
+                <div>
+                  <p className="font-semibold text-gray-900">No Enterprise Compliance</p>
+                  <p className="text-sm text-gray-700">→ NOW: Byzantine Council</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-red-600 font-bold text-xl">•</span>
+                <div>
+                  <p className="font-semibold text-gray-900">No AI Analyst Job Market</p>
+                  <p className="text-sm text-gray-700">→ NOW: CEASAI.training</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Four Solutions Grid */}
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             {/* Solution 1: AI Safety */}
@@ -145,6 +192,28 @@ export default function HomepageMaster() {
               </div>
             </motion.div>
           </div>
+
+          {/* Critical Weaknesses - Value Destruction */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.45 }}
+            className="bg-gradient-to-r from-amber-50 to-orange-50 p-8 rounded-xl border-2 border-amber-400 mb-12 shadow-md"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">⚠️ Critical Weaknesses Destroying 30% of Your Value</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg border-l-4 border-amber-600">
+                <p className="font-bold text-gray-900 mb-2">Weakness #1: Illegal "Regulatory Body" Positioning (-£400K)</p>
+                <p className="text-sm text-gray-700 mb-2">You call CSOAI a "regulatory body" and "authority." This is legally impossible and reputationally fatal.</p>
+                <p className="text-sm font-semibold text-amber-700"><strong>Fix:</strong> Rebrand as "Western AI Safety Standards Organization" (like ISO). Register as Community Interest Company (CIC). Add disclaimer: "CSOAI guidelines are recommendations, not legal mandates."</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-orange-600">
+                <p className="font-bold text-gray-900 mb-2">Weakness #2: Offline Domains & No Social Proof (-£150K)</p>
+                <p className="text-sm text-gray-700 mb-2">csoai.org and ceasai.org are down. Your landing page has zero customer logos, zero case studies, zero testimonials.</p>
+                <p className="text-sm font-semibold text-orange-700"><strong>Fix:</strong> Enterprise buyers won't trust vaporware. Bring domains online immediately. Add customer logos, case studies, and testimonials from early adopters.</p>
+              </div>
+            </div>
+          </motion.div>
 
           {/* Key Facts Row */}
           <motion.div
@@ -295,34 +364,7 @@ export default function HomepageMaster() {
             <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">The EU AI Act compliance deadline is February 2, 2026. 50,000 enterprises must comply. They need 100,000-250,000 AI Safety Analysts. That job category doesn't exist yet. This is the largest employment opportunity of the decade—and the only way to solve the regulatory crisis while protecting humanity.</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {/* Compliance Need */}
-            <motion.div {...fadeInUp} className="bg-white bg-opacity-95 p-8 rounded-lg shadow-lg">
-              <div className="text-center">
-                <p className="text-6xl font-bold text-emerald-600 mb-3">50,000</p>
-                <p className="text-lg font-bold text-gray-900 mb-2">EU Enterprises</p>
-                <p className="text-gray-600 text-sm">Must comply with EU AI Act by February 2, 2026</p>
-              </div>
-            </motion.div>
 
-            {/* Analysts Needed */}
-            <motion.div {...fadeInUp} className="bg-white bg-opacity-95 p-8 rounded-lg shadow-lg">
-              <div className="text-center">
-                <p className="text-6xl font-bold text-emerald-600 mb-3">100K-250K</p>
-                <p className="text-lg font-bold text-gray-900 mb-2">AI Analysts Needed</p>
-                <p className="text-gray-600 text-sm">2-5 analysts per enterprise to audit AI systems</p>
-              </div>
-            </motion.div>
-
-            {/* Current Supply */}
-            <motion.div {...fadeInUp} className="bg-white bg-opacity-95 p-8 rounded-lg shadow-lg">
-              <div className="text-center">
-                <p className="text-6xl font-bold text-red-600 mb-3">0</p>
-                <p className="text-lg font-bold text-gray-900 mb-2">Current Supply</p>
-                <p className="text-gray-600 text-sm">This job category doesn't exist in the market</p>
-              </div>
-            </motion.div>
-          </div>
 
           <motion.div {...fadeInUp} className="bg-white bg-opacity-10 border-2 border-white rounded-lg p-10 mb-12">
             <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">How CEASAI Solves the Crisis</h3>
@@ -790,59 +832,6 @@ export default function HomepageMaster() {
 
       {/* Conversion Modals */}
       <ConversionModals isOpen={modalOpen} onClose={closeModal} type={modalType} />
-
-      {/* ============================================
-          FOOTER
-          ============================================ */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="font-bold text-white mb-4">CSOAI</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white">About CSOAI</a></li>
-                <li><a href="#" className="hover:text-white">SOAI-PDCA Framework</a></li>
-                <li><a href="#" className="hover:text-white">33-Agent Council</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-white mb-4">CEASAI</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white">Training Program</a></li>
-                <li><a href="#" className="hover:text-white">Certification Exam</a></li>
-                <li><a href="#" className="hover:text-white">Job Board</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-white mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white">Watchdog Hub</a></li>
-                <li><a href="#" className="hover:text-white">Blog & News</a></li>
-                <li><a href="#" className="hover:text-white">Documentation</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-white mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center text-sm">
-              <p>&copy; 2025 CSOAI. All rights reserved.</p>
-              <div className="flex gap-6 mt-4 md:mt-0">
-                <span className="text-emerald-400">✓ EU AI Act Compliant</span>
-                <span className="text-emerald-400">✓ GDPR Compliant</span>
-                <span className="text-emerald-400">✓ ISO 27001 Certified</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

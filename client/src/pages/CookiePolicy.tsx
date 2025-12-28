@@ -22,7 +22,7 @@ export default function CookiePolicy() {
               Cookie Policy
             </h1>
             <p className="text-lg text-gray-600">
-              Last updated: December 2024
+              Last updated: December 28, 2024
             </p>
           </motion.div>
         </div>
@@ -131,7 +131,8 @@ export default function CookiePolicy() {
               </p>
               <p className="text-gray-600">
                 <strong>Email:</strong> privacy@csoai.org<br />
-                <strong>Address:</strong> San Francisco, CA, USA
+                <strong>Address:</strong> CSOAI, United Kingdom<br />
+                <strong>Website:</strong> www.csoai.org
               </p>
             </div>
           </motion.div>

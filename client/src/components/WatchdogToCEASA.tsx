@@ -139,7 +139,7 @@ function ConversionStepCard({ step, isActive, onSelect }: any) {
           <div>
             <p className="text-xs font-semibold text-gray-700 mb-2">Benefits:</p>
             <ul className="space-y-1">
-              {step.benefits.map((benefit, idx) => (
+              {step.benefits.map((benefit: string, idx: number) => (
                 <li key={idx} className="text-sm text-gray-600 flex items-start">
                   <CheckCircle className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
                   {benefit}

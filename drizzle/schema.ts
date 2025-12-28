@@ -1,4 +1,4 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, tinyint, bigint } from "drizzle-orm/mysql-core";
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, tinyint, bigint, boolean } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm"
 
 export const agentVotes = mysqlTable("agent_votes", {
@@ -801,11 +801,11 @@ export const realtimeEvents = mysqlTable("realtime_events", {
 export type RealtimeEvent = typeof realtimeEvents.$inferSelect;
 export type InsertRealtimeEvent = typeof realtimeEvents.$inferInsert;
 
-export const websocketConnections = mysqlTable("websocket_connections", {
-	id: int().autoincrement().notNull(),
-	userId: int().notNull(),
-	connectionId: varchar({ length: 255 }).notNull(),
-	isActive: tinyint().default(1).notNull(),
+	export const websocketConnections = mysqlTable("websocket_connections", {
+		id: int().autoincrement().notNull(),
+		userId: int().notNull(),
+		connectionId: varchar({ length: 255 }).notNull(),
+		isActive: tinyint().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	lastHeartbeat: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 }, (table) => ({

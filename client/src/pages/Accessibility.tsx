@@ -139,8 +139,8 @@ export default function Accessibility() {
               </p>
               <p className="text-gray-600">
                 <strong>Email:</strong> accessibility@csoai.org<br />
-                <strong>Phone:</strong> +1 (555) 123-4567<br />
-                <strong>Address:</strong> San Francisco, CA, USA
+                <strong>Address:</strong> CSOAI, United Kingdom<br />
+                <strong>Website:</strong> www.csoai.org
               </p>
             </Card>
           </motion.div>

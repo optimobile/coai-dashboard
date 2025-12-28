@@ -94,7 +94,7 @@ export function NotificationCenter() {
     }
   };
 
-  const formatTime = (date: Date) => {
+  const formatTime = (date: Date | string) => {
     const now = new Date();
     const diff = now.getTime() - new Date(date).getTime();
     const minutes = Math.floor(diff / 60000);

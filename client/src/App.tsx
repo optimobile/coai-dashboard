@@ -114,6 +114,9 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CookiePolicy from "./pages/CookiePolicy";
 import Accessibility from "./pages/Accessibility";
+import EarlyAccessLanding from "./pages/EarlyAccessLanding";
+import EnterprisePlansLanding from "./pages/EnterprisePlansLanding";
+import CouncilLicensingLanding from "./pages/CouncilLicensingLanding";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -231,6 +234,9 @@ function App() {
                   <Route path="/terms" component={TermsOfService} />
                   <Route path="/cookies" component={CookiePolicy} />
                   <Route path="/accessibility" component={Accessibility} />
+                  <Route path="/early-access" component={EarlyAccessLanding} />
+                  <Route path="/enterprise-plans" component={EnterprisePlansLanding} />
+                  <Route path="/council-licensing" component={CouncilLicensingLanding} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
