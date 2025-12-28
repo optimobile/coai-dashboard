@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ConversionModals } from '@/components/ConversionModals';
+import { CountdownTimer } from '@/components/CountdownTimer';
 import {
   ChevronDown,
   Users,
@@ -50,14 +51,28 @@ export default function HomepageMaster() {
           ============================================ */}
       <section className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex items-center justify-center px-4 py-20">
         <div className="max-w-6xl mx-auto w-full">
+          {/* Urgency Banner with Countdown */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-xl p-6 mb-8 text-center"
+          >
+            <p className="text-sm md:text-base font-semibold text-gray-800 mb-3">
+              🚨 <span className="text-red-600">EU AI Act Enforcement Deadline</span> — We need <span className="font-bold text-red-700">250,000 AI Safety Analysts</span> in:
+            </p>
+            <CountdownTimer />
+          </motion.div>
+
           {/* Main Headline */}
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center mb-12">
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-center mb-12">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 leading-tight">
               AI is Growing.
               <br />
               <span className="text-emerald-600">We Fixed the Problem.</span>
             </h1>
             <p className="text-2xl text-gray-700 font-semibold mt-6">Four critical solutions. One unified platform.</p>
+            <p className="text-lg text-red-600 font-semibold mt-4">Without 250,000 trained analysts by Feb 2, 2026, enterprises face compliance chaos. Our Byzantine Council ensures safety.</p>
           </motion.div>
 
           {/* Four Solutions Grid */}
