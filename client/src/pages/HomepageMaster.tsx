@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -22,6 +22,10 @@ export default function HomepageMaster() {
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'loi' | 'course' | 'enterprise' | 'government' | 'watchdog' | null>(null);
+
+  useEffect(() => {
+    document.title = 'CSOAI: AI Safety Certification & Compliance Platform';
+  }, []);
 
   const openModal = (type: 'loi' | 'course' | 'enterprise' | 'government' | 'watchdog') => {
     setModalType(type);
@@ -211,27 +215,27 @@ export default function HomepageMaster() {
           </div>
 
           <motion.div {...fadeInUp} className="bg-white bg-opacity-10 border-2 border-white rounded-lg p-10 mb-12">
-            <h3 className="text-3xl font-bold text-white mb-6 text-center">How CEASAI Solves the Crisis</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">How CEASAI Solves the Crisis</h3>
             <p className="text-lg text-emerald-100 mb-8 max-w-4xl mx-auto text-center leading-relaxed">If we train 100,000-250,000 AI Safety Analysts through CEASAI by February 2026, we solve the impossible regulatory deadline while creating the largest employment opportunity in a generation and making AI fundamentally safer for everyone.</p>
             
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white bg-opacity-5 p-6 rounded-lg border border-white border-opacity-20 hover:bg-opacity-10 transition">
                 <p className="text-emerald-300 font-bold text-lg mb-3">✓ Regulatory Compliance</p>
-                <p className="text-white text-sm leading-relaxed">50,000 enterprises get access to certified AI Safety Analysts who can audit their systems and ensure compliance before the Feb 2 deadline. No enterprise gets left behind.</p>
+                <p className="text-gray-900 text-sm leading-relaxed">50,000 enterprises get access to certified AI Safety Analysts who can audit their systems and ensure compliance before the Feb 2 deadline. No enterprise gets left behind.</p>
               </div>
               <div className="bg-white bg-opacity-5 p-6 rounded-lg border border-white border-opacity-20 hover:bg-opacity-10 transition">
                 <p className="text-emerald-300 font-bold text-lg mb-3">✓ Mass Employment</p>
-                <p className="text-white text-sm leading-relaxed">250,000 new remote jobs created at $45-150/hour. Career paths for developers, researchers, compliance professionals, and anyone passionate about AI safety. Meaningful work that protects humanity.</p>
+                <p className="text-gray-900 text-sm leading-relaxed">250,000 new remote jobs created at $45-150/hour. Career paths for developers, researchers, compliance professionals, and anyone passionate about AI safety. Meaningful work that protects humanity.</p>
               </div>
               <div className="bg-white bg-opacity-5 p-6 rounded-lg border border-white border-opacity-20 hover:bg-opacity-10 transition">
                 <p className="text-emerald-300 font-bold text-lg mb-3">✓ AI Safety</p>
-                <p className="text-white text-sm leading-relaxed">Every AI system gets human expert review. Bias detection. Ethical oversight. Real accountability. The 33-Agent Council ensures decisions are impartial. This is how we make AI safer for everyone.</p>
+                <p className="text-gray-900 text-sm leading-relaxed">Every AI system gets human expert review. Bias detection. Ethical oversight. Real accountability. The 33-Agent Council ensures decisions are impartial. This is how we make AI safer for everyone.</p>
               </div>
             </div>
           </motion.div>
 
           <motion.div {...fadeInUp} className="text-center">
-            <p className="text-white text-lg mb-8 max-w-3xl mx-auto leading-relaxed">This isn't just a business opportunity. This is the solution to an impossible regulatory crisis. This is how we create 250,000 meaningful jobs. This is how we protect humanity as AI grows. The time to act is now.</p>
+            <p className="text-gray-900 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">This isn't just a business opportunity. This is the solution to an impossible regulatory crisis. This is how we create 250,000 meaningful jobs. This is how we protect humanity as AI grows. The time to act is now.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" onClick={() => openModal('course')} className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-3 text-lg font-bold">
                 Become an AI Safety Analyst
@@ -601,6 +605,30 @@ export default function HomepageMaster() {
               {
                 q: "How do I report AI problems?",
                 a: "Visit the Watchdog Hub and submit a report. You can report anonymously. Your report will be reviewed by the 33-Agent Council and tracked through the SOAI-PDCA improvement cycle.",
+              },
+              {
+                q: "What background do I need?",
+                a: "You don't need a technical background. Our training covers everything from AI basics to compliance frameworks. We accept applications from developers, compliance professionals, researchers, and anyone passionate about AI safety.",
+              },
+              {
+                q: "How long is the certification?",
+                a: "The CEASAI program takes approximately 8 weeks to complete. This includes 5 weeks of self-paced training, 2 weeks of exam preparation, and the final exam. You can work at your own pace.",
+              },
+              {
+                q: "What is the 33-Agent Council?",
+                a: "The 33-Agent Council is a Byzantine consensus system that uses AI agents and human experts to make impartial decisions on AI safety incidents. It ensures no single entity controls outcomes and prevents bias.",
+              },
+              {
+                q: "Can I use CSOAI for my enterprise?",
+                a: "Yes! CSOAI is open-source and free. Enterprises can deploy it internally for compliance monitoring, incident tracking, and AI governance. We also offer enterprise support and custom integrations.",
+              },
+              {
+                q: "How is my data protected?",
+                a: "We use industry-standard encryption, secure authentication, and regular security audits. We comply with GDPR, CCPA, and other privacy regulations. We never sell your data to third parties.",
+              },
+              {
+                q: "What happens after I pass the exam?",
+                a: "After passing, you receive a digital certificate and can start accepting work on Watchdog cases and Council voting. You'll have access to the analyst dashboard and can earn money immediately.",
               },
             ].map((faq, idx) => (
               <motion.div key={idx} {...fadeInUp} className="bg-white rounded-lg border border-gray-200 overflow-hidden">

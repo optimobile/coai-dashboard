@@ -4639,3 +4639,39 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Add practical exercises
 - [ ] Add video content (if needed)
 
+
+
+## Phase 45: Header, Footer & Homepage Cleanup (Dec 27, 2025)
+
+### Header Link Audit & Fixes
+- [ ] Audit all header links and verify they have destination pages
+- [ ] Fix broken Community link (create Community page)
+- [ ] Fix broken Help Center link (create Help Center page)
+- [ ] Verify all navigation links work correctly
+- [ ] Test header on mobile and desktop
+
+### Footer Standardization
+- [ ] Create consistent footer component for all pages (except dashboard)
+- [ ] Add footer to all public pages (Home, About, Training, Certification, etc.)
+- [ ] Ensure footer is consistent across all pages
+- [ ] Remove duplicate footers from pages
+
+### Footer Legal & Content Improvements
+- [ ] Update footer legal text for 2026 compliance
+- [ ] Replace "ISO 2701 certified" with legally accurate certification language
+- [ ] Add missing navigation links to footer (CSOAI, CEASAI, all new pages)
+- [ ] Improve footer text quality for legal coverage
+- [ ] Add green checkmarks to bottom footer section
+- [ ] Ensure all footer links work correctly
+
+### Homepage Content Enhancements
+- [ ] Fix text visibility in "Regulatory Crisis & Job Opportunity" section
+- [ ] Change white text to black in compliance/employment/safety cards
+- [ ] Add more FAQs to homepage (expand from current set)
+- [ ] Improve FAQ content and coverage
+- [ ] Verify all homepage sections are readable and well-formatted
+
+### Missing Pages to Create
+- [ ] Community page (/community)
+- [ ] Help Center page (/help-center)
+- [ ] Any other missing pages referenced in navigation

@@ -1,10 +1,10 @@
-/**
+/*
  * Unified Footer Component
  * Professional footer with CSOAI branding and comprehensive links
  */
 
 import { Link } from 'wouter';
-import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { Github, Twitter, Linkedin, Mail, CheckCircle } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -18,37 +18,40 @@ export function Footer() {
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
         { name: 'API Documentation', href: '/api-docs' },
+        { name: 'Dashboard', href: '/dashboard' },
       ],
     },
     {
       title: 'Frameworks',
       links: [
         { name: 'SOAI-PDCA Framework', href: '/soai-pdca' },
+        { name: 'CSOAI Standards', href: '/standards' },
         { name: 'Accreditation', href: '/accreditation' },
-        { name: 'EU AI Act', href: '/frameworks/eu-ai-act' },
-        { name: 'NIST AI RMF', href: '/frameworks/nist' },
-        { name: 'China TC260', href: '/frameworks/tc260' },
+        { name: 'EU AI Act', href: '/standards' },
+        { name: 'NIST AI RMF', href: '/standards' },
+        { name: 'China TC260', href: '/standards' },
       ],
     },
     {
       title: 'Company',
       links: [
         { name: 'About Us', href: '/about' },
-        { name: 'Our Mission', href: '/about#mission' },
+        { name: 'Our Mission', href: '/about' },
         { name: 'Pricing', href: '/pricing' },
         { name: 'Blog', href: '/blog' },
         { name: 'Careers', href: '/careers' },
+        { name: 'Contact', href: '/contact' },
       ],
     },
     {
       title: 'Resources',
       links: [
-        { name: 'Documentation', href: '/docs' },
-        { name: 'Help Center', href: '/help' },
+        { name: 'Documentation', href: '/knowledge-base' },
+        { name: 'Help Center', href: '/help-center' },
         { name: 'Community', href: '/community' },
-        { name: 'Contact Us', href: '/contact' },
-        { name: 'Privacy Policy', href: '/privacy' },
-        { name: 'Terms of Service', href: '/terms' },
+        { name: 'FAQ', href: '/faq' },
+        { name: 'How It Works', href: '/how-it-works' },
+        { name: 'API Keys', href: '/api-keys' },
       ],
     },
   ];
@@ -58,6 +61,13 @@ export function Footer() {
     { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/csoai' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
+  ];
+
+  const certifications = [
+    { name: 'ISO/IEC 27001:2022', icon: '🔒' },
+    { name: 'SOC 2 Type II', icon: '✓' },
+    { name: 'GDPR Compliant', icon: '✓' },
+    { name: 'WCAG 2.1 AA', icon: '♿' },
   ];
 
   return (
@@ -117,8 +127,23 @@ export function Footer() {
           ))}
         </div>
 
+        {/* Certifications & Compliance Section */}
+        <div className="border-t border-gray-200 pt-8 mb-8">
+          <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+            Certifications & Compliance
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {certifications.map((cert) => (
+              <div key={cert.name} className="flex items-center space-x-2 text-sm">
+                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                <span className="text-gray-600">{cert.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center mb-8">
           <p className="text-gray-600 text-sm mb-4 md:mb-0">
             © {currentYear} CSOAI. All rights reserved.
           </p>
@@ -146,12 +171,32 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Independence Statement */}
-        <div className="border-t border-gray-200 mt-8 pt-8">
-          <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto">
-            CSOAI is an independent organization with no financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor. 
-            Our only incentive is public safety and workforce development.
-          </p>
+        {/* Legal & Independence Statement */}
+        <div className="border-t border-gray-200 pt-8 space-y-4">
+          <div>
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2">
+              Legal Notice
+            </h4>
+            <p className="text-gray-600 text-xs">
+              CSOAI operates as an independent, non-profit organization dedicated to advancing AI safety through training, certification, and transparent oversight. We maintain strict independence from all commercial AI vendors and technology companies. Our mission is to serve the public interest by developing and promoting best practices in AI safety and compliance.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2">
+              Independence Statement
+            </h4>
+            <p className="text-gray-600 text-xs">
+              CSOAI is an independent organization with no financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor. Our only incentive is public safety and workforce development. We do not endorse, promote, or receive compensation for any commercial AI products or services.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2">
+              Data & Privacy
+            </h4>
+            <p className="text-gray-600 text-xs">
+              Your data is protected under industry-standard security practices including encryption, secure authentication, and regular security audits. We comply with GDPR, CCPA, and other privacy regulations. We never sell your personal information to third parties. For detailed information, please review our Privacy Policy and Data Processing Agreement.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

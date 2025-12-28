@@ -107,6 +107,13 @@ import { ComplianceRoadmapPage } from "./pages/ComplianceRoadmapPage";
 import { AlertManagementPage } from "./pages/AlertManagementPage";
 import { WebhookManagementPage } from "./pages/WebhookManagementPage";
 import { AlertToastProvider } from "./components/AlertToastProvider";
+import Community from "./pages/Community";
+import HelpCenter from "./pages/HelpCenter";
+import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import CookiePolicy from "./pages/CookiePolicy";
+import Accessibility from "./pages/Accessibility";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -216,6 +223,14 @@ function App() {
                   <Route path="/admin/government" component={GovernmentAdminDashboard} />
                   <Route path="/notification-preferences" component={NotificationPreferences} />
                   <Route path="/region-settings" component={RegionSettings} />
+                  <Route path="/community" component={Community} />
+                  <Route path="/help-center" component={HelpCenter} />
+                  <Route path="/help" component={HelpCenter} />
+                  <Route path="/contact" component={Contact} />
+                  <Route path="/privacy" component={PrivacyPolicy} />
+                  <Route path="/terms" component={TermsOfService} />
+                  <Route path="/cookies" component={CookiePolicy} />
+                  <Route path="/accessibility" component={Accessibility} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
