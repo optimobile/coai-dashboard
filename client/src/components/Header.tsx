@@ -70,7 +70,7 @@ export function Header() {
       name: 'Watchdog', 
       href: '/watchdog',
       submenu: [
-        { name: 'Report Incident', href: '/watchdog', description: 'Report AI safety incident' },
+        { name: 'Report Incident', href: '/watchdog/incident', description: 'Report AI safety incident' },
         { name: 'Free Courses', href: '/training', description: 'Foundation analyst training' },
         { name: 'Analyst Jobs', href: '/jobs', description: 'Available positions' },
         { name: 'Leaderboard', href: '/watchdog-leaderboard', description: 'Top analysts' },
@@ -80,9 +80,12 @@ export function Header() {
       name: 'Compliance', 
       href: '/compliance',
       submenu: [
-        { name: 'Frameworks', href: '/standards', description: 'EU AI Act, NIST, ISO' },
-        { name: 'Assessment', href: '/compliance', description: 'Run assessment' },
-        { name: 'Scorecard', href: '/transparency', description: 'Public compliance data' },
+        { name: 'All Frameworks', href: '/standards', description: 'EU AI Act, NIST, ISO' },
+        { name: 'UK AI Bill', href: '/frameworks/uk-ai-bill', description: 'Q2 2026 coming soon' },
+        { name: 'Australia AI', href: '/frameworks/australia-ai', description: 'Q2 2026 coming soon' },
+        { name: 'Canada AI Act', href: '/frameworks/canada-ai-act', description: 'Q2 2026 coming soon' },
+        { name: 'Run Assessment', href: '/compliance', description: 'Run assessment' },
+        { name: 'Public Scorecard', href: '/transparency', description: 'Public compliance data' },
       ]
     },
     { 

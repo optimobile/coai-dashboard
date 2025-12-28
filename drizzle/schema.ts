@@ -802,16 +802,16 @@ export type RealtimeEvent = typeof realtimeEvents.$inferSelect;
 export type InsertRealtimeEvent = typeof realtimeEvents.$inferInsert;
 
 export const websocketConnections = mysqlTable("websocket_connections", {
-	id: int().autoincrement().notNull(),
+	id: int().autoincrement().primaryKey(),
 	userId: int().notNull(),
 	connectionId: varchar({ length: 255 }).notNull(),
 	isActive: int().default(1).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	lastHeartbeat: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
-}, (table) => [
-	index("idx_userId_ws").on(table.userId),
-	index("idx_connectionId_ws").on(table.connectionId),
-]);
+}, (table) => ({
+	userIdIdx: index("idx_userId_ws").on(table.userId),
+	connectionIdIdx: index("idx_connectionId_ws").on(table.connectionId),
+}));
 
 export type WebsocketConnection = typeof websocketConnections.$inferSelect;
 export type InsertWebsocketConnection = typeof websocketConnections.$inferInsert;

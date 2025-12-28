@@ -5110,3 +5110,54 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Create GDPR-compliant payment privacy notice
 - [ ] Document liability coverage for payment processing
 
+
+
+## Phase 15 - New Regulatory Frameworks & Watchdog Incident Page Fix
+
+### New Framework Landing Pages
+- [ ] Research UK AI Bill requirements and structure
+- [ ] Research Australia AI Ethics Framework
+- [ ] Research other new frameworks (Japan, Singapore, Canada, etc.)
+- [ ] Create FrameworkPage.tsx component for reusable framework landing pages
+- [ ] Create UKAIBill.tsx landing page with training courses (Q2 2026)
+- [ ] Create AustraliaAIEthics.tsx landing page with training courses (Q2 2026)
+- [ ] Create framework pages for all new regulatory frameworks
+- [ ] Add framework pages to navigation menu
+- [ ] Link framework pages from Training dropdown
+- [ ] Add "Q2 2026 Coming Soon" badges to new frameworks
+- [ ] Test all framework landing pages
+
+### Watchdog Incident Reporting Page Fix
+- [ ] Fix WatchdogIncident.tsx page structure
+- [ ] Add Report Incident form to page (allow anonymous submissions)
+- [ ] Add Recent Reports feed showing latest incidents
+- [ ] Add "View More Reports" button that requires sign-in
+- [ ] Implement anonymous incident submission endpoint
+- [ ] Store anonymous reports in database
+- [ ] Show public incident feed (recent 10 reports)
+- [ ] Add sign-in prompt for viewing full report details
+- [ ] Remove "Become a Safety AI Analyst" signup from this page
+- [ ] Test anonymous report submission
+- [ ] Test sign-in flow for viewing more reports
+- [ ] Verify data collection from anonymous users
+
+## Phase 15 - COMPLETED ✅
+
+### New Framework Landing Pages - DONE
+- [x] Create FrameworkLandingPage.tsx reusable component
+- [x] Create UKAIBill.tsx landing page with training modules (Q2 2026)
+- [x] Create AustraliaAIGovernance.tsx landing page (Q2 2026)
+- [x] Create CanadaAIAct.tsx landing page (Q2 2026)
+- [x] Add framework pages to App.tsx routes
+- [x] Add framework links to Compliance dropdown menu
+- [x] Display "Q2 2026 Coming Soon" badges on new frameworks
+
+### Watchdog Incident Reporting Page - DONE
+- [x] Create WatchdogIncidentReport.tsx page
+- [x] Add anonymous incident report form
+- [x] Add recent reports feed (public view)
+- [x] Add "View More Reports" sign-in prompt
+- [x] Update Watchdog dropdown to point to /watchdog/incident
+- [x] Integrate with trpc.watchdog.submitIncidentReport endpoint
+- [x] Integrate with trpc.watchdog.getPublicReports endpoint
+- [x] Support anonymous submissions to maximize data collection

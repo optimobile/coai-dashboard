@@ -125,6 +125,10 @@ import Accessibility from "./pages/Accessibility";
 import EarlyAccessLanding from "./pages/EarlyAccessLanding";
 import EnterprisePlansLanding from "./pages/EnterprisePlansLanding";
 import CouncilLicensingLanding from "./pages/CouncilLicensingLanding";
+import UKAIBill from "./pages/UKAIBill";
+import AustraliaAIGovernance from "./pages/AustraliaAIGovernance";
+import CanadaAIAct from "./pages/CanadaAIAct";
+import WatchdogIncidentReport from "./pages/WatchdogIncidentReport";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -248,6 +252,12 @@ function App() {
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/enterprise-plans" component={EnterprisePlansLanding} />
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
+                  {/* Framework Landing Pages */}
+                  <Route path="/frameworks/uk-ai-bill" component={UKAIBill} />
+                  <Route path="/frameworks/australia-ai" component={AustraliaAIGovernance} />
+                  <Route path="/frameworks/canada-ai-act" component={CanadaAIAct} />
+                  {/* Watchdog Incident Reporting */}
+                  <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
