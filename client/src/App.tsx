@@ -208,6 +208,7 @@ function App() {
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
+                  <Route path="/soai-pdca/government" component={GovernmentPortal} />
                   <Route path="/pdca-simulator" component={PDCASimulator} />
                   <Route path="/verify-certificate" component={CertificateVerification} />
                   <Route path="/enterprise" component={Enterprise} />

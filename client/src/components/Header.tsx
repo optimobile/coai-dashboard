@@ -1,11 +1,12 @@
 /**
- * Unified Header Component with Mega Menu
+ * Master Header Component - Rebuilt for Optimal Spacing & Responsiveness
  * Professional navigation with CSOAI branding and comprehensive dropdown menus
+ * Fixed: Logo sizing, navigation spacing, responsive design
  */
 
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Globe } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -61,6 +62,7 @@ export function Header() {
       href: '/soai-pdca',
       submenu: [
         { name: 'Framework', href: '/soai-pdca', description: 'Learn about SOAI-PDCA' },
+        { name: 'Government Integration', href: '/soai-pdca/government', description: 'Government compliance' },
         { name: 'Simulator', href: '/pdca-simulator', description: 'Interactive demo' },
       ]
     },
@@ -143,7 +145,6 @@ export function Header() {
         });
         break;
       case 'Tab':
-        // Allow natural tab behavior but close dropdown
         setActiveDropdown(null);
         setFocusedItemIndex(-1);
         break;
@@ -172,24 +173,24 @@ export function Header() {
   }, [activeDropdown]);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
-      <nav className="w-full px-6 sm:px-8 lg:px-12">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
+      <nav className="w-full px-4 sm:px-6 lg:px-12">
+        <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
+          {/* Logo - Fixed sizing */}
+          <a href="/" className="flex items-center gap-2 flex-shrink-0 hover:opacity-80 transition-opacity">
             <img
               src="/csoai-icon.svg.png"
               alt="CSOAI"
-              className="h-10 w-10"
+              className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10"
             />
-            <span className="text-2xl font-bold text-slate-900">CSOAI</span>
+            <span className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 whitespace-nowrap">CSOAI</span>
           </a>
 
           {/* Desktop Navigation with Mega Menu */}
-          <div className="hidden lg:flex items-center space-x-4 flex-1 ml-8">
+          <div className="hidden lg:flex items-center gap-1 flex-1 ml-8">
             <a
               href="/"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
                 location === '/'
                   ? 'text-emerald-600 bg-emerald-50'
                   : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
@@ -202,14 +203,14 @@ export function Header() {
               <div
                 key={item.name}
                 ref={activeDropdown === item.name ? dropdownRef : null}
-                className="relative"
+                className="relative group"
                 onMouseEnter={() => setActiveDropdown(item.name)}
                 onMouseLeave={() => setActiveDropdown(null)}
                 onKeyDown={(e) => handleKeyDown(e, item.name, item.submenu?.length || 0)}
               >
                 <a
                   href={item.href}
-                  className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap ${
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 whitespace-nowrap ${
                     isActive(item.href)
                       ? 'text-emerald-600 bg-emerald-50'
                       : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
@@ -256,13 +257,13 @@ export function Header() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden lg:flex items-center space-x-4 ml-auto">
+          <div className="hidden lg:flex items-center gap-2 ml-auto">
             <LanguageSelector />
             {user ? (
               <>
                 <NotificationCenter />
                 <Link href="/dashboard">
-                  <Button variant="ghost" size="sm" className="text-gray-700">
+                  <Button variant="ghost" size="sm" className="text-gray-700 whitespace-nowrap">
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Dashboard
                   </Button>
@@ -272,7 +273,7 @@ export function Header() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="text-gray-700">
                       <User className="h-4 w-4 mr-2" />
-                      {user.name || user.email}
+                      <span className="hidden sm:inline">{user.name || user.email}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
@@ -313,12 +314,12 @@ export function Header() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-gray-700">
+                  <Button variant="ghost" size="sm" className="text-gray-700 whitespace-nowrap">
                     Sign In
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white whitespace-nowrap">
                     Get Started
                   </Button>
                 </Link>
@@ -328,8 +329,9 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 ml-auto"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -348,124 +350,124 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
             />
             {/* Mobile Menu */}
-            <div className="fixed left-0 right-0 top-18 bottom-0 bg-white overflow-y-auto z-50 lg:hidden border-t border-gray-200">
-              <div className="flex flex-col space-y-2 p-4">
-              <a
-                href="/"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location === '/'
-                    ? 'text-emerald-600 bg-emerald-50'
-                    : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Home
-              </a>
-              
-              {navigation.map((item) => (
-                <div key={item.name}>
-                  <a
-                    href={item.href}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors block ${
-                      isActive(item.href)
-                        ? 'text-emerald-600 bg-emerald-50'
-                        : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                    }`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                  {item.submenu && (
-                    <div className="ml-4 mt-1 space-y-1">
-                      {item.submenu.map((subItem) => (
-                        <a
-                          key={subItem.name}
-                          href={subItem.href}
-                          className="block px-4 py-2 text-xs text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-lg"
+            <div className="fixed left-0 right-0 top-16 sm:top-18 bottom-0 bg-white overflow-y-auto z-50 lg:hidden border-t border-gray-200">
+              <div className="flex flex-col space-y-1 p-4">
+                <a
+                  href="/"
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    location === '/'
+                      ? 'text-emerald-600 bg-emerald-50'
+                      : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </a>
+                
+                {navigation.map((item) => (
+                  <div key={item.name}>
+                    <a
+                      href={item.href}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors block ${
+                        isActive(item.href)
+                          ? 'text-emerald-600 bg-emerald-50'
+                          : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                      }`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </a>
+                    {item.submenu && (
+                      <div className="ml-4 mt-1 space-y-1">
+                        {item.submenu.map((subItem) => (
+                          <a
+                            key={subItem.name}
+                            href={subItem.href}
+                            className="block px-4 py-2 text-xs text-gray-600 hover:text-emerald-600 hover:bg-gray-50 rounded-lg"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {subItem.name}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                
+                <div className="pt-4 border-t border-gray-200 space-y-2">
+                  {user ? (
+                    <>
+                      <Link href="/dashboard">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-gray-700"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          {subItem.name}
-                        </a>
-                      ))}
-                    </div>
+                          <BarChart3 className="h-4 w-4 mr-2" />
+                          Dashboard
+                        </Button>
+                      </Link>
+                      <Link href="/my-courses">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-gray-700"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          My Courses
+                        </Button>
+                      </Link>
+                      <Link href="/settings">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-gray-700"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <Settings className="h-4 w-4 mr-2" />
+                          Settings
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start text-red-600"
+                        onClick={() => {
+                          logout();
+                          setMobileMenuOpen(false);
+                        }}
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Sign Out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/login">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Sign In
+                        </Button>
+                      </Link>
+                      <Link href="/signup">
+                        <Button
+                          size="sm"
+                          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Get Started
+                        </Button>
+                      </Link>
+                    </>
                   )}
                 </div>
-              ))}
-              
-              <div className="pt-4 border-t border-gray-200 space-y-2">
-                {user ? (
-                  <>
-                    <Link href="/dashboard">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start text-gray-700"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <BarChart3 className="h-4 w-4 mr-2" />
-                        Dashboard
-                      </Button>
-                    </Link>
-                    <Link href="/my-courses">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start text-gray-700"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        My Courses
-                      </Button>
-                    </Link>
-                    <Link href="/settings">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start text-gray-700"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <Settings className="h-4 w-4 mr-2" />
-                        Settings
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full justify-start text-red-600"
-                      onClick={() => {
-                        logout();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Sign Out
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/login">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Sign In
-                      </Button>
-                    </Link>
-                    <Link href="/signup">
-                      <Button
-                        size="sm"
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Get Started
-                      </Button>
-                    </Link>
-                  </>
-                )}
               </div>
-            </div>
             </div>
           </>
         )}
