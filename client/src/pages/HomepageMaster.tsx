@@ -338,20 +338,20 @@ export default function HomepageMaster() {
 
 
           <motion.div {...fadeInUp} className="bg-white bg-opacity-10 border-2 border-white rounded-lg p-10 mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">How CEASAI Solves the Crisis</h3>
+            <h3 className="text-3xl font-bold text-emerald-600 mb-6 text-center">How CEASAI Solves the Crisis</h3>
             <p className="text-lg text-emerald-100 mb-8 max-w-4xl mx-auto text-center leading-relaxed">If we train 100,000-250,000 AI Safety Analysts through CEASAI by February 2026, we solve the impossible regulatory deadline while creating the largest employment opportunity in a generation and making AI fundamentally safer for everyone.</p>
             
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white bg-opacity-5 p-6 rounded-lg border border-white border-opacity-20 hover:bg-opacity-10 transition">
-                <p className="text-emerald-300 font-bold text-lg mb-3">✓ Regulatory Compliance</p>
+                <p className="text-emerald-600 font-bold text-lg mb-3">✓ Regulatory Compliance</p>
                 <p className="text-gray-900 text-sm leading-relaxed">50,000 enterprises get access to certified AI Safety Analysts who can audit their systems and ensure compliance before the Feb 2 deadline. No enterprise gets left behind.</p>
               </div>
               <div className="bg-white bg-opacity-5 p-6 rounded-lg border border-white border-opacity-20 hover:bg-opacity-10 transition">
-                <p className="text-emerald-300 font-bold text-lg mb-3">✓ Mass Employment</p>
+                <p className="text-emerald-600 font-bold text-lg mb-3">✓ Mass Employment</p>
                 <p className="text-gray-900 text-sm leading-relaxed">250,000 new remote jobs created at $45-150/hour. Career paths for developers, researchers, compliance professionals, and anyone passionate about AI safety. Meaningful work that protects humanity.</p>
               </div>
               <div className="bg-white bg-opacity-5 p-6 rounded-lg border border-white border-opacity-20 hover:bg-opacity-10 transition">
-                <p className="text-emerald-300 font-bold text-lg mb-3">✓ AI Safety</p>
+                <p className="text-emerald-600 font-bold text-lg mb-3">✓ AI Safety</p>
                 <p className="text-gray-900 text-sm leading-relaxed">Every AI system gets human expert review. Bias detection. Ethical oversight. Real accountability. The 33-Agent Council ensures decisions are impartial. This is how we make AI safer for everyone.</p>
               </div>
             </div>

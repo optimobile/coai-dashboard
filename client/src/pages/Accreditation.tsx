@@ -91,7 +91,7 @@ export default function Accreditation() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-20">
+      <section className="bg-gradient-to-r from-emerald-900 to-emerald-800 text-white py-20">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex justify-center mb-8">
@@ -306,7 +306,7 @@ export default function Accreditation() {
           <div className="grid md:grid-cols-3 gap-8">
             {accreditationLevels.map((cert, index) => (
               <Card key={index} className="border-2 border-gray-200 hover:shadow-xl transition-shadow">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-green-50">
+                <CardHeader className="bg-gradient-to-r from-emerald-50 to-emerald-50">
                   <div className="text-sm font-semibold text-emerald-600 mb-2">
                     LEVEL {index + 1}
                   </div>
@@ -337,7 +337,7 @@ export default function Accreditation() {
       </section>
 
       {/* For Organizations */}
-      <section className="py-20 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+      <section className="py-20 bg-gradient-to-r from-emerald-900 to-emerald-800 text-white">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">

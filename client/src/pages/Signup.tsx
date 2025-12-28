@@ -42,11 +42,11 @@ export default function Signup() {
   }, [user, setLocation, search]);
 
   const handleSignup = () => {
-    // Pass referral code to OAuth signup endpoint
-    const signupUrl = referralCode 
-      ? `/api/auth/signup?ref=${encodeURIComponent(referralCode)}`
-      : '/api/auth/signup';
-    window.location.href = signupUrl;
+    // Redirect to OAuth login with referral code if available
+    const loginUrl = referralCode 
+      ? `/api/oauth/login?ref=${encodeURIComponent(referralCode)}&signup=true`
+      : '/api/oauth/login?signup=true';
+    window.location.href = loginUrl;
   };
 
   return (

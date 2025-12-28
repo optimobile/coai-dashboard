@@ -92,7 +92,7 @@ export const DashboardIntegrated: React.FC = () => {
   }, [dashboardState.autoRefresh, dashboardState.refreshInterval, handleRefresh]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -118,11 +118,11 @@ export const DashboardIntegrated: React.FC = () => {
 
       {/* Controls */}
       <Card>
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-4">
           <CardTitle className="text-lg">Dashboard Settings</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Auto-Refresh Toggle */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Auto-Refresh</label>

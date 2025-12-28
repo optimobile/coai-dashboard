@@ -73,7 +73,7 @@ export default function MembersDashboard() {
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Header */}
         <div className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
-          <div className="px-6 py-4">
+          <div className="px-8 py-6">
             <h1 className="text-3xl font-bold tracking-tight">Members Dashboard</h1>
             <p className="text-sm text-muted-foreground mt-1">
               Manage your AI safety training, certification, watchdog reports, and regulatory compliance
@@ -109,7 +109,7 @@ export default function MembersDashboard() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
             {/* Overview Tab */}
             <TabsContent value="overview" className="h-full">
-              <div className="p-6">
+              <div className="p-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -122,7 +122,7 @@ export default function MembersDashboard() {
 
             {/* Watchdog Tab */}
             <TabsContent value="watchdog" className="h-full">
-              <div className="p-6 space-y-6">
+              <div className="p-8 space-y-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}

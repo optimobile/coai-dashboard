@@ -74,7 +74,7 @@ export default function MyCourses() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
+      <div className="p-8 space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -101,10 +101,10 @@ export default function MyCourses() {
             </Button>
           </Card>
         ) : (
-          <div className="grid gap-6">
+          <div className="grid gap-8">
             {enrollments.map((enrollment: any) => (
-              <Card key={enrollment.id} className="p-6 hover:shadow-lg transition-shadow">
-                <div className="flex flex-col lg:flex-row gap-6">
+              <Card key={enrollment.id} className="p-8 hover:shadow-lg transition-shadow">
+                <div className="flex flex-col lg:flex-row gap-8">
                   {/* Course Info */}
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-4">
