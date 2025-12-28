@@ -40,6 +40,7 @@ import WatchdogSignup from "./pages/WatchdogSignup";
 import Training from "./pages/Training";
 import TrainingV2 from "./pages/Training-v2";
 import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 import MyCourses from "./pages/MyCourses";
 import CoursePlayer from "./pages/CoursePlayer";
 import Certification from "./pages/Certification";
@@ -215,6 +216,7 @@ function App() {
                   <Route path="/watchdog-hub" component={PublicWatchdogHub} />
                   <Route path="/training" component={TrainingV2} />
                   <Route path="/courses" component={Courses} />
+                  <Route path="/courses/:id" component={CourseDetail} />
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/dashboard/progress" component={StudentProgress} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
