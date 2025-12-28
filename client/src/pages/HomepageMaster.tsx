@@ -172,6 +172,74 @@ export default function HomepageMaster() {
       </section>
 
       {/* ============================================
+          SECTION 2.5: THE MARKET OPPORTUNITY
+          ============================================ */}
+      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-emerald-600">
+        <div className="max-w-6xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">The Regulatory Crisis. The Job Opportunity.</h2>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">50,000 enterprises in the EU must comply with the AI Act by February 2, 2026. That's an impossible deadline without a solution.</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {/* Compliance Need */}
+            <motion.div {...fadeInUp} className="bg-white bg-opacity-95 p-8 rounded-lg">
+              <div className="text-center">
+                <p className="text-5xl font-bold text-blue-600 mb-2">50,000</p>
+                <p className="text-lg font-semibold text-gray-900 mb-2">EU Enterprises</p>
+                <p className="text-gray-600">Need AI compliance by Feb 2, 2026</p>
+              </div>
+            </motion.div>
+
+            {/* Analysts Needed */}
+            <motion.div {...fadeInUp} className="bg-white bg-opacity-95 p-8 rounded-lg">
+              <div className="text-center">
+                <p className="text-5xl font-bold text-emerald-600 mb-2">100,000-250,000</p>
+                <p className="text-lg font-semibold text-gray-900 mb-2">AI Analysts Needed</p>
+                <p className="text-gray-600">2-5 analysts per enterprise to review AI systems</p>
+              </div>
+            </motion.div>
+
+            {/* Current Supply */}
+            <motion.div {...fadeInUp} className="bg-white bg-opacity-95 p-8 rounded-lg">
+              <div className="text-center">
+                <p className="text-5xl font-bold text-red-600 mb-2">0</p>
+                <p className="text-lg font-semibold text-gray-900 mb-2">Current Supply</p>
+                <p className="text-gray-600">This job category doesn't exist yet</p>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div {...fadeInUp} className="bg-white bg-opacity-10 border-2 border-white rounded-lg p-8 text-center">
+            <h3 className="text-2xl font-bold text-white mb-4">The Solution: Mass CEASAI Adoption</h3>
+            <p className="text-lg text-blue-100 mb-6 max-w-3xl mx-auto">If we train 100,000-250,000 AI Safety Analysts through CEASAI by February 2026, we solve THREE problems simultaneously:</p>
+            
+            <div className="grid md:grid-cols-3 gap-6 text-left">
+              <div className="bg-white bg-opacity-10 p-6 rounded-lg border border-white border-opacity-30">
+                <p className="text-emerald-300 font-bold text-lg mb-2">✓ Regulatory Compliance</p>
+                <p className="text-white">50,000 enterprises get the analysts they need to meet the Feb 2 deadline</p>
+              </div>
+              <div className="bg-white bg-opacity-10 p-6 rounded-lg border border-white border-opacity-30">
+                <p className="text-emerald-300 font-bold text-lg mb-2">✓ Mass Employment</p>
+                <p className="text-white">250,000 new jobs created at $45-150/hr, transforming careers globally</p>
+              </div>
+              <div className="bg-white bg-opacity-10 p-6 rounded-lg border border-white border-opacity-30">
+                <p className="text-emerald-300 font-bold text-lg mb-2">✓ AI Safety</p>
+                <p className="text-white">Every AI system gets human expert review, making AI safer for everyone</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div {...fadeInUp} className="text-center mt-12">
+            <p className="text-white text-lg mb-6">This isn't just a business opportunity. It's the only way to solve the regulatory crisis while creating meaningful jobs and protecting humanity.</p>
+            <Button size="lg" onClick={() => openModal('course')} className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-3 text-lg font-bold">
+              Become an AI Safety Analyst Today
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ============================================
           SECTION 3: THE ECOSYSTEM
           ============================================ */}
       <section className="py-20 px-4 bg-gradient-to-b from-emerald-50 to-white">
