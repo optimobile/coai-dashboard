@@ -114,6 +114,8 @@ export function Header() {
         { name: 'Main How It Works', href: '/how-it-works', description: 'Complete pipeline' },
         { name: 'About CSOAI', href: '/about', description: 'Our mission' },
         { name: 'FAQ', href: '/faq', description: 'Common questions' },
+        { name: 'Government Links', href: '/government-links', description: 'Regulatory resources' },
+        { name: 'Regulatory Compliance', href: '/regulatory-compliance', description: 'Compliance guide' },
         { name: 'Knowledge Base', href: '/knowledge-base', description: 'Learning resources' },
         { name: 'Blog', href: '/blog', description: 'News & updates' },
         { name: 'Help Center', href: '/help-center', description: 'Support & guides' },

@@ -141,6 +141,8 @@ import TC260Compliance from "./pages/TC260Compliance";
 import UKAIBillCompliance from "./pages/UKAIBillCompliance";
 import CanadaAIActCompliance from "./pages/CanadaAIActCompliance";
 import AustraliaAIGovernanceCompliance from "./pages/AustraliaAIGovernanceCompliance";
+import GovernmentLinks from "./pages/GovernmentLinks";
+import RegulatoryCompliance from "./pages/RegulatoryCompliance";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -282,6 +284,9 @@ function App() {
                   <Route path="/frameworks/canada-ai-act" component={CanadaAIAct} />
                   {/* Watchdog Incident Reporting */}
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
+                  {/* Government & Regulatory Pages */}
+                  <Route path="/government-links" component={GovernmentLinks} />
+                  <Route path="/regulatory-compliance" component={RegulatoryCompliance} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />

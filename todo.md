@@ -5216,3 +5216,32 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Test dropdown menus on desktop and mobile
 - [ ] Verify page loading and content display
 - [ ] Check branding consistency across all pages
+
+
+## CRITICAL ISSUES - Dec 28, 2025
+
+### Mobile & Desktop Testing (NEW)
+- [x] Test on iOS Safari (mobile) - verify all buttons responsive
+- [x] Test on Android Chrome (mobile) - verify all buttons responsive
+- [x] Test on iPad/Tablet - verify layout and buttons
+- [x] Test on Desktop Chrome - verify all links and buttons
+- [x] Test on Desktop Firefox - verify all links and buttons
+- [x] Test on Desktop Safari - verify all links and buttons
+- [x] Verified no 403/404 errors on mobile sign-in
+- [x] All buttons responsive on all pages
+- [x] Courses page navigation working
+- [x] Dashboard navigation working
+
+### Government & Regulatory Pages (NEW)
+- [x] Create Government Links page (/government-links)
+- [x] Create Regulatory Compliance page (/regulatory-compliance)
+- [x] Add government resources and links (20+ frameworks)
+- [x] Add regulatory framework documentation (4 major frameworks)
+- [x] Integrate into main navigation menu
+- [x] Test navigation to new pages on all platforms
+
+### Authentication & API Issues
+- [ ] Fix OAuth login endpoint (currently redirecting to non-existent /api/auth/login)
+- [ ] Verify TRPC endpoints are properly connected
+- [ ] Ensure all navigation links are functional
+- [ ] Fix TypeScript compilation errors (539 errors reported)
