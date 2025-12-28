@@ -60,9 +60,9 @@ export default function HomepageMaster() {
           {/* Main Headline */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-center mb-12">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 leading-tight">
-              AI is Growing.
+              Securing AI's Future.
               <br />
-              <span className="text-emerald-600">We Fixed the Problem.</span>
+              <span className="text-emerald-600">The Solution to AI Safety & Tomorrow's Challenges.</span>
             </h1>
             <p className="text-2xl text-gray-700 font-semibold mt-6">Four critical solutions. One unified platform.</p>
             <p className="text-lg text-red-600 font-semibold mt-4">Without 250,000 trained analysts by Feb 2, 2026, enterprises face compliance chaos. Our Byzantine Council ensures safety.</p>

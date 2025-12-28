@@ -4916,3 +4916,27 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Create email sequence documentation
 - [ ] Save checkpoint with both features
 - [ ] Deliver to user with metrics and recommendations
+
+
+## Phase 45 - Watchdog Incidents Seeding & Certification Badges (NEW)
+
+### Watchdog Historical Incidents
+- [x] Research real AI incidents from online sources (ChatGPT lawsuit, Tesla crash, Midjourney copyright, etc.)
+- [x] Create watchdog_incidents seeding service with auto-run on startup
+- [x] Add incident upvoting/downvoting system (using existing watchdogReports table)
+- [x] Add incident status tracking (reported/investigating/resolved)
+- [x] Create API endpoints for seeding incidents
+- [x] Seed 20+ historical incidents into database automatically
+- [ ] Verify incidents display on public Watchdog hub
+
+### Certification Badge System
+- [x] Build badge generation service (PNG + HTML embed + SVG)
+- [x] Create badge verification pages at /cert/[id]
+- [x] Add public analyst profile display on badge pages
+- [x] Implement badge sharing to LinkedIn with pre-filled text
+- [x] Create badge download functionality (PNG/SVG)
+- [x] Add badge embed code for websites
+- [x] Create viral loop tracking (clicks, shares, conversions)
+- [x] Add badge statistics dashboard for analysts
+- [ ] Test end-to-end badge generation and sharing
+- [ ] Connect badge API to frontend

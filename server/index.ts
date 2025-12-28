@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import governmentRouter from "./api/government.js";
 import enterpriseRouter from "./api/enterprise.js";
+import watchdogIncidentsRouter from "./api/watchdog-incidents.js";
+import badgesRouter from "./api/badges.js";
 import { initializeWebSocketServer } from "./websocket/server.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -28,6 +30,8 @@ async function startServer() {
   // API Routes
   app.use("/api/government", governmentRouter);
   app.use("/api/v1", enterpriseRouter);
+  app.use("/api/watchdog", watchdogIncidentsRouter);
+  app.use("/api/badges", badgesRouter);
 
   // API Documentation
   app.get("/api/docs", (_req, res) => {
