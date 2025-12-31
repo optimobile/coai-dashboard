@@ -657,6 +657,8 @@ export const users = mysqlTable("users", {
 	brand: varchar({ length: 50 }).default('councilof.ai'),
 	foundingMember: int("founding_member").default(0),
 	referralCode: varchar("referral_code", { length: 50 }),
+	payoutFrequency: mysqlEnum("payout_frequency", ['weekly','biweekly','monthly']).default('monthly'),
+	lastPayoutDate: timestamp("last_payout_date", { mode: 'string' }),
 },
 (table) => [
 	index("users_openId_unique").on(table.openId),

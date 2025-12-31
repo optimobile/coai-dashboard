@@ -111,7 +111,7 @@ export class PayoutSchedulingService {
    * Check if payout is due based on frequency and last payout date
    */
   private static isPayoutDue(lastPayoutDate: string | null, frequency: string): boolean {
-    const now = new Date().toISOString();
+    const now = new Date();
     const last = lastPayoutDate ? new Date(lastPayoutDate) : new Date(0);
 
     const daysSinceLastPayout = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
@@ -205,7 +205,7 @@ export class PayoutSchedulingService {
           break;
       }
 
-      const now = new Date().toISOString();
+      const now = new Date();
       const daysUntilPayout = Math.ceil((nextPayoutDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
       return {

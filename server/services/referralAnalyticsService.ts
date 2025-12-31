@@ -363,7 +363,7 @@ export class ReferralAnalyticsService {
       const payouts = await db
         .select()
         .from(referralPayouts)
-        .where(eq(referralPayouts.userId, userId));
+        .where(eq(referralPayouts.referrerId, userId));
 
       return payouts;
     } catch (error) {

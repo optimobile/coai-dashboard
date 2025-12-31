@@ -5424,3 +5424,11 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Add missing database columns (payoutFrequency, lastPayoutDate in users table)
 - [ ] Fix remaining service file type errors
 - [ ] Add loading states to buttons
+
+
+## Database Schema Updates - Dec 31, 2024
+
+- [x] Add payoutFrequency column to users table (weekly/biweekly/monthly enum)
+- [x] Add lastPayoutDate column to users table (timestamp)
+- [x] Fix payoutSchedulingService getTime() errors (use Date object instead of string)
+- [x] Fix referralAnalyticsService userId reference (use referrerId instead)
