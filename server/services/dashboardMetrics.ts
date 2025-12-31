@@ -96,7 +96,7 @@ export class DashboardMetricsService {
       trend,
       trendPercentage: Math.abs(trendPercentage),
       certificationLevel: certificationLevel as any,
-      lastUpdated: new Date(),
+      lastUpdated: new Date().toISOString(),
       riskLevel,
     };
   }
@@ -113,13 +113,13 @@ export class DashboardMetricsService {
       createdAt: Date;
     }>
   ): WebhookMetrics {
-    const successfulDeliveries = deliveries.filter((d) => d.status === 'delivered').length;
-    const failedDeliveries = deliveries.filter((d) => d.status === 'failed').length;
+    const successfulDeliveries = deliveries.filter((d: any) => d.status === 'delivered').length;
+    const failedDeliveries = deliveries.filter((d: any) => d.status === 'failed').length;
     const totalDeliveries = deliveries.length;
 
     const deliveryTimes = deliveries
-      .filter((d) => d.deliveryTime)
-      .map((d) => d.deliveryTime || 0);
+      .filter((d: any) => d.deliveryTime)
+      .map((d: any) => d.deliveryTime || 0);
     const averageDeliveryTime =
       deliveryTimes.length > 0
         ? deliveryTimes.reduce((a, b) => a + b, 0) / deliveryTimes.length
@@ -128,7 +128,7 @@ export class DashboardMetricsService {
     const successRate =
       totalDeliveries > 0 ? (successfulDeliveries / totalDeliveries) * 100 : 0;
 
-    const lastDelivery = deliveries.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+    const lastDelivery = deliveries.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
 
     return {
       totalSubscriptions,
@@ -155,11 +155,11 @@ export class DashboardMetricsService {
     }>
   ): OnboardingFunnelAnalytics {
     const totalStarted = sessions.length;
-    const completedStep1 = sessions.filter((s) => s.completedSteps.includes(1)).length;
-    const completedStep2 = sessions.filter((s) => s.completedSteps.includes(2)).length;
-    const completedStep3 = sessions.filter((s) => s.completedSteps.includes(3)).length;
-    const completedStep4 = sessions.filter((s) => s.completedSteps.includes(4)).length;
-    const completedStep5 = sessions.filter((s) => s.completedSteps.includes(5)).length;
+    const completedStep1 = sessions.filter((s: any) => s.completedSteps.includes(1)).length;
+    const completedStep2 = sessions.filter((s: any) => s.completedSteps.includes(2)).length;
+    const completedStep3 = sessions.filter((s: any) => s.completedSteps.includes(3)).length;
+    const completedStep4 = sessions.filter((s: any) => s.completedSteps.includes(4)).length;
+    const completedStep5 = sessions.filter((s: any) => s.completedSteps.includes(5)).length;
 
     const conversionRates = {
       step1to2: completedStep1 > 0 ? (completedStep2 / completedStep1) * 100 : 0,
@@ -172,10 +172,10 @@ export class DashboardMetricsService {
     // Calculate average time per step
     const averageTimePerStep: Record<number, number> = {};
     for (let step = 1; step <= 5; step++) {
-      const sessionsAtStep = sessions.filter((s) => s.completedSteps.includes(step));
+      const sessionsAtStep = sessions.filter((s: any) => s.completedSteps.includes(step));
       if (sessionsAtStep.length > 0) {
-        const totalTime = sessionsAtStep.reduce((sum, s) => {
-          return sum + (s.updatedAt.getTime() - s.createdAt.getTime());
+        const totalTime = sessionsAtStep.reduce((sum: number, s: any) => {
+          return sum + (new Date(s.updatedAt).getTime() - new Date(s.createdAt).getTime());
         }, 0);
         averageTimePerStep[step] = Math.round(totalTime / sessionsAtStep.length / 60000); // Convert to minutes
       }
@@ -188,7 +188,7 @@ export class DashboardMetricsService {
       { step: 3, dropoffCount: completedStep2 - completedStep3 },
       { step: 4, dropoffCount: completedStep3 - completedStep4 },
       { step: 5, dropoffCount: completedStep4 - completedStep5 },
-    ].filter((d) => d.dropoffCount > 0);
+    ].filter((d: any) => d.dropoffCount > 0);
 
     return {
       totalStarted,
@@ -230,9 +230,9 @@ export class DashboardMetricsService {
     }>
   ): { highRiskSystems: number; limitedRiskSystems: number; minimalRiskSystems: number } {
     return {
-      highRiskSystems: systems.filter((s) => s.complianceScore < 70).length,
-      limitedRiskSystems: systems.filter((s) => s.complianceScore >= 70 && s.complianceScore < 90).length,
-      minimalRiskSystems: systems.filter((s) => s.complianceScore >= 90).length,
+      highRiskSystems: systems.filter((s: any) => s.complianceScore < 70).length,
+      limitedRiskSystems: systems.filter((s: any) => s.complianceScore >= 70 && s.complianceScore < 90).length,
+      minimalRiskSystems: systems.filter((s: any) => s.complianceScore >= 90).length,
     };
   }
 
@@ -267,7 +267,7 @@ export class DashboardMetricsService {
 
     // Add action items for high-risk systems
     systems
-      .filter((s) => s.complianceScore < 70)
+      .filter((s: any) => s.complianceScore < 70)
       .forEach((system) => {
         items.push({
           id: `action-${system.id}-compliance`,
@@ -304,7 +304,7 @@ export class DashboardMetricsService {
     // Add action item for stale assessments
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     systems
-      .filter((s) => s.lastAssessmentDate < thirtyDaysAgo)
+      .filter((s: any) => s.lastAssessmentDate < thirtyDaysAgo)
       .forEach((system) => {
         items.push({
           id: `action-${system.id}-assessment`,

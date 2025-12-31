@@ -28,7 +28,7 @@ describe('Phase 24 Features', () => {
         recipientEmail: 'test@example.com',
         phaseName: 'Critical Remediation',
         phaseNumber: 1,
-        completedAt: new Date(),
+        completedAt: new Date().toISOString(),
         organizationName: 'Test Organization',
         dashboardUrl: 'https://dashboard.example.com',
       };
@@ -59,7 +59,7 @@ describe('Phase 24 Features', () => {
           {
             title: 'Alert 1',
             severity: 'high',
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
           },
         ],
         completedPhases: ['Phase 1: Critical Remediation'],
@@ -111,7 +111,7 @@ describe('Phase 24 Features', () => {
         recipientEmail: 'test+special@example.com',
         phaseName: 'Phase 1: Critical & Urgent Remediation',
         phaseNumber: 1,
-        completedAt: new Date(),
+        completedAt: new Date().toISOString(),
         organizationName: 'Test & Co. Organization',
         dashboardUrl: 'https://dashboard.example.com?phase=1&status=complete',
       };
@@ -210,7 +210,7 @@ describe('Phase 24 Features', () => {
         url: 'https://example.com/webhooks',
         events: ['alert.created', 'phase.completed'],
         active: true,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
         deliveryCount: 0,
         failureCount: 0,
       };
@@ -227,7 +227,7 @@ describe('Phase 24 Features', () => {
         status: 'success' as const,
         statusCode: 200,
         responseTime: 245,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
         payload: { alertId: 'alert-123' },
       };
 
@@ -278,7 +278,7 @@ describe('Phase 24 Features', () => {
         recipientEmail: 'user@example.com',
         phaseName: 'Critical Remediation',
         phaseNumber: 1,
-        completedAt: new Date(),
+        completedAt: new Date().toISOString(),
         organizationName: 'Test Org',
         dashboardUrl: 'https://dashboard.example.com',
       };
@@ -317,7 +317,7 @@ describe('Phase 24 Features', () => {
 
       const event = {
         type: 'alert.created',
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
         data: { alertId: 'alert-123' },
       };
 

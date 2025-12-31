@@ -111,8 +111,8 @@ export async function triggerEmailSequence(
       status: "active",
       currentStep: 1,
       metadata: JSON.stringify(metadata || {}),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
 
     // Send first email in sequence
@@ -181,7 +181,7 @@ export async function processScheduledEmails(): Promise<{
           // Sequence complete
           await db
             .update(emailSequences)
-            .set({ status: "completed", updatedAt: new Date() })
+            .set({ status: "completed", updatedAt: new Date().toISOString() })
             .where(eq(emailSequences.id, sequence.id));
           continue;
         }
@@ -190,7 +190,7 @@ export async function processScheduledEmails(): Promise<{
         const createdDate = new Date(sequence.createdAt);
         const scheduledDate = new Date(createdDate.getTime() + nextEmail.delayDays * 24 * 60 * 60 * 1000);
 
-        if (new Date() >= scheduledDate && nextEmail.enabled) {
+        if (new Date().toISOString() >= scheduledDate && nextEmail.enabled) {
           // Get user details
           const userRecord = await db
             .select()
@@ -220,7 +220,7 @@ export async function processScheduledEmails(): Promise<{
                   .update(emailSequences)
                   .set({
                     currentStep: sequence.currentStep + 1,
-                    updatedAt: new Date(),
+                    updatedAt: new Date().toISOString(),
                   })
                   .where(eq(emailSequences.id, sequence.id));
 
@@ -261,7 +261,7 @@ export async function cancelEmailSequence(sequenceId: number): Promise<{ success
 
     await db
       .update(emailSequences)
-      .set({ status: "cancelled", updatedAt: new Date() })
+      .set({ status: "cancelled", updatedAt: new Date().toISOString() })
       .where(eq(emailSequences.id, sequenceId));
 
     return { success: true };

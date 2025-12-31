@@ -233,7 +233,7 @@ export function broadcastToAll(message: RealtimeMessage) {
  * Broadcast to users in an organization
  */
 export async function broadcastToOrganization(organizationId: number, message: RealtimeMessage) {
-  const db = getDb();
+  const db = await getDb();
 
   try {
     // This would require a join with users table to find all users in the organization

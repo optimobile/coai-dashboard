@@ -160,7 +160,7 @@ describe('Real-Time Features', () => {
               { id: 'a1', title: 'Action 1', completed: true },
               { id: 'a2', title: 'Action 2', completed: true },
             ],
-            completedAt: new Date(),
+            completedAt: new Date().toISOString(),
           },
           {
             phase: 2,

@@ -4,8 +4,8 @@
  * 20% commission per referred analyst certification
  */
 
-import { db } from '@/server/db';
-import { users } from '@/drizzle/schema';
+import { db } from '../db';
+import { users } from '../../drizzle/schema';
 import { eq } from 'drizzle-orm';
 import crypto from 'crypto';
 
@@ -80,7 +80,7 @@ export class ReferralProgramService {
       //   referralCode: code,
       //   status: 'active',
       //   expiresAt,
-      //   createdAt: new Date(),
+      //   createdAt: new Date().toISOString(),
       // });
 
       return {
@@ -108,7 +108,7 @@ export class ReferralProgramService {
       //   .set({
       //     referredUserId,
       //     status: 'converted',
-      //     conversionDate: new Date(),
+      //     conversionDate: new Date().toISOString(),
       //     commissionAmount,
       //   })
       //   .where(eq(referrals.referralCode, referralCode));
@@ -120,7 +120,7 @@ export class ReferralProgramService {
       //   commissionRate: this.COMMISSION_RATE,
       //   commissionAmount,
       //   status: 'earned',
-      //   createdAt: new Date(),
+      //   createdAt: new Date().toISOString(),
       // });
 
       return {
@@ -276,7 +276,7 @@ Looking forward to seeing you in the program!
       //   where: eq(referrals.referralCode, code),
       // });
 
-      // return referral && referral.status === 'active' && new Date() < referral.expiresAt;
+      // return referral && referral.status === 'active' && new Date().toISOString() < referral.expiresAt;
 
       return true; // Placeholder
     } catch (error) {

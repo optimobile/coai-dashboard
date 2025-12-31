@@ -86,7 +86,7 @@ export class NotificationService {
         message,
         data,
         channels: [],
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
         status: "pending"
       };
     }
@@ -100,7 +100,7 @@ export class NotificationService {
       message,
       data,
       channels: recipient.preferences.channels,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       status: "pending"
     };
 
@@ -148,7 +148,7 @@ export class NotificationService {
     }
 
     await Promise.allSettled(sendPromises);
-    notification.sentAt = new Date();
+    notification.sentAt = new Date().toISOString();
     notification.status = "sent";
   }
 
@@ -247,7 +247,7 @@ export class NotificationService {
 
     // Check if in quiet hours
     if (preferences.quietHours?.enabled) {
-      const now = new Date();
+      const now = new Date().toISOString();
       const currentTime = now.toLocaleTimeString("en-US", {
         hour12: false,
         hour: "2-digit",
@@ -316,7 +316,7 @@ export class NotificationService {
     const notification = this.notifications.get(notificationId);
     if (!notification) return null;
 
-    notification.readAt = new Date();
+    notification.readAt = new Date().toISOString();
     notification.status = "read";
     // TODO: Update in database
     return notification;

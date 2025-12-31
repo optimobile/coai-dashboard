@@ -80,7 +80,7 @@ export const certificatesRouter = router({
           studentName: ctx.user.name || 'Student',
           courseName: course.title,
           framework: course.framework || 'General',
-          completionDate: enrollment.completedAt || new Date(),
+          completionDate: enrollment.completedAt || new Date().toISOString(),
           verificationUrl: `${process.env.VITE_FRONTEND_FORGE_API_URL || 'https://coai.manus.space'}/verify-certificate/${certificateId}`,
         });
 
@@ -89,7 +89,7 @@ export const certificatesRouter = router({
           userId: ctx.user.id,
           courseId: input.courseId,
           certificateId,
-          issuedAt: new Date(),
+          issuedAt: new Date().toISOString(),
         });
 
         return {

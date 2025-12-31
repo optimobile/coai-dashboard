@@ -156,8 +156,8 @@ export class WebhookQueueService {
         url: subscription.url,
         status: DeliveryStatus.PENDING,
         attemptCount: 0,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
 
       this.queue.set(delivery.id, delivery);
@@ -176,7 +176,7 @@ export class WebhookQueueService {
     event: WebhookEventPayload
   ): Promise<void> {
     delivery.attemptCount++;
-    delivery.updatedAt = new Date();
+    delivery.updatedAt = new Date().toISOString();
 
     console.log(
       `[WebhookQueue] Attempting delivery ${delivery.attemptCount}/${this.MAX_RETRIES}: ${delivery.id}`
@@ -188,7 +188,7 @@ export class WebhookQueueService {
       if (response.success) {
         delivery.status = DeliveryStatus.DELIVERED;
         delivery.httpStatus = response.httpStatus;
-        delivery.deliveredAt = new Date();
+        delivery.deliveredAt = new Date().toISOString();
         console.log(`[WebhookQueue] Delivery successful: ${delivery.id}`);
       } else {
         this.handleDeliveryFailure(delivery, response);
@@ -312,7 +312,7 @@ export class WebhookQueueService {
       const event: WebhookEventPayload = {
         id: delivery.eventId,
         type: "compliance.requirement.updated" as WebhookEventType, // This would come from DB in production
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
         data: {},
         companyId: this.subscriptions.get(delivery.subscriptionId)?.companyId || ""
       };

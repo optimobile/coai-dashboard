@@ -267,7 +267,7 @@ export const jobsRouter = router({
 
     return {
       locations: locations.map((l) => l.location).filter(Boolean),
-      companies: companies.map((c) => c.company).filter(Boolean),
+      companies: companies.map((c: any) => c.company).filter(Boolean),
       certifications: [
         "CSOAI Foundation",
         "CSOAI Professional",
@@ -340,7 +340,7 @@ export const jobsRouter = router({
         .set({
           status: input.status === 'pending' ? 'submitted' : input.status === 'reviewed' ? 'reviewing' : input.status,
           employerResponse: input.employerResponse,
-          statusUpdatedAt: new Date(),
+          statusUpdatedAt: new Date().toISOString(),
         })
         .where(eq(jobApplications.id, input.applicationId));
 

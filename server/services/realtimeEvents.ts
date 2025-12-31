@@ -239,7 +239,7 @@ export async function markEventAsRead(eventId: number) {
       .update(realtimeEvents)
       .set({
         isRead: true,
-        readAt: new Date(),
+        readAt: new Date().toISOString(),
       })
       .where(eq(realtimeEvents.id, eventId));
   } catch (error) {

@@ -11,7 +11,7 @@ describe("Analytics & Email Onboarding Integration", () => {
       const event = {
         eventType: "signup_completed",
         userId: 1,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       };
       expect(event.eventType).toBe("signup_completed");
       expect(event.userId).toBe(1);
@@ -155,11 +155,11 @@ describe("Analytics & Email Onboarding Integration", () => {
 
     it("should correlate analytics events with email engagement", () => {
       const events = [
-        { type: "signup_completed", timestamp: new Date() },
-        { type: "email_sent", templateId: "welcome", timestamp: new Date() },
-        { type: "email_opened", templateId: "welcome", timestamp: new Date() },
-        { type: "course_started", timestamp: new Date() },
-        { type: "course_completed", timestamp: new Date() },
+        { type: "signup_completed", timestamp: new Date().toISOString() },
+        { type: "email_sent", templateId: "welcome", timestamp: new Date().toISOString() },
+        { type: "email_opened", templateId: "welcome", timestamp: new Date().toISOString() },
+        { type: "course_started", timestamp: new Date().toISOString() },
+        { type: "course_completed", timestamp: new Date().toISOString() },
       ];
 
       expect(events).toHaveLength(5);
@@ -226,7 +226,7 @@ describe("Analytics & Email Onboarding Integration", () => {
       const events = Array.from({ length: 10000 }, (_, i) => ({
         id: i,
         type: "event",
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       }));
       const endTime = Date.now();
 

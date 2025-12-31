@@ -28,11 +28,11 @@ export const complianceRouter = router({
         let requirements = EUAiActComplianceService.getRequirements();
 
         if (input.riskLevel) {
-          requirements = requirements.filter((r) => r.riskLevel === input.riskLevel);
+          requirements = requirements.filter((r: any) => r.riskLevel === input.riskLevel);
         }
 
         if (input.article) {
-          requirements = requirements.filter((r) => r.article === input.article);
+          requirements = requirements.filter((r: any) => r.article === input.article);
         }
 
         if (input.systemType) {

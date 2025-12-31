@@ -63,7 +63,7 @@ export const webhooksRouter = router({
           events: input.events,
           secret,
           isActive: true,
-          createdAt: new Date(),
+          createdAt: new Date().toISOString(),
         };
 
         webhookSubscriptions.set(subscriptionId, subscription);
@@ -233,8 +233,8 @@ export const webhooksRouter = router({
         }
 
         const deliveries = Array.from(webhookDeliveries.values())
-          .filter((d) => d.subscriptionId === input.subscriptionId)
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+          .filter((d: any) => d.subscriptionId === input.subscriptionId)
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
           .slice(input.offset, input.offset + input.limit);
 
         return {
@@ -283,7 +283,7 @@ export const webhooksRouter = router({
         const testPayload = {
           id: `test_${Date.now()}`,
           type: 'webhook.test',
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           data: {
             message: 'This is a test webhook delivery',
             subscriptionId: input.subscriptionId,
@@ -315,8 +315,8 @@ export const webhooksRouter = router({
             status: response.ok ? 'delivered' : 'failed' as const,
             httpStatus: response.status,
             attemptCount: 1,
-            deliveredAt: response.ok ? new Date() : undefined,
-            createdAt: new Date(),
+            deliveredAt: response.ok ? new Date().toISOString() : undefined,
+            createdAt: new Date().toISOString(),
           };
 
           webhookDeliveries.set(delivery.id, delivery);
@@ -334,7 +334,7 @@ export const webhooksRouter = router({
             status: 'failed' as const,
             error: String(error),
             attemptCount: 1,
-            createdAt: new Date(),
+            createdAt: new Date().toISOString(),
           };
 
           webhookDeliveries.set(delivery.id, delivery);
@@ -373,7 +373,7 @@ export const webhooksRouter = router({
         const payload = {
           id: `rule_${Date.now()}`,
           type: `rule.${input.changeType}`,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           data: {
             ruleId: input.ruleId,
             ruleName: input.ruleName,
@@ -410,7 +410,7 @@ export const webhooksRouter = router({
 
             if (response.ok) {
               deliveredCount++;
-              subscription.lastTriggeredAt = new Date();
+              subscription.lastTriggeredAt = new Date().toISOString();
             } else {
               failedCount++;
             }

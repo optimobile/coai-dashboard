@@ -182,8 +182,8 @@ export const bulkImportRouter = router({
             ...system,
             userId,
             status: "active" as const,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           }));
 
           await db.insert(aiSystems).values(insertData);
@@ -283,8 +283,8 @@ export const bulkImportRouter = router({
             ...system,
             userId,
             status: "active" as const,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           }));
 
           await db.insert(aiSystems).values(insertData);

@@ -4,10 +4,10 @@
  * Handles session initialization, monitoring, submission, and certificate flagging
  */
 
-import { db } from '@/server/db';
-import { userTestAttempts, userCertificates, proctoringSessions } from '@/drizzle/schema';
+import { db } from '../db';
+import { userTestAttempts, userCertificates, proctoringSessions } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
-import { ExamProctoringService } from '@/server/services/examProctoring';
+import { ExamProctoringService } from '../services/examProctoring';
 
 export interface ExamSessionConfig {
   userId: string;
@@ -41,7 +41,7 @@ export class ExamSessionService {
       const attempt = await db.insert(userTestAttempts).values({
         userId: config.userId,
         testId: parseInt(config.examId),
-        startedAt: new Date(),
+        startedAt: new Date().toISOString(),
         status: 'in_progress',
         score: 0,
         passed: false,
@@ -60,7 +60,7 @@ export class ExamSessionService {
           recordSession: true,
           allowScreenSharing: false,
           allowExternalApps: false,
-          startTime: new Date(),
+          startTime: new Date().toISOString(),
           endTime: new Date(Date.now() + config.durationMinutes * 60 * 1000),
         });
       }
@@ -68,7 +68,7 @@ export class ExamSessionService {
       return {
         attemptId,
         proctoringSessionId,
-        startTime: new Date(),
+        startTime: new Date().toISOString(),
         endTime: new Date(Date.now() + config.durationMinutes * 60 * 1000),
         requiresProctoring: config.requireProctoring,
       };
@@ -128,7 +128,7 @@ export class ExamSessionService {
       await db
         .update(userTestAttempts)
         .set({
-          completedAt: new Date(),
+          completedAt: new Date().toISOString(),
           status: passed && proctoringStatus !== 'invalid' ? 'completed' : 'flagged',
           score,
           passed: passed && proctoringStatus !== 'invalid',
@@ -188,7 +188,7 @@ export class ExamSessionService {
       if (testId === 3) certificationType = 'expert';
 
       // Calculate expiration (3 years)
-      const expiresAt = new Date();
+      const expiresAt = new Date().toISOString();
       expiresAt.setFullYear(expiresAt.getFullYear() + 3);
 
       // Create certificate with proctoring metadata
@@ -197,7 +197,7 @@ export class ExamSessionService {
         certificateNumber,
         certificationType,
         status: proctoringStatus === 'flagged' ? 'pending_review' : 'active',
-        issuedAt: new Date(),
+        issuedAt: new Date().toISOString(),
         expiresAt,
         proctoringStatus,
         integrityScore,
@@ -279,7 +279,7 @@ export class ExamSessionService {
       }
 
       // Check expiration
-      if (certificate.expiresAt && new Date() > certificate.expiresAt) {
+      if (certificate.expiresAt && new Date().toISOString() > certificate.expiresAt) {
         return {
           valid: false,
           message: 'Certificate has expired',
@@ -332,13 +332,13 @@ export class ExamSessionService {
           new Date(a.completedAt) <= endDate,
       );
 
-      const proctoredAttempts = filtered.filter((a) => a.proctoringSessionId);
-      const flaggedAttempts = filtered.filter((a) => a.proctoringStatus === 'flagged');
-      const invalidAttempts = filtered.filter((a) => a.proctoringStatus === 'invalid');
+      const proctoredAttempts = filtered.filter((a: any) => a.proctoringSessionId);
+      const flaggedAttempts = filtered.filter((a: any) => a.proctoringStatus === 'flagged');
+      const invalidAttempts = filtered.filter((a: any) => a.proctoringStatus === 'invalid');
 
       const avgIntegrityScore =
         proctoredAttempts.length > 0
-          ? proctoredAttempts.reduce((sum, a) => sum + (a.integrityScore || 0), 0) /
+          ? proctoredAttempts.reduce((sum: number, a: any) => sum + (a.integrityScore || 0), 0) /
             proctoredAttempts.length
           : 0;
 
@@ -350,7 +350,7 @@ export class ExamSessionService {
         flaggedAttempts: flaggedAttempts.length,
         invalidAttempts: invalidAttempts.length,
         avgIntegrityScore: Math.round(avgIntegrityScore),
-        passRate: filtered.length > 0 ? (filtered.filter((a) => a.passed).length / filtered.length) * 100 : 0,
+        passRate: filtered.length > 0 ? (filtered.filter((a: any) => a.passed).length / filtered.length) * 100 : 0,
       };
     } catch (error) {
       console.error('Failed to get integrity report:', error);

@@ -3,11 +3,11 @@
  * tRPC endpoints for exam proctoring, government portal, and referral program
  */
 
-import { router, publicProcedure, protectedProcedure } from '@/server/_core/trpc';
+import { router, publicProcedure, protectedProcedure } from '../_core/trpc';
 import { z } from 'zod';
-import { ExamProctoringService } from '@/server/services/examProctoring';
-import { GovernmentPortalService } from '@/server/services/governmentPortal';
-import { ReferralProgramService } from '@/server/services/referralProgram';
+import { ExamProctoringService } from '../services/examProctoring';
+import { GovernmentPortalService } from '../services/governmentPortal';
+import { ReferralProgramService } from '../services/referralProgram';
 import { TRPCError } from '@trpc/server';
 
 /**
@@ -31,7 +31,7 @@ export const proctoringRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       try {
-        const startTime = new Date();
+        const startTime = new Date().toISOString();
         const endTime = new Date(startTime.getTime() + input.durationMinutes * 60 * 1000);
 
         const sessionId = await ExamProctoringService.startSession({
@@ -85,7 +85,7 @@ export const proctoringRouter = router({
           type: input.eventType,
           severity: input.severity,
           description: input.description,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           metadata: input.metadata,
         });
 
@@ -160,7 +160,7 @@ export const proctoringRouter = router({
     .query(async ({ input }) => {
       try {
         const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-        const endDate = input.endDate || new Date();
+        const endDate = input.endDate || new Date().toISOString();
 
         const stats = await ExamProctoringService.getStatistics(startDate, endDate);
         return stats;

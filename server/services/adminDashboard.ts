@@ -111,7 +111,7 @@ export class AdminDashboard {
       systemHealth: avgHealth,
       averageLatency: avgLatency,
       errorRate: avgErrorRate,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
     };
   }
 
@@ -250,7 +250,7 @@ export class AdminDashboard {
       alerts.push({
         severity: "critical",
         message: `High error rate detected: ${metrics.errorRate.toFixed(2)}%`,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       });
     }
 
@@ -258,7 +258,7 @@ export class AdminDashboard {
       alerts.push({
         severity: "warning",
         message: `High latency detected: ${metrics.averageLatency.toFixed(0)}ms`,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       });
     }
 
@@ -266,7 +266,7 @@ export class AdminDashboard {
       alerts.push({
         severity: "info",
         message: `High connection count: ${metrics.activeConnections}`,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       });
     }
 
@@ -274,7 +274,7 @@ export class AdminDashboard {
       alerts.push({
         severity: "critical",
         message: `System health critical: ${metrics.systemHealth.toFixed(0)}%`,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       });
     }
 

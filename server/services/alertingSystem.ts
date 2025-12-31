@@ -88,7 +88,7 @@ export class AlertingSystem {
       description,
       organizationId,
       systemId,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       metadata,
     };
 
@@ -366,7 +366,7 @@ export class AlertingSystem {
         description: alert.description,
         severity: alert.severity,
         read: false,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
 
       console.log(`In-app notification created: ${JSON.stringify(notification)}`);
@@ -473,7 +473,7 @@ export class AlertingSystem {
    * Check if current time is in quiet hours
    */
   private isInQuietHours(quietHours: { start: string; end: string }): boolean {
-    const now = new Date();
+    const now = new Date().toISOString();
     const currentTime = now.getHours() * 60 + now.getMinutes();
 
     const [startHour, startMin] = quietHours.start.split(':').map(Number);
@@ -510,7 +510,7 @@ export class AlertingSystem {
   resolveAlert(alertId: string): Alert | undefined {
     const alert = this.alerts.get(alertId);
     if (alert) {
-      alert.resolvedAt = new Date();
+      alert.resolvedAt = new Date().toISOString();
     }
     return alert;
   }
@@ -523,15 +523,15 @@ export class AlertingSystem {
 
     return {
       total: alerts.length,
-      unresolved: alerts.filter((a) => !a.resolvedAt).length,
-      critical: alerts.filter((a) => a.severity === 'critical').length,
-      high: alerts.filter((a) => a.severity === 'high').length,
-      medium: alerts.filter((a) => a.severity === 'medium').length,
-      low: alerts.filter((a) => a.severity === 'low').length,
+      unresolved: alerts.filter((a: any) => !a.resolvedAt).length,
+      critical: alerts.filter((a: any) => a.severity === 'critical').length,
+      high: alerts.filter((a: any) => a.severity === 'high').length,
+      medium: alerts.filter((a: any) => a.severity === 'medium').length,
+      low: alerts.filter((a: any) => a.severity === 'low').length,
       byType: Object.fromEntries(
         Array.from(
-          new Set(alerts.map((a) => a.type)).values()
-        ).map((type) => [type, alerts.filter((a) => a.type === type).length])
+          new Set(alerts.map((a: any) => a.type)).values()
+        ).map((type) => [type, alerts.filter((a: any) => a.type === type).length])
       ),
     };
   }

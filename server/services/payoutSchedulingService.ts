@@ -27,7 +27,7 @@ export class PayoutSchedulingService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
       let payoutsProcessed = 0;
       let totalAmount = 0;
 
@@ -111,7 +111,7 @@ export class PayoutSchedulingService {
    * Check if payout is due based on frequency and last payout date
    */
   private static isPayoutDue(lastPayoutDate: string | null, frequency: string): boolean {
-    const now = new Date();
+    const now = new Date().toISOString();
     const last = lastPayoutDate ? new Date(lastPayoutDate) : new Date(0);
 
     const daysSinceLastPayout = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
@@ -140,7 +140,7 @@ export class PayoutSchedulingService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
 
       await db
         .update(users)
@@ -172,7 +172,7 @@ export class PayoutSchedulingService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
 
       const user = await db
         .select()
@@ -205,7 +205,7 @@ export class PayoutSchedulingService {
           break;
       }
 
-      const now = new Date();
+      const now = new Date().toISOString();
       const daysUntilPayout = Math.ceil((nextPayoutDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
       return {
@@ -325,7 +325,7 @@ export class PayoutSchedulingService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
 
       // Get user
       const user = await db

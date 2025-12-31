@@ -250,7 +250,7 @@ describe('Advanced Features', () => {
       const roadmap = await roadmapGenerator.generateRoadmap('org-1', gaps, ['Compliance Officer'], 6);
 
       expect(roadmap.recommendations.length).toBeGreaterThan(0);
-      expect(roadmap.recommendations.some((r) => r.includes('critical'))).toBe(true);
+      expect(roadmap.recommendations.some((r: any) => r.includes('critical'))).toBe(true);
     });
 
     it('should generate roadmap summary', async () => {

@@ -79,7 +79,7 @@ export const modulePopulationRouter = router({
         await ctx.db.update(courses)
           .set({ 
             modules: updatedNistModules,
-            updatedAt: new Date()
+            updatedAt: new Date().toISOString()
           })
           .where(eq(courses.id, nistCourse.id));
 
@@ -120,7 +120,7 @@ export const modulePopulationRouter = router({
         await ctx.db.update(courses)
           .set({ 
             modules: updatedIsoModules,
-            updatedAt: new Date()
+            updatedAt: new Date().toISOString()
           })
           .where(eq(courses.id, isoCourse.id));
         

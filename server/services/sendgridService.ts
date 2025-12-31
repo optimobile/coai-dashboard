@@ -384,13 +384,13 @@ COAI Dashboard • AI Safety Certification Platform
 Weekly Digest - ${data.organizationName}
 
 Recent Alerts (${data.alerts.length}):
-${data.alerts.map((a) => `- ${a.title} (${a.severity})`).join('\n')}
+${data.alerts.map((a: any) => `- ${a.title} (${a.severity})`).join('\n')}
 
 Completed Phases:
-${data.completedPhases.length > 0 ? data.completedPhases.map((p) => `- ${p}`).join('\n') : 'None'}
+${data.completedPhases.length > 0 ? data.completedPhases.map((p: any) => `- ${p}`).join('\n') : 'None'}
 
 Upcoming Deadlines:
-${data.upcomingDeadlines.length > 0 ? data.upcomingDeadlines.map((d) => `- ${d.name} (${d.dueDate.toLocaleDateString()})`).join('\n') : 'None'}
+${data.upcomingDeadlines.length > 0 ? data.upcomingDeadlines.map((d: any) => `- ${d.name} (${d.dueDate.toLocaleDateString()})`).join('\n') : 'None'}
 
 View dashboard: https://dashboard.coai.com
 

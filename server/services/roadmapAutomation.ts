@@ -45,12 +45,12 @@ export class RoadmapAutomationService {
       if (phase.completedAt) continue;
 
       // Calculate completion percentage
-      const completedActions = phase.actions.filter((a) => a.completed).length;
+      const completedActions = phase.actions.filter((a: any) => a.completed).length;
       const completionPercentage = (completedActions / phase.actions.length) * 100;
 
       // Auto-complete phase if all actions are done
       if (completionPercentage === 100 && !phase.completedAt) {
-        phase.completedAt = new Date();
+        phase.completedAt = new Date().toISOString();
         hasChanges = true;
 
         // Trigger phase completion event
@@ -142,7 +142,7 @@ export class RoadmapAutomationService {
     }
 
     const phase = roadmap.phases[phaseIndex];
-    const action = phase.actions.find((a) => a.id === actionId);
+    const action = phase.actions.find((a: any) => a.id === actionId);
 
     if (!action) {
       throw new Error('Action not found');
@@ -150,7 +150,7 @@ export class RoadmapAutomationService {
 
     // Mark action as completed
     action.completed = true;
-    action.completedAt = new Date();
+    action.completedAt = new Date().toISOString();
 
     // Check if phase should be auto-completed
     return this.checkPhaseProgression(roadmap, userId);
@@ -162,7 +162,7 @@ export class RoadmapAutomationService {
   private calculateEstimatedCompletion(actionCount: number): Date {
     // Estimate: 2 hours per action on average
     const estimatedHours = actionCount * 2;
-    const estimatedDate = new Date();
+    const estimatedDate = new Date().toISOString();
     estimatedDate.setHours(estimatedDate.getHours() + estimatedHours);
     return estimatedDate;
   }
@@ -176,7 +176,7 @@ export class RoadmapAutomationService {
 
     phases.forEach((phase) => {
       totalActions += phase.actions.length;
-      completedActions += phase.actions.filter((a) => a.completed).length;
+      completedActions += phase.actions.filter((a: any) => a.completed).length;
     });
 
     return totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
@@ -198,7 +198,7 @@ export class RoadmapAutomationService {
       if (phase.completedAt) {
         status = 'completed';
       } else {
-        const completedActions = phase.actions.filter((a) => a.completed).length;
+        const completedActions = phase.actions.filter((a: any) => a.completed).length;
         if (completedActions > 0) {
           status = 'in_progress';
         }
@@ -224,7 +224,7 @@ export class RoadmapAutomationService {
     remainingActions: number;
   } {
     const totalActions = phase.actions.length;
-    const completedActions = phase.actions.filter((a) => a.completed).length;
+    const completedActions = phase.actions.filter((a: any) => a.completed).length;
     const completionPercentage = (completedActions / totalActions) * 100;
     const remainingActions = totalActions - completedActions;
 

@@ -142,7 +142,7 @@ export class UserProvisioningService {
     role: "admin" | "analyst" | "viewer";
     attributes: Record<string, unknown>;
   }): Promise<ProvisionedUser> {
-    const now = new Date();
+    const now = new Date().toISOString();
 
     // Check if user already exists
     const existingUser = await this.getUserByEmail(oauthUser.email, oauthUser.jurisdiction);
@@ -364,7 +364,7 @@ export class SessionManager {
     if (!session) return false;
 
     // Check if session is expired
-    if (session.expiresAt < new Date()) {
+    if (session.expiresAt < new Date().toISOString()) {
       this.sessions.delete(sessionId);
       return false;
     }
@@ -380,7 +380,7 @@ export class SessionManager {
     const session = this.sessions.get(sessionId);
     if (!session) return null;
 
-    if (session.expiresAt < new Date()) {
+    if (session.expiresAt < new Date().toISOString()) {
       this.sessions.delete(sessionId);
       return null;
     }
@@ -399,7 +399,7 @@ export class SessionManager {
    * Cleanup expired sessions
    */
   cleanupExpiredSessions(): void {
-    const now = new Date();
+    const now = new Date().toISOString();
     const sessionsArray = Array.from(this.sessions.entries());
     for (const [sessionId, session] of sessionsArray) {
       if (session.expiresAt < now) {

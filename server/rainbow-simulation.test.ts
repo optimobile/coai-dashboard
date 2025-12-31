@@ -32,7 +32,7 @@ describe("Rainbow Simulation Tests", () => {
       );
 
       const results = await Promise.allSettled(promises);
-      const successful = results.filter((r) => r.status === "fulfilled").length;
+      const successful = results.filter((r: any) => r.status === "fulfilled").length;
 
       // Should handle at least 90% success rate under high load
       expect(successful).toBeGreaterThan(90);
@@ -50,7 +50,7 @@ describe("Rainbow Simulation Tests", () => {
       );
 
       const results = await Promise.allSettled(promises);
-      const successful = results.filter((r) => r.status === "fulfilled").length;
+      const successful = results.filter((r: any) => r.status === "fulfilled").length;
 
       expect(successful).toBeGreaterThan(45); // 90% success rate
     });
@@ -206,7 +206,7 @@ describe("Rainbow Simulation Tests", () => {
       const results = await Promise.allSettled(promises);
 
       // At least one should succeed
-      const successful = results.filter((r) => r.status === "fulfilled");
+      const successful = results.filter((r: any) => r.status === "fulfilled");
       expect(successful.length).toBeGreaterThan(0);
 
       // Verify final state is consistent (one of the updates applied)

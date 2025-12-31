@@ -41,7 +41,7 @@ describe("Compliance Report Generation", () => {
           id: 1,
           overallScore: 75,
           status: "completed",
-          completedAt: new Date(),
+          completedAt: new Date().toISOString(),
         },
         items: [
           {
@@ -153,7 +153,7 @@ describe("Compliance Report Generation", () => {
       const mockData = {
         aiSystem: { id: 1, name: "Test", systemType: "chatbot", riskLevel: "high" },
         framework: { id: 1, code: "EU_AI_ACT", name: "EU AI Act", version: "2024" },
-        assessment: { id: 1, overallScore: 80, status: "completed", completedAt: new Date() },
+        assessment: { id: 1, overallScore: 80, status: "completed", completedAt: new Date().toISOString() },
         items: [{ id: 1, status: "compliant", evidence: "Test evidence" }],
         generatedBy: "Tester",
       };
@@ -179,7 +179,7 @@ describe("Compliance Report Generation", () => {
       const mockData = {
         aiSystem: { id: 1, name: "Test", systemType: "analysis", riskLevel: "limited" },
         framework: { id: 1, code: "NIST_RMF", name: "NIST RMF", version: "1.0" },
-        assessment: { id: 1, overallScore: 65, status: "completed", completedAt: new Date() },
+        assessment: { id: 1, overallScore: 65, status: "completed", completedAt: new Date().toISOString() },
         items: [{ id: 1, status: "partial", notes: "Needs improvement" }],
         generatedBy: "Analyst",
       };
@@ -199,7 +199,7 @@ describe("Compliance Report Generation", () => {
       const euData = {
         aiSystem: { id: 1, name: "EU System", systemType: "chatbot", riskLevel: "high" },
         framework: { id: 1, code: "EU_AI_ACT", name: "EU AI Act", version: "2024/1689" },
-        assessment: { id: 1, overallScore: 72, status: "completed", completedAt: new Date() },
+        assessment: { id: 1, overallScore: 72, status: "completed", completedAt: new Date().toISOString() },
         items: [],
         generatedBy: "EU Analyst",
       };
@@ -217,7 +217,7 @@ describe("Compliance Report Generation", () => {
       const nistData = {
         aiSystem: { id: 2, name: "NIST System", systemType: "recommendation", riskLevel: "limited" },
         framework: { id: 2, code: "NIST_AI_RMF", name: "NIST AI RMF", version: "1.0" },
-        assessment: { id: 2, overallScore: 85, status: "completed", completedAt: new Date() },
+        assessment: { id: 2, overallScore: 85, status: "completed", completedAt: new Date().toISOString() },
         items: [],
         generatedBy: "NIST Analyst",
       };
@@ -235,7 +235,7 @@ describe("Compliance Report Generation", () => {
       const tc260Data = {
         aiSystem: { id: 3, name: "TC260 System", systemType: "generation", riskLevel: "high" },
         framework: { id: 3, code: "TC260", name: "TC260 AI Safety Framework", version: "2.0" },
-        assessment: { id: 3, overallScore: 68, status: "completed", completedAt: new Date() },
+        assessment: { id: 3, overallScore: 68, status: "completed", completedAt: new Date().toISOString() },
         items: [],
         generatedBy: "TC260 Analyst",
       };

@@ -523,21 +523,21 @@ export class EUAiActComplianceService {
    * Get requirements by risk level
    */
   static getRequirementsByRiskLevel(riskLevel: string): EUAiActRequirement[] {
-    return this.EU_AI_ACT_REQUIREMENTS.filter((r) => r.riskLevel === riskLevel);
+    return this.EU_AI_ACT_REQUIREMENTS.filter((r: any) => r.riskLevel === riskLevel);
   }
 
   /**
    * Get requirements by article
    */
   static getRequirementsByArticle(article: number): EUAiActRequirement[] {
-    return this.EU_AI_ACT_REQUIREMENTS.filter((r) => r.article === article);
+    return this.EU_AI_ACT_REQUIREMENTS.filter((r: any) => r.article === article);
   }
 
   /**
    * Get requirements applicable to system type
    */
   static getRequirementsBySystemType(systemType: string): EUAiActRequirement[] {
-    return this.EU_AI_ACT_REQUIREMENTS.filter((r) =>
+    return this.EU_AI_ACT_REQUIREMENTS.filter((r: any) =>
       r.applicableSystems.includes(systemType) || r.applicableSystems.includes('all')
     );
   }
@@ -612,7 +612,7 @@ export class EUAiActComplianceService {
    * Get evidence checklist for requirement
    */
   static getEvidenceChecklist(requirementId: string): string[] {
-    const requirement = this.EU_AI_ACT_REQUIREMENTS.find((r) => r.id === requirementId);
+    const requirement = this.EU_AI_ACT_REQUIREMENTS.find((r: any) => r.id === requirementId);
     return requirement?.evidenceRequired || [];
   }
 
@@ -620,7 +620,7 @@ export class EUAiActComplianceService {
    * Get compliance indicators for requirement
    */
   static getComplianceIndicators(requirementId: string): string[] {
-    const requirement = this.EU_AI_ACT_REQUIREMENTS.find((r) => r.id === requirementId);
+    const requirement = this.EU_AI_ACT_REQUIREMENTS.find((r: any) => r.id === requirementId);
     return requirement?.complianceIndicators || [];
   }
 }

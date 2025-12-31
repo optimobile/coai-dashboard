@@ -68,10 +68,10 @@ export const emailOnboardingRouter = router({
         metadata: JSON.stringify({
           courseInterests: input.courseInterests || [],
           experienceLevel: input.experienceLevel || "beginner",
-          startedAt: new Date(),
+          startedAt: new Date().toISOString(),
         }),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
 
       return {
@@ -129,7 +129,7 @@ export const emailOnboardingRouter = router({
             successStories: input.successStories ?? existing[0].successStories,
             certificationUpdates: input.certificationUpdates ?? existing[0].certificationUpdates,
             frequency: input.frequency ?? existing[0].frequency,
-            updatedAt: new Date(),
+            updatedAt: new Date().toISOString(),
           })
           .where(eq(userEmailPreferences.userId, ctx.user.id));
       } else {
@@ -141,8 +141,8 @@ export const emailOnboardingRouter = router({
           successStories: input.successStories ?? true,
           certificationUpdates: input.certificationUpdates ?? true,
           frequency: input.frequency ?? "weekly",
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         });
       }
 

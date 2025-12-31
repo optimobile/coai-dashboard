@@ -146,7 +146,7 @@ export class RulesEngine {
       .update(complianceRules)
       .set({
         isActive: false,
-        deprecatedDate: new Date(),
+        deprecatedDate: new Date().toISOString(),
       })
       .where(eq(complianceRules.id, ruleId));
 

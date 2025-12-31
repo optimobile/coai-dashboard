@@ -270,7 +270,7 @@ export const publicApiRouter = router({
       .where(eq(watchdogReports.isPublic, true))
       .groupBy(watchdogReports.status);
 
-    const totalIncidents = resolutionStats.reduce((sum, s) => sum + Number(s.count), 0);
+    const totalIncidents = resolutionStats.reduce((sum: number, s: any) => sum + Number(s.count), 0);
     const resolvedCount = resolutionStats.find(s => s.status === 'resolved')?.count || 0;
     const resolutionRate = totalIncidents > 0 ? Math.round((Number(resolvedCount) / totalIncidents) * 100) : 0;
 

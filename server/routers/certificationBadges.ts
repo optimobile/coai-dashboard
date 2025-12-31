@@ -32,7 +32,7 @@ export const certificationBadgesRouter = router({
           userId: input.userId,
           userName: user.name || `User ${input.userId}`,
           certificationLevel: input.certificationLevel,
-          issueDate: new Date(),
+          issueDate: new Date().toISOString(),
         });
 
         // Store in database
@@ -43,7 +43,7 @@ export const certificationBadgesRouter = router({
           badgeImageUrl: badgePackage.badgeImageUrl,
           badgeEmbedCode: badgePackage.badgeEmbedCode,
           verificationUrl: badgePackage.verificationUrl,
-          issuedAt: new Date(),
+          issuedAt: new Date().toISOString(),
           shareCount: 0,
           clickCount: 0,
           linkedInShares: 0,

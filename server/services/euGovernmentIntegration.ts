@@ -4,7 +4,7 @@
  * Supports: EU Commission, EDPB, National Regulatory Authorities
  */
 
-import { db } from '@/server/db';
+import { db } from '../db';
 import { organizations, complianceReports, certifications } from '@/server/db/schema';
 import { eq, and } from 'drizzle-orm';
 
@@ -106,7 +106,7 @@ export class EUGovernmentIntegrationService {
       return {
         success: true,
         reportId: result.reportId,
-        submissionDate: new Date(),
+        submissionDate: new Date().toISOString(),
         status: 'submitted',
       };
     } catch (error) {
@@ -169,7 +169,7 @@ export class EUGovernmentIntegrationService {
       return {
         success: true,
         referenceNumber: result.referenceNumber,
-        submissionDate: new Date(),
+        submissionDate: new Date().toISOString(),
       };
     } catch (error) {
       console.error('[EDPB Integration] ❌ Failed to submit to EDPB:', error);
@@ -241,7 +241,7 @@ export class EUGovernmentIntegrationService {
       return {
         success: true,
         caseNumber: result.caseNumber,
-        submissionDate: new Date(),
+        submissionDate: new Date().toISOString(),
         authority: authorityName,
       };
     } catch (error) {
@@ -412,12 +412,12 @@ export class EUGovernmentIntegrationService {
         systemName: org.name,
         riskCategory: (latestReport?.riskCategory as any) || 'high-risk',
         complianceStatus: (latestReport?.status as any) || 'in-progress',
-        riskAssessmentDate: latestReport?.createdAt || new Date(),
+        riskAssessmentDate: latestReport?.createdAt || new Date().toISOString(),
         lastAuditDate: latestReport?.updatedAt,
         incidents: latestReport?.incidentCount || 0,
         seriousIncidents: latestReport?.seriousIncidentCount || 0,
         correctionActions: latestReport?.correctionActions || [],
-        certifications: certs.map((c) => c.certificateId),
+        certifications: certs.map((c: any) => c.certificateId),
         documentation: {
           technicalDocumentation: true,
           riskAssessment: true,

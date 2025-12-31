@@ -173,7 +173,7 @@ export const notificationsRouter = router({
       // Mark as read
       await db
         .update(notifications)
-        .set({ isRead: true, readAt: new Date() })
+        .set({ isRead: true, readAt: new Date().toISOString() })
         .where(eq(notifications.id, input.id));
 
       return { success: true };
@@ -190,7 +190,7 @@ export const notificationsRouter = router({
 
     await db
       .update(notifications)
-      .set({ isRead: true, readAt: new Date() })
+      .set({ isRead: true, readAt: new Date().toISOString() })
       .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)));
 
     return { success: true };

@@ -91,7 +91,7 @@ export const reportsRouter = router({
             organizationName: system.name,
             reportPeriod: {
               start: input.dateRange?.startDate ? new Date(input.dateRange.startDate) : new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-              end: input.dateRange?.endDate ? new Date(input.dateRange.endDate) : new Date(),
+              end: input.dateRange?.endDate ? new Date(input.dateRange.endDate) : new Date().toISOString(),
             },
             complianceScore: calculateComplianceScore(assessmentData),
             auditResults: [],
@@ -124,7 +124,7 @@ export const reportsRouter = router({
           filename,
           mimeType,
           size: reportBuffer.length,
-          generatedAt: new Date(),
+          generatedAt: new Date().toISOString(),
           downloadUrl: `/api/download-report/${Date.now()}`,
         };
       } catch (error) {
@@ -182,7 +182,7 @@ export const reportsRouter = router({
           success: true,
           scheduleId: `schedule_${Date.now()}`,
           message: `Report scheduled for ${input.frequency} delivery`,
-          nextGenerationDate: new Date(),
+          nextGenerationDate: new Date().toISOString(),
           recipients: input.recipients,
           status: 'active',
         };
@@ -241,7 +241,7 @@ export const reportsRouter = router({
               format: 'pdf',
               recipients: ['admin@example.com'],
               nextGenerationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-              lastGeneratedDate: new Date(),
+              lastGeneratedDate: new Date().toISOString(),
               status: 'active',
             },
           ],

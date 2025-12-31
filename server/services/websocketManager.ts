@@ -110,7 +110,7 @@ export class WebSocketManager {
       userId,
       connectionId,
       channels: new Set([channel || `user:${userId}`]),
-      lastHeartbeat: new Date(),
+      lastHeartbeat: new Date().toISOString(),
     };
 
     this.clients.set(connectionId, client);
@@ -246,7 +246,7 @@ export class WebSocketManager {
    */
   private startHeartbeat() {
     this.heartbeatInterval = setInterval(() => {
-      const now = new Date();
+      const now = new Date().toISOString();
       this.clients.forEach((client, connectionId) => {
         const timeSinceLastHeartbeat = now.getTime() - client.lastHeartbeat.getTime();
 

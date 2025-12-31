@@ -41,9 +41,23 @@ export class ReferralAnalyticsService {
     userId: number,
     dateRange: 'week' | 'month' | 'quarter' = 'month'
   ): Promise<ReferralAnalytics> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) {
+      return {
+        totalClicks: 0,
+        totalConversions: 0,
+        totalEarnings: 0,
+        conversionRate: 0,
+        averageCommissionPerConversion: 0,
+        topReferralCodes: [],
+        clicksTrend: [],
+        conversionsTrend: [],
+        earningsTrend: [],
+      };
+    }
+
     const now = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     // Calculate start date based on range
     if (dateRange === 'week') {
@@ -61,7 +75,7 @@ export class ReferralAnalyticsService {
         .from(referralCodes)
         .where(eq(referralCodes.userId, userId));
 
-      const codeIds = codes.map((c) => c.id);
+      const codeIds = codes.map((c: any) => c.id);
 
       if (codeIds.length === 0) {
         return {
@@ -101,8 +115,8 @@ export class ReferralAnalyticsService {
 
       // Calculate metrics
       const totalClicks = clicks.length;
-      const totalConversions = conversions.filter((c) => c.status === 'earned' || c.status === 'processed').length;
-      const totalEarnings = conversions.reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
+      const totalConversions = conversions.filter((c: any) => c.status === 'earned' || c.status === 'processed').length;
+      const totalEarnings = conversions.reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount || '0'), 0);
       const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
       const averageCommissionPerConversion = totalConversions > 0 ? totalEarnings / totalConversions : 0;
 
@@ -145,7 +159,8 @@ export class ReferralAnalyticsService {
       earnings: number;
     }>
   > {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return [];
 
     try {
       const codes = await db
@@ -171,7 +186,7 @@ export class ReferralAnalyticsService {
             )
           );
 
-        const earnings = codeConversions.reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
+        const earnings = codeConversions.reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount || '0'), 0);
 
         topCodes.push({
           code: code.code,
@@ -196,20 +211,18 @@ export class ReferralAnalyticsService {
     userId: number,
     dateRange: 'week' | 'month' | 'quarter'
   ): Promise<Array<{ date: string; clicks: number }>> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return [];
+
     const now = new Date();
-    let startDate = new Date();
-    let days = 7;
+    const startDate = new Date();
 
     if (dateRange === 'week') {
       startDate.setDate(now.getDate() - 7);
-      days = 7;
     } else if (dateRange === 'month') {
       startDate.setMonth(now.getMonth() - 1);
-      days = 30;
-    } else if (dateRange === 'quarter') {
+    } else {
       startDate.setMonth(now.getMonth() - 3);
-      days = 90;
     }
 
     try {
@@ -223,29 +236,17 @@ export class ReferralAnalyticsService {
           )
         );
 
-      // Group clicks by date
-      const clicksByDate: { [key: string]: number } = {};
-
-      for (let i = 0; i < days; i++) {
-        const date = new Date(startDate);
-        date.setDate(date.getDate() + i);
-        const dateStr = date.toISOString().split('T')[0];
-        clicksByDate[dateStr] = 0;
-      }
-
-      clicks.forEach((click) => {
-        const dateStr = click.clickedAt.split('T')[0];
-        if (clicksByDate[dateStr] !== undefined) {
-          clicksByDate[dateStr]++;
-        }
+      // Group by date
+      const clicksByDate: Record<string, number> = {};
+      clicks.forEach((click: any) => {
+        const date = click.clickedAt?.split('T')[0] || '';
+        clicksByDate[date] = (clicksByDate[date] || 0) + 1;
       });
 
-      return Object.entries(clicksByDate)
-        .map(([date, clicks]) => ({
-          date,
-          clicks,
-        }))
-        .sort((a, b) => a.date.localeCompare(b.date));
+      return Object.entries(clicksByDate).map(([date, count]) => ({
+        date,
+        clicks: count,
+      }));
     } catch (error) {
       console.error('Error getting clicks trend:', error);
       return [];
@@ -259,20 +260,18 @@ export class ReferralAnalyticsService {
     userId: number,
     dateRange: 'week' | 'month' | 'quarter'
   ): Promise<Array<{ date: string; conversions: number }>> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return [];
+
     const now = new Date();
-    let startDate = new Date();
-    let days = 7;
+    const startDate = new Date();
 
     if (dateRange === 'week') {
       startDate.setDate(now.getDate() - 7);
-      days = 7;
     } else if (dateRange === 'month') {
       startDate.setMonth(now.getMonth() - 1);
-      days = 30;
-    } else if (dateRange === 'quarter') {
+    } else {
       startDate.setMonth(now.getMonth() - 3);
-      days = 90;
     }
 
     try {
@@ -282,35 +281,21 @@ export class ReferralAnalyticsService {
         .where(
           and(
             eq(referralConversions.referrerId, userId),
-            gte(referralConversions.convertedAt, startDate.toISOString())
+            gte(referralConversions.createdAt, startDate.toISOString())
           )
         );
 
-      // Group conversions by date
-      const conversionsByDate: { [key: string]: number } = {};
-
-      for (let i = 0; i < days; i++) {
-        const date = new Date(startDate);
-        date.setDate(date.getDate() + i);
-        const dateStr = date.toISOString().split('T')[0];
-        conversionsByDate[dateStr] = 0;
-      }
-
-      conversions.forEach((conversion) => {
-        if (conversion.convertedAt) {
-          const dateStr = conversion.convertedAt.split('T')[0];
-          if (conversionsByDate[dateStr] !== undefined) {
-            conversionsByDate[dateStr]++;
-          }
-        }
+      // Group by date
+      const conversionsByDate: Record<string, number> = {};
+      conversions.forEach((conv: any) => {
+        const date = conv.createdAt?.split('T')[0] || '';
+        conversionsByDate[date] = (conversionsByDate[date] || 0) + 1;
       });
 
-      return Object.entries(conversionsByDate)
-        .map(([date, conversions]) => ({
-          date,
-          conversions,
-        }))
-        .sort((a, b) => a.date.localeCompare(b.date));
+      return Object.entries(conversionsByDate).map(([date, count]) => ({
+        date,
+        conversions: count,
+      }));
     } catch (error) {
       console.error('Error getting conversions trend:', error);
       return [];
@@ -324,20 +309,18 @@ export class ReferralAnalyticsService {
     userId: number,
     dateRange: 'week' | 'month' | 'quarter'
   ): Promise<Array<{ date: string; earnings: number }>> {
-    const db = getDb();
+    const db = await getDb();
+    if (!db) return [];
+
     const now = new Date();
-    let startDate = new Date();
-    let days = 7;
+    const startDate = new Date();
 
     if (dateRange === 'week') {
       startDate.setDate(now.getDate() - 7);
-      days = 7;
     } else if (dateRange === 'month') {
       startDate.setMonth(now.getMonth() - 1);
-      days = 30;
-    } else if (dateRange === 'quarter') {
+    } else {
       startDate.setMonth(now.getMonth() - 3);
-      days = 90;
     }
 
     try {
@@ -347,35 +330,22 @@ export class ReferralAnalyticsService {
         .where(
           and(
             eq(referralConversions.referrerId, userId),
-            gte(referralConversions.convertedAt, startDate.toISOString())
+            eq(referralConversions.status, 'earned'),
+            gte(referralConversions.createdAt, startDate.toISOString())
           )
         );
 
-      // Group earnings by date
-      const earningsByDate: { [key: string]: number } = {};
-
-      for (let i = 0; i < days; i++) {
-        const date = new Date(startDate);
-        date.setDate(date.getDate() + i);
-        const dateStr = date.toISOString().split('T')[0];
-        earningsByDate[dateStr] = 0;
-      }
-
-      conversions.forEach((conversion) => {
-        if (conversion.convertedAt) {
-          const dateStr = conversion.convertedAt.split('T')[0];
-          if (earningsByDate[dateStr] !== undefined) {
-            earningsByDate[dateStr] += parseFloat(conversion.commissionAmount as any);
-          }
-        }
+      // Group by date
+      const earningsByDate: Record<string, number> = {};
+      conversions.forEach((conv: any) => {
+        const date = conv.createdAt?.split('T')[0] || '';
+        earningsByDate[date] = (earningsByDate[date] || 0) + parseFloat(conv.commissionAmount || '0');
       });
 
-      return Object.entries(earningsByDate)
-        .map(([date, earnings]) => ({
-          date,
-          earnings,
-        }))
-        .sort((a, b) => a.date.localeCompare(b.date));
+      return Object.entries(earningsByDate).map(([date, amount]) => ({
+        date,
+        earnings: amount,
+      }));
     } catch (error) {
       console.error('Error getting earnings trend:', error);
       return [];
@@ -383,72 +353,22 @@ export class ReferralAnalyticsService {
   }
 
   /**
-   * Get referral performance summary
+   * Get payout history for a user
    */
-  static async getReferralSummary(userId: number): Promise<{
-    totalReferralCodes: number;
-    activeReferralCodes: number;
-    totalClicks: number;
-    totalConversions: number;
-    totalEarnings: number;
-    pendingEarnings: number;
-    processedEarnings: number;
-    conversionRate: number;
-  }> {
-    const db = getDb();
+  static async getPayoutHistory(userId: number): Promise<any[]> {
+    const db = await getDb();
+    if (!db) return [];
 
     try {
-      // Get referral codes
-      const codes = await db
+      const payouts = await db
         .select()
-        .from(referralCodes)
-        .where(eq(referralCodes.userId, userId));
+        .from(referralPayouts)
+        .where(eq(referralPayouts.userId, userId));
 
-      const activeCodes = codes.filter((c) => c.status === 'active').length;
-
-      // Get all clicks
-      const clicks = await db
-        .select()
-        .from(referralClicks)
-        .where(eq(referralClicks.referrerId, userId));
-
-      // Get all conversions
-      const conversions = await db
-        .select()
-        .from(referralConversions)
-        .where(eq(referralConversions.referrerId, userId));
-
-      const totalConversions = conversions.filter((c) => c.status === 'earned' || c.status === 'processed').length;
-      const pendingConversions = conversions.filter((c) => c.status === 'pending').length;
-      const processedConversions = conversions.filter((c) => c.status === 'processed').length;
-
-      const totalEarnings = conversions
-        .filter((c) => c.status === 'earned' || c.status === 'processed')
-        .reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
-
-      const pendingEarnings = conversions
-        .filter((c) => c.status === 'pending')
-        .reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
-
-      const processedEarnings = conversions
-        .filter((c) => c.status === 'processed')
-        .reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
-
-      const conversionRate = clicks.length > 0 ? (totalConversions / clicks.length) * 100 : 0;
-
-      return {
-        totalReferralCodes: codes.length,
-        activeReferralCodes: activeCodes,
-        totalClicks: clicks.length,
-        totalConversions,
-        totalEarnings,
-        pendingEarnings,
-        processedEarnings,
-        conversionRate,
-      };
+      return payouts;
     } catch (error) {
-      console.error('Error getting referral summary:', error);
-      throw error;
+      console.error('Error getting payout history:', error);
+      return [];
     }
   }
 }

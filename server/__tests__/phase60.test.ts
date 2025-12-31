@@ -12,7 +12,7 @@ import { eq } from "drizzle-orm";
 // Mock context for testing
 const mockContext: Context = {
   user: {
-    id: "1",
+    id: 1,
     openId: "test-open-id",
     name: "Test User",
     email: "test@example.com",

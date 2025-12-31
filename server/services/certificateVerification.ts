@@ -53,7 +53,7 @@ export class CertificateVerificationService {
       const certificateId = this.generateCertificateId(organizationId, analystName);
 
       // Set expiry dates based on level
-      const issuanceDate = new Date();
+      const issuanceDate = new Date().toISOString();
       const expiryDate = this.calculateExpiryDate(certificationLevel, issuanceDate);
 
       // Create certificate object
@@ -104,7 +104,7 @@ export class CertificateVerificationService {
         return {
           valid: false,
           certificate: null,
-          verificationDate: new Date(),
+          verificationDate: new Date().toISOString(),
           blockchainVerified: false,
           governmentPortalVerified: false,
           message: 'Certificate not found',
@@ -123,7 +123,7 @@ export class CertificateVerificationService {
       );
 
       // Check expiry
-      const isExpired = new Date() > certificate.expiryDate;
+      const isExpired = new Date().toISOString() > certificate.expiryDate;
 
       const valid =
         hashValid && blockchainVerified && governmentPortalVerified && !isExpired;
@@ -137,7 +137,7 @@ export class CertificateVerificationService {
       return {
         valid,
         certificate,
-        verificationDate: new Date(),
+        verificationDate: new Date().toISOString(),
         blockchainVerified,
         governmentPortalVerified,
         message: valid ? 'Certificate is valid and authentic' : 'Certificate verification failed',
@@ -381,8 +381,8 @@ export class CertificateVerificationService {
         organizationId: 0,
         analystName: '',
         certificationLevel: 'fundamentals',
-        issuanceDate: new Date(),
-        expiryDate: new Date(),
+        issuanceDate: new Date().toISOString(),
+        expiryDate: new Date().toISOString(),
         score: 0,
         issuer: this.issuer,
         verificationHash: '',

@@ -248,7 +248,7 @@ export const recommendationsRouter = router({
         )) : [];
 
       const dismissedIds = new Set(dismissedInteractions.map(d => d.recommendationId));
-      const now = new Date();
+      const now = new Date().toISOString();
       const activeSnoozedIds = new Set(
         snoozedInteractions
           .filter(s => s.snoozeUntil && new Date(s.snoozeUntil) > now)
@@ -733,7 +733,7 @@ export const recommendationsRouter = router({
       });
 
       // Update analytics
-      const now = new Date();
+      const now = new Date().toISOString();
       const period = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
       
       // Try to update existing analytics record, or create new one
@@ -809,7 +809,7 @@ export const recommendationsRouter = router({
     const db = await getDb();
     if (!db) return { dismissedIds: [], snoozedIds: [] };
 
-    const now = new Date();
+    const now = new Date().toISOString();
 
     // Get dismissed recommendations
     const dismissed = await db

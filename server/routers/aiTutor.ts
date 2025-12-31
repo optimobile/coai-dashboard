@@ -12,23 +12,22 @@
  */
 
 import { z } from "zod";
-import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { testQuestions, userTestAttempts, users } from "../../drizzle/schema";
-import { eq, and, desc, sql, gte, lte } from "drizzle-orm";
+import { testQuestions, userTestAttempts, certificationTests } from "../../drizzle/schema";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
 
 export const aiTutorRouter = router({
   /**
-   * Get a practice question for a specific framework
+   * Get a practice question for a specific test
    * Returns questions in adaptive order based on user's weak areas
    */
   getPracticeQuestion: protectedProcedure
     .input(
       z.object({
-        framework: z.string(),
-        level: z.enum(["fundamentals", "advanced", "specialist"]).optional(),
-        topicId: z.number().optional(),
+        testId: z.number().optional(),
+        difficulty: z.enum(["easy", "medium", "hard"]).optional(),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -39,47 +38,50 @@ export const aiTutorRouter = router({
       // Get user's weak areas from previous attempts
       const weakAreas = await db
         .select({
-          topicId: testQuestions.topicId,
-          correctCount: sql<number>`SUM(CASE WHEN ${userTestAttempts.isCorrect} = 1 THEN 1 ELSE 0 END)`,
+          moduleId: testQuestions.moduleId,
+          correctCount: sql<number>`SUM(CASE WHEN ${userTestAttempts.passed} = 1 THEN 1 ELSE 0 END)`,
           totalCount: sql<number>`COUNT(*)`,
         })
         .from(userTestAttempts)
         .innerJoin(
           testQuestions,
-          eq(userTestAttempts.questionId, testQuestions.id)
+          eq(userTestAttempts.testId, testQuestions.testId)
         )
         .where(eq(userTestAttempts.userId, ctx.user.id))
-        .groupBy(testQuestions.topicId);
+        .groupBy(testQuestions.moduleId);
 
-      // Calculate accuracy per topic
-      const weakTopics = weakAreas
-        .map((area) => ({
-          topicId: area.topicId,
+      // Calculate accuracy per module
+      const weakModules = weakAreas
+        .map((area: any) => ({
+          moduleId: area.moduleId,
           accuracy: area.correctCount / (area.totalCount || 1),
         }))
         .sort((a, b) => a.accuracy - b.accuracy)
-        .slice(0, 5); // Top 5 weakest topics
+        .slice(0, 5); // Top 5 weakest modules
 
       // Get next question - prioritize weak areas
-      let query = db
+      let whereConditions: any[] = [eq(testQuestions.isActive, true)];
+      
+      if (input.testId) {
+        whereConditions.push(eq(testQuestions.testId, input.testId));
+      }
+      if (input.difficulty) {
+        whereConditions.push(eq(testQuestions.difficulty, input.difficulty));
+      }
+
+      const questions = await db
         .select()
         .from(testQuestions)
-        .where(
-          and(
-            eq(testQuestions.framework, input.framework),
-            input.level ? eq(testQuestions.difficulty, input.level) : undefined
-          )
-        );
+        .where(and(...whereConditions))
+        .limit(100);
 
-      const questions = await query.limit(100);
-
-      // Prioritize weak topics, then randomize
+      // Prioritize weak modules, then randomize
       let selectedQuestion: (typeof testQuestions.$inferSelect) | null = null;
 
-      if (weakTopics.length > 0) {
-        const weakTopicIds = weakTopics.map((t) => t.topicId).filter(Boolean);
-        const weakQuestion = questions.find((q) =>
-          weakTopicIds.includes(q.topicId)
+      if (weakModules.length > 0) {
+        const weakModuleIds = weakModules.map((t: any) => t.moduleId).filter(Boolean);
+        const weakQuestion = questions.find((q: any) =>
+          weakModuleIds.includes(q.moduleId)
         );
         if (weakQuestion) {
           selectedQuestion = weakQuestion;
@@ -92,16 +94,15 @@ export const aiTutorRouter = router({
       }
 
       if (!selectedQuestion) {
-        throw new Error("No questions available for this framework");
+        throw new Error("No questions available");
       }
 
       return {
         id: selectedQuestion.id,
-        question: selectedQuestion.question,
-        options: selectedQuestion.options,
-        framework: selectedQuestion.framework,
+        question: selectedQuestion.questionText,
+        options: selectedQuestion.options as string[],
         difficulty: selectedQuestion.difficulty,
-        topic: selectedQuestion.topic,
+        moduleId: selectedQuestion.moduleId,
         // Don't return correct answer yet
       };
     }),
@@ -115,7 +116,6 @@ export const aiTutorRouter = router({
       z.object({
         questionId: z.number(),
         selectedAnswer: z.string(),
-        framework: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -136,29 +136,21 @@ export const aiTutorRouter = router({
       // Check if answer is correct
       const isCorrect = question.correctAnswer === input.selectedAnswer;
 
-      // Record the attempt
-      await db.insert(userTestAttempts).values({
-        userId: ctx.user.id,
-        questionId: input.questionId,
-        selectedAnswer: input.selectedAnswer,
-        isCorrect: isCorrect ? 1 : 0,
-        attemptedAt: new Date().toISOString(),
-      });
-
       // Generate AI explanation using LLM
+      const options = question.options as string[];
       const explanationPrompt = `
-You are an expert AI compliance trainer. A user just answered a question about ${input.framework}.
+You are an expert AI compliance trainer. A user just answered a question.
 
-Question: ${question.question}
+Question: ${question.questionText}
 
 Options:
-${question.options.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}) ${opt}`).join("\n")}
+${options.map((opt: string, idx: number) => `${String.fromCharCode(65 + idx)}) ${opt}`).join("\n")}
 
 User's Answer: ${input.selectedAnswer}
 Correct Answer: ${question.correctAnswer}
 Is Correct: ${isCorrect ? "YES" : "NO"}
 
-Explanation: ${question.explanation}
+Explanation: ${question.explanation || "No explanation provided"}
 
 Please provide:
 1. A brief explanation of why the answer is ${isCorrect ? "correct" : "incorrect"} (2-3 sentences)
@@ -170,32 +162,33 @@ Format your response as JSON with keys: "whyCorrect", "keyConcept", "example", "
 `;
 
       let aiExplanation = {
-        whyCorrect: "Unable to generate explanation",
+        whyCorrect: question.explanation || "Unable to generate explanation",
         keyConcept: "",
         example: "",
         nextReview: "",
       };
 
       try {
-        const response = await invokeLLM(explanationPrompt);
-        const parsed = JSON.parse(response);
-        aiExplanation = {
-          whyCorrect: parsed.whyCorrect || aiExplanation.whyCorrect,
-          keyConcept: parsed.keyConcept || "",
-          example: parsed.example || "",
-          nextReview: parsed.nextReview || "",
-        };
+        const response = await invokeLLM({ prompt: explanationPrompt });
+        if (typeof response === 'string') {
+          const parsed = JSON.parse(response);
+          aiExplanation = {
+            whyCorrect: parsed.whyCorrect || aiExplanation.whyCorrect,
+            keyConcept: parsed.keyConcept || "",
+            example: parsed.example || "",
+            nextReview: parsed.nextReview || "",
+          };
+        }
       } catch (error) {
         console.error("Error generating AI explanation:", error);
         // Fallback to question's built-in explanation
-        aiExplanation.whyCorrect = question.explanation;
       }
 
       return {
         isCorrect,
         correctAnswer: question.correctAnswer,
         explanation: aiExplanation,
-        topic: question.topic,
+        moduleId: question.moduleId,
       };
     }),
 
@@ -203,205 +196,125 @@ Format your response as JSON with keys: "whyCorrect", "keyConcept", "example", "
    * Get user's learning analytics and weak areas
    */
   getLearningAnalytics: protectedProcedure
-    .input(z.object({ framework: z.string() }))
+    .input(z.object({ testId: z.number().optional() }))
     .query(async ({ input, ctx }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       if (!ctx.user?.id) throw new Error("User not authenticated");
 
-      // Get all attempts for this framework
+      // Get all attempts for this user
       const attempts = await db
-        .select({
-          questionId: userTestAttempts.questionId,
-          isCorrect: userTestAttempts.isCorrect,
-          topic: testQuestions.topic,
-          difficulty: testQuestions.difficulty,
-          attemptedAt: userTestAttempts.attemptedAt,
-        })
+        .select()
         .from(userTestAttempts)
-        .innerJoin(
-          testQuestions,
-          eq(userTestAttempts.questionId, testQuestions.id)
-        )
-        .where(
-          and(
-            eq(userTestAttempts.userId, ctx.user.id),
-            eq(testQuestions.framework, input.framework)
-          )
-        )
-        .orderBy(desc(userTestAttempts.attemptedAt));
+        .where(eq(userTestAttempts.userId, ctx.user.id))
+        .orderBy(desc(userTestAttempts.createdAt));
 
-      // Calculate statistics
+      if (attempts.length === 0) {
+        return {
+          totalAttempts: 0,
+          correctAnswers: 0,
+          accuracy: 0,
+          weakAreas: [],
+          strongAreas: [],
+          recentAttempts: [],
+          improvementTrend: [],
+        };
+      }
+
+      // Calculate overall stats
       const totalAttempts = attempts.length;
-      const correctAttempts = attempts.filter((a) => a.isCorrect === 1).length;
-      const overallAccuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts) * 100 : 0;
+      const correctAnswers = attempts.filter((a: any) => a.passed === 1).length;
+      const accuracy = Math.round((correctAnswers / totalAttempts) * 100);
 
-      // Group by topic
-      const byTopic = attempts.reduce(
-        (acc, attempt) => {
-          const topic = attempt.topic || "Unknown";
-          if (!acc[topic]) {
-            acc[topic] = { correct: 0, total: 0, accuracy: 0 };
-          }
-          acc[topic].total++;
-          if (attempt.isCorrect === 1) {
-            acc[topic].correct++;
-          }
-          acc[topic].accuracy = (acc[topic].correct / acc[topic].total) * 100;
-          return acc;
-        },
-        {} as Record<string, { correct: number; total: number; accuracy: number }>
-      );
+      // Recent attempts (last 10)
+      const recentAttempts = attempts.slice(0, 10).map((a: any) => ({
+        id: a.id,
+        testId: a.testId,
+        score: a.score,
+        passed: a.passed === 1,
+        createdAt: a.createdAt,
+      }));
 
-      // Identify weak areas (< 70% accuracy)
-      const weakAreas = Object.entries(byTopic)
-        .filter(([_, stats]) => stats.accuracy < 70)
-        .map(([topic, stats]) => ({
-          topic,
-          accuracy: Math.round(stats.accuracy),
-          correct: stats.correct,
-          total: stats.total,
-        }))
-        .sort((a, b) => a.accuracy - b.accuracy);
-
-      // Calculate progress over time (last 7 days)
-      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      const recentAttempts = attempts.filter((a) => a.attemptedAt >= sevenDaysAgo);
-      const recentAccuracy =
-        recentAttempts.length > 0
-          ? (recentAttempts.filter((a) => a.isCorrect === 1).length / recentAttempts.length) * 100
-          : 0;
+      // Calculate improvement trend (last 5 attempts)
+      const improvementTrend = attempts.slice(0, 5).reverse().map((a: any, idx: number) => ({
+        attemptNumber: idx + 1,
+        score: a.score || 0,
+        passed: a.passed === 1,
+      }));
 
       return {
         totalAttempts,
-        correctAttempts,
-        overallAccuracy: Math.round(overallAccuracy),
-        recentAccuracy: Math.round(recentAccuracy),
-        byTopic,
-        weakAreas,
-        readyForExam: overallAccuracy >= 70,
+        correctAnswers,
+        accuracy,
+        weakAreas: [], // Would need more data to calculate
+        strongAreas: [], // Would need more data to calculate
+        recentAttempts,
+        improvementTrend,
       };
     }),
 
   /**
-   * Get personalized recommendations for what to study next
+   * Get spaced repetition recommendations
+   * Returns questions that should be reviewed based on forgetting curve
    */
-  getRecommendations: protectedProcedure
-    .input(z.object({ framework: z.string() }))
-    .query(async ({ input, ctx }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
-      if (!ctx.user?.id) throw new Error("User not authenticated");
+  getSpacedRepetitionRecommendations: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    if (!ctx.user?.id) throw new Error("User not authenticated");
 
-      // Get learning analytics
-      const analytics = await db
-        .select({
-          topic: testQuestions.topic,
-          difficulty: testQuestions.difficulty,
-          isCorrect: userTestAttempts.isCorrect,
-        })
-        .from(userTestAttempts)
-        .innerJoin(
-          testQuestions,
-          eq(userTestAttempts.questionId, testQuestions.id)
-        )
-        .where(
-          and(
-            eq(userTestAttempts.userId, ctx.user.id),
-            eq(testQuestions.framework, input.framework)
-          )
-        );
+    // Get user's past attempts
+    const attempts = await db
+      .select()
+      .from(userTestAttempts)
+      .where(eq(userTestAttempts.userId, ctx.user.id))
+      .orderBy(desc(userTestAttempts.createdAt))
+      .limit(50);
 
-      // Group by topic and calculate accuracy
-      const topicStats = analytics.reduce(
-        (acc, item) => {
-          const topic = item.topic || "Unknown";
-          if (!acc[topic]) {
-            acc[topic] = { correct: 0, total: 0 };
-          }
-          acc[topic].total++;
-          if (item.isCorrect === 1) {
-            acc[topic].correct++;
-          }
-          return acc;
-        },
-        {} as Record<string, { correct: number; total: number }>
-      );
+    // Find questions that were answered incorrectly
+    const incorrectAttempts = attempts.filter((a: any) => a.passed === 0);
 
-      // Generate recommendations
-      const recommendations = Object.entries(topicStats)
-        .map(([topic, stats]) => {
-          const accuracy = (stats.correct / stats.total) * 100;
-          let priority = "low";
-          let action = "";
+    // Get unique test IDs from incorrect attempts
+    const testIds = [...new Set(incorrectAttempts.map((a: any) => a.testId))];
 
-          if (accuracy < 50) {
-            priority = "critical";
-            action = `Focus on ${topic} - you're only getting ${Math.round(accuracy)}% correct`;
-          } else if (accuracy < 70) {
-            priority = "high";
-            action = `Review ${topic} - aim for 70%+ accuracy`;
-          } else if (accuracy < 85) {
-            priority = "medium";
-            action = `Practice ${topic} to build confidence`;
-          } else {
-            priority = "low";
-            action = `${topic} is solid - move to harder questions`;
-          }
+    // Get questions from those tests
+    const reviewQuestions = testIds.length > 0 ? await db
+      .select()
+      .from(testQuestions)
+      .where(sql`${testQuestions.testId} IN (${sql.join(testIds.map((id: any) => sql`${id}`), sql`, `)})`)
+      .limit(10) : [];
 
-          return {
-            topic,
-            accuracy: Math.round(accuracy),
-            priority,
-            action,
-          };
-        })
-        .sort((a, b) => {
-          const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-          return priorityOrder[a.priority as keyof typeof priorityOrder] -
-            priorityOrder[b.priority as keyof typeof priorityOrder];
-        });
-
-      return {
-        recommendations,
-        nextSteps: recommendations.slice(0, 3),
-        readyForExam: recommendations.every((r) => r.accuracy >= 70),
-      };
-    }),
-
-  /**
-   * Get practice questions for a specific topic
-   */
-  getPracticeQuestionsByTopic: publicProcedure
-    .input(
-      z.object({
-        framework: z.string(),
-        topic: z.string(),
-        limit: z.number().default(10),
-      })
-    )
-    .query(async ({ input }) => {
-      const db = await getDb();
-      if (!db) return [];
-
-      const questions = await db
-        .select()
-        .from(testQuestions)
-        .where(
-          and(
-            eq(testQuestions.framework, input.framework),
-            eq(testQuestions.topic, input.topic)
-          )
-        )
-        .limit(input.limit);
-
-      return questions.map((q) => ({
+    return {
+      questionsToReview: reviewQuestions.map((q: any) => ({
         id: q.id,
-        question: q.question,
-        options: q.options,
-        topic: q.topic,
+        question: q.questionText,
         difficulty: q.difficulty,
-        // Don't return correct answer
-      }));
-    }),
+        moduleId: q.moduleId,
+        reason: "Previously answered incorrectly",
+      })),
+      nextReviewDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+      totalPendingReviews: reviewQuestions.length,
+    };
+  }),
+
+  /**
+   * Get available tests for practice
+   */
+  getAvailableTests: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+
+    const tests = await db
+      .select()
+      .from(certificationTests)
+      .where(eq(certificationTests.isActive, 1));
+
+    return tests.map((t: any) => ({
+      id: t.id,
+      title: t.title,
+      description: t.description,
+      passingScore: t.passingScore,
+      timeLimit: t.timeLimit,
+      questionCount: t.questionCount,
+    }));
+  }),
 });

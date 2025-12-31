@@ -18,7 +18,7 @@ export class ReferralValidationService {
     referrerName?: string;
     error?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
 
     try {
       // Find the referral code
@@ -46,7 +46,7 @@ export class ReferralValidationService {
       }
 
       // Check if code has expired
-      if (referralCode.expiresAt && new Date(referralCode.expiresAt) < new Date()) {
+      if (referralCode.expiresAt && new Date(referralCode.expiresAt) < new Date().toISOString()) {
         return {
           valid: false,
           error: 'Referral code has expired',
@@ -94,7 +94,7 @@ export class ReferralValidationService {
     referrerId?: number;
     error?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
 
     try {
       // Validate the referral code
@@ -180,7 +180,7 @@ export class ReferralValidationService {
     referralCode?: string;
     referredAt?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
 
     try {
       // Find conversion record for this user
@@ -246,7 +246,7 @@ export class ReferralValidationService {
     commissionAmount?: number;
     error?: string;
   }> {
-    const db = getDb();
+    const db = await getDb();
 
     try {
       // Find the conversion record for this user
@@ -309,7 +309,7 @@ export class ReferralValidationService {
    * Get total earnings for a referral code
    */
   private static async getTotalEarnings(referralCodeId: number): Promise<string> {
-    const db = getDb();
+    const db = await getDb();
 
     try {
       const conversions = await db
@@ -322,7 +322,7 @@ export class ReferralValidationService {
           )
         );
 
-      const total = conversions.reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
+      const total = conversions.reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount as any), 0);
       return total.toString();
     } catch (error) {
       console.error('Error calculating total earnings:', error);

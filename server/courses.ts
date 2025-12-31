@@ -376,7 +376,7 @@ export const coursesRouter = router({
         .update(courseEnrollments)
         .set({
           status: "completed",
-          completedAt: new Date(),
+          completedAt: new Date().toISOString(),
         })
         .where(eq(courseEnrollments.id, input.enrollmentId));
 

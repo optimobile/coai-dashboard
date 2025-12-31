@@ -30,16 +30,16 @@ vi.mock("./db", () => ({
 }));
 
 describe("API Keys Router", () => {
-  const mockUser = {
+  const mockUser: any = {
     id: 1,
     openId: "test-user-123",
     name: "Test User",
     email: "test@example.com",
     role: "user" as const,
     loginMethod: "oauth" as const,
-    lastSignedIn: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    lastSignedIn: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   const createContext = (user: typeof mockUser | null = mockUser): TrpcContext => ({
@@ -149,9 +149,9 @@ describe("API Key Generation", () => {
         email: "test@example.com",
         role: "user" as const,
         loginMethod: "oauth" as const,
-        lastSignedIn: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        lastSignedIn: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
       req: {} as any,
       res: {
@@ -177,9 +177,9 @@ describe("API Key Generation", () => {
         email: "test@example.com",
         role: "user" as const,
         loginMethod: "oauth" as const,
-        lastSignedIn: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        lastSignedIn: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
       req: {} as any,
       res: {

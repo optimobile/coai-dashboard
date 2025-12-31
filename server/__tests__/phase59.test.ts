@@ -9,15 +9,15 @@ import { jobPostings, notifications, notificationPreferences } from "../../drizz
 import { eq } from "drizzle-orm";
 
 // Mock user context
-const mockUser = {
-  id: "1",
+const mockUser: any = {
+  id: 1,
   openId: "test-user",
   name: "Test User",
   email: "test@example.com",
   role: "user" as const,
 };
 
-const mockContext = {
+const mockContext: any = {
   user: mockUser,
   req: {} as any,
   res: {} as any,

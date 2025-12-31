@@ -83,7 +83,7 @@ export class AuditTrailService {
       entityType,
       entityId,
       changes,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       ipAddress,
       userAgent,
       status,

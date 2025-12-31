@@ -13,7 +13,7 @@ import {
   courseCompletionTracking,
   recommendationAnalytics,
 } from "../../drizzle/schema";
-import { eq, and, gte, lte, desc, sql, count, avg } from "drizzle-orm";
+import { eq, and, gte, lte, desc, sql, count } from "drizzle-orm";
 
 export const analyticsRouter = router({
   // Track an analytics event
@@ -33,10 +33,9 @@ export const analyticsRouter = router({
         ]),
         userId: z.number().optional(),
         metadata: z.record(z.any()).optional(),
-        sessionId: z.string().optional(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
@@ -44,10 +43,8 @@ export const analyticsRouter = router({
         eventType: input.eventType,
         userId: input.userId || null,
         metadata: input.metadata ? JSON.stringify(input.metadata) : null,
-        sessionId: input.sessionId || null,
-        ipAddress: ctx.req?.ip || null,
-        userAgent: ctx.req?.get("user-agent") || null,
-        createdAt: new Date(),
+        timestamp: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
       });
 
       return { success: true };
@@ -66,28 +63,33 @@ export const analyticsRouter = router({
       if (!db) return null;
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date();
+      const endDate = input.endDate || new Date().toISOString();
 
+      // Get funnel data aggregated from conversionFunnels table
       const funnelData = await db
         .select()
         .from(conversionFunnels)
         .where(
           and(
-            gte(conversionFunnels.recordedAt, startDate.toISOString()),
-            lte(conversionFunnels.recordedAt, endDate.toISOString())
+            gte(conversionFunnels.timestamp, startDate.toISOString()),
+            lte(conversionFunnels.timestamp, endDate.toISOString())
           )
         )
-        .orderBy(desc(conversionFunnels.recordedAt));
+        .orderBy(desc(conversionFunnels.timestamp));
 
       if (!funnelData.length) return null;
 
-      const latest = funnelData[0];
+      // Aggregate funnel steps
+      const signupStarts = funnelData.filter(f => f.step === 'signup' && f.completed === 0).length;
+      const signupCompletes = funnelData.filter(f => f.step === 'signup' && f.completed === 1).length;
+      const conversionRate = signupStarts > 0 ? (signupCompletes / signupStarts) * 100 : 0;
+
       return {
-        signupStarts: latest.signupStarts,
-        signupCompletes: latest.signupCompletes,
-        conversionRate: latest.conversionRate,
-        dropoffRate: 100 - (latest.conversionRate || 0),
-        recordedAt: latest.recordedAt,
+        signupStarts,
+        signupCompletes,
+        conversionRate,
+        dropoffRate: 100 - conversionRate,
+        recordedAt: funnelData[0].timestamp,
       };
     }),
 
@@ -104,30 +106,39 @@ export const analyticsRouter = router({
       if (!db) return null;
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date();
+      const endDate = input.endDate || new Date().toISOString();
 
       const metrics = await db
         .select()
         .from(paymentAnalytics)
         .where(
           and(
-            gte(paymentAnalytics.recordedAt, startDate.toISOString()),
-            lte(paymentAnalytics.recordedAt, endDate.toISOString())
+            gte(paymentAnalytics.createdAt, startDate.toISOString()),
+            lte(paymentAnalytics.createdAt, endDate.toISOString())
           )
         )
-        .orderBy(desc(paymentAnalytics.recordedAt));
+        .orderBy(desc(paymentAnalytics.createdAt));
 
       if (!metrics.length) return null;
 
-      const latest = metrics[0];
+      // Aggregate payment metrics
+      const totalTransactions = metrics.length;
+      const successfulTransactions = metrics.filter(m => m.status === 'completed').length;
+      const failedTransactions = metrics.filter(m => m.status === 'failed').length;
+      const successRate = totalTransactions > 0 ? (successfulTransactions / totalTransactions) * 100 : 0;
+      const totalRevenue = metrics
+        .filter(m => m.status === 'completed')
+        .reduce((sum, m) => sum + parseFloat(m.amount), 0);
+      const averageTransactionValue = successfulTransactions > 0 ? totalRevenue / successfulTransactions : 0;
+
       return {
-        totalTransactions: latest.totalTransactions,
-        successfulTransactions: latest.successfulTransactions,
-        failedTransactions: latest.failedTransactions,
-        successRate: latest.successRate,
-        totalRevenue: latest.totalRevenue,
-        averageTransactionValue: latest.averageTransactionValue,
-        recordedAt: latest.recordedAt,
+        totalTransactions,
+        successfulTransactions,
+        failedTransactions,
+        successRate,
+        totalRevenue,
+        averageTransactionValue,
+        recordedAt: metrics[0].createdAt,
       };
     }),
 
@@ -145,34 +156,40 @@ export const analyticsRouter = router({
       if (!db) return null;
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date();
+      const endDate = input.endDate || new Date().toISOString();
 
-      let query = db
-        .select()
-        .from(courseCompletionTracking)
-        .where(
-          and(
-            gte(courseCompletionTracking.recordedAt, startDate.toISOString()),
-            lte(courseCompletionTracking.recordedAt, endDate.toISOString())
-          )
-        );
+      let whereConditions = and(
+        gte(courseCompletionTracking.createdAt, startDate.toISOString()),
+        lte(courseCompletionTracking.createdAt, endDate.toISOString())
+      );
 
       if (input.courseId) {
-        query = query.where(eq(courseCompletionTracking.courseId, input.courseId));
+        whereConditions = and(
+          whereConditions,
+          eq(courseCompletionTracking.courseId, input.courseId)
+        );
       }
 
-      const stats = await query.orderBy(desc(courseCompletionTracking.recordedAt));
+      const stats = await db
+        .select()
+        .from(courseCompletionTracking)
+        .where(whereConditions)
+        .orderBy(desc(courseCompletionTracking.createdAt));
 
       if (!stats.length) return null;
 
-      const latest = stats[0];
+      // Aggregate completion stats
+      const enrolledCount = stats.length;
+      const completedCount = stats.filter(s => s.certificateIssued === 1).length;
+      const completionRate = enrolledCount > 0 ? (completedCount / enrolledCount) * 100 : 0;
+
       return {
-        courseId: latest.courseId,
-        enrolledCount: latest.enrolledCount,
-        completedCount: latest.completedCount,
-        completionRate: latest.completionRate,
-        averageTimeToCompletion: latest.averageTimeToCompletion,
-        recordedAt: latest.recordedAt,
+        courseId: input.courseId || null,
+        enrolledCount,
+        completedCount,
+        completionRate,
+        averageTimeToCompletion: null, // Not tracked in current schema
+        recordedAt: stats[0].createdAt,
       };
     }),
 
@@ -189,29 +206,30 @@ export const analyticsRouter = router({
       if (!db) throw new Error("Database not available");
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date();
+      const endDate = input.endDate || new Date().toISOString();
 
+      // Get recommendation analytics for the user
       const analytics = await db
         .select()
         .from(recommendationAnalytics)
         .where(
           and(
-            eq(recommendationAnalytics.userId, ctx.user.id),
-            gte(recommendationAnalytics.recordedAt, startDate.toISOString()),
-            lte(recommendationAnalytics.recordedAt, endDate.toISOString())
+            gte(recommendationAnalytics.createdAt, startDate.toISOString()),
+            lte(recommendationAnalytics.createdAt, endDate.toISOString())
           )
         )
-        .orderBy(desc(recommendationAnalytics.recordedAt));
+        .orderBy(desc(recommendationAnalytics.createdAt));
 
-      return analytics.map((a) => ({
-        userId: a.userId,
-        sessionCount: a.sessionCount,
-        totalTimeSpent: a.totalTimeSpent,
-        coursesEnrolled: a.coursesEnrolled,
-        coursesCompleted: a.coursesCompleted,
-        certificationsEarned: a.certificationsEarned,
-        lastActivityAt: a.lastActivityAt,
-        recordedAt: a.recordedAt,
+      return analytics.map((a: any) => ({
+        period: a.period,
+        periodType: a.periodType,
+        totalGenerated: a.totalGenerated,
+        totalViewed: a.totalViewed,
+        totalImplemented: a.totalImplemented,
+        totalDismissed: a.totalDismissed,
+        helpfulCount: a.helpfulCount,
+        notHelpfulCount: a.notHelpfulCount,
+        recordedAt: a.createdAt,
       }));
     }),
 
@@ -265,20 +283,17 @@ export const analyticsRouter = router({
         )
       );
 
+    const successCount = paymentSuccessEvents[0]?.count || 0;
+    const failedCount = paymentFailedEvents[0]?.count || 0;
+    const totalPayments = successCount + failedCount;
+
     return {
       signupsLast24h: signupEvents[0]?.count || 0,
-      paymentsSuccessLast24h: paymentSuccessEvents[0]?.count || 0,
-      paymentsFailedLast24h: paymentFailedEvents[0]?.count || 0,
+      paymentsSuccessLast24h: successCount,
+      paymentsFailedLast24h: failedCount,
       courseCompletionsLast24h: courseCompletionEvents[0]?.count || 0,
-      paymentSuccessRate:
-        paymentSuccessEvents[0] && paymentFailedEvents[0]
-          ? (
-              (paymentSuccessEvents[0].count /
-                (paymentSuccessEvents[0].count + paymentFailedEvents[0].count)) *
-              100
-            ).toFixed(2)
-          : 0,
-      timestamp: new Date(),
+      paymentSuccessRate: totalPayments > 0 ? ((successCount / totalPayments) * 100).toFixed(2) : "0",
+      timestamp: new Date().toISOString(),
     };
   }),
 });

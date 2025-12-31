@@ -4,8 +4,8 @@
  * Includes AI-based cheating detection and compliance tracking
  */
 
-import { db } from '@/server/db';
-import { proctoringSessions, proctoringEvents } from '@/drizzle/schema';
+import { db } from '../db';
+import { proctoringSessions, proctoringEvents } from '../../drizzle/schema';
 import { eq, and, gte, lte } from 'drizzle-orm';
 import { invokeLLM } from '@/server/_core/llm';
 
@@ -62,7 +62,7 @@ export class ExamProctoringService {
         recordingUrl: null,
         integrityScore: 100,
         suspiciousEventCount: 0,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       });
 
       return sessionId;
@@ -88,7 +88,7 @@ export class ExamProctoringService {
         description: event.description,
         metadata: JSON.stringify(event.metadata || {}),
         timestamp: event.timestamp,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       });
 
       // Update session suspicious event count
@@ -134,7 +134,7 @@ export class ExamProctoringService {
       });
 
       // Parse metadata
-      const parsedEvents = events.map((e) => ({
+      const parsedEvents = events.map((e: any) => ({
         ...e,
         metadata: e.metadata ? JSON.parse(e.metadata as string) : {},
       }));
@@ -230,7 +230,7 @@ Consider:
         .where(eq(proctoringSessions.sessionId, sessionId));
 
       // Filter suspicious events
-      const suspiciousEvents = parsedEvents.filter((e) => e.severity !== 'low');
+      const suspiciousEvents = parsedEvents.filter((e: any) => e.severity !== 'low');
 
       return {
         sessionId,
@@ -265,7 +265,7 @@ Consider:
 
       return {
         ...session,
-        events: events.map((e) => ({
+        events: events.map((e: any) => ({
           ...e,
           metadata: e.metadata ? JSON.parse(e.metadata as string) : {},
         })),
@@ -305,18 +305,18 @@ Consider:
       });
 
       const totalSessions = sessions.length;
-      const passedSessions = sessions.filter((s) => s.certificateValidity === 'full').length;
-      const flaggedSessions = sessions.filter((s) => s.certificateValidity === 'flagged').length;
-      const failedSessions = sessions.filter((s) => s.certificateValidity === 'invalid').length;
+      const passedSessions = sessions.filter((s: any) => s.certificateValidity === 'full').length;
+      const flaggedSessions = sessions.filter((s: any) => s.certificateValidity === 'flagged').length;
+      const failedSessions = sessions.filter((s: any) => s.certificateValidity === 'invalid').length;
 
       const avgIntegrityScore =
         sessions.length > 0
-          ? sessions.reduce((sum, s) => sum + (s.integrityScore || 0), 0) / sessions.length
+          ? sessions.reduce((sum: number, s: any) => sum + (s.integrityScore || 0), 0) / sessions.length
           : 0;
 
       const avgSuspiciousEvents =
         sessions.length > 0
-          ? sessions.reduce((sum, s) => sum + (s.suspiciousEventCount || 0), 0) / sessions.length
+          ? sessions.reduce((sum: number, s: any) => sum + (s.suspiciousEventCount || 0), 0) / sessions.length
           : 0;
 
       return {

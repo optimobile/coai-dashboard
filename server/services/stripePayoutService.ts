@@ -23,7 +23,7 @@ export class StripePayoutService {
     failed: number;
     totalAmount: number;
   }> {
-    const db = getDb();
+    const db = await getDb();
     let successCount = 0;
     let failedCount = 0;
     let totalAmount = 0;
@@ -108,7 +108,7 @@ export class StripePayoutService {
               userData.email || '',
               userData.name || 'Referrer',
               totalCommission,
-              new Date().toLocaleDateString('en-US', {
+              new Date().toISOString().toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -196,7 +196,7 @@ export class StripePayoutService {
    * Handle Stripe payout webhook
    */
   static async handlePayoutWebhook(event: any): Promise<void> {
-    const db = getDb();
+    const db = await getDb();
 
     try {
       if (event.type === 'payout.paid') {
@@ -248,7 +248,7 @@ export class StripePayoutService {
    * Get payout history for a referrer
    */
   static async getPayoutHistory(referrerId: number): Promise<any[]> {
-    const db = getDb();
+    const db = await getDb();
 
     return db
       .select()

@@ -4,8 +4,8 @@
  */
 
 import Stripe from 'stripe';
-import { db } from '@/server/db';
-import { commissions } from '@/drizzle/schema';
+import { db } from '../db';
+import { commissions } from '../../drizzle/schema';
 import { eq, and, gte } from 'drizzle-orm';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
@@ -48,7 +48,7 @@ export class StripePayoutService {
         commissionRate: config.commissionRate,
         commissionAmount: config.commissionAmount,
         status: 'earned',
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       });
 
       return result[0];
@@ -70,7 +70,7 @@ export class StripePayoutService {
         ),
       });
 
-      return pendingCommissions.reduce((sum, c) => sum + (c.commissionAmount || 0), 0);
+      return pendingCommissions.reduce((sum: number, c: any) => sum + (c.commissionAmount || 0), 0);
     } catch (error) {
       console.error('Failed to calculate pending commissions:', error);
       throw new Error('Failed to calculate pending commissions');
@@ -90,7 +90,7 @@ export class StripePayoutService {
       });
 
       const referrerMap = new Map<string, number>();
-      allCommissions.forEach((c) => {
+      allCommissions.forEach((c: any) => {
         const current = referrerMap.get(c.referrerId) || 0;
         referrerMap.set(c.referrerId, current + (c.commissionAmount || 0));
       });
@@ -141,7 +141,7 @@ export class StripePayoutService {
         payoutId,
         amount,
         status: 'processing',
-        scheduledDate: new Date(),
+        scheduledDate: new Date().toISOString(),
       };
     } catch (error) {
       console.error('Failed to process payout:', error);
@@ -195,7 +195,7 @@ export class StripePayoutService {
         .update(commissions)
         .set({
           status: 'processed',
-          processedAt: new Date(),
+          processedAt: new Date().toISOString(),
         })
         .where(eq(commissions.payoutId, payout.id));
 
@@ -255,7 +255,7 @@ export class StripePayoutService {
 
       // Group by payout ID
       const payoutMap = new Map<string | null, typeof commissionRecords>();
-      commissionRecords.forEach((c) => {
+      commissionRecords.forEach((c: any) => {
         const payoutId = c.payoutId || 'unpaid';
         if (!payoutMap.has(payoutId)) {
           payoutMap.set(payoutId, []);
@@ -264,7 +264,7 @@ export class StripePayoutService {
       });
 
       const history = Array.from(payoutMap.entries()).map(([payoutId, records]) => {
-        const totalAmount = records.reduce((sum, r) => sum + (r.commissionAmount || 0), 0);
+        const totalAmount = records.reduce((sum: number, r: any) => sum + (r.commissionAmount || 0), 0);
         const status = records[0]?.status || 'unknown';
 
         return {
@@ -288,7 +288,7 @@ export class StripePayoutService {
    * Schedule next monthly payout
    */
   static getNextPayoutDate(): Date {
-    const today = new Date();
+    const today = new Date().toISOString();
     const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, this.PAYOUT_DAY_OF_MONTH);
 
     // If today is already past the payout day, schedule for next month

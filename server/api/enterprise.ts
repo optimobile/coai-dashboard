@@ -19,7 +19,7 @@ const authenticateEnterprise = (req: Request, res: Response, next: Function) => 
         code: "UNAUTHORIZED",
         message: "Missing API key"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
   
@@ -69,7 +69,7 @@ router.get("/compliance/status/:systemId", async (req: Request, res: Response) =
     res.json({
       success: true,
       data: response,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -78,7 +78,7 @@ router.get("/compliance/status/:systemId", async (req: Request, res: Response) =
         code: "INTERNAL_ERROR",
         message: "Failed to fetch compliance status"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -112,7 +112,7 @@ router.get("/requirements/active", async (req: Request, res: Response) => {
     res.json({
       success: true,
       data: { requirements },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -121,7 +121,7 @@ router.get("/requirements/active", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to fetch requirements"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -146,7 +146,7 @@ router.post("/audits/request", async (req: Request, res: Response) => {
           code: "INVALID_REQUEST",
           message: "Missing required fields: systemId, reason"
         },
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       });
     }
     
@@ -160,13 +160,13 @@ router.post("/audits/request", async (req: Request, res: Response) => {
       status: "scheduled",
       estimatedCompletion: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
       assignedAnalyst: "analyst_123",
-      createdAt: new Date()
+      createdAt: new Date().toISOString()
     };
     
     res.status(201).json({
       success: true,
       data: auditResponse,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -175,7 +175,7 @@ router.post("/audits/request", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to request audit"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -203,7 +203,7 @@ router.get("/audits/:auditId", async (req: Request, res: Response) => {
     res.json({
       success: true,
       data: audit,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -212,7 +212,7 @@ router.get("/audits/:auditId", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to fetch audit details"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -237,7 +237,7 @@ router.post("/webhooks/subscribe", async (req: Request, res: Response) => {
           code: "INVALID_REQUEST",
           message: "Missing required fields: url, events (array)"
         },
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       });
     }
     
@@ -250,13 +250,13 @@ router.post("/webhooks/subscribe", async (req: Request, res: Response) => {
       url,
       events,
       isActive: true,
-      createdAt: new Date()
+      createdAt: new Date().toISOString()
     };
     
     res.status(201).json({
       success: true,
       data: subscription,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -265,7 +265,7 @@ router.post("/webhooks/subscribe", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to subscribe to webhooks"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -284,7 +284,7 @@ router.get("/webhooks", async (req: Request, res: Response) => {
     res.json({
       success: true,
       data: { webhooks },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -293,7 +293,7 @@ router.get("/webhooks", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to fetch webhooks"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -312,7 +312,7 @@ router.delete("/webhooks/:webhookId", async (req: Request, res: Response) => {
     res.json({
       success: true,
       data: { message: "Webhook subscription deleted" },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -321,7 +321,7 @@ router.delete("/webhooks/:webhookId", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to delete webhook"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -346,14 +346,14 @@ router.get("/analytics/compliance-trend", async (req: Request, res: Response) =>
         { date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), score: 85 },
         { date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), score: 88 },
         { date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), score: 90 },
-        { date: new Date(), score: 92 }
+        { date: new Date().toISOString(), score: 92 }
       ]
     };
     
     res.json({
       success: true,
       data: trend,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -362,7 +362,7 @@ router.get("/analytics/compliance-trend", async (req: Request, res: Response) =>
         code: "INTERNAL_ERROR",
         message: "Failed to fetch compliance trend"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });

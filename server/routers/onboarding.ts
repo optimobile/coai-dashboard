@@ -48,7 +48,7 @@ export const onboardingRouter = router({
         id: sessionId,
         userId: ctx.user.id,
         step: 1,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
 
       onboardingSessions.set(sessionId, session);
@@ -278,8 +278,8 @@ export const onboardingRouter = router({
 
         // Calculate baseline compliance score
         const answers = Object.values(input.assessmentAnswers);
-        const compliantAnswers = answers.filter((a) => a === 'yes').length;
-        const partialAnswers = answers.filter((a) => a === 'partial').length;
+        const compliantAnswers = answers.filter((a: any) => a === 'yes').length;
+        const partialAnswers = answers.filter((a: any) => a === 'partial').length;
         const baselineScore = Math.round(
           ((compliantAnswers + partialAnswers * 0.5) / answers.length) * 100
         );
@@ -332,7 +332,7 @@ export const onboardingRouter = router({
 
         session.teamMembers = input.teamMembers;
         session.step = 6;
-        session.completedAt = new Date();
+        session.completedAt = new Date().toISOString();
 
         onboardingSessions.set(input.sessionId, session);
 

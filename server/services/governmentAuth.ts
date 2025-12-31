@@ -4,8 +4,8 @@
  * Role-based access control with audit logging
  */
 
-import { db } from '@/server/db';
-import { governmentPortalAccess } from '@/drizzle/schema';
+import { db } from '../db';
+import { governmentPortalAccess } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 import crypto from 'crypto';
 
@@ -142,7 +142,7 @@ export class GovernmentAuthService {
             accessToken,
             refreshToken,
             tokenExpiresAt: new Date(Date.now() + 3600 * 1000),
-            lastAccessedAt: new Date(),
+            lastAccessedAt: new Date().toISOString(),
           })
           .where(eq(governmentPortalAccess.userId, userId));
       } else {
@@ -156,7 +156,7 @@ export class GovernmentAuthService {
           accessToken,
           refreshToken,
           tokenExpiresAt: new Date(Date.now() + 3600 * 1000),
-          lastAccessedAt: new Date(),
+          lastAccessedAt: new Date().toISOString(),
         });
       }
 
@@ -188,7 +188,7 @@ export class GovernmentAuthService {
       }
 
       // Check token expiration
-      if (user.tokenExpiresAt && new Date() > user.tokenExpiresAt) {
+      if (user.tokenExpiresAt && new Date().toISOString() > user.tokenExpiresAt) {
         return false;
       }
 
@@ -222,7 +222,7 @@ export class GovernmentAuthService {
         action,
         resource,
         details,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
         ipAddress,
         userAgent,
       };
@@ -302,7 +302,7 @@ export class GovernmentAuthService {
         .set({
           accessToken: null,
           refreshToken: null,
-          tokenExpiresAt: new Date(),
+          tokenExpiresAt: new Date().toISOString(),
         })
         .where(eq(governmentPortalAccess.userId, userId));
 

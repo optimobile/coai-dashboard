@@ -167,7 +167,7 @@ export async function generateCertificatePDFV2(data: CertificateDataV2): Promise
     pdfDoc.setCreator('CSOAI Platform');
     pdfDoc.setProducer('CSOAI Certificate Generator V2');
     pdfDoc.setKeywords(['AI Safety', 'Certification', 'CSOAI', data.framework]);
-    pdfDoc.setCreationDate(new Date());
+    pdfDoc.setCreationDate(new Date().toISOString());
 
     // Save PDF
     const pdfBytes = await pdfDoc.save();

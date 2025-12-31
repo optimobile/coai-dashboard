@@ -150,10 +150,10 @@ export async function sendDailyDigests(): Promise<void> {
   console.log(`[EmailDigest] Processing daily digests for ${usersWithDigest.length} users`);
 
   // Get yesterday's start and end
-  const yesterday = new Date();
+  const yesterday = new Date().toISOString();
   yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setHours(0, 0, 0, 0);
-  const today = new Date();
+  const today = new Date().toISOString();
   today.setHours(0, 0, 0, 0);
 
   for (const user of usersWithDigest) {
@@ -195,7 +195,7 @@ export async function sendDailyDigests(): Promise<void> {
       // Update last digest sent timestamp
       await db
         .update(notificationPreferences)
-        .set({ lastDigestSentAt: new Date() })
+        .set({ lastDigestSentAt: new Date().toISOString() })
         .where(eq(notificationPreferences.userId, user.userId));
 
       console.log(`[EmailDigest] Sent daily digest to user ${user.userId}`);
@@ -234,10 +234,10 @@ export async function sendWeeklyDigests(): Promise<void> {
   console.log(`[EmailDigest] Processing weekly digests for ${usersWithDigest.length} users`);
 
   // Get last week's start and end
-  const lastWeek = new Date();
+  const lastWeek = new Date().toISOString();
   lastWeek.setDate(lastWeek.getDate() - 7);
   lastWeek.setHours(0, 0, 0, 0);
-  const today = new Date();
+  const today = new Date().toISOString();
   today.setHours(0, 0, 0, 0);
 
   for (const user of usersWithDigest) {
@@ -279,7 +279,7 @@ export async function sendWeeklyDigests(): Promise<void> {
       // Update last digest sent timestamp
       await db
         .update(notificationPreferences)
-        .set({ lastDigestSentAt: new Date() })
+        .set({ lastDigestSentAt: new Date().toISOString() })
         .where(eq(notificationPreferences.userId, user.userId));
 
       console.log(`[EmailDigest] Sent weekly digest to user ${user.userId}`);

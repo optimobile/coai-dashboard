@@ -111,18 +111,18 @@ router.get("/reports", apiLimiter, (req: Request, res: Response) => {
 
   // Apply filters
   if (severity) {
-    filtered = filtered.filter((r) => r.severity === severity);
+    filtered = filtered.filter((r: any) => r.severity === severity);
   }
   if (category) {
-    filtered = filtered.filter((r) => r.category === category);
+    filtered = filtered.filter((r: any) => r.category === category);
   }
   if (region) {
-    filtered = filtered.filter((r) =>
+    filtered = filtered.filter((r: any) =>
       r.region.toLowerCase().includes((region as string).toLowerCase())
     );
   }
   if (status) {
-    filtered = filtered.filter((r) => r.status === status);
+    filtered = filtered.filter((r: any) => r.status === status);
   }
 
   // Apply sorting
@@ -172,10 +172,10 @@ router.get("/statistics", apiLimiter, (req: Request, res: Response) => {
   const stats = {
     total_reports: mockReports.length,
     by_severity: {
-      critical: mockReports.filter((r) => r.severity === "critical").length,
-      high: mockReports.filter((r) => r.severity === "high").length,
-      medium: mockReports.filter((r) => r.severity === "medium").length,
-      low: mockReports.filter((r) => r.severity === "low").length,
+      critical: mockReports.filter((r: any) => r.severity === "critical").length,
+      high: mockReports.filter((r: any) => r.severity === "high").length,
+      medium: mockReports.filter((r: any) => r.severity === "medium").length,
+      low: mockReports.filter((r: any) => r.severity === "low").length,
     },
     by_category: mockReports.reduce(
       (acc, r) => {
@@ -192,14 +192,14 @@ router.get("/statistics", apiLimiter, (req: Request, res: Response) => {
       {} as Record<string, number>
     ),
     by_status: {
-      verified: mockReports.filter((r) => r.status === "verified").length,
-      investigating: mockReports.filter((r) => r.status === "investigating")
+      verified: mockReports.filter((r: any) => r.status === "verified").length,
+      investigating: mockReports.filter((r: any) => r.status === "investigating")
         .length,
-      pending: mockReports.filter((r) => r.status === "pending").length,
+      pending: mockReports.filter((r: any) => r.status === "pending").length,
     },
-    total_views: mockReports.reduce((sum, r) => sum + r.views, 0),
+    total_views: mockReports.reduce((sum: number, r: any) => sum + r.views, 0),
     average_views_per_report: Math.round(
-      mockReports.reduce((sum, r) => sum + r.views, 0) / mockReports.length
+      mockReports.reduce((sum: number, r: any) => sum + r.views, 0) / mockReports.length
     ),
   };
 
@@ -225,7 +225,7 @@ router.get("/trends", apiLimiter, (req: Request, res: Response) => {
   
   // Generate trend data
   const trends: Record<string, number> = {};
-  const today = new Date();
+  const today = new Date().toISOString();
   
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today);
@@ -314,7 +314,7 @@ router.get("/categories", apiLimiter, (req: Request, res: Response) => {
 
   res.json({
     success: true,
-    data: categories.map((c) => ({
+    data: categories.map((c: any) => ({
       ...c,
       percentage: Math.round((c.count / mockReports.length) * 100),
     })),

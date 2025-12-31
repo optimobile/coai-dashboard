@@ -30,7 +30,7 @@ export class ReferralService {
    * Generate a new referral code for a user
    */
   static async generateReferralCode(userId: number): Promise<string> {
-    const db = getDb();
+    const db = await getDb();
     
     // Generate unique code
     let code: string;
@@ -64,7 +64,7 @@ export class ReferralService {
    * Get referral code for a user
    */
   static async getUserReferralCode(userId: number): Promise<ReferralCodeInfo | null> {
-    const db = getDb();
+    const db = await getDb();
     
     const result = await db
       .select()
@@ -94,7 +94,7 @@ export class ReferralService {
     userAgent?: string,
     source?: string
   ): Promise<boolean> {
-    const db = getDb();
+    const db = await getDb();
 
     // Find referral code
     const refCode = await db
@@ -137,7 +137,7 @@ export class ReferralService {
     certificationName: string,
     certificationPrice: number
   ): Promise<boolean> {
-    const db = getDb();
+    const db = await getDb();
 
     // Find referral code
     const refCode = await db
@@ -186,7 +186,7 @@ export class ReferralService {
    * Get referral statistics for a user
    */
   static async getReferralStats(userId: number): Promise<ReferralStats> {
-    const db = getDb();
+    const db = await getDb();
 
     // Get referral code
     const refCode = await db
@@ -218,7 +218,7 @@ export class ReferralService {
       totalClicks: codeRecord.totalClicks,
       totalConversions: codeRecord.totalConversions,
       totalEarnings: parseFloat(codeRecord.totalEarnings as any),
-      recentActivity: recentConversions.map((c) => ({
+      recentActivity: recentConversions.map((c: any) => ({
         referredEmail: c.referredEmail,
         certificationName: c.certificationName,
         commissionAmount: parseFloat(c.commissionAmount as any),
@@ -232,7 +232,7 @@ export class ReferralService {
    * Calculate pending commissions for a user
    */
   static async calculatePendingCommissions(userId: number): Promise<number> {
-    const db = getDb();
+    const db = await getDb();
 
     const result = await db
       .select({
@@ -260,7 +260,7 @@ export class ReferralService {
     subject: string,
     resendMessageId?: string
   ): Promise<void> {
-    const db = getDb();
+    const db = await getDb();
 
     await db.insert(referralEmailLogs).values({
       referrerId,
@@ -278,7 +278,7 @@ export class ReferralService {
    * Get referral code by code string
    */
   static async getReferralCodeByCode(code: string): Promise<any | null> {
-    const db = getDb();
+    const db = await getDb();
 
     const result = await db
       .select()

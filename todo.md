@@ -5258,3 +5258,39 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Verify TRPC endpoints are properly connected
 - [ ] Ensure all navigation links are functional
 - [ ] Fix TypeScript compilation errors (539 errors reported)
+
+
+## Custom Notification System (New Feature Request)
+
+### Toast Notifications (Real-time UI feedback)
+- [x] Implement toast notification component using Sonner (already installed)
+- [x] Add success toasts for form submissions, purchases, signups
+- [x] Add error toasts for failed operations with retry options
+- [x] Add info toasts for system updates and announcements
+- [x] Position toasts in bottom-right corner (non-intrusive)
+
+### In-App Notification Center (Bell Icon)
+- [x] Add notification bell icon to header/navbar
+- [x] Create notification dropdown panel with unread count badge
+- [x] Show recent notifications with timestamps
+- [x] Mark as read/unread functionality
+- [x] Link notifications to relevant pages
+- [x] Add "View All" link to full notifications page
+
+### Notification Types to Implement
+- [x] Council decision notifications (when votes complete)
+- [x] Watchdog report status updates
+- [x] Certification/exam results
+- [x] Course enrollment confirmations
+- [x] Payment success/failure alerts
+- [x] New case assignments for analysts
+- [x] Admin announcements/broadcasts
+- [x] Compliance deadline reminders
+
+### Backend Notification Infrastructure
+- [x] Extend existing notifications table usage
+- [x] Add real-time notification delivery via polling/SSE
+- [x] Create notification preferences UI in settings
+- [x] Add email notification opt-in/opt-out per category
+- [x] Implement notification batching for digest emails
+

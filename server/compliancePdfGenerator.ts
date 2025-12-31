@@ -557,18 +557,18 @@ function drawPageFooter(doc: PDFKit.PDFDocument, pageNum: number, totalPages: nu
     .fillColor(COLORS.secondary)
     .text(`CSOAI Compliance Report - ${frameworkCode}`, 50, footerY)
     .text(`Page ${pageNum} of ${totalPages}`, 50, footerY, { align: "right", width: pageWidth })
-    .text(`Generated: ${formatDate(new Date())}`, 50, footerY + 12, { align: "center", width: pageWidth });
+    .text(`Generated: ${formatDate(new Date().toISOString())}`, 50, footerY + 12, { align: "center", width: pageWidth });
 }
 
 // Helper functions
 function calculateComplianceStats(items: AssessmentItemData[]) {
   return {
     total: items.length,
-    compliant: items.filter((i) => i.status === "compliant").length,
-    nonCompliant: items.filter((i) => i.status === "non_compliant").length,
-    inProgress: items.filter((i) => i.status === "in_progress").length,
-    notStarted: items.filter((i) => i.status === "not_started").length,
-    notApplicable: items.filter((i) => i.status === "not_applicable").length,
+    compliant: items.filter((i: any) => i.status === "compliant").length,
+    nonCompliant: items.filter((i: any) => i.status === "non_compliant").length,
+    inProgress: items.filter((i: any) => i.status === "in_progress").length,
+    notStarted: items.filter((i: any) => i.status === "not_started").length,
+    notApplicable: items.filter((i: any) => i.status === "not_applicable").length,
   };
 }
 

@@ -85,7 +85,7 @@ export class NotificationDeliveryService {
         notificationId: 0, // Would be actual notification ID
         channel: 'email',
         status: 'sent',
-        deliveredAt: new Date(),
+        deliveredAt: new Date().toISOString(),
         retryCount: 0,
       });
     } catch (error) {
@@ -126,7 +126,7 @@ export class NotificationDeliveryService {
         notificationId: 0,
         channel: 'slack',
         status: 'sent',
-        deliveredAt: new Date(),
+        deliveredAt: new Date().toISOString(),
         retryCount: 0,
       });
     } catch (error) {
@@ -163,7 +163,7 @@ export class NotificationDeliveryService {
         notificationId: 0,
         channel: 'webhook',
         status: 'sent',
-        deliveredAt: new Date(),
+        deliveredAt: new Date().toISOString(),
         retryCount: 0,
       });
     } catch (error) {

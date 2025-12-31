@@ -36,7 +36,7 @@ export const enterpriseRouter = router({
     );
 
     const deliveries = [
-      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date() },
+      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date().toISOString() },
       { status: 'delivered' as const, deliveryTime: 312, createdAt: new Date(Date.now() - 60000) },
       { status: 'failed' as const, createdAt: new Date(Date.now() - 120000) },
     ];
@@ -95,7 +95,7 @@ export const enterpriseRouter = router({
    */
   getWebhookMetrics: publicProcedure.query(async () => {
     const deliveries = [
-      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date() },
+      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date().toISOString() },
       { status: 'delivered' as const, deliveryTime: 312, createdAt: new Date(Date.now() - 60000) },
       { status: 'delivered' as const, deliveryTime: 198, createdAt: new Date(Date.now() - 120000) },
       { status: 'failed' as const, createdAt: new Date(Date.now() - 180000) },
@@ -184,7 +184,7 @@ export const enterpriseRouter = router({
     .mutation(async ({ input }) => {
       const exportData = {
         organizationName: 'Acme Corp',
-        exportDate: new Date(),
+        exportDate: new Date().toISOString(),
         exportedBy: 'admin@acme.com',
         systems: [
           {
@@ -194,7 +194,7 @@ export const enterpriseRouter = router({
             riskLevel: 'limited',
             complianceScore: 85,
             certificationLevel: 'gold',
-            lastAssessment: new Date(),
+            lastAssessment: new Date().toISOString(),
             controls: [
               { id: 'ctrl-1', name: 'Data Protection', status: 'compliant' as const, evidence: ['policy.pdf', 'audit.log'] },
               { id: 'ctrl-2', name: 'Transparency', status: 'partial' as const, evidence: ['disclosure.md'] },
@@ -222,7 +222,7 @@ export const enterpriseRouter = router({
     .mutation(async ({ input }) => {
       const exportData = {
         organizationName: 'Acme Corp',
-        exportDate: new Date(),
+        exportDate: new Date().toISOString(),
         exportedBy: 'admin@acme.com',
         systems: [
           {
@@ -232,7 +232,7 @@ export const enterpriseRouter = router({
             riskLevel: 'limited',
             complianceScore: 85,
             certificationLevel: 'gold',
-            lastAssessment: new Date(),
+            lastAssessment: new Date().toISOString(),
             controls: [
               { id: 'ctrl-1', name: 'Data Protection', status: 'compliant' as const, evidence: ['policy.pdf'] },
             ],
@@ -259,7 +259,7 @@ export const enterpriseRouter = router({
     .mutation(async ({ input }) => {
       const exportData = {
         organizationName: 'Acme Corp',
-        exportDate: new Date(),
+        exportDate: new Date().toISOString(),
         exportedBy: 'admin@acme.com',
         systems: [
           {
@@ -269,7 +269,7 @@ export const enterpriseRouter = router({
             riskLevel: 'limited',
             complianceScore: 85,
             certificationLevel: 'gold',
-            lastAssessment: new Date(),
+            lastAssessment: new Date().toISOString(),
             controls: [],
           },
         ],
@@ -422,11 +422,11 @@ export const enterpriseRouter = router({
         apiSecret: 'test-secret',
         webhookUrl: 'https://api.coai.io/webhooks/addon-splunk/user-1',
         webhookSecret: 'whsec_test',
-        lastSyncTime: new Date(),
+        lastSyncTime: new Date().toISOString(),
         lastErrorMessage: null,
         configuration: {},
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         userId: 'user-1',
         addonId: 'addon-splunk',
       };
@@ -455,7 +455,7 @@ export const enterpriseRouter = router({
           phase: 1,
           name: 'Critical Remediation',
           duration: '0-30 days',
-          startDate: new Date(),
+          startDate: new Date().toISOString(),
           endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           actions: [
             {
@@ -465,7 +465,7 @@ export const enterpriseRouter = router({
               estimatedHours: 120,
               priority: 'critical' as const,
               owner: 'Security Officer',
-              startDate: new Date(),
+              startDate: new Date().toISOString(),
               endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
               status: 'in-progress' as const,
               progress: 60,
@@ -538,7 +538,7 @@ export const enterpriseRouter = router({
         totalHours: 260,
         completedHours: 0,
         overallProgress: 30,
-        generatedAt: new Date(),
+        generatedAt: new Date().toISOString(),
       };
     }),
 
@@ -599,18 +599,18 @@ export const enterpriseRouter = router({
       // Filter alerts
       let filtered = allAlerts;
       if (input.severity !== 'all') {
-        filtered = filtered.filter((a) => a.severity === input.severity);
+        filtered = filtered.filter((a: any) => a.severity === input.severity);
       }
       if (input.type) {
-        filtered = filtered.filter((a) => a.type === input.type);
+        filtered = filtered.filter((a: any) => a.type === input.type);
       }
       if (input.status === 'unresolved') {
-        filtered = filtered.filter((a) => !a.resolvedAt);
+        filtered = filtered.filter((a: any) => !a.resolvedAt);
       } else if (input.status === 'resolved') {
-        filtered = filtered.filter((a) => a.resolvedAt);
+        filtered = filtered.filter((a: any) => a.resolvedAt);
       }
       if (input.organizationId) {
-        filtered = filtered.filter((a) => a.organization === input.organizationId);
+        filtered = filtered.filter((a: any) => a.organization === input.organizationId);
       }
 
       return {
@@ -629,7 +629,7 @@ export const enterpriseRouter = router({
       return {
         success: true,
         alertId: input.alertId,
-        resolvedAt: new Date(),
+        resolvedAt: new Date().toISOString(),
         message: 'Alert resolved successfully',
       };
     }),
@@ -670,7 +670,7 @@ export const enterpriseRouter = router({
       return {
         success: true,
         alertId: input.alertId,
-        archivedAt: new Date(),
+        archivedAt: new Date().toISOString(),
         message: 'Alert archived successfully',
       };
     }),
@@ -684,7 +684,7 @@ export const enterpriseRouter = router({
       return {
         success: true,
         resolvedCount: input.alertIds.length,
-        resolvedAt: new Date(),
+        resolvedAt: new Date().toISOString(),
         message: `${input.alertIds.length} alerts resolved successfully`,
       };
     }),
@@ -755,7 +755,7 @@ export const enterpriseRouter = router({
       return {
         success: true,
         preferences: input,
-        updatedAt: new Date(),
+        updatedAt: new Date().toISOString(),
         message: 'Notification preferences updated successfully',
       };
     }),

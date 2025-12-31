@@ -72,7 +72,7 @@ export const emailAutomationRouter = router({
     return {
       status: "operational",
       service: "email-automation",
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       features: [
         "welcome_sequence",
         "course_recommendations",

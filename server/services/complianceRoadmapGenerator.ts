@@ -89,7 +89,7 @@ export class ComplianceRoadmapGenerator {
 
     return {
       organizationId,
-      generatedAt: new Date(),
+      generatedAt: new Date().toISOString(),
       totalGaps: gaps.length,
       criticalGaps,
       estimatedTotalHours: totalHours,
@@ -148,7 +148,7 @@ export class ComplianceRoadmapGenerator {
 ${gapSummary}
 
 Current Resources Available:
-${currentResources.map((r) => `- ${r}`).join('\n')}
+${currentResources.map((r: any) => `- ${r}`).join('\n')}
 
 Target Timeline: ${targetTimeline} months
 

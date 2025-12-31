@@ -21,9 +21,9 @@ function createMockContext(authenticated: boolean = false): TrpcContext {
     name: 'Test User',
     loginMethod: 'manus',
     role: 'user',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    lastSignedIn: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    lastSignedIn: new Date().toISOString(),
   } : null;
 
   return {

@@ -259,7 +259,7 @@ describe('Core Systems Integration Tests', () => {
         id: 'webhook-1',
         status: 'delivered',
         httpStatus: 200,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
 
       expect(delivery).toHaveProperty('id');

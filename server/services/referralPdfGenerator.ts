@@ -166,8 +166,8 @@ export class ReferralPdfGenerator {
    * Format date range for display
    */
   private static formatDateRange(dateRange: 'week' | 'month' | 'quarter'): string {
-    const now = new Date();
-    let startDate = new Date();
+    const now = new Date().toISOString();
+    let startDate = new Date().toISOString();
 
     if (dateRange === 'week') {
       startDate.setDate(now.getDate() - 7);

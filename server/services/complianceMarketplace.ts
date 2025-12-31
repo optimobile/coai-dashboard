@@ -233,7 +233,7 @@ export class ComplianceMarketplaceService {
 
     let filtered = addons;
     if (category) {
-      filtered = filtered.filter((a) => a.category === category);
+      filtered = filtered.filter((a: any) => a.category === category);
     }
 
     if (sortBy === 'rating') {
@@ -241,7 +241,7 @@ export class ComplianceMarketplaceService {
     } else if (sortBy === 'popularity') {
       filtered.sort((a, b) => b.installedCount - a.installedCount);
     } else if (sortBy === 'newest') {
-      filtered.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     }
 
     return filtered;
@@ -252,7 +252,7 @@ export class ComplianceMarketplaceService {
    */
   static getAddonDetails(addonId: string): MarketplaceAddon | null {
     const addons = this.getMarketplaceAddons();
-    return addons.find((a) => a.id === addonId) || null;
+    return addons.find((a: any) => a.id === addonId) || null;
   }
 
   /**
@@ -283,8 +283,8 @@ export class ComplianceMarketplaceService {
       lastSyncTime: null,
       lastErrorMessage: null,
       configuration,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
   }
 
@@ -338,8 +338,8 @@ export class ComplianceMarketplaceService {
       trigger,
       actions: actions.sort((a, b) => a.order - b.order),
       isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
   }
 
@@ -379,7 +379,7 @@ export class ComplianceMarketplaceService {
     });
 
     const allSuccessful = results.every((r) => r.status === 'success');
-    const anySuccessful = results.some((r) => r.status === 'success');
+    const anySuccessful = results.some((r: any) => r.status === 'success');
 
     return {
       workflowId: workflow.id,
@@ -479,7 +479,7 @@ export class ComplianceMarketplaceService {
       return {
         status: 'offline',
         uptime: 0,
-        lastCheck: new Date(),
+        lastCheck: new Date().toISOString(),
         nextCheck: new Date(Date.now() + 5 * 60 * 1000),
       };
     }
@@ -491,7 +491,7 @@ export class ComplianceMarketplaceService {
     return {
       status,
       uptime,
-      lastCheck: new Date(),
+      lastCheck: new Date().toISOString(),
       nextCheck: new Date(Date.now() + 60 * 1000),
     };
   }

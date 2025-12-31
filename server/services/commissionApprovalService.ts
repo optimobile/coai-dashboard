@@ -36,7 +36,7 @@ export class CommissionApprovalService {
           )
         );
 
-      return conversions.map((c) => ({
+      return conversions.map((c: any) => ({
         id: c.id,
         referredUserEmail: c.referredEmail,
         certificationName: c.certificationName || 'Unknown',
@@ -188,7 +188,7 @@ export class CommissionApprovalService {
         .from(referralPayouts)
         .where(eq(referralPayouts.referrerId, userId));
 
-      return payouts.map((p) => ({
+      return payouts.map((p: any) => ({
         id: p.id,
         totalAmount: parseFloat(p.totalAmount as any),
         conversionCount: p.conversionCount,
@@ -345,15 +345,15 @@ export class CommissionApprovalService {
         .from(referralConversions)
         .where(eq(referralConversions.referrerId, userId));
 
-      const earned = conversions.filter((c) => c.status === 'earned');
-      const processed = conversions.filter((c) => c.status === 'processed');
-      const pending = conversions.filter((c) => c.status === 'pending');
-      const failed = conversions.filter((c) => c.status === 'failed');
+      const earned = conversions.filter((c: any) => c.status === 'earned');
+      const processed = conversions.filter((c: any) => c.status === 'processed');
+      const pending = conversions.filter((c: any) => c.status === 'pending');
+      const failed = conversions.filter((c: any) => c.status === 'failed');
 
-      const totalEarned = earned.reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
-      const totalProcessed = processed.reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
-      const totalPending = pending.reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
-      const totalFailed = failed.reduce((sum, c) => sum + parseFloat(c.commissionAmount as any), 0);
+      const totalEarned = earned.reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount as any), 0);
+      const totalProcessed = processed.reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount as any), 0);
+      const totalPending = pending.reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount as any), 0);
+      const totalFailed = failed.reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount as any), 0);
 
       const averageCommission = conversions.length > 0 ? totalEarned / conversions.length : 0;
 

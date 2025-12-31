@@ -90,7 +90,7 @@ describe("Certification Exam System", () => {
         id: 1,
         userId: 1,
         testId: 1,
-        startedAt: new Date(),
+        startedAt: new Date().toISOString(),
       };
 
       const mockDb = {
@@ -110,7 +110,7 @@ describe("Certification Exam System", () => {
 
     it("should track time remaining", () => {
       const timeLimitMinutes = 60;
-      const startTime = new Date();
+      const startTime = new Date().toISOString();
       const currentTime = new Date(startTime.getTime() + 30 * 60 * 1000); // 30 minutes later
       
       const elapsedSeconds = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
@@ -202,7 +202,7 @@ describe("Certification Exam System", () => {
     });
 
     it("should set correct expiry date (1 year)", () => {
-      const issuedAt = new Date();
+      const issuedAt = new Date().toISOString();
       const expiresAt = new Date(issuedAt.getTime() + 365 * 24 * 60 * 60 * 1000);
       
       const diffDays = Math.round((expiresAt.getTime() - issuedAt.getTime()) / (24 * 60 * 60 * 1000));
@@ -260,7 +260,7 @@ describe("Certification Exam System", () => {
         id: 1,
         userId: 1,
         testId: 1,
-        completedAt: new Date(),
+        completedAt: new Date().toISOString(),
         answers: { "1": "A", "2": "B" },
         score: 80,
         percentScore: "80.00",
@@ -286,7 +286,7 @@ describe("Certification Exam System", () => {
 
       // Simulate building review data
       const userAnswers = mockAttempt.answers as Record<string, string>;
-      const reviewQuestions = mockQuestions.map((q) => {
+      const reviewQuestions = mockQuestions.map((q: any) => {
         const userAnswer = userAnswers[q.id.toString()] || null;
         const isCorrect = userAnswer === q.correctAnswer;
         return {
@@ -315,9 +315,9 @@ describe("Certification Exam System", () => {
 
       const summary = {
         totalQuestions: reviewQuestions.length,
-        correctCount: reviewQuestions.filter((q) => q.isCorrect).length,
-        incorrectCount: reviewQuestions.filter((q) => !q.isCorrect && q.userAnswer).length,
-        unansweredCount: reviewQuestions.filter((q) => !q.userAnswer).length,
+        correctCount: reviewQuestions.filter((q: any) => q.isCorrect).length,
+        incorrectCount: reviewQuestions.filter((q: any) => !q.isCorrect && q.userAnswer).length,
+        unansweredCount: reviewQuestions.filter((q: any) => !q.userAnswer).length,
       };
 
       expect(summary.totalQuestions).toBe(5);
@@ -334,9 +334,9 @@ describe("Certification Exam System", () => {
         { id: 4, isCorrect: false, userAnswer: null },
       ];
 
-      const correctOnly = questions.filter((q) => q.isCorrect);
-      const incorrectOnly = questions.filter((q) => !q.isCorrect && q.userAnswer);
-      const unansweredOnly = questions.filter((q) => !q.userAnswer);
+      const correctOnly = questions.filter((q: any) => q.isCorrect);
+      const incorrectOnly = questions.filter((q: any) => !q.isCorrect && q.userAnswer);
+      const unansweredOnly = questions.filter((q: any) => !q.userAnswer);
 
       expect(correctOnly).toHaveLength(2);
       expect(incorrectOnly).toHaveLength(1);

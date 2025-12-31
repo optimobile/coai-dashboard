@@ -3,11 +3,11 @@
  * tRPC endpoints for exam sessions, government auth, and stripe payouts
  */
 
-import { router, publicProcedure, protectedProcedure } from '@/server/_core/trpc';
+import { router, publicProcedure, protectedProcedure } from '../_core/trpc';
 import { z } from 'zod';
-import { ExamSessionService } from '@/server/services/examSession';
-import { GovernmentAuthService } from '@/server/services/governmentAuth';
-import { StripePayoutService } from '@/server/services/stripePayout';
+import { ExamSessionService } from '../services/examSession';
+import { GovernmentAuthService } from '../services/governmentAuth';
+import { StripePayoutService } from '../services/stripePayout';
 import { TRPCError } from '@trpc/server';
 
 /**

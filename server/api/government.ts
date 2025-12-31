@@ -54,8 +54,8 @@ router.get("/requirements/active", async (req: Request, res: Response) => {
         priority: "high",
         effectiveDate: new Date("2025-03-01"),
         createdBy: "system",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         version: 1
       }
     ];
@@ -63,7 +63,7 @@ router.get("/requirements/active", async (req: Request, res: Response) => {
     const response: APIResponse<ComplianceRequirement[]> = {
       success: true,
       data: requirements,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
     
     res.json(response);
@@ -74,7 +74,7 @@ router.get("/requirements/active", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to fetch requirements"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -95,7 +95,7 @@ router.post("/requirements/submit", async (req: Request, res: Response) => {
           code: "INVALID_REQUEST",
           message: "Missing required fields: requirement, framework, effectiveDate"
         },
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       });
     }
     
@@ -108,8 +108,8 @@ router.post("/requirements/submit", async (req: Request, res: Response) => {
       priority: priority || "medium",
       effectiveDate: new Date(effectiveDate),
       createdBy: (req as any).governmentUser.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       version: 1
     };
     
@@ -118,7 +118,7 @@ router.post("/requirements/submit", async (req: Request, res: Response) => {
     const response: APIResponse<ComplianceRequirement> = {
       success: true,
       data: newRequirement,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
     
     res.status(201).json(response);
@@ -129,7 +129,7 @@ router.post("/requirements/submit", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to submit requirement"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -172,13 +172,13 @@ router.get("/compliance/status", async (req: Request, res: Response) => {
         "APAC": 0.78,
         "China": 0.81
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
     
     const response: APIResponse<ComplianceStatistics> = {
       success: true,
       data: stats,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
     
     res.json(response);
@@ -189,7 +189,7 @@ router.get("/compliance/status", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to fetch compliance status"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -216,13 +216,13 @@ router.get("/compliance/status/:systemId", async (req: Request, res: Response) =
         iso42001: 90,
         tc260: 92
       },
-      updatedAt: new Date()
+      updatedAt: new Date().toISOString()
     };
     
     const response: APIResponse<ComplianceStatus> = {
       success: true,
       data: status,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
     
     res.json(response);
@@ -233,7 +233,7 @@ router.get("/compliance/status/:systemId", async (req: Request, res: Response) =
         code: "INTERNAL_ERROR",
         message: "Failed to fetch system compliance status"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -258,7 +258,7 @@ router.post("/enforcement/flag", async (req: Request, res: Response) => {
           code: "INVALID_REQUEST",
           message: "Missing required fields: systemId, reason, severity"
         },
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       });
     }
     
@@ -271,9 +271,9 @@ router.post("/enforcement/flag", async (req: Request, res: Response) => {
       severity: severity as any,
       action: action || "audit-required",
       issuedBy: (req as any).governmentUser.id,
-      issuedAt: new Date(),
+      issuedAt: new Date().toISOString(),
       status: "open",
-      updatedAt: new Date()
+      updatedAt: new Date().toISOString()
     };
     
     // TODO: Notify enterprise via webhook
@@ -281,7 +281,7 @@ router.post("/enforcement/flag", async (req: Request, res: Response) => {
     const response: APIResponse<EnforcementAction> = {
       success: true,
       data: enforcementAction,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
     
     res.status(201).json(response);
@@ -292,7 +292,7 @@ router.post("/enforcement/flag", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to flag system for enforcement"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -312,7 +312,7 @@ router.get("/enforcement/actions", async (req: Request, res: Response) => {
     const response: APIResponse<EnforcementAction[]> = {
       success: true,
       data: actions,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
     
     res.json(response);
@@ -323,7 +323,7 @@ router.get("/enforcement/actions", async (req: Request, res: Response) => {
         code: "INTERNAL_ERROR",
         message: "Failed to fetch enforcement actions"
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
   }
 });

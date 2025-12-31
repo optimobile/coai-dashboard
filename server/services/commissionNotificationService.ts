@@ -27,7 +27,7 @@ export class CommissionNotificationService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
 
       // Get conversion details
       const conversion = await db
@@ -105,7 +105,7 @@ export class CommissionNotificationService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
 
       // Get conversion details
       const conversion = await db
@@ -185,7 +185,7 @@ export class CommissionNotificationService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
 
       // Get referrer details
       const referrer = await db
@@ -250,7 +250,7 @@ export class CommissionNotificationService {
     error?: string;
   }> {
     try {
-      const db = getDb();
+      const db = await getDb();
 
       // Get referrer details
       const referrer = await db
@@ -276,7 +276,7 @@ export class CommissionNotificationService {
         data: {
           referrerName: referrerUser.name || 'Referrer',
           weekStartDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-          weekEndDate: new Date().toLocaleDateString(),
+          weekEndDate: new Date().toISOString().toLocaleDateString(),
           clicks: weekData.clicks,
           conversions: weekData.conversions,
           earnings: weekData.earnings,

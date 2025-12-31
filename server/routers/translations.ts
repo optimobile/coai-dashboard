@@ -48,7 +48,7 @@ export const translationsRouter = router({
       const cached = getFromCache(cacheKey);
       if (cached) return cached;
 
-      const db = getDb();
+      const db = await getDb();
       const translation = await db
         .select()
         .from(courseTranslations)
@@ -102,7 +102,7 @@ export const translationsRouter = router({
       const cached = getFromCache(cacheKey);
       if (cached) return cached;
 
-      const db = getDb();
+      const db = await getDb();
       const translation = await db
         .select()
         .from(moduleTranslations)
@@ -156,7 +156,7 @@ export const translationsRouter = router({
       const cached = getFromCache(cacheKey);
       if (cached) return cached;
 
-      const db = getDb();
+      const db = await getDb();
       const translation = await db
         .select()
         .from(lessonTranslations)
@@ -201,7 +201,7 @@ export const translationsRouter = router({
   getCourseTranslations: publicProcedure
     .input(z.object({ courseId: z.number() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       return await db
         .select()
         .from(courseTranslations)
@@ -214,7 +214,7 @@ export const translationsRouter = router({
   getModuleTranslations: publicProcedure
     .input(z.object({ moduleId: z.number() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       return await db
         .select()
         .from(moduleTranslations)
@@ -227,7 +227,7 @@ export const translationsRouter = router({
   getLessonTranslations: publicProcedure
     .input(z.object({ lessonId: z.number() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       return await db
         .select()
         .from(lessonTranslations)
@@ -257,7 +257,7 @@ export const translationsRouter = router({
         throw new Error('Unauthorized');
       }
 
-      const db = getDb();
+      const db = await getDb();
       const existing = await db
         .select()
         .from(courseTranslations)
@@ -324,7 +324,7 @@ export const translationsRouter = router({
         throw new Error('Unauthorized');
       }
 
-      const db = getDb();
+      const db = await getDb();
       const existing = await db
         .select()
         .from(moduleTranslations)
@@ -397,7 +397,7 @@ export const translationsRouter = router({
         throw new Error('Unauthorized');
       }
 
-      const db = getDb();
+      const db = await getDb();
       const existing = await db
         .select()
         .from(lessonTranslations)
