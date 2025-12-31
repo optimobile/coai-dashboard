@@ -122,7 +122,7 @@ export default function NotificationSettings() {
               </div>
             </div>
             <Switch
-              checked={preferences.emailEnabled}
+              checked={Boolean(preferences.emailEnabled)}
               onCheckedChange={(checked) => handleToggle('emailEnabled', checked)}
             />
           </div>
@@ -142,7 +142,7 @@ export default function NotificationSettings() {
                 </div>
               </div>
               <Switch
-                checked={preferences.slackEnabled}
+                checked={Boolean(preferences.slackEnabled)}
                 onCheckedChange={(checked) => handleToggle('slackEnabled', checked)}
               />
             </div>
@@ -218,7 +218,7 @@ export default function NotificationSettings() {
               </div>
             </div>
             <Switch
-              checked={preferences.complianceAlerts}
+              checked={Boolean(preferences.complianceAlerts)}
               onCheckedChange={(checked) => handleToggle('complianceAlerts', checked)}
             />
           </div>
@@ -237,7 +237,7 @@ export default function NotificationSettings() {
               </div>
             </div>
             <Switch
-              checked={preferences.systemUpdates}
+              checked={Boolean(preferences.systemUpdates)}
               onCheckedChange={(checked) => handleToggle('systemUpdates', checked)}
             />
           </div>
@@ -256,7 +256,7 @@ export default function NotificationSettings() {
               </div>
             </div>
             <Switch
-              checked={preferences.jobApplications}
+              checked={Boolean(preferences.jobApplications)}
               onCheckedChange={(checked) => handleToggle('jobApplications', checked)}
             />
           </div>
@@ -275,7 +275,7 @@ export default function NotificationSettings() {
               </div>
             </div>
             <Switch
-              checked={preferences.certificateIssued}
+              checked={Boolean(preferences.certificateIssued)}
               onCheckedChange={(checked) => handleToggle('certificateIssued', checked)}
             />
           </div>
@@ -294,7 +294,7 @@ export default function NotificationSettings() {
               </div>
             </div>
             <Switch
-              checked={preferences.councilDecisions}
+              checked={Boolean(preferences.councilDecisions)}
               onCheckedChange={(checked) => handleToggle('councilDecisions', checked)}
             />
           </div>
@@ -313,7 +313,7 @@ export default function NotificationSettings() {
               </div>
             </div>
             <Switch
-              checked={preferences.reportUpdates}
+              checked={Boolean(preferences.reportUpdates)}
               onCheckedChange={(checked) => handleToggle('reportUpdates', checked)}
             />
           </div>
@@ -336,7 +336,7 @@ export default function NotificationSettings() {
               <p className="text-sm text-gray-600">Receive batched notifications instead of individual emails</p>
             </div>
             <Switch
-              checked={preferences.digestEnabled || false}
+              checked={Boolean(preferences.digestEnabled)}
               onCheckedChange={(checked) => handleToggle('digestEnabled', checked)}
             />
           </div>

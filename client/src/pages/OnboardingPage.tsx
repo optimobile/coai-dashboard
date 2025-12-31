@@ -45,7 +45,7 @@ export function OnboardingPage() {
   // Start onboarding
   const startOnboardingMutation = useMutation({
     mutationFn: async () => {
-      const response = await trpc.onboarding.startOnboarding.mutate({});
+      const response = await trpc.onboarding.startOnboarding.mutate();
       return response;
     },
     onSuccess: (data) => {

@@ -306,7 +306,7 @@ Format your response as JSON with keys: "whyCorrect", "keyConcept", "example", "
     const tests = await db
       .select()
       .from(certificationTests)
-      .where(eq(certificationTests.isActive, 1));
+      .where(eq(certificationTests.isActive, true));
 
     return tests.map((t: any) => ({
       id: t.id,

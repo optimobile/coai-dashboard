@@ -22,6 +22,13 @@ import { Quiz } from '@/components/Quiz';
 import { getModuleQuiz } from '@/data/quizzes';
 import type { QuizResult } from '@/types/quiz';
 
+interface CourseModule {
+  title: string;
+  description?: string;
+  content?: string;
+  durationMinutes?: number;
+}
+
 export default function CoursePlayer() {
   const params = useParams();
   const [, setLocation] = useLocation();
@@ -32,19 +39,25 @@ export default function CoursePlayer() {
   const [quizPassed, setQuizPassed] = useState(false);
 
   // Fetch course details
-  const { data: course, isLoading } = trpc.courses.getCourseDetails.useQuery({ courseId });
+  const { data: courseData, isLoading } = trpc.courses.getCourseDetails.useQuery({ courseId });
+  
+  // Cast modules to proper type
+  const course = courseData ? {
+    ...courseData,
+    modules: (courseData.modules as CourseModule[] | null) || []
+  } : null;
   
   // Fetch user's enrollment and progress
   const { data: enrollments } = trpc.courses.getMyEnrollments.useQuery();
   const enrollment = enrollments?.find(e => e.courseId === courseId);
 
   // Mark module complete mutation
-  const markCompleteMutation = trpc.courses.markModuleComplete.useMutation({
-    onSuccess: (data) => {
+  const markCompleteMutation = trpc.courses.markCourseCompleted.useMutation({
+    onSuccess: (data: any) => {
       toast.success('Module marked as complete!');
       setCompletedModules(prev => new Set([...Array.from(prev), currentModuleIndex]));
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error(`Failed to mark complete: ${error.message}`);
     }
   });
@@ -108,8 +121,7 @@ export default function CoursePlayer() {
     if (!course || !enrollment) return;
     
     markCompleteMutation.mutate({
-      enrollmentId: enrollment.id,
-      moduleIndex: currentModuleIndex
+      enrollmentId: enrollment.id
     });
     
     // Reset quiz state for next module

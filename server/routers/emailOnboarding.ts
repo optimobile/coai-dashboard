@@ -10,7 +10,6 @@ import {
   emailSequences,
   emailTemplates,
   userEmailPreferences,
-  emailTemplates,
 } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 
@@ -32,13 +31,8 @@ export const emailOnboardingRouter = router({
       const db = await getDb();
       if (!db) return [];
 
-      let query = db.select().from(emailTemplates);
-
-      if (input.sequenceType) {
-        query = query.where(eq(emailTemplates.sequenceType, input.sequenceType));
-      }
-
-      return await query;
+      // sequenceType column doesn't exist in schema, return all templates
+      return await db.select().from(emailTemplates);
     }),
 
   // Start onboarding sequence for a user
@@ -60,7 +54,7 @@ export const emailOnboardingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const sequence = await db.insert(emailSequences).values({
+      const [sequence] = await db.insert(emailSequences).values({
         userId: ctx.user.id,
         sequenceType: input.sequenceType,
         status: "active",
@@ -72,11 +66,11 @@ export const emailOnboardingRouter = router({
         }),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      });
+      }).$returningId() as { id: number }[];
 
       return {
         success: true,
-        sequenceId: sequence.insertId,
+        sequenceId: sequence.id,
         message: `${input.sequenceType} onboarding sequence started`,
       };
     }),
@@ -123,24 +117,19 @@ export const emailOnboardingRouter = router({
         await db
           .update(userEmailPreferences)
           .set({
-            welcomeEmails: input.welcomeEmails ?? existing[0].welcomeEmails,
-            courseRecommendations: input.courseRecommendations ?? existing[0].courseRecommendations,
-            examPrepGuides: input.examPrepGuides ?? existing[0].examPrepGuides,
-            successStories: input.successStories ?? existing[0].successStories,
-            certificationUpdates: input.certificationUpdates ?? existing[0].certificationUpdates,
-            frequency: input.frequency ?? existing[0].frequency,
+            marketingEmails: input.welcomeEmails ? 1 : 0,
+            productUpdates: input.courseRecommendations ? 1 : 0,
+            weeklyDigest: input.examPrepGuides ? 1 : 0,
             updatedAt: new Date().toISOString(),
           })
           .where(eq(userEmailPreferences.userId, ctx.user.id));
       } else {
         await db.insert(userEmailPreferences).values({
           userId: ctx.user.id,
-          welcomeEmails: input.welcomeEmails ?? true,
-          courseRecommendations: input.courseRecommendations ?? true,
-          examPrepGuides: input.examPrepGuides ?? true,
-          successStories: input.successStories ?? true,
-          certificationUpdates: input.certificationUpdates ?? true,
-          frequency: input.frequency ?? "weekly",
+          optIn: 1,
+          marketingEmails: input.welcomeEmails ? 1 : 0,
+          productUpdates: input.courseRecommendations ? 1 : 0,
+          weeklyDigest: input.examPrepGuides ? 1 : 0,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });

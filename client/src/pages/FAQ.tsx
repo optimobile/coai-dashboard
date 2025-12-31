@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet-async";
 export default function FAQ() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [expandedIndex, setExpandedIndex] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {

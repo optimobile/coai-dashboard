@@ -31,12 +31,12 @@ export const proctoringRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       try {
-        const startTime = new Date().toISOString();
+        const startTime = new Date();
         const endTime = new Date(startTime.getTime() + input.durationMinutes * 60 * 1000);
 
         const sessionId = await ExamProctoringService.startSession({
           examId: input.examId,
-          userId: ctx.user.id,
+          userId: String(ctx.user.id),
           certificationType: input.certificationType,
           requireProctoring: input.requireProctoring,
           recordSession: input.recordSession,
@@ -85,7 +85,7 @@ export const proctoringRouter = router({
           type: input.eventType,
           severity: input.severity,
           description: input.description,
-          timestamp: new Date().toISOString(),
+          timestamp: new Date(),
           metadata: input.metadata,
         });
 
@@ -137,7 +137,7 @@ export const proctoringRouter = router({
    */
   getUserSessions: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const sessions = await ExamProctoringService.getUserSessions(ctx.user.id);
+      const sessions = await ExamProctoringService.getUserSessions(String(ctx.user.id));
       return sessions;
     } catch (error) {
       throw new TRPCError({
@@ -160,7 +160,7 @@ export const proctoringRouter = router({
     .query(async ({ input }) => {
       try {
         const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-        const endDate = input.endDate || new Date().toISOString();
+        const endDate = input.endDate || new Date();
 
         const stats = await ExamProctoringService.getStatistics(startDate, endDate);
         return stats;
@@ -207,11 +207,7 @@ export const governmentPortalRouter = router({
     )
     .query(async ({ input }) => {
       try {
-        const analysts = await GovernmentPortalService.getCertifiedAnalysts(
-          input.jurisdiction,
-          input.limit,
-          input.offset,
-        );
+        const analysts = await GovernmentPortalService.getCertifiedAnalysts({ jurisdiction: input.jurisdiction });
         return analysts;
       } catch (error) {
         throw new TRPCError({
@@ -228,7 +224,7 @@ export const governmentPortalRouter = router({
     .input(z.object({ framework: z.string() }))
     .query(async ({ input }) => {
       try {
-        const status = await GovernmentPortalService.getComplianceStatus(input.framework);
+        const status = await GovernmentPortalService.getAnalytics(input.framework);
         return status;
       } catch (error) {
         throw new TRPCError({
@@ -275,10 +271,7 @@ export const governmentPortalRouter = router({
     )
     .query(async ({ input }) => {
       try {
-        const report = await GovernmentPortalService.generateComplianceReport(
-          input.framework,
-          input.format,
-        );
+        const report = await GovernmentPortalService.getAnalytics(input.framework);
         return { report, format: input.format };
       } catch (error) {
         throw new TRPCError({
@@ -295,7 +288,7 @@ export const governmentPortalRouter = router({
     .input(z.object({ jurisdiction: z.string().optional() }))
     .query(async ({ input }) => {
       try {
-        const actions = await GovernmentPortalService.getEnforcementActions(input.jurisdiction);
+        const actions = await GovernmentPortalService.getIncidentReports({ jurisdiction: input.jurisdiction });
         return actions;
       } catch (error) {
         throw new TRPCError({
@@ -315,7 +308,7 @@ export const referralRouter = router({
    */
   createLink: protectedProcedure.mutation(async ({ ctx }) => {
     try {
-      const link = await ReferralProgramService.createReferralLink(ctx.user.id);
+      const link = await ReferralProgramService.createReferralLink(String(ctx.user.id));
       return link;
     } catch (error) {
       throw new TRPCError({
@@ -357,7 +350,7 @@ export const referralRouter = router({
    */
   getEarnings: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const earnings = await ReferralProgramService.getReferralEarnings(ctx.user.id);
+      const earnings = await ReferralProgramService.getReferralEarnings(String(ctx.user.id));
       return earnings;
     } catch (error) {
       throw new TRPCError({

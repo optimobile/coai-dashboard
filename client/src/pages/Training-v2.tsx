@@ -30,10 +30,12 @@ export default function TrainingV2() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold">
-                Start Training Now
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              <Link href="/courses">
+                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold">
+                  Start Training Now
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
               <Link href="/certification">
                 <Button size="lg" variant="outline" className="border-2 border-emerald-500 text-gray-900 dark:text-white hover:bg-emerald-500/10 px-8 py-6 text-lg font-semibold">
                   View Certification
@@ -321,10 +323,12 @@ export default function TrainingV2() {
             Complete all five modules, pass the certification exam, and start earning as an AI Safety Analyst. Your journey begins now.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold">
-              Begin Module 1
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <Link href="/courses">
+              <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold">
+                Begin Module 1
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
             <Link href="/certification">
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold">
                 Learn About Certification

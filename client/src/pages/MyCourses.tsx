@@ -19,7 +19,7 @@ export default function MyCourses() {
     onSuccess: () => {
       toast.success("Enrollment cancelled successfully");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error(error.message || "Failed to cancel enrollment");
     },
   });

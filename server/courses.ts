@@ -115,6 +115,15 @@ export const coursesRouter = router({
     }),
 
   /**
+   * Get all regions for filtering
+   */
+  getRegions: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(regions);
+  }),
+
+  /**
    * Get course bundles with savings calculations
    */
   getCourseBundles: publicProcedure
@@ -208,7 +217,7 @@ export const coursesRouter = router({
             subscriptionStatus: "active",
             referredBySpecialistId: input.referredBySpecialistId,
           })
-          .$returningId();
+          .$returningId() as { id: number }[];
 
         return {
           enrollmentId: enrollment.id,
@@ -275,7 +284,7 @@ export const coursesRouter = router({
             subscriptionStatus: isSubscription ? "pending" : "none",
             referredBySpecialistId: input.referredBySpecialistId,
           })
-          .$returningId();
+          .$returningId() as { id: number }[];
 
         return {
           enrollmentId: enrollment.id,
@@ -434,5 +443,37 @@ export const coursesRouter = router({
         success: true,
         message: "Payment confirmed. Course access granted.",
       };
+    }),
+
+  /**
+   * Cancel an enrollment
+   */
+  cancelEnrollment: protectedProcedure
+    .input(z.object({ enrollmentId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify ownership
+      const [enrollment] = await db
+        .select()
+        .from(courseEnrollments)
+        .where(
+          and(
+            eq(courseEnrollments.id, input.enrollmentId),
+            eq(courseEnrollments.userId, ctx.user.id)
+          )
+        );
+
+      if (!enrollment) {
+        throw new Error("Enrollment not found");
+      }
+
+      // Delete the enrollment
+      await db
+        .delete(courseEnrollments)
+        .where(eq(courseEnrollments.id, input.enrollmentId));
+
+      return { success: true, message: "Enrollment cancelled" };
     }),
 });

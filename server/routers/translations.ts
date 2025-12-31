@@ -49,6 +49,7 @@ export const translationsRouter = router({
       if (cached) return cached;
 
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const translation = await db
         .select()
         .from(courseTranslations)
@@ -103,6 +104,7 @@ export const translationsRouter = router({
       if (cached) return cached;
 
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const translation = await db
         .select()
         .from(moduleTranslations)
@@ -157,6 +159,7 @@ export const translationsRouter = router({
       if (cached) return cached;
 
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const translation = await db
         .select()
         .from(lessonTranslations)
@@ -202,6 +205,7 @@ export const translationsRouter = router({
     .input(z.object({ courseId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       return await db
         .select()
         .from(courseTranslations)
@@ -215,6 +219,7 @@ export const translationsRouter = router({
     .input(z.object({ moduleId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       return await db
         .select()
         .from(moduleTranslations)
@@ -228,6 +233,7 @@ export const translationsRouter = router({
     .input(z.object({ lessonId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       return await db
         .select()
         .from(lessonTranslations)
@@ -258,6 +264,7 @@ export const translationsRouter = router({
       }
 
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const existing = await db
         .select()
         .from(courseTranslations)
@@ -325,6 +332,7 @@ export const translationsRouter = router({
       }
 
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const existing = await db
         .select()
         .from(moduleTranslations)
@@ -398,6 +406,7 @@ export const translationsRouter = router({
       }
 
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const existing = await db
         .select()
         .from(lessonTranslations)

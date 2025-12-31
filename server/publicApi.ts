@@ -27,7 +27,7 @@ export const publicApiRouter = router({
     const totalReports = await db
       .select({ count: sql<number>`count(*)` })
       .from(watchdogReports)
-      .where(eq(watchdogReports.isPublic, true));
+      .where(eq(watchdogReports.isPublic, 1));
 
     const bySeverity = await db
       .select({
@@ -35,7 +35,7 @@ export const publicApiRouter = router({
         count: sql<number>`count(*)`,
       })
       .from(watchdogReports)
-      .where(eq(watchdogReports.isPublic, true))
+      .where(eq(watchdogReports.isPublic, 1))
       .groupBy(watchdogReports.severity);
 
     const byStatus = await db
@@ -44,7 +44,7 @@ export const publicApiRouter = router({
         count: sql<number>`count(*)`,
       })
       .from(watchdogReports)
-      .where(eq(watchdogReports.isPublic, true))
+      .where(eq(watchdogReports.isPublic, 1))
       .groupBy(watchdogReports.status);
 
     return {
@@ -75,7 +75,7 @@ export const publicApiRouter = router({
           createdAt: watchdogReports.createdAt,
         })
         .from(watchdogReports)
-        .where(eq(watchdogReports.isPublic, true))
+        .where(eq(watchdogReports.isPublic, 1))
         .orderBy(desc(watchdogReports.createdAt))
         .limit(input.limit);
 
@@ -257,7 +257,7 @@ export const publicApiRouter = router({
           ELSE 1 END)`,
       })
       .from(watchdogReports)
-      .where(eq(watchdogReports.isPublic, true))
+      .where(eq(watchdogReports.isPublic, 1))
       .groupBy(watchdogReports.incidentType);
 
     // Get resolution rates
@@ -267,7 +267,7 @@ export const publicApiRouter = router({
         count: sql<number>`count(*)`,
       })
       .from(watchdogReports)
-      .where(eq(watchdogReports.isPublic, true))
+      .where(eq(watchdogReports.isPublic, 1))
       .groupBy(watchdogReports.status);
 
     const totalIncidents = resolutionStats.reduce((sum: number, s: any) => sum + Number(s.count), 0);

@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,57 +40,27 @@ export function CompliancePage() {
   });
 
   // Fetch requirements
-  const { data: requirements } = useQuery({
-    queryKey: ['requirements', selectedArticle],
-    queryFn: async () => {
-      return await trpc.compliance.getRequirements.query({
-        article: selectedArticle ? parseInt(selectedArticle) : undefined,
-      });
-    },
+  const { data: requirements } = trpc.compliance.getRequirements.useQuery({
+    article: selectedArticle ? parseInt(selectedArticle) : undefined,
   });
 
   // Fetch articles
-  const { data: articles } = useQuery({
-    queryKey: ['articles'],
-    queryFn: async () => {
-      return await trpc.compliance.getArticles.query({});
-    },
-  });
+  const { data: articles } = trpc.compliance.getArticles.useQuery();
 
   // Assess compliance
-  const assessMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedSystem) throw new Error('Please select an AI system');
-      return await trpc.compliance.assessCompliance.mutate({
-        aiSystemId: parseInt(selectedSystem),
-        implementedControls,
-      });
-    },
-  });
+  const assessMutation = trpc.compliance.assessCompliance.useMutation();
 
   // Generate gap analysis
-  const gapAnalysisMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedSystem) throw new Error('Please select an AI system');
-      return await trpc.compliance.generateGapAnalysis.mutate({
-        aiSystemId: parseInt(selectedSystem),
-        implementedControls,
-      });
-    },
-  });
+  const gapAnalysisMutation = trpc.compliance.generateGapAnalysis.useMutation();
 
   // Get compliance roadmap
-  const roadmapQuery = useQuery({
-    queryKey: ['roadmap', selectedSystem, targetCertification],
-    queryFn: async () => {
-      if (!selectedSystem) return null;
-      return await trpc.compliance.getComplianceRoadmap.query({
-        aiSystemId: parseInt(selectedSystem),
-        targetLevel: targetCertification,
-      });
+  const { data: roadmapData } = trpc.compliance.getComplianceRoadmap.useQuery(
+    {
+      aiSystemId: selectedSystem ? parseInt(selectedSystem) : 0,
+      targetLevel: targetCertification,
     },
-    enabled: !!selectedSystem,
-  });
+    { enabled: !!selectedSystem }
+  );
 
   const handleToggleControl = (control: string) => {
     setImplementedControls((prev) =>
@@ -173,7 +143,10 @@ export function CompliancePage() {
 
               {/* Assess Button */}
               <Button
-                onClick={() => assessMutation.mutate()}
+                onClick={() => assessMutation.mutate({
+                  aiSystemId: parseInt(selectedSystem),
+                  implementedControls,
+                })}
                 disabled={!selectedSystem || assessMutation.isPending}
                 className="w-full"
                 size="lg"
@@ -311,7 +284,10 @@ export function CompliancePage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <Button
-                onClick={() => gapAnalysisMutation.mutate()}
+                onClick={() => gapAnalysisMutation.mutate({
+                  aiSystemId: parseInt(selectedSystem),
+                  implementedControls,
+                })}
                 disabled={!selectedSystem || gapAnalysisMutation.isPending}
                 className="w-full"
               >
@@ -402,9 +378,9 @@ export function CompliancePage() {
               </div>
 
               {/* Roadmap Phases */}
-              {roadmapQuery.data?.phases && (
+              {roadmapData?.phases && (
                 <div className="space-y-3">
-                  {roadmapQuery.data.phases.map((phase: any) => (
+                  {roadmapData.phases.map((phase: any) => (
                     <div key={phase.phase} className="p-4 border rounded-lg space-y-2">
                       <div className="flex items-start justify-between">
                         <div>
@@ -426,10 +402,10 @@ export function CompliancePage() {
                 </div>
               )}
 
-              {roadmapQuery.data && (
+              {roadmapData && (
                 <div className="p-4 bg-emerald-50 dark:bg-emerald-950 rounded-lg">
                   <p className="text-sm font-medium">Total Duration</p>
-                  <p className="text-2xl font-bold text-blue-600">{roadmapQuery.data.totalDuration}</p>
+                  <p className="text-2xl font-bold text-blue-600">{roadmapData.totalDuration}</p>
                 </div>
               )}
             </CardContent>

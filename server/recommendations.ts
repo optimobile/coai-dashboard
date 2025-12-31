@@ -306,7 +306,7 @@ export const recommendationsRouter = router({
             ELSE 1 END)`,
         })
         .from(watchdogReports)
-        .where(eq(watchdogReports.isPublic, true))
+        .where(eq(watchdogReports.isPublic, 1))
         .groupBy(watchdogReports.incidentType) : [];
 
       // Get council decision patterns
@@ -654,7 +654,7 @@ export const recommendationsRouter = router({
             ELSE 1 END)`,
         })
         .from(watchdogReports)
-        .where(eq(watchdogReports.isPublic, true))
+        .where(eq(watchdogReports.isPublic, 1))
         .groupBy(watchdogReports.incidentType) : [];
 
       // Generate public recommendations based on top incident types

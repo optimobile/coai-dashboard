@@ -30,10 +30,12 @@ export default function CertificationV2() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold">
-                Take Certification Exam
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              <Link href="/certification/exam">
+                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold">
+                  Take Certification Exam
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
               <Link href="/training">
                 <Button size="lg" variant="outline" className="border-2 border-emerald-500 text-gray-900 dark:text-white hover:bg-emerald-500/10 px-8 py-6 text-lg font-semibold">
                   Complete Training First
@@ -372,10 +374,12 @@ export default function CertificationV2() {
             Complete your training, pass the exam, and start your career as an AI Safety Analyst today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold">
-              Take Certification Exam
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <Link href="/certification/exam">
+              <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold">
+                Take Certification Exam
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
             <Link href="/training">
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold">
                 Review Training Modules

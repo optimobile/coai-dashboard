@@ -30,7 +30,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useLocation, Link } from "wouter";
-import DashboardLayout from "@/components/DashboardLayout";
+// DashboardLayout removed - this component is now embedded in MembersDashboard
 import { trpc } from "@/lib/trpc";
 import { ReferralWidget } from "@/components/ReferralWidget";
 
@@ -123,7 +123,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <DashboardLayout>
+    <>
       <div className="p-6 space-y-6">
         {/* Page Header */}
         <div className="flex items-center justify-between">
@@ -587,6 +587,6 @@ export default function Dashboard() {
           </Card>
         </motion.div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }

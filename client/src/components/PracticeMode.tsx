@@ -35,7 +35,7 @@ export function PracticeMode({ framework, level, onComplete }: PracticeModeProps
 
   // Fetch practice question
   const getPracticeQuestion = trpc.aiTutor.getPracticeQuestion.useQuery(
-    { framework, level },
+    { difficulty: level === "advanced" ? "hard" : level === "specialist" ? "hard" : "medium" },
     { enabled: !currentQuestion && !showExplanation }
   );
 
@@ -44,15 +44,15 @@ export function PracticeMode({ framework, level, onComplete }: PracticeModeProps
 
   // Get learning analytics
   const analytics = trpc.aiTutor.getLearningAnalytics.useQuery(
-    { framework },
+    {},
     { enabled: questionsAnswered > 0 }
   );
 
-  // Get recommendations
-  const recommendations = trpc.aiTutor.getRecommendations.useQuery(
-    { framework },
-    { enabled: questionsAnswered > 0 }
-  );
+  // Get recommendations - this method doesn't exist, commenting out
+  // const recommendations = trpc.aiTutor.getRecommendations.useQuery(
+  //   { framework },
+  //   { enabled: questionsAnswered > 0 }
+  // );
 
   // Load initial question
   useEffect(() => {
@@ -70,7 +70,6 @@ export function PracticeMode({ framework, level, onComplete }: PracticeModeProps
       const result = await submitAnswer.mutateAsync({
         questionId: currentQuestion.id,
         selectedAnswer,
-        framework,
       });
 
       setIsCorrect(result.isCorrect);
@@ -268,32 +267,32 @@ export function PracticeMode({ framework, level, onComplete }: PracticeModeProps
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">Overall Accuracy</p>
-                      <p className="text-2xl font-bold">{analytics.data.overallAccuracy}%</p>
+                      <p className="text-2xl font-bold">{analytics.data.accuracy}%</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Recent (7 days)</p>
-                      <p className="text-2xl font-bold">{analytics.data.recentAccuracy}%</p>
+                      <p className="text-sm text-muted-foreground">Total Attempts</p>
+                      <p className="text-2xl font-bold">{analytics.data.totalAttempts}</p>
                     </div>
                   </div>
 
-                  {analytics.data.weakAreas.length > 0 && (
+                  {analytics.data.weakAreas && analytics.data.weakAreas.length > 0 && (
                     <div>
                       <p className="text-sm font-semibold mb-2">Areas to improve:</p>
                       <div className="space-y-2">
-                        {analytics.data.weakAreas.slice(0, 3).map((area) => (
-                          <div key={area.topic} className="text-sm">
+                        {analytics.data.weakAreas.slice(0, 3).map((area: any, idx: number) => (
+                          <div key={idx} className="text-sm">
                             <div className="flex justify-between mb-1">
-                              <span>{area.topic}</span>
-                              <span className="text-xs text-muted-foreground">{area.accuracy}%</span>
+                              <span>{area.topic || `Area ${idx + 1}`}</span>
+                              <span className="text-xs text-muted-foreground">{area.accuracy || 0}%</span>
                             </div>
-                            <Progress value={area.accuracy} className="h-1" />
+                            <Progress value={area.accuracy || 0} className="h-1" />
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {analytics.data.readyForExam && (
+                  {analytics.data.accuracy >= 70 && (
                     <Alert className="bg-green-50 border-green-200">
                       <CheckCircle className="h-4 w-4 text-green-600" />
                       <AlertDescription className="text-green-900 text-sm">
@@ -307,35 +306,21 @@ export function PracticeMode({ framework, level, onComplete }: PracticeModeProps
           </TabsContent>
 
           <TabsContent value="recommendations" className="space-y-4">
-            {recommendations.data && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">What to study next</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {recommendations.data.nextSteps.map((step) => (
-                    <div
-                      key={step.topic}
-                      className={`p-3 rounded border-l-4 ${
-                        step.priority === "critical"
-                          ? "border-l-red-500 bg-red-50"
-                          : step.priority === "high"
-                            ? "border-l-orange-500 bg-orange-50"
-                            : "border-l-blue-500 bg-blue-50"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-semibold text-sm">{step.topic}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{step.action}</p>
-                        </div>
-                        <span className="text-xs font-bold">{step.accuracy}%</span>
-                      </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">What to study next</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-3 rounded border-l-4 border-l-blue-500 bg-blue-50">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="font-semibold text-sm">Continue practicing</p>
+                      <p className="text-xs text-muted-foreground mt-1">Answer more questions to get personalized recommendations</p>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       )}
