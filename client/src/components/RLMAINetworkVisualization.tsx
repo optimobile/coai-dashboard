@@ -249,7 +249,163 @@ export function RLMAINetworkVisualization() {
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
+              <filter id="ultraGlow">
+                <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+              {/* Animated gradient for data streams */}
+              <linearGradient id="dataStreamBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0">
+                  <animate attributeName="offset" values="0;1" dur="1.5s" repeatCount="indefinite" />
+                </stop>
+                <stop offset="50%" stopColor="#60a5fa" stopOpacity="1">
+                  <animate attributeName="offset" values="0.5;1.5" dur="1.5s" repeatCount="indefinite" />
+                </stop>
+                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0">
+                  <animate attributeName="offset" values="1;2" dur="1.5s" repeatCount="indefinite" />
+                </stop>
+              </linearGradient>
+              <linearGradient id="dataStreamPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#a855f7" stopOpacity="0">
+                  <animate attributeName="offset" values="0;1" dur="1.2s" repeatCount="indefinite" />
+                </stop>
+                <stop offset="50%" stopColor="#c084fc" stopOpacity="1">
+                  <animate attributeName="offset" values="0.5;1.5" dur="1.2s" repeatCount="indefinite" />
+                </stop>
+                <stop offset="100%" stopColor="#a855f7" stopOpacity="0">
+                  <animate attributeName="offset" values="1;2" dur="1.2s" repeatCount="indefinite" />
+                </stop>
+              </linearGradient>
+              <linearGradient id="dataStreamGold" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0">
+                  <animate attributeName="offset" values="0;1" dur="2s" repeatCount="indefinite" />
+                </stop>
+                <stop offset="50%" stopColor="#fbbf24" stopOpacity="1">
+                  <animate attributeName="offset" values="0.5;1.5" dur="2s" repeatCount="indefinite" />
+                </stop>
+                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0">
+                  <animate attributeName="offset" values="1;2" dur="2s" repeatCount="indefinite" />
+                </stop>
+              </linearGradient>
+              <radialGradient id="pulseGradient">
+                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+              </radialGradient>
             </defs>
+            
+            {/* Animated circular pulse rings */}
+            {[1, 2, 3].map((ring) => (
+              <circle
+                key={`pulse-ring-${ring}`}
+                cx="350"
+                cy="350"
+                r="60"
+                fill="none"
+                stroke="url(#pulseGradient)"
+                strokeWidth="2"
+                opacity="0"
+              >
+                <animate
+                  attributeName="r"
+                  values="60;180"
+                  dur="3s"
+                  begin={`${ring * 1}s`}
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0.6;0"
+                  dur="3s"
+                  begin={`${ring * 1}s`}
+                  repeatCount="indefinite"
+                />
+              </circle>
+            ))}
+            
+            {/* Animated data stream paths - Outer ring */}
+            {governmentRegulators.map((reg, index) => {
+              const pos = getPosition(index, governmentRegulators.length, 310);
+              const midX = (pos.x + 350) / 2;
+              const midY = (pos.y + 350) / 2;
+              const offset = 30;
+              const controlX = midX + (index % 2 === 0 ? offset : -offset);
+              const controlY = midY + (index % 2 === 0 ? -offset : offset);
+              return (
+                <g key={`stream-reg-${index}`}>
+                  <path
+                    d={`M ${pos.x} ${pos.y} Q ${controlX} ${controlY} 350 350`}
+                    fill="none"
+                    stroke={`${reg.color}20`}
+                    strokeWidth="3"
+                    strokeDasharray="8,4"
+                  />
+                  {/* Animated particle along path */}
+                  <circle r="4" fill={reg.color} filter="url(#strongGlow)">
+                    <animateMotion
+                      dur={`${2 + (index % 3) * 0.5}s`}
+                      repeatCount="indefinite"
+                      path={`M ${pos.x - 350} ${pos.y - 350} Q ${controlX - 350} ${controlY - 350} 0 0`}
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0;1;1;0"
+                      dur={`${2 + (index % 3) * 0.5}s`}
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </g>
+              );
+            })}
+            
+            {/* Animated data stream paths - Company ring */}
+            {safetyCompanies.map((_, index) => {
+              const pos = getPosition(index, safetyCompanies.length, 220);
+              return (
+                <g key={`stream-company-${index}`}>
+                  {/* Animated particle */}
+                  <circle r="3" fill="#60a5fa" filter="url(#glow)">
+                    <animateMotion
+                      dur={`${1.5 + (index % 4) * 0.3}s`}
+                      repeatCount="indefinite"
+                      path={`M ${pos.x - 350} ${pos.y - 350} L 0 0`}
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0;1;1;0"
+                      dur={`${1.5 + (index % 4) * 0.3}s`}
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </g>
+              );
+            })}
+            
+            {/* Animated data stream paths - Agent ring */}
+            {byzantineAgents.slice(0, 16).map((_, index) => {
+              const pos = getPosition(index, byzantineAgents.length, 140);
+              return (
+                <g key={`stream-agent-${index}`}>
+                  {/* Animated particle */}
+                  <circle r="2" fill="#a855f7" filter="url(#glow)">
+                    <animateMotion
+                      dur={`${1 + (index % 5) * 0.2}s`}
+                      repeatCount="indefinite"
+                      path={`M ${pos.x - 350} ${pos.y - 350} L 0 0`}
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0;1;1;0"
+                      dur={`${1 + (index % 5) * 0.2}s`}
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </g>
+              );
+            })}
             
             {/* Connection lines from regulators (outermost) */}
             {governmentRegulators.map((reg, index) => {

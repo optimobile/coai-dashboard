@@ -105,6 +105,9 @@ export default function PublicHome() {
         </div>
       </section>
 
+      {/* £1,000,000 Training Giveaway CTA */}
+      <MillionPoundGiveaway />
+
       {/* Framework Badges */}
       <section className="py-12 bg-muted/30 border-y">
         <div className="container mx-auto px-4">
