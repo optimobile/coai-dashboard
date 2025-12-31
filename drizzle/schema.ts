@@ -913,6 +913,25 @@ export const userEmailPreferences = mysqlTable("user_email_preferences", {
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 }, (table) => [index("idx_userId_prefs").on(table.userId)]);
 
+// Giveaway Applications Table - £1M Training Giveaway Campaign
+export const giveawayApplications = mysqlTable("giveaway_applications", {
+	id: int().autoincrement().notNull(),
+	email: varchar({ length: 320 }).notNull(),
+	name: varchar({ length: 255 }),
+	company: varchar({ length: 255 }),
+	jobTitle: varchar({ length: 255 }),
+	country: varchar({ length: 100 }),
+	linkedinUrl: varchar({ length: 500 }),
+	referralSource: varchar({ length: 100 }), // how they heard about us
+	status: mysqlEnum(['pending','approved','rejected','waitlisted','enrolled']).default('pending').notNull(),
+	courseLevel: mysqlEnum(['fundamentals','advanced','specialist']).default('fundamentals').notNull(),
+	approvedAt: timestamp({ mode: 'string' }),
+	enrolledAt: timestamp({ mode: 'string' }),
+	confirmationEmailSent: int().default(0).notNull(),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_email_giveaway").on(table.email), index("idx_status_giveaway").on(table.status)]);
+
 // Type exports
 export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
 export type InsertAnalyticsEvent = typeof analyticsEvents.$inferInsert;
@@ -1003,3 +1022,5 @@ export type RecommendationPreference = typeof recommendationPreferences.$inferSe
 export type InsertRecommendationPreference = typeof recommendationPreferences.$inferInsert;
 export type RecommendationAnalytic = typeof recommendationAnalytics.$inferSelect;
 export type InsertRecommendationAnalytic = typeof recommendationAnalytics.$inferInsert;
+export type GiveawayApplication = typeof giveawayApplications.$inferSelect;
+export type InsertGiveawayApplication = typeof giveawayApplications.$inferInsert;

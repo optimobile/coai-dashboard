@@ -339,7 +339,7 @@ export default function HomepageMaster() {
 
           <motion.div {...fadeInUp} className="bg-white bg-opacity-10 border-2 border-white rounded-lg p-10 mb-12">
             <h3 className="text-3xl font-bold text-emerald-600 mb-6 text-center">How CEASAI Solves the Crisis</h3>
-            <p className="text-lg text-emerald-100 mb-8 max-w-4xl mx-auto text-center leading-relaxed">If we train 100,000-250,000 AI Safety Analysts through CEASAI by February 2026, we solve the impossible regulatory deadline while creating the largest employment opportunity in a generation and making AI fundamentally safer for everyone.</p>
+            <p className="text-lg mb-8 max-w-4xl mx-auto text-center leading-relaxed" style={{ color: '#fd0808' }}>If we train 100,000-250,000 AI Safety Analysts through CEASAI by February 2026, we solve the impossible regulatory deadline while creating the largest employment opportunity in a generation and making AI fundamentally safer for everyone.</p>
             
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white bg-opacity-5 p-6 rounded-lg border border-white border-opacity-20 hover:bg-opacity-10 transition">
