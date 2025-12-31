@@ -439,7 +439,7 @@ export default function HomepageMaster() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 mb-1">Cost:</p>
-                  <p className="text-emerald-600 font-bold">$99-$499 (one-time or monthly)</p>
+                  <p className="text-emerald-600 font-bold">£499 - £1,999 (one-time or monthly)</p>
                 </div>
               </div>
             </motion.div>
