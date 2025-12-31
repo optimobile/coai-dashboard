@@ -46,6 +46,7 @@ import {
 import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Question {
   id: number;
@@ -68,6 +69,7 @@ interface ExamState {
 
 export default function CertificationExam() {
   const [, navigate] = useLocation();
+  const { user, loading: authLoading } = useAuth();
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [showTimeWarning, setShowTimeWarning] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
@@ -138,8 +140,23 @@ export default function CertificationExam() {
 
   // Start the exam
   const handleStartExam = async () => {
+    console.log("Starting exam...", { testData, questions: questions.length, user });
+    
+    // Check if user is logged in
+    if (!user) {
+      alert("Please log in to take the certification exam.");
+      navigate("/login?redirect=/certification/exam");
+      return;
+    }
+    
+    if (!testData || questions.length === 0) {
+      console.error("No test data or questions available");
+      alert("Unable to start exam: No questions loaded. Please refresh the page and try again.");
+      return;
+    }
     try {
       const result = await startTestMutation.mutateAsync({ testId: 1 });
+      console.log("Exam started:", result);
       setExamState((prev) => ({
         ...prev,
         status: "in_progress",
@@ -147,8 +164,14 @@ export default function CertificationExam() {
         startTime: new Date(),
         timeRemaining: (testData?.test?.timeLimitMinutes || 60) * 60,
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to start exam:", error);
+      if (error?.message?.includes("login") || error?.data?.code === "UNAUTHORIZED") {
+        alert("Please log in to take the certification exam.");
+        navigate("/login?redirect=/certification/exam");
+      } else {
+        alert("Failed to start exam. Please try again.");
+      }
     }
   };
 

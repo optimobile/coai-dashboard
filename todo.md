@@ -5369,3 +5369,58 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Advanced feature service method signatures
 - Note: These are mostly non-critical server-side type issues that don't affect runtime
 
+
+
+## Phase: January 1st Viral Launch Preparation
+
+### Critical Bug Fixes
+- [ ] Fix exam crash - Start Exam button loads and crashes
+- [ ] Fix all remaining TypeScript errors (489 remaining)
+- [ ] Test all exam flows end-to-end
+- [ ] Polish platform to 100% working state
+
+### Viral Launch Content (100 Blog Posts)
+- [ ] 33 posts targeting top news companies (TechCrunch, Wired, The Verge, etc.)
+- [ ] 33 posts targeting top AI companies (OpenAI, Anthropic, Google, etc.)
+- [ ] 34 posts targeting top AI safety researchers as board invitations
+- [ ] Include Meta/Manus acquisition timing angle
+- [ ] Each post customized with specific CTA for that audience
+
+### Board Structure
+- [ ] 100 board members at 0.25-0.5% each
+- [ ] CSOAI.org as CIC structure
+- [ ] CEASAI.training shares for board members
+
+
+
+## Phase: Critical Bug Fixes (Dec 31, 2024)
+
+### Duplicate Sidebar Fix
+- [x] Remove DashboardLayout wrapper from Dashboard.tsx (was nested inside MembersDashboard)
+- [x] Verify single sidebar displays correctly in Members Dashboard
+
+### Button Navigation Fixes
+- [x] Fix Start Training Now button → navigates to /courses
+- [x] Fix View Certification button → navigates to /certification
+- [x] Fix Take Certification Exam button → navigates to /certification/exam
+- [x] Fix Begin Module 1 button → navigates to /courses
+- [x] Fix Learn About Certification button → navigates to /certification
+
+### Exam System Fixes
+- [x] Fix getTestQuestions API to return questions (changed to publicProcedure)
+- [x] Add authentication check to exam start - redirects to login if not authenticated
+- [x] Fix isActive comparison in testQuestions query (boolean vs int)
+
+### TypeScript Error Fixes
+- [x] Reduced TypeScript errors from 609 to 539 (70 errors fixed)
+- [x] Fixed isPublic comparisons (int vs boolean)
+- [x] Fixed $returningId() type assertions
+- [x] Fixed Date method issues (toISOString, setMonth, getMonth on strings)
+- [x] Fixed complianceFrameworks variable name
+- [x] Fixed isActive: 0 to isActive: false for apiKeys
+- [ ] Remaining 539 TypeScript errors (mostly server-side schema mismatches)
+
+### Remaining Issues
+- [ ] Add missing database columns (payoutFrequency, lastPayoutDate in users table)
+- [ ] Fix remaining service file type errors
+- [ ] Add loading states to buttons

@@ -1147,7 +1147,7 @@ const certificationRouter = router({
   }),
 
   // Get test with questions (for taking the test)
-  getTestQuestions: protectedProcedure
+  getTestQuestions: publicProcedure
     .input(z.object({ testId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
