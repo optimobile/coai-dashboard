@@ -5892,3 +5892,46 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Create giveaway API endpoints
 - [x] Connect MillionPoundGiveaway form to backend
 - [x] Send confirmation emails for giveaway signups
+
+
+## Phase 24 - Government White-Label & Global Blog Campaign
+
+### Government White-Label Pipeline
+- [x] Create automated framework generation system for governments
+- [x] Build white-label configuration wizard
+- [x] Add government onboarding flow
+- [x] Create framework template system
+
+### Global AI Safety Initiative Page
+- [x] Build dedicated landing page for 118 countries
+- [x] Add tiered pricing (£500K-£10M/year)
+- [x] Create government signup form
+- [x] Add white-label demo/preview
+
+### 118 Country Blog Posts (Parallel Processing)
+- [x] Research and compile list of 118 countries without AI governance
+- [x] Generate detailed blog post for each country
+- [x] Include country-specific news contacts
+- [x] Add press media kit download for each
+- [x] Link to top journalists/news outlets per country
+
+### Framework Blog Posts
+- [x] EU AI Act comprehensive guide
+- [x] NIST RMF comprehensive guide
+- [x] UK AI Safety comprehensive guide
+- [x] Australia AI Safety comprehensive guide
+- [x] TC260 comprehensive guide
+- [x] Additional frameworks as needed (Canada, Singapore, Japan, South Korea, Brazil, India, ISO 42001)
+
+### Press Media Kits
+- [x] Create downloadable press kit template
+- [x] Include press release templates
+- [x] Add high-res logos and assets
+- [x] Include key statistics and quotes
+- [x] Add journalist contact templates
+
+### Enterprise Usage-Based Pricing
+- [ ] Add API usage tracking
+- [ ] Implement overage charges
+- [ ] Create usage dashboard
+- [ ] Add billing alerts

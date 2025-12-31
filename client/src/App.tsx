@@ -145,6 +145,7 @@ import CanadaAIActCompliance from "./pages/CanadaAIActCompliance";
 import AustraliaAIGovernanceCompliance from "./pages/AustraliaAIGovernanceCompliance";
 import GovernmentLinks from "./pages/GovernmentLinks";
 import RegulatoryCompliance from "./pages/RegulatoryCompliance";
+import GlobalAISafetyInitiative from "./pages/GlobalAISafetyInitiative";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -176,6 +177,7 @@ function App() {
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
+                  <Route path="/global-ai-safety-initiative" component={GlobalAISafetyInitiative} />
                   <Route path="/about" component={About} />
                   <Route path="/how-it-works" component={HowItWorks} />
                   <Route path="/how-it-works/dashboard" component={DashboardHowItWorks} />
