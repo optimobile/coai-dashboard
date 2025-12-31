@@ -147,7 +147,7 @@ export async function generateCertificatePDFV2(data: CertificateDataV2): Promise
         width: badgeWidth,
         height: 22,
         color: rgb(badgeColor.r, badgeColor.g, badgeColor.b),
-        borderRadius: 11,
+
       });
 
       const levelText = data.certificationLevel.toUpperCase();
@@ -274,7 +274,7 @@ export async function generateCertificatePDFV2(data: CertificateDataV2): Promise
         width: accredBadgeWidth,
         height: 16,
         color: rgb(0.969, 0.973, 0.976), // Very light gray
-        borderRadius: 8,
+
       });
 
       const accredTextWidth = helveticaFont.widthOfTextAtSize(accred, 7);

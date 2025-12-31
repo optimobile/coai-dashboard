@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Switch, useLocation, Redirect } from "wouter";
 import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -146,6 +146,9 @@ import AustraliaAIGovernanceCompliance from "./pages/AustraliaAIGovernanceCompli
 import GovernmentLinks from "./pages/GovernmentLinks";
 import RegulatoryCompliance from "./pages/RegulatoryCompliance";
 import GlobalAISafetyInitiative from "./pages/GlobalAISafetyInitiative";
+import BlogIndex from "./pages/BlogIndex";
+import GovernmentCRM from "./pages/GovernmentCRM";
+import EmailAutomation from "./pages/EmailAutomation";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -290,9 +293,18 @@ function App() {
                   <Route path="/frameworks/canada-ai-act" component={CanadaAIAct} />
                   {/* Watchdog Incident Reporting */}
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
+                  {/* Blog and CRM Pages */}
+                  <Route path="/blog" component={BlogIndex} />
+                  <Route path="/admin/government-crm" component={GovernmentCRM} />
+                  <Route path="/admin/email-automation" component={EmailAutomation} />
                   {/* Government & Regulatory Pages */}
                   <Route path="/government-links" component={GovernmentLinks} />
                   <Route path="/regulatory-compliance" component={RegulatoryCompliance} />
+                  {/* Redirect routes for common paths */}
+                  <Route path="/billing">{() => <Redirect to="/settings/billing" />}</Route>
+                  <Route path="/support">{() => <Redirect to="/help-center" />}</Route>
+                  <Route path="/council">{() => <Redirect to="/agent-council" />}</Route>
+                  <Route path="/loi">{() => <Redirect to="/enterprise" />}</Route>
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
