@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link, useLocation } from 'wouter';
 import {
   Eye,
   GraduationCap,
@@ -14,11 +15,15 @@ import {
   LayoutGrid,
   FileText,
   AlertTriangle,
+  History,
+  Trophy,
+  Plus,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DashboardLayout from '@/components/DashboardLayout';
+import WatchdogIncidentsPanel from '@/components/WatchdogIncidentsPanel';
 
 // Import feature components
 import Dashboard from './Dashboard';
@@ -67,6 +72,13 @@ const tabs = [
 
 export default function MembersDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [watchdogSubTab, setWatchdogSubTab] = useState('incidents');
+  const [, setLocation] = useLocation();
+
+  const handleViewIncident = (id: number) => {
+    // Navigate to incident detail page
+    setLocation(`/watchdog-hub?incident=${id}`);
+  };
 
   return (
     <DashboardLayout>
@@ -120,63 +132,77 @@ export default function MembersDashboard() {
               </div>
             </TabsContent>
 
-            {/* Watchdog Tab */}
+            {/* Watchdog Tab - Enhanced with sub-tabs */}
             <TabsContent value="watchdog" className="h-full">
-              <div className="p-8 space-y-8">
+              <div className="p-8 space-y-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="grid gap-6">
-                    {/* Watchdog Features */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Eye className="h-5 w-5" />
-                          The Watchdog - AI Incident Reporting
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid md:grid-cols-3 gap-4 mb-6">
+                  {/* Watchdog Header with Quick Actions */}
+                  <Card className="mb-6">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Eye className="h-5 w-5 text-emerald-600" />
+                        The Watchdog - AI Incident Reporting
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid md:grid-cols-4 gap-4">
+                        <Link href="/watchdog-hub">
                           <Button
                             variant="outline"
-                            className="h-auto flex-col items-start p-4"
-                            onClick={() => {
-                              // Navigate to report submission
-                            }}
+                            className="h-auto flex-col items-start p-4 w-full hover:border-emerald-500 hover:bg-emerald-50"
                           >
-                            <AlertTriangle className="h-5 w-5 mb-2" />
+                            <Plus className="h-5 w-5 mb-2 text-emerald-600" />
                             <span className="font-semibold">Submit Report</span>
                             <span className="text-xs text-muted-foreground">Report AI incidents</span>
                           </Button>
-                          <Button
-                            variant="outline"
-                            className="h-auto flex-col items-start p-4"
-                            onClick={() => {
-                              // Navigate to incident database
-                            }}
-                          >
-                            <FileText className="h-5 w-5 mb-2" />
-                            <span className="font-semibold">View Incidents</span>
-                            <span className="text-xs text-muted-foreground">Browse all reports</span>
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="h-auto flex-col items-start p-4"
-                            onClick={() => {
-                              // Navigate to leaderboard
-                            }}
-                          >
-                            <Eye className="h-5 w-5 mb-2" />
-                            <span className="font-semibold">Leaderboard</span>
-                            <span className="text-xs text-muted-foreground">Top analysts</span>
-                          </Button>
-                        </div>
-                        <Watchdog />
-                      </CardContent>
-                    </Card>
-                  </div>
+                        </Link>
+                        <Button
+                          variant={watchdogSubTab === 'incidents' ? 'default' : 'outline'}
+                          className="h-auto flex-col items-start p-4"
+                          onClick={() => setWatchdogSubTab('incidents')}
+                        >
+                          <History className="h-5 w-5 mb-2" />
+                          <span className="font-semibold">Previous Incidents</span>
+                          <span className="text-xs text-muted-foreground">Browse all reports</span>
+                        </Button>
+                        <Button
+                          variant={watchdogSubTab === 'leaderboard' ? 'default' : 'outline'}
+                          className="h-auto flex-col items-start p-4"
+                          onClick={() => setWatchdogSubTab('leaderboard')}
+                        >
+                          <Trophy className="h-5 w-5 mb-2" />
+                          <span className="font-semibold">Leaderboard</span>
+                          <span className="text-xs text-muted-foreground">Top analysts</span>
+                        </Button>
+                        <Button
+                          variant={watchdogSubTab === 'about' ? 'default' : 'outline'}
+                          className="h-auto flex-col items-start p-4"
+                          onClick={() => setWatchdogSubTab('about')}
+                        >
+                          <Eye className="h-5 w-5 mb-2" />
+                          <span className="font-semibold">About Watchdog</span>
+                          <span className="text-xs text-muted-foreground">Learn more</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Watchdog Sub-content */}
+                  {watchdogSubTab === 'incidents' && (
+                    <WatchdogIncidentsPanel onViewIncident={handleViewIncident} />
+                  )}
+
+                  {watchdogSubTab === 'leaderboard' && (
+                    <WatchdogLeaderboard />
+                  )}
+
+                  {watchdogSubTab === 'about' && (
+                    <Watchdog />
+                  )}
                 </motion.div>
               </div>
             </TabsContent>

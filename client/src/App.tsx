@@ -226,6 +226,7 @@ function App() {
                   <Route path="/courses/:id" component={CourseDetail} />
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/dashboard/progress" component={StudentProgress} />
+                  <Route path="/dashboard/compliance" component={Compliance} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/verify-certificate/:id" component={VerifyCertificate} />
                   <Route path="/features/33-agent-council" component={AgentCouncilFeature} />
