@@ -5739,3 +5739,67 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - Frameworks covered: EU AI Act, NIST AI RMF, ISO 42001, TC260, UK AI Bill, Canada AIDA, Australia AI, Ethics
 - Legal certification: ISO 17024 aligned CSOAI certification
 - AI Tutor: Fully integrated with adaptive learning
+
+
+## Phase: RLMAI Network Visualization & CEASAI Pricing Restructure - December 31, 2024
+
+### RLMAI Cross-Training Network Visualization
+- [ ] Inspect ai-architect-launch.lovable.app for animation reference
+- [ ] Create RLMAINetworkVisualization component with animated data flows
+- [ ] Show 27 AI companies feeding data back and forth
+- [ ] Display real-time decision counter (12,868+ daily)
+- [ ] Show AI Safety ecosystem (CSOAI, CEASAI, CouncilOf, SafetyOf, BiasDetect, etc.)
+- [ ] Show SaaS AI ecosystem (LoopFactory products)
+- [ ] Show Traditional businesses (PlantHire, Muckaway, GrabHire, etc.)
+- [ ] Add animated connection lines showing data flow
+- [ ] Show global data collection from all industries
+- [ ] Demonstrate LLM and ensemble learning with RLMAI
+- [ ] Add to homepage with prominent placement
+
+### CEASAI Pricing Restructure - 3 Tier System
+- [ ] Tier 1: £499 (was £500) - Fundamentals course
+- [x] Tier 2: £999 - Advanced/Professional course (NEW)
+- [x] Tier 3: £1,999 - Expert/Specialist course
+- [ ] Add monthly payment options: 12, 24, 36 months
+- [ ] Update all pricing pages with new tiers
+- [ ] Update Stripe products with new prices
+- [ ] Add more exam questions for £999 and £1,199 courses
+- [ ] Ensure consistent pricing across all pages
+
+### Certificate Verification Page
+- [ ] Create public /verify endpoint
+- [ ] Allow employers to validate certificates by number
+- [ ] Display certificate details and validity status
+
+### Remaining Launch Tasks
+- [ ] Fix ceasai.training SSL certificate
+- [ ] Test live payment flow with promo code
+- [ ] Validate Stripe integration on production domain
+
+
+## Phase 12 - RLMAI Visualization & Pricing Restructure (Dec 31, 2024)
+
+### RLMAI Cross-Training Network Visualization
+- [x] Build animated network visualization component
+- [x] Show 27 companies with orbital layout around central RLMAI hub
+- [x] Add live counter animation (12,000+ decisions/day)
+- [x] Color-code nodes by category (AI Safety, SaaS AI, Traditional)
+- [x] Add animated data flow lines between nodes
+- [x] Integrate into CSOAI homepage (PublicHome.tsx)
+
+### CEASAI Pricing Restructure
+- [x] Tier 1: £499 - Fundamentals course
+- [x] Tier 2: £999 - Advanced/Professional course
+- [x] Tier 3: £1,999 - Expert/Specialist course
+- [x] Add monthly payment options (12, 24, 36 months)
+- [ ] Update Stripe products with new prices
+
+### Company Name Fix
+- [x] Rename ISISecurity.ai to ASISecurity.ai throughout codebase (not found in codebase - will use ASISecurity in new components)
+
+### £1M Training Giveaway PR Campaign
+- [x] Add promotional section for £1M free training giveaway
+- [x] Calculate: £1M ÷ £1,999 = ~500 Expert courses OR £1M ÷ £499 = ~2,000 Fundamentals
+- [x] Create "Apply for Free Certification" CTA
+- [x] Add countdown/limited spots indicator
+- [ ] Track giveaway applications in database

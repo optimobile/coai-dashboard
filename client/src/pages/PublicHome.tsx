@@ -1,5 +1,8 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { RLMAINetworkVisualization } from "@/components/RLMAINetworkVisualization";
+import { CEASAIPricing } from "@/components/CEASAIPricing";
+import { MillionPoundGiveaway } from "@/components/MillionPoundGiveaway";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { 
@@ -502,6 +505,15 @@ export default function PublicHome() {
           </div>
         </div>
       </section>
+
+      {/* RLMAI Cross-Training Network */}
+      <RLMAINetworkVisualization />
+
+      {/* £1M Training Giveaway */}
+      <MillionPoundGiveaway />
+
+      {/* CEASAI Pricing */}
+      <CEASAIPricing />
 
       {/* Stats Section */}
       <section className="py-20 px-4">
