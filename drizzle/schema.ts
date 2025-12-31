@@ -659,6 +659,7 @@ export const users = mysqlTable("users", {
 	referralCode: varchar("referral_code", { length: 50 }),
 	payoutFrequency: mysqlEnum("payout_frequency", ['weekly','biweekly','monthly']).default('monthly'),
 	lastPayoutDate: timestamp("last_payout_date", { mode: 'string' }),
+	stripeConnectAccountId: varchar("stripe_connect_account_id", { length: 255 }),
 },
 (table) => [
 	index("users_openId_unique").on(table.openId),

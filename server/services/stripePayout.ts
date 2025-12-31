@@ -5,6 +5,7 @@
  */
 
 import Stripe from 'stripe';
+import { PayoutEmailService } from './payoutEmailService';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2025-12-15.clover',
@@ -192,13 +193,27 @@ export class StripePayoutService {
    */
   private static async handlePayoutPaid(payout: Stripe.Payout): Promise<void> {
     try {
+      let referrerId: string | null = null;
       commissionsStore.forEach(c => {
         if (c.payoutId === payout.id) {
           c.status = 'processed';
           c.processedAt = new Date();
+          referrerId = c.referrerId;
         }
       });
       console.log(`Payout ${payout.id} completed successfully`);
+
+      // Send email notification
+      if (referrerId) {
+        await PayoutEmailService.sendPayoutProcessedEmail({
+          userId: parseInt(referrerId),
+          amount: payout.amount,
+          currency: payout.currency,
+          payoutId: payout.id,
+          status: 'completed',
+          processedDate: new Date(),
+        });
+      }
     } catch (error) {
       console.error('Failed to handle payout paid:', error);
     }
@@ -209,12 +224,26 @@ export class StripePayoutService {
    */
   private static async handlePayoutFailed(payout: Stripe.Payout): Promise<void> {
     try {
+      let referrerId: string | null = null;
       commissionsStore.forEach(c => {
         if (c.payoutId === payout.id) {
           c.status = 'failed';
+          referrerId = c.referrerId;
         }
       });
       console.log(`Payout ${payout.id} failed`);
+
+      // Send email notification
+      if (referrerId) {
+        await PayoutEmailService.sendPayoutFailedEmail({
+          userId: parseInt(referrerId),
+          amount: payout.amount,
+          currency: payout.currency,
+          payoutId: payout.id,
+          status: 'failed',
+          errorMessage: payout.failure_message || 'Payout could not be processed',
+        });
+      }
     } catch (error) {
       console.error('Failed to handle payout failed:', error);
     }

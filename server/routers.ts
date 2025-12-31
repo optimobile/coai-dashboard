@@ -55,6 +55,7 @@ import { emailOnboardingRouter } from "./routers/emailOnboarding";
 import { emailAutomationRouter } from "./routers/emailAutomationRouter";
 import { aiTutorRouter } from "./routers/aiTutor";
 import { stripeProductsRouter } from "./routers/stripeProducts";
+import { stripeConnectRouter } from "./routers/stripeConnect";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2823,6 +2824,7 @@ export const appRouter = router({
   aiTutor: aiTutorRouter,
   stripeProducts: stripeProductsRouter,
   certificationBadges: certificationBadgesRouter,
+  stripeConnect: stripeConnectRouter,
 });
 
 export type AppRouter = typeof appRouter;

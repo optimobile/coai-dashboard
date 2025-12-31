@@ -28,6 +28,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
+import StripeConnectOnboarding from "@/components/StripeConnectOnboarding";
 import { trpc } from "@/lib/trpc";
 
 interface Payout {
@@ -174,6 +175,9 @@ export default function PayoutHistory() {
             Export CSV
           </Button>
         </div>
+
+        {/* Stripe Connect Onboarding */}
+        <StripeConnectOnboarding />
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
