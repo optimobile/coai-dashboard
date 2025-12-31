@@ -70,9 +70,9 @@ const FRAMEWORKS = [
 ];
 
 const TIERS = [
-  { id: "fundamentals", name: "Fundamentals", price: 9900, description: "Essential concepts and basics" },
-  { id: "professional", name: "Professional", price: 19900, description: "In-depth knowledge and applications" },
-  { id: "expert", name: "Expert", price: 49900, description: "Advanced topics and certifications" },
+  { id: "fundamentals", name: "Fundamentals", price: 49900, description: "Essential concepts and basics" },
+  { id: "professional", name: "Professional", price: 99900, description: "In-depth knowledge and applications" },
+  { id: "expert", name: "Expert", price: 199900, description: "Advanced topics and certifications" },
 ];
 
 export const stripeProductsRouter = router({
@@ -133,7 +133,7 @@ export const stripeProductsRouter = router({
         line_items: [
           {
             price_data: {
-              currency: "usd",
+              currency: "gbp",
               product_data: {
                 name: `${framework.name} - ${tier.name}`,
                 description: `${framework.description}\n${tier.description}`,
@@ -216,7 +216,7 @@ export const stripeProductsRouter = router({
           tierId: tier.id,
           tierName: tier.name,
           price: tier.price,
-          priceFormatted: `$${(tier.price / 100).toFixed(2)}`,
+          priceFormatted: `£${(tier.price / 100).toFixed(2)}`,
           stripePriceId: `price_${fw.id}_${tier.id}`,
         }))
       ),
@@ -257,7 +257,7 @@ export const stripeProductsRouter = router({
       const price = await stripe.prices.create({
         product: product.id,
         unit_amount: tier.price,
-        currency: "usd",
+        currency: "gbp",
         metadata: {
           frameworkId: framework.id,
           tierId: tier.id,

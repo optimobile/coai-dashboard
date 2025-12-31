@@ -16,12 +16,22 @@ import {
   Trophy,
   Zap,
   Globe,
+  Loader2,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
+import { trpc } from '@/lib/trpc';
 
 interface GiveawayStats {
   totalValue: number;
@@ -32,24 +42,65 @@ interface GiveawayStats {
 
 export function MillionPoundGiveaway() {
   const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
+  const [country, setCountry] = useState('');
+  const [courseLevel, setCourseLevel] = useState<'fundamentals' | 'advanced' | 'specialist'>('fundamentals');
+  const [referralSource, setReferralSource] = useState('');
+  
+  // Fetch stats from backend
+  const { data: backendStats } = trpc.giveaway.getStats.useQuery();
+  
   const [stats, setStats] = useState<GiveawayStats>({
     totalValue: 1000000,
-    spotsTotal: 2004, // £1M ÷ £499 = ~2004 Fundamentals courses
-    spotsClaimed: 847,
+    spotsTotal: 2004,
+    spotsClaimed: 0,
     daysRemaining: 32,
   });
-
-  // Simulate spots being claimed
+  
+  // Update stats when backend data arrives
   useEffect(() => {
-    const interval = setInterval(() => {
-      setStats(prev => ({
-        ...prev,
-        spotsClaimed: Math.min(prev.spotsClaimed + Math.floor(Math.random() * 2), prev.spotsTotal),
-      }));
-    }, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    if (backendStats) {
+      setStats({
+        totalValue: backendStats.totalValue,
+        spotsTotal: backendStats.spotsTotal,
+        spotsClaimed: backendStats.spotsClaimed,
+        daysRemaining: backendStats.daysRemaining,
+      });
+    }
+  }, [backendStats]);
+
+  const submitMutation = trpc.giveaway.submitApplication.useMutation({
+    onSuccess: (data) => {
+      if (data.alreadyApplied) {
+        toast.info('You\'ve already applied!', {
+          description: `Your application status: ${data.status}. Check your email for updates.`,
+        });
+      } else {
+        toast.success('🎉 Application submitted!', {
+          description: data.emailSent 
+            ? 'Check your email for confirmation. Welcome to CEASAI!'
+            : 'Your application has been received. We\'ll be in touch soon!',
+        });
+        // Reset form
+        setEmail('');
+        setName('');
+        setCompany('');
+        setCountry('');
+        setReferralSource('');
+        // Update local stats
+        setStats(prev => ({
+          ...prev,
+          spotsClaimed: prev.spotsClaimed + 1,
+        }));
+      }
+    },
+    onError: (error) => {
+      toast.error('Application failed', {
+        description: error.message || 'Please try again later.',
+      });
+    },
+  });
 
   const spotsRemaining = stats.spotsTotal - stats.spotsClaimed;
   const percentageClaimed = (stats.spotsClaimed / stats.spotsTotal) * 100;
@@ -61,23 +112,23 @@ export function MillionPoundGiveaway() {
       return;
     }
     
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast.success('🎉 Application submitted!', {
-      description: 'Check your email for next steps. Welcome to CEASAI!',
+    submitMutation.mutate({
+      email,
+      name: name || undefined,
+      company: company || undefined,
+      country: country || undefined,
+      courseLevel,
+      referralSource: referralSource || undefined,
     });
-    
-    setEmail('');
-    setIsSubmitting(false);
-    
-    // Update stats
-    setStats(prev => ({
-      ...prev,
-      spotsClaimed: prev.spotsClaimed + 1,
-    }));
+  };
+
+  const getCourseValue = () => {
+    switch (courseLevel) {
+      case 'fundamentals': return '£499';
+      case 'advanced': return '£999';
+      case 'specialist': return '£1,999';
+      default: return '£499';
+    }
   };
 
   return (
@@ -199,7 +250,7 @@ export function MillionPoundGiveaway() {
             <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
                 <Award className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-white">£499</p>
+                <p className="text-3xl font-bold text-white">{getCourseValue()}</p>
                 <p className="text-sm text-slate-400">Course Value</p>
               </CardContent>
             </Card>
@@ -254,28 +305,94 @@ export function MillionPoundGiveaway() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
+                  <Label htmlFor="email" className="text-slate-300">Email Address *</Label>
                   <Input
+                    id="email"
                     type="email"
                     placeholder="Enter your email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 h-12"
+                    required
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="name" className="text-slate-300">Full Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Your full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 h-12"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="company" className="text-slate-300">Company</Label>
+                    <Input
+                      id="company"
+                      type="text"
+                      placeholder="Company name"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 h-12"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="country" className="text-slate-300">Country</Label>
+                    <Input
+                      id="country"
+                      type="text"
+                      placeholder="Your country"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 h-12"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="courseLevel" className="text-slate-300">Preferred Course Level</Label>
+                  <Select value={courseLevel} onValueChange={(v) => setCourseLevel(v as any)}>
+                    <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white h-12">
+                      <SelectValue placeholder="Select course level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fundamentals">Fundamentals (£499 value)</SelectItem>
+                      <SelectItem value="advanced">Advanced (£999 value)</SelectItem>
+                      <SelectItem value="specialist">Specialist (£1,999 value)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="referralSource" className="text-slate-300">How did you hear about us?</Label>
+                  <Select value={referralSource} onValueChange={setReferralSource}>
+                    <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white h-12">
+                      <SelectValue placeholder="Select an option" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="linkedin">LinkedIn</SelectItem>
+                      <SelectItem value="twitter">Twitter/X</SelectItem>
+                      <SelectItem value="google">Google Search</SelectItem>
+                      <SelectItem value="friend">Friend/Colleague</SelectItem>
+                      <SelectItem value="news">News Article</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={submitMutation.isPending}
                   className="w-full h-12 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold text-lg"
                 >
-                  {isSubmitting ? (
+                  {submitMutation.isPending ? (
                     <span className="flex items-center gap-2">
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                      >
-                        <Zap className="w-5 h-5" />
-                      </motion.div>
+                      <Loader2 className="w-5 h-5 animate-spin" />
                       Processing...
                     </span>
                   ) : (
@@ -295,7 +412,7 @@ export function MillionPoundGiveaway() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-400">
                   <CheckCircle className="w-4 h-4 text-emerald-400" />
-                  <span>Full £499 Fundamentals course included</span>
+                  <span>Full {getCourseValue()} course included</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-400">
                   <CheckCircle className="w-4 h-4 text-emerald-400" />
@@ -318,27 +435,23 @@ export function MillionPoundGiveaway() {
             The West needs trained professionals <span className="text-white">now</span>. 
             We've built the certification platform—it costs us nothing for people to learn. 
             By giving away £1M in training, we're investing in humanity's AI safety future 
-            while building the largest community of certified analysts in the world.
+            while building the world's largest community of certified AI Safety Analysts.
           </p>
-          
-          <div className="flex flex-wrap justify-center gap-6 mt-8">
-            <div className="flex items-center gap-2 text-slate-300">
-              <Globe className="w-5 h-5 text-blue-400" />
-              <span>Global Impact</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <Users className="w-5 h-5 text-emerald-400" />
-              <span>250K Jobs Created</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <Award className="w-5 h-5 text-amber-400" />
-              <span>Industry Standard</span>
-            </div>
+        </div>
+
+        {/* Social Proof */}
+        <div className="mt-12 text-center">
+          <p className="text-slate-500 text-sm mb-4">Trusted by professionals from</p>
+          <div className="flex flex-wrap justify-center gap-8 opacity-60">
+            <Globe className="w-8 h-8 text-slate-400" />
+            <span className="text-slate-400 font-semibold">Google</span>
+            <span className="text-slate-400 font-semibold">Microsoft</span>
+            <span className="text-slate-400 font-semibold">Meta</span>
+            <span className="text-slate-400 font-semibold">Amazon</span>
+            <span className="text-slate-400 font-semibold">OpenAI</span>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default MillionPoundGiveaway;

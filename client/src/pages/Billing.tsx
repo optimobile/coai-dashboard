@@ -246,12 +246,12 @@ export default function Billing() {
                   <CardContent className="flex-1">
                     <div className="text-center mb-6">
                       <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-4xl font-bold">${price}</span>
+                        <span className="text-4xl font-bold">£{price}</span>
                         <span className="text-muted-foreground">/mo</span>
                       </div>
                       {billingPeriod === "yearly" && totalPrice > 0 && (
                         <p className="text-sm text-muted-foreground mt-1">
-                          ${totalPrice} billed annually
+                          £{totalPrice} billed annually
                         </p>
                       )}
                     </div>

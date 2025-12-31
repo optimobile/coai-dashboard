@@ -27,8 +27,8 @@ export const SUBSCRIPTION_TIERS = {
   pro: {
     name: "Pro",
     description: "For teams managing multiple AI systems",
-    priceMonthly: 49,
-    priceYearly: 490, // ~17% discount
+    priceMonthly: 39,
+    priceYearly: 390, // ~17% discount
     stripePriceIdMonthly: process.env.STRIPE_PRO_MONTHLY_PRICE_ID || "price_pro_monthly",
     stripePriceIdYearly: process.env.STRIPE_PRO_YEARLY_PRICE_ID || "price_pro_yearly",
     features: [
@@ -52,8 +52,8 @@ export const SUBSCRIPTION_TIERS = {
   enterprise: {
     name: "Enterprise",
     description: "For organizations with advanced compliance needs",
-    priceMonthly: 199,
-    priceYearly: 1990, // ~17% discount
+    priceMonthly: 159,
+    priceYearly: 1590, // ~17% discount
     stripePriceIdMonthly: process.env.STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || "price_enterprise_monthly",
     stripePriceIdYearly: process.env.STRIPE_ENTERPRISE_YEARLY_PRICE_ID || "price_enterprise_yearly",
     features: [

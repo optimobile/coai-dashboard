@@ -82,7 +82,7 @@ export default function EnterpriseHowItWorks() {
     {
       tier: "Startup",
       description: "For early-stage AI companies",
-      price: "$5,000/month",
+      price: "£4,000/month",
       features: [
         "Up to 5 AI systems",
         "API integration",
@@ -94,7 +94,7 @@ export default function EnterpriseHowItWorks() {
     {
       tier: "Growth",
       description: "For scaling AI companies",
-      price: "$15,000/month",
+      price: "£12,000/month",
       features: [
         "Up to 20 AI systems",
         "Full API integration",

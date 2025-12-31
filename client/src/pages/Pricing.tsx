@@ -59,8 +59,8 @@ const PRICING_TIERS = [
     id: 'pro',
     name: 'Pro',
     description: 'For growing teams with compliance needs',
-    monthlyPrice: 49,
-    yearlyPrice: 39,
+    monthlyPrice: 39,
+    yearlyPrice: 31,
     icon: Rocket,
     color: 'text-emerald-500 dark:text-emerald-400',
     bgColor: 'bg-emerald-500/20',
@@ -90,8 +90,8 @@ const PRICING_TIERS = [
     id: 'enterprise',
     name: 'Enterprise',
     description: 'For organizations requiring full compliance',
-    monthlyPrice: 199,
-    yearlyPrice: 159,
+    monthlyPrice: 159,
+    yearlyPrice: 127,
     icon: Building2,
     color: 'text-gray-400',
     bgColor: 'bg-gray-500/20',
@@ -292,11 +292,11 @@ export default function Pricing() {
                 </CardHeader>
                 <CardContent className="text-center">
                   <div className="mb-6">
-                    <span className="text-5xl font-bold text-gray-900 dark:text-white">${price}</span>
+                    <span className="text-5xl font-bold text-gray-900 dark:text-white">£{price}</span>
                     <span className="text-gray-600 dark:text-gray-400">/month</span>
                     {isYearly && tier.monthlyPrice > 0 && (
                       <p className="text-sm text-gray-600 dark:text-gray-500 mt-1">
-                        Billed ${price * 12}/year
+                        Billed £{price * 12}/year
                       </p>
                     )}
                   </div>

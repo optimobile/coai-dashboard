@@ -49,7 +49,7 @@ export default function EnterprisePlansLanding() {
             {[
               {
                 name: 'Growth',
-                price: '$2,999',
+                price: '£2,499',
                 period: '/month',
                 description: 'For scaling organizations',
                 users: 'Up to 25 users',
@@ -64,7 +64,7 @@ export default function EnterprisePlansLanding() {
               },
               {
                 name: 'Professional',
-                price: '$9,999',
+                price: '£7,999',
                 period: '/month',
                 description: 'For mid-size enterprises',
                 users: 'Up to 100 users',

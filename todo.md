@@ -5842,3 +5842,53 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Add social sharing buttons (Twitter, LinkedIn, Facebook, WhatsApp)
 - [ ] Create giveaway admin dashboard page
 - [ ] Add application management (approve, reject, export)
+
+
+## Phase 12 - GBP Pricing & Giveaway System
+
+### Pricing Updates (£499-£1,999)
+- [ ] Update Pricing page with GBP pricing (£499 Fundamentals, £999 Advanced, £1,999 Expert)
+- [ ] Update Training page with GBP pricing
+- [ ] Update course detail pages with GBP pricing
+- [ ] Update any other pages showing USD pricing to GBP
+
+### Stripe GBP Products
+- [ ] Create Stripe products for GBP pricing tiers
+- [ ] Create price IDs for one-time payments (£499, £999, £1,999)
+- [ ] Create price IDs for monthly payment options
+- [ ] Update checkout flow to use GBP prices
+
+### Giveaway Signup Flow
+- [ ] Create giveaway_signups database table
+- [ ] Create giveaway signup API endpoint
+- [ ] Connect £1M giveaway form to database
+- [ ] Send confirmation emails on signup
+- [ ] Add admin view for giveaway signups
+
+
+## Phase 12 - GBP Pricing & Giveaway Campaign (Dec 31, 2024)
+
+- [x] Update pricing across all pages to £499-£1,999
+- [x] Create Stripe GBP products for CEASAI tiers
+- [x] Implement giveaway signup database schema (giveawayApplications table)
+- [x] Create giveaway API endpoints (giveaway router)
+- [x] Connect MillionPoundGiveaway form to backend
+- [x] Send confirmation emails for giveaway signups
+- [x] Update Pricing.tsx to use GBP (£39/£159/mo)
+- [x] Update Billing.tsx to use GBP
+- [x] Update EarlyAccessLanding.tsx to use GBP
+- [x] Update EnterpriseHowItWorks.tsx to use GBP
+- [x] Update EnterprisePlansLanding.tsx to use GBP
+- [x] Update WatchdogToCEASA.tsx to use GBP
+- [x] Update stripeProducts router to use GBP
+- [x] Update products.ts subscription tiers to GBP
+
+
+## Phase 12 - GBP Pricing & Giveaway System
+
+- [x] Update pricing across all pages to £499-£1,999
+- [x] Create Stripe GBP products for CEASAI tiers
+- [x] Implement giveaway signup database schema
+- [x] Create giveaway API endpoints
+- [x] Connect MillionPoundGiveaway form to backend
+- [x] Send confirmation emails for giveaway signups

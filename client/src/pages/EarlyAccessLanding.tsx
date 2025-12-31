@@ -177,15 +177,15 @@ export default function EarlyAccessLanding() {
             {[
               {
                 name: 'Analyst',
-                price: '$99',
-                originalPrice: '$199',
+                price: '£249',
+                originalPrice: '£499',
                 description: 'Perfect for individuals',
                 features: ['CEASAI Certification', 'Training Courses', 'Watchdog Access', 'Community']
               },
               {
                 name: 'Enterprise',
-                price: '$999',
-                originalPrice: '$1,999',
+                price: '£499',
+                originalPrice: '£999',
                 description: 'For organizations',
                 features: ['Team Accounts (5)', 'Byzantine Council', 'API Access', 'Priority Support']
               },

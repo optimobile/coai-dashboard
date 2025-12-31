@@ -239,11 +239,11 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
             <CardContent className="space-y-4">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Investment</p>
-                <p className="text-2xl font-bold">$299</p>
+                <p className="text-2xl font-bold">£499</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">Salary Increase (Avg)</p>
-                <p className="text-2xl font-bold text-green-600">+$5K/year</p>
+                <p className="text-2xl font-bold text-green-600">+£5K/year</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">ROI Timeline</p>
@@ -265,11 +265,11 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
             <CardContent className="space-y-4">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Investment</p>
-                <p className="text-2xl font-bold">$799</p>
+                <p className="text-2xl font-bold">£999</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">Salary Increase (Avg)</p>
-                <p className="text-2xl font-bold text-green-600">+$20K/year</p>
+                <p className="text-2xl font-bold text-green-600">+£20K/year</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">ROI Timeline</p>
@@ -292,7 +292,7 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">Salary Increase (Avg)</p>
-                <p className="text-2xl font-bold text-green-600">+$50K+/year</p>
+                <p className="text-2xl font-bold text-green-600">+£50K+/year</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">ROI Timeline</p>
