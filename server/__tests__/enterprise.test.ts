@@ -42,9 +42,9 @@ describe('Enterprise Features', () => {
 
     it('should calculate webhook metrics correctly', () => {
       const deliveries = [
-        { status: 'delivered' as const, deliveryTime: 100, createdAt: new Date().toISOString() },
-        { status: 'delivered' as const, deliveryTime: 200, createdAt: new Date().toISOString() },
-        { status: 'failed' as const, createdAt: new Date().toISOString() },
+        { status: 'delivered' as const, deliveryTime: 100, createdAt: new Date() },
+        { status: 'delivered' as const, deliveryTime: 200, createdAt: new Date() },
+        { status: 'failed' as const, createdAt: new Date() },
       ];
 
       const metrics = DashboardMetricsService.calculateWebhookMetrics(5, 4, deliveries);
@@ -65,21 +65,21 @@ describe('Enterprise Features', () => {
           currentStep: 5,
           completedSteps: [1, 2, 3, 4, 5],
           createdAt: new Date(Date.now() - 3600000),
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date(),
         },
         {
           id: 'sess-2',
           currentStep: 3,
           completedSteps: [1, 2, 3],
           createdAt: new Date(Date.now() - 7200000),
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date(),
         },
         {
           id: 'sess-3',
           currentStep: 1,
           completedSteps: [1],
           createdAt: new Date(Date.now() - 10800000),
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date(),
         },
       ];
 
@@ -127,7 +127,7 @@ describe('Enterprise Features', () => {
         failedDeliveries: 6,
         averageDeliveryTime: 250,
         successRate: 94,
-        lastDeliveryTime: new Date().toISOString(),
+        lastDeliveryTime: new Date(),
       };
 
       const onboardingAnalytics = {
@@ -247,7 +247,7 @@ describe('Enterprise Features', () => {
         AuditTrailService.logAssessmentCompletion('user-2', 'sys-2', 'EU AI Act', 72, 45, '192.168.1.2', 'Chrome/120'),
       ];
 
-      const report = AuditTrailService.generateAuditReport(logs, new Date(Date.now() - 24 * 60 * 60 * 1000), new Date().toISOString());
+      const report = AuditTrailService.generateAuditReport(logs, new Date(Date.now() - 24 * 60 * 60 * 1000), new Date());
 
       expect(report.totalEntries).toBeGreaterThan(0);
       expect(report.successfulActions).toBeGreaterThan(0);
@@ -263,7 +263,7 @@ describe('Enterprise Features', () => {
     it('should generate XML export', () => {
       const exportData = {
         organizationName: 'Test Corp',
-        exportDate: new Date().toISOString(),
+        exportDate: new Date(),
         exportedBy: 'admin@test.com',
         systems: [
           {
@@ -273,7 +273,7 @@ describe('Enterprise Features', () => {
             riskLevel: 'limited',
             complianceScore: 85,
             certificationLevel: 'gold',
-            lastAssessment: new Date().toISOString(),
+            lastAssessment: new Date(),
             controls: [
               { id: 'ctrl-1', name: 'Data Protection', status: 'compliant' as const, evidence: ['policy.pdf'] },
             ],
@@ -295,7 +295,7 @@ describe('Enterprise Features', () => {
     it('should generate CSV export', () => {
       const exportData = {
         organizationName: 'Test Corp',
-        exportDate: new Date().toISOString(),
+        exportDate: new Date(),
         exportedBy: 'admin@test.com',
         systems: [
           {
@@ -305,7 +305,7 @@ describe('Enterprise Features', () => {
             riskLevel: 'limited',
             complianceScore: 85,
             certificationLevel: 'gold',
-            lastAssessment: new Date().toISOString(),
+            lastAssessment: new Date(),
             controls: [],
           },
         ],
@@ -324,7 +324,7 @@ describe('Enterprise Features', () => {
     it('should generate JSON export', () => {
       const exportData = {
         organizationName: 'Test Corp',
-        exportDate: new Date().toISOString(),
+        exportDate: new Date(),
         exportedBy: 'admin@test.com',
         systems: [],
         auditLog: [],
@@ -481,7 +481,7 @@ describe('Enterprise Features', () => {
         failedDeliveries: 1,
         averageDeliveryTime: 250,
         successRate: 99,
-        lastDeliveryTime: new Date().toISOString(),
+        lastDeliveryTime: new Date(),
       };
 
       const onboardingAnalytics = {
@@ -497,10 +497,10 @@ describe('Enterprise Features', () => {
       };
 
       const trends = [
-        { date: new Date().toISOString(), score: 85, systemId: 1 },
+        { date: new Date(), score: 85, systemId: 1 },
       ];
 
-      const systems = [{ id: 1, name: 'System 1', complianceScore: 85, lastAssessmentDate: new Date().toISOString() }];
+      const systems = [{ id: 1, name: 'System 1', complianceScore: 85, lastAssessmentDate: new Date() }];
 
       const dashboard = DashboardMetricsService.buildExecutiveDashboard(
         scoreCards,
@@ -524,7 +524,7 @@ describe('Enterprise Features', () => {
 
       const exportData = {
         organizationName: 'Test Corp',
-        exportDate: new Date().toISOString(),
+        exportDate: new Date(),
         exportedBy: 'admin@test.com',
         systems: [],
         auditLog: logs,

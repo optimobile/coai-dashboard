@@ -41,7 +41,7 @@ describe('Referral Program', () => {
     it('should reject an invalid referral code', async () => {
       const result = await ReferralValidationService.validateReferralCode('INVALID999');
 
-      expect(result.isValid).toBe(false);
+      expect(result.valid).toBe(false);
     });
 
     it('should track referrer relationship on user creation', async () => {
@@ -149,7 +149,7 @@ describe('Referral Program', () => {
 
       // 2. Validate code
       const validation = await ReferralValidationService.validateReferralCode(code);
-      expect(validation.isValid).toBe(true);
+      expect(validation.valid).toBe(true);
 
       // 3. Track referrer relationship
       const tracking = await ReferralValidationService.trackReferrerRelationship(

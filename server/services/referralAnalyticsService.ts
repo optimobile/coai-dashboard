@@ -353,6 +353,66 @@ export class ReferralAnalyticsService {
   }
 
   /**
+   * Get referral summary for a user
+   */
+  static async getReferralSummary(userId: number): Promise<{
+    totalReferralCodes: number;
+    activeReferralCodes: number;
+    pendingEarnings: number;
+    processedEarnings: number;
+  }> {
+    const db = await getDb();
+    if (!db) {
+      return {
+        totalReferralCodes: 0,
+        activeReferralCodes: 0,
+        pendingEarnings: 0,
+        processedEarnings: 0,
+      };
+    }
+
+    try {
+      // Get referral codes
+      const codes = await db
+        .select()
+        .from(referralCodes)
+        .where(eq(referralCodes.userId, userId));
+
+      const totalReferralCodes = codes.length;
+      const activeReferralCodes = codes.filter((c: any) => c.status === 'active').length;
+
+      // Get conversions for earnings
+      const conversions = await db
+        .select()
+        .from(referralConversions)
+        .where(eq(referralConversions.referrerId, userId));
+
+      const pendingEarnings = conversions
+        .filter((c: any) => c.status === 'pending' || c.status === 'earned')
+        .reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount || '0'), 0);
+
+      const processedEarnings = conversions
+        .filter((c: any) => c.status === 'processed')
+        .reduce((sum: number, c: any) => sum + parseFloat(c.commissionAmount || '0'), 0);
+
+      return {
+        totalReferralCodes,
+        activeReferralCodes,
+        pendingEarnings,
+        processedEarnings,
+      };
+    } catch (error) {
+      console.error('Error getting referral summary:', error);
+      return {
+        totalReferralCodes: 0,
+        activeReferralCodes: 0,
+        pendingEarnings: 0,
+        processedEarnings: 0,
+      };
+    }
+  }
+
+  /**
    * Get payout history for a user
    */
   static async getPayoutHistory(userId: number): Promise<any[]> {
