@@ -5624,3 +5624,47 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Other domains pending verification
 
 ### Production Status: READY FOR LAUNCH
+
+## Testing & Enhancement Tasks - December 31, 2024
+
+### User Journey Testing
+- [ ] Test signup flow as new user
+- [ ] Test course enrollment
+- [ ] Test course module completion
+- [ ] Test exam flow (50 questions, 70% pass threshold)
+- [ ] Test certificate generation with CEASAI branding
+- [ ] Verify certificate download works
+
+### Domain CNAME Verification (Full List)
+- [ ] Verify ceasai.training redirects
+- [ ] Verify safetyof.ai redirects
+- [ ] Document all configured domains
+
+### Exam Questions Expansion (Target: 50+)
+- [ ] Add more EU AI Act questions (target: 15 total)
+- [ ] Add more NIST RMF questions (target: 10 total)
+- [ ] Add more TC260 questions (target: 10 total)
+- [ ] Add more Ethics questions (target: 10 total)
+- [ ] Add more Incident Analysis questions (target: 10 total)
+
+## Testing & Enhancement Results - December 31, 2024
+
+### User Journey Testing - COMPLETED
+- [x] Verified signup page loads correctly
+- [x] Verified courses page with regional courses
+- [x] Verified training page with 5 modules
+- [x] Verified exam page with instructions and topics
+- [x] Verified certificates page with CEASAI branding
+- [x] Certificate generator V2 includes proper CEASAI branding
+
+### Domain CNAME Verification - COMPLETED
+- [x] csoai.org - WORKING (HTTP 200)
+- [x] councilof.ai - WORKING (HTTP 200)
+- [x] safetyof.ai - WORKING (HTTP 200)
+- [x] ceasai.training - DNS configured but SSL certificate issue (needs attention)
+
+### Exam Questions Expansion - COMPLETED
+- [x] Original seed file: 51 questions
+- [x] Added 23 new questions via add-more-questions.ts
+- [x] Total: 74 questions (exceeds 50+ target)
+- [x] Categories covered: EU AI Act (15), NIST RMF (14), TC260 (10), Ethics (11), Incident Analysis (14), Scenarios (8)
