@@ -89,4 +89,9 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+// Export db getter for backward compatibility with services that import { db }
+export const db = {
+  async getDb() { return getDb(); }
+};
+
 // TODO: add feature queries here as your schema grows.

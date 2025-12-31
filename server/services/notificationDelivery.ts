@@ -3,7 +3,7 @@
  * Handles email, Slack, and webhook delivery with retry logic
  */
 
-import { db } from '../db';
+import { getDb } from '../db';
 import { notifications, notificationPreferences } from '../../drizzle/schema';
 import { eq } from 'drizzle-orm';
 
@@ -11,10 +11,10 @@ interface DeliveryLog {
   notificationId: number;
   channel: 'email' | 'slack' | 'webhook';
   status: 'pending' | 'sent' | 'failed' | 'bounced';
-  deliveredAt?: Date;
+  deliveredAt?: string | Date;
   errorMessage?: string;
   retryCount: number;
-  nextRetryAt?: Date;
+  nextRetryAt?: string | Date;
 }
 
 interface NotificationPayload {
@@ -36,10 +36,10 @@ export class NotificationDeliveryService {
    */
   public async sendNotification(payload: NotificationPayload): Promise<void> {
     try {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
       // Get user preferences
-      const prefs = await db.query.notificationPreferences.findFirst({
-        where: eq(notificationPreferences.userId, payload.userId),
-      });
+      const [prefs] = await db.select().from(notificationPreferences).where(eq(notificationPreferences.userId, payload.userId));
 
       if (!prefs) {
         console.warn(`[Notification] No preferences found for user ${payload.userId}`);

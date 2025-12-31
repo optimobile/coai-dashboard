@@ -142,7 +142,7 @@ export async function sendDailyDigests(): Promise<void> {
     .leftJoin(users, eq(notificationPreferences.userId, users.id))
     .where(
       and(
-        eq(notificationPreferences.digestEnabled, true),
+        eq(notificationPreferences.digestEnabled, 1),
         eq(notificationPreferences.digestFrequency, 'daily')
       )
     );
@@ -150,11 +150,13 @@ export async function sendDailyDigests(): Promise<void> {
   console.log(`[EmailDigest] Processing daily digests for ${usersWithDigest.length} users`);
 
   // Get yesterday's start and end
-  const yesterday = new Date().toISOString();
+  const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setHours(0, 0, 0, 0);
-  const today = new Date().toISOString();
+  const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const yesterdayStr = yesterday.toISOString();
+  const todayStr = today.toISOString();
 
   for (const user of usersWithDigest) {
     if (!user.userEmail || !user.userId) continue;
@@ -166,9 +168,9 @@ export async function sendDailyDigests(): Promise<void> {
       .where(
         and(
           eq(notifications.userId, user.userId),
-          eq(notifications.isRead, false),
-          gte(notifications.createdAt, yesterday),
-          lte(notifications.createdAt, today)
+          eq(notifications.isRead, 0),
+          gte(notifications.createdAt, yesterdayStr),
+          lte(notifications.createdAt, todayStr)
         )
       )
       .orderBy(desc(notifications.createdAt));
@@ -226,7 +228,7 @@ export async function sendWeeklyDigests(): Promise<void> {
     .leftJoin(users, eq(notificationPreferences.userId, users.id))
     .where(
       and(
-        eq(notificationPreferences.digestEnabled, true),
+        eq(notificationPreferences.digestEnabled, 1),
         eq(notificationPreferences.digestFrequency, 'weekly')
       )
     );
@@ -234,11 +236,13 @@ export async function sendWeeklyDigests(): Promise<void> {
   console.log(`[EmailDigest] Processing weekly digests for ${usersWithDigest.length} users`);
 
   // Get last week's start and end
-  const lastWeek = new Date().toISOString();
+  const lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
   lastWeek.setHours(0, 0, 0, 0);
-  const today = new Date().toISOString();
-  today.setHours(0, 0, 0, 0);
+  const todayWeekly = new Date();
+  todayWeekly.setHours(0, 0, 0, 0);
+  const lastWeekStr = lastWeek.toISOString();
+  const todayWeeklyStr = todayWeekly.toISOString();
 
   for (const user of usersWithDigest) {
     if (!user.userEmail || !user.userId) continue;
@@ -250,9 +254,9 @@ export async function sendWeeklyDigests(): Promise<void> {
       .where(
         and(
           eq(notifications.userId, user.userId),
-          eq(notifications.isRead, false),
-          gte(notifications.createdAt, lastWeek),
-          lte(notifications.createdAt, today)
+          eq(notifications.isRead, 0),
+          gte(notifications.createdAt, lastWeekStr),
+          lte(notifications.createdAt, todayWeeklyStr)
         )
       )
       .orderBy(desc(notifications.createdAt));

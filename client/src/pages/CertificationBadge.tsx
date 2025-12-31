@@ -128,9 +128,9 @@ export default function CertificationBadge() {
 
               <div className="border-t pt-4 mt-4">
                 <p className="text-sm text-gray-600 mb-2">Issued: {badge.issuedAt && new Date(badge.issuedAt).toLocaleDateString()}</p>
-                {badge.expiresAt && (
+                {(badge as any).expiresAt && (
                   <p className="text-sm text-gray-600 mb-2">
-                    Expires: {new Date(badge.expiresAt).toLocaleDateString()}
+                    Expires: {new Date((badge as any).expiresAt).toLocaleDateString()}
                   </p>
                 )}
               </div>

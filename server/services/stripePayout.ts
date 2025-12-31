@@ -1,15 +1,13 @@
 /**
  * Stripe Referral Payout Service
  * Manages commission calculations, payout processing, and webhook handling
+ * Note: Using in-memory storage until commissions table is added to schema
  */
 
 import Stripe from 'stripe';
-import { db } from '../db';
-import { commissions } from '../../drizzle/schema';
-import { eq, and, gte } from 'drizzle-orm';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-12-15.clover',
 });
 
 export interface PayoutConfig {
@@ -28,6 +26,23 @@ export interface PayoutResult {
   completedDate?: Date;
 }
 
+// In-memory commissions storage
+interface Commission {
+  id: number;
+  referrerId: string;
+  referralId: number;
+  courseId?: number;
+  commissionRate: number;
+  commissionAmount: number;
+  status: 'earned' | 'pending' | 'processed' | 'failed';
+  payoutId?: string | null;
+  createdAt: Date;
+  processedAt?: Date;
+}
+
+const commissionsStore: Commission[] = [];
+let commissionIdCounter = 1;
+
 /**
  * Stripe Payout Service
  * Manages monthly commission payouts via Stripe Connect
@@ -41,17 +56,18 @@ export class StripePayoutService {
    */
   static async createCommission(config: PayoutConfig): Promise<number> {
     try {
-      const result = await db.insert(commissions).values({
+      const commission: Commission = {
+        id: commissionIdCounter++,
         referrerId: config.referrerId,
         referralId: config.referralId,
         courseId: config.courseId,
         commissionRate: config.commissionRate,
         commissionAmount: config.commissionAmount,
         status: 'earned',
-        createdAt: new Date().toISOString(),
-      });
-
-      return result[0];
+        createdAt: new Date(),
+      };
+      commissionsStore.push(commission);
+      return commission.id;
     } catch (error) {
       console.error('Failed to create commission:', error);
       throw new Error('Failed to create commission');
@@ -63,14 +79,10 @@ export class StripePayoutService {
    */
   static async calculatePendingCommissions(referrerId: string): Promise<number> {
     try {
-      const pendingCommissions = await db.query.commissions.findMany({
-        where: and(
-          eq(commissions.referrerId, referrerId),
-          eq(commissions.status, 'earned'),
-        ),
-      });
-
-      return pendingCommissions.reduce((sum: number, c: any) => sum + (c.commissionAmount || 0), 0);
+      const pendingCommissions = commissionsStore.filter(
+        c => c.referrerId === referrerId && c.status === 'earned'
+      );
+      return pendingCommissions.reduce((sum, c) => sum + (c.commissionAmount || 0), 0);
     } catch (error) {
       console.error('Failed to calculate pending commissions:', error);
       throw new Error('Failed to calculate pending commissions');
@@ -85,12 +97,10 @@ export class StripePayoutService {
       const results: PayoutResult[] = [];
 
       // Get all unique referrers with pending commissions
-      const allCommissions = await db.query.commissions.findMany({
-        where: eq(commissions.status, 'earned'),
-      });
+      const allCommissions = commissionsStore.filter(c => c.status === 'earned');
 
       const referrerMap = new Map<string, number>();
-      allCommissions.forEach((c: any) => {
+      allCommissions.forEach((c) => {
         const current = referrerMap.get(c.referrerId) || 0;
         referrerMap.set(c.referrerId, current + (c.commissionAmount || 0));
       });
@@ -119,43 +129,35 @@ export class StripePayoutService {
       const payout = await stripe.payouts.create({
         amount,
         currency: 'usd',
-        method: 'instant', // Instant payout for referrers
+        method: 'instant',
         description: `CSOAI Referral Commission - ${referrerId}`,
       });
 
       const payoutId = payout.id;
 
       // Update all earned commissions for this referrer to pending
-      await db
-        .update(commissions)
-        .set({
-          status: 'pending',
-          payoutId,
-        })
-        .where(and(
-          eq(commissions.referrerId, referrerId),
-          eq(commissions.status, 'earned'),
-        ));
+      commissionsStore.forEach(c => {
+        if (c.referrerId === referrerId && c.status === 'earned') {
+          c.status = 'pending';
+          c.payoutId = payoutId;
+        }
+      });
 
       return {
         payoutId,
         amount,
         status: 'processing',
-        scheduledDate: new Date().toISOString(),
+        scheduledDate: new Date(),
       };
     } catch (error) {
       console.error('Failed to process payout:', error);
 
       // Update commissions to failed status
-      await db
-        .update(commissions)
-        .set({
-          status: 'failed',
-        })
-        .where(and(
-          eq(commissions.referrerId, referrerId),
-          eq(commissions.status, 'pending'),
-        ));
+      commissionsStore.forEach(c => {
+        if (c.referrerId === referrerId && c.status === 'pending') {
+          c.status = 'failed';
+        }
+      });
 
       throw new Error('Failed to process payout');
     }
@@ -190,15 +192,12 @@ export class StripePayoutService {
    */
   private static async handlePayoutPaid(payout: Stripe.Payout): Promise<void> {
     try {
-      // Update all commissions for this payout to processed
-      await db
-        .update(commissions)
-        .set({
-          status: 'processed',
-          processedAt: new Date().toISOString(),
-        })
-        .where(eq(commissions.payoutId, payout.id));
-
+      commissionsStore.forEach(c => {
+        if (c.payoutId === payout.id) {
+          c.status = 'processed';
+          c.processedAt = new Date();
+        }
+      });
       console.log(`Payout ${payout.id} completed successfully`);
     } catch (error) {
       console.error('Failed to handle payout paid:', error);
@@ -210,14 +209,11 @@ export class StripePayoutService {
    */
   private static async handlePayoutFailed(payout: Stripe.Payout): Promise<void> {
     try {
-      // Update all commissions for this payout to failed
-      await db
-        .update(commissions)
-        .set({
-          status: 'failed',
-        })
-        .where(eq(commissions.payoutId, payout.id));
-
+      commissionsStore.forEach(c => {
+        if (c.payoutId === payout.id) {
+          c.status = 'failed';
+        }
+      });
       console.log(`Payout ${payout.id} failed`);
     } catch (error) {
       console.error('Failed to handle payout failed:', error);
@@ -229,15 +225,12 @@ export class StripePayoutService {
    */
   private static async handlePayoutCanceled(payout: Stripe.Payout): Promise<void> {
     try {
-      // Reset commissions back to earned status
-      await db
-        .update(commissions)
-        .set({
-          status: 'earned',
-          payoutId: null,
-        })
-        .where(eq(commissions.payoutId, payout.id));
-
+      commissionsStore.forEach(c => {
+        if (c.payoutId === payout.id) {
+          c.status = 'earned';
+          c.payoutId = null;
+        }
+      });
       console.log(`Payout ${payout.id} canceled`);
     } catch (error) {
       console.error('Failed to handle payout canceled:', error);
@@ -249,13 +242,11 @@ export class StripePayoutService {
    */
   static async getPayoutHistory(referrerId: string) {
     try {
-      const commissionRecords = await db.query.commissions.findMany({
-        where: eq(commissions.referrerId, referrerId),
-      });
+      const commissionRecords = commissionsStore.filter(c => c.referrerId === referrerId);
 
       // Group by payout ID
-      const payoutMap = new Map<string | null, typeof commissionRecords>();
-      commissionRecords.forEach((c: any) => {
+      const payoutMap = new Map<string | null, Commission[]>();
+      commissionRecords.forEach((c) => {
         const payoutId = c.payoutId || 'unpaid';
         if (!payoutMap.has(payoutId)) {
           payoutMap.set(payoutId, []);
@@ -264,7 +255,7 @@ export class StripePayoutService {
       });
 
       const history = Array.from(payoutMap.entries()).map(([payoutId, records]) => {
-        const totalAmount = records.reduce((sum: number, r: any) => sum + (r.commissionAmount || 0), 0);
+        const totalAmount = records.reduce((sum, r) => sum + (r.commissionAmount || 0), 0);
         const status = records[0]?.status || 'unknown';
 
         return {
@@ -288,7 +279,7 @@ export class StripePayoutService {
    * Schedule next monthly payout
    */
   static getNextPayoutDate(): Date {
-    const today = new Date().toISOString();
+    const today = new Date();
     const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, this.PAYOUT_DAY_OF_MONTH);
 
     // If today is already past the payout day, schedule for next month

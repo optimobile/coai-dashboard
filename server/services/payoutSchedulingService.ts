@@ -28,6 +28,7 @@ export class PayoutSchedulingService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
       let payoutsProcessed = 0;
       let totalAmount = 0;
 
@@ -141,6 +142,7 @@ export class PayoutSchedulingService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
       await db
         .update(users)
@@ -173,6 +175,7 @@ export class PayoutSchedulingService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
       const user = await db
         .select()
@@ -326,6 +329,7 @@ export class PayoutSchedulingService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
       // Get user
       const user = await db

@@ -30,7 +30,7 @@ export enum DeliveryStatus {
 export interface WebhookEventPayload {
   id: string;
   type: WebhookEventType;
-  timestamp: Date;
+  timestamp: string | Date;
   data: Record<string, unknown>;
   companyId: string;
 }
@@ -48,10 +48,10 @@ export interface WebhookDelivery {
   responseBody?: string;
   error?: string;
   attemptCount: number;
-  nextRetryAt?: Date;
-  deliveredAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  nextRetryAt?: string | Date;
+  deliveredAt?: string | Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 /**
@@ -64,8 +64,8 @@ export interface WebhookSubscription {
   events: WebhookEventType[];
   secret: string;
   isActive: boolean;
-  createdAt: Date;
-  lastTriggeredAt?: Date;
+  createdAt: string | Date;
+  lastTriggeredAt?: string | Date;
 }
 
 /**
@@ -156,8 +156,8 @@ export class WebhookQueueService {
         url: subscription.url,
         status: DeliveryStatus.PENDING,
         attemptCount: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        createdAt: new Date()?.toString() || new Date().toISOString(),
+        updatedAt: new Date()?.toString() || new Date().toISOString()
       };
 
       this.queue.set(delivery.id, delivery);
@@ -176,7 +176,7 @@ export class WebhookQueueService {
     event: WebhookEventPayload
   ): Promise<void> {
     delivery.attemptCount++;
-    delivery.updatedAt = new Date().toISOString();
+    delivery.updatedAt = new Date()?.toString() || new Date().toISOString();
 
     console.log(
       `[WebhookQueue] Attempting delivery ${delivery.attemptCount}/${this.MAX_RETRIES}: ${delivery.id}`
@@ -188,7 +188,7 @@ export class WebhookQueueService {
       if (response.success) {
         delivery.status = DeliveryStatus.DELIVERED;
         delivery.httpStatus = response.httpStatus;
-        delivery.deliveredAt = new Date().toISOString();
+        delivery.deliveredAt = new Date()?.toString() || new Date().toISOString();
         console.log(`[WebhookQueue] Delivery successful: ${delivery.id}`);
       } else {
         this.handleDeliveryFailure(delivery, response);
@@ -230,7 +230,7 @@ export class WebhookQueueService {
           "X-CSOAI-Event-ID": event.id,
           "X-CSOAI-Event-Type": event.type,
           "X-CSOAI-Signature": signature,
-          "X-CSOAI-Timestamp": event.timestamp.toISOString()
+          "X-CSOAI-Timestamp": event.timestamp?.toString() || new Date().toISOString()
         },
         body: payload,
         signal: controller.signal
@@ -305,14 +305,14 @@ export class WebhookQueueService {
    */
   private scheduleRetry(delivery: WebhookDelivery): void {
     const delay = delivery.nextRetryAt
-      ? delivery.nextRetryAt.getTime() - Date.now()
+      ? (typeof delivery.nextRetryAt === 'string' ? new Date(delivery.nextRetryAt).getTime() : delivery.nextRetryAt.getTime()) - Date.now()
       : this.calculateBackoffDelay(delivery.attemptCount);
 
     const timeoutId = setTimeout(async () => {
       const event: WebhookEventPayload = {
         id: delivery.eventId,
         type: "compliance.requirement.updated" as WebhookEventType, // This would come from DB in production
-        timestamp: new Date().toISOString(),
+        timestamp: new Date()?.toString() || new Date().toISOString(),
         data: {},
         companyId: this.subscriptions.get(delivery.subscriptionId)?.companyId || ""
       };

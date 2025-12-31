@@ -38,12 +38,14 @@ export const reportsRouter = router({
         }
 
         // Verify user has access to this AI system
-        const system = await db.query.aiSystems.findFirst({
-          where: and(
+        const [system] = await db
+          .select()
+          .from(aiSystems)
+          .where(and(
             eq(aiSystems.id, input.aiSystemId),
             eq(aiSystems.userId, ctx.user.id)
-          ),
-        });
+          ))
+          .limit(1);
 
         if (!system) {
           throw new TRPCError({
@@ -53,9 +55,11 @@ export const reportsRouter = router({
         }
 
         // Get framework details
-        const framework = await db.query.frameworks.findFirst({
-          where: eq(frameworks.id, input.frameworkId),
-        });
+        const [framework] = await db
+          .select()
+          .from(frameworks)
+          .where(eq(frameworks.id, input.frameworkId))
+          .limit(1);
 
         if (!framework) {
           throw new TRPCError({
@@ -65,12 +69,14 @@ export const reportsRouter = router({
         }
 
         // Get assessments for this system and framework
-        const assessmentData = await db.query.assessments.findFirst({
-          where: and(
+        const [assessmentData] = await db
+          .select()
+          .from(assessments)
+          .where(and(
             eq(assessments.aiSystemId, input.aiSystemId),
             eq(assessments.frameworkId, input.frameworkId)
-          ),
-        });
+          ))
+          .limit(1);
 
         if (!assessmentData) {
           throw new TRPCError({
@@ -91,7 +97,7 @@ export const reportsRouter = router({
             organizationName: system.name,
             reportPeriod: {
               start: input.dateRange?.startDate ? new Date(input.dateRange.startDate) : new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-              end: input.dateRange?.endDate ? new Date(input.dateRange.endDate) : new Date().toISOString(),
+              end: input.dateRange?.endDate ? new Date(input.dateRange.endDate) : new Date(),
             },
             complianceScore: calculateComplianceScore(assessmentData),
             auditResults: [],
@@ -162,12 +168,14 @@ export const reportsRouter = router({
         }
 
         // Verify user has access to this AI system
-        const system = await db.query.aiSystems.findFirst({
-          where: and(
+        const [system] = await db
+          .select()
+          .from(aiSystems)
+          .where(and(
             eq(aiSystems.id, input.aiSystemId),
             eq(aiSystems.userId, ctx.user.id)
-          ),
-        });
+          ))
+          .limit(1);
 
         if (!system) {
           throw new TRPCError({
@@ -216,12 +224,14 @@ export const reportsRouter = router({
 
         // Verify user has access to the AI system if specified
         if (input.aiSystemId) {
-          const system = await db.query.aiSystems.findFirst({
-            where: and(
+          const [system] = await db
+            .select()
+            .from(aiSystems)
+            .where(and(
               eq(aiSystems.id, input.aiSystemId),
               eq(aiSystems.userId, ctx.user.id)
-            ),
-          });
+            ))
+            .limit(1);
 
           if (!system) {
             throw new TRPCError({

@@ -9,7 +9,7 @@ import {
   triggerEmailSequence,
   processScheduledEmails,
   cancelEmailSequence,
-  getSequenceStatus,
+  getEmailSequenceStatus,
 } from "../services/emailAutomation";
 
 export const emailAutomationRouter = router({
@@ -24,7 +24,7 @@ export const emailAutomationRouter = router({
           "success_stories",
           "certification_path",
         ]),
-        metadata: z.record(z.any()).optional(),
+        metadata: z.record(z.string(), z.any()).optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -38,32 +38,22 @@ export const emailAutomationRouter = router({
       throw new Error("Unauthorized: Only admins can process scheduled emails");
     }
 
-    return await processScheduledEmails();
+    await processScheduledEmails();
+    return { success: true };
   }),
 
   // Cancel email sequence
   cancelSequence: protectedProcedure
-    .input(z.object({ sequenceId: z.number() }))
+    .input(z.object({ sequenceType: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      // Verify user owns this sequence
-      const status = await getSequenceStatus(input.sequenceId);
-      if (!status.success || status.sequence?.userId !== ctx.user.id) {
-        throw new Error("Unauthorized: You can only cancel your own sequences");
-      }
-
-      return await cancelEmailSequence(input.sequenceId);
+      return await cancelEmailSequence(ctx.user.id, input.sequenceType);
     }),
 
   // Get sequence status
   getStatus: protectedProcedure
-    .input(z.object({ sequenceId: z.number() }))
+    .input(z.object({ sequenceType: z.string() }))
     .query(async ({ input, ctx }) => {
-      // Verify user owns this sequence
-      const status = await getSequenceStatus(input.sequenceId);
-      if (!status.success || status.sequence?.userId !== ctx.user.id) {
-        throw new Error("Unauthorized: You can only view your own sequences");
-      }
-
+      const status = await getEmailSequenceStatus(ctx.user.id, input.sequenceType);
       return status;
     }),
 

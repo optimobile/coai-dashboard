@@ -27,6 +27,7 @@ export interface UserWithRole {
 export async function checkUserRole(userId: number, requiredRole: UserRole): Promise<boolean> {
   try {
     const db = await getDb();
+    if (!db) return false;
     const user = await db
       .select()
       .from(users)
@@ -75,6 +76,7 @@ export function requireRole(requiredRole: UserRole) {
 export async function getUserWithRole(userId: number): Promise<UserWithRole | null> {
   try {
     const db = await getDb();
+    if (!db) return null;
     const user = await db
       .select()
       .from(users)
@@ -89,7 +91,7 @@ export async function getUserWithRole(userId: number): Promise<UserWithRole | nu
     return {
       id: userData.id,
       email: userData.email || '',
-      name: userData.name,
+      name: userData.name ?? undefined,
       role: (userData.role as UserRole) || UserRole.USER,
     };
   } catch (error) {

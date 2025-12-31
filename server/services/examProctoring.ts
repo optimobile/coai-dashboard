@@ -2,12 +2,10 @@
  * Exam Proctoring Service
  * Integrates with Proctorio/Examity for remote exam monitoring
  * Includes AI-based cheating detection and compliance tracking
+ * Note: Using in-memory storage until proctoring tables are added to schema
  */
 
-import { db } from '../db';
-import { proctoringSessions, proctoringEvents } from '../../drizzle/schema';
-import { eq, and, gte, lte } from 'drizzle-orm';
-import { invokeLLM } from '@/server/_core/llm';
+import { invokeLLM } from '../_core/llm';
 
 export interface ProctoringSessionConfig {
   examId: string;
@@ -38,6 +36,10 @@ export interface ProctoringResult {
   certificateValidity: 'full' | 'flagged' | 'invalid';
 }
 
+// In-memory storage for proctoring sessions (until DB tables are added)
+const proctoringSessionsStore = new Map<string, any>();
+const proctoringEventsStore = new Map<string, any[]>();
+
 /**
  * Exam Proctoring Service
  * Manages remote exam monitoring and integrity verification
@@ -50,8 +52,8 @@ export class ExamProctoringService {
     const sessionId = `PROC-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
     try {
-      // Insert proctoring session into database
-      await db.insert(proctoringSessions).values({
+      // Store session in memory
+      proctoringSessionsStore.set(sessionId, {
         sessionId,
         examId: config.examId,
         userId: config.userId,
@@ -64,6 +66,7 @@ export class ExamProctoringService {
         suspiciousEventCount: 0,
         createdAt: new Date().toISOString(),
       });
+      proctoringEventsStore.set(sessionId, []);
 
       return sessionId;
     } catch (error) {
@@ -80,8 +83,9 @@ export class ExamProctoringService {
     event: ProctoringEvent,
   ): Promise<void> {
     try {
-      // Insert event into database
-      await db.insert(proctoringEvents).values({
+      // Store event in memory
+      const events = proctoringEventsStore.get(sessionId) || [];
+      events.push({
         sessionId,
         eventType: event.type,
         severity: event.severity,
@@ -90,23 +94,16 @@ export class ExamProctoringService {
         timestamp: event.timestamp,
         createdAt: new Date().toISOString(),
       });
+      proctoringEventsStore.set(sessionId, events);
 
       // Update session suspicious event count
-      const session = await db.query.proctoringSessions.findFirst({
-        where: eq(proctoringSessions.sessionId, sessionId),
-      });
-
+      const session = proctoringSessionsStore.get(sessionId);
       if (session) {
         const eventCount = session.suspiciousEventCount + (event.severity !== 'low' ? 1 : 0);
         const newScore = Math.max(0, 100 - eventCount * 5);
-
-        await db
-          .update(proctoringSessions)
-          .set({
-            suspiciousEventCount: eventCount,
-            integrityScore: newScore,
-          })
-          .where(eq(proctoringSessions.sessionId, sessionId));
+        session.suspiciousEventCount = eventCount;
+        session.integrityScore = newScore;
+        proctoringSessionsStore.set(sessionId, session);
       }
     } catch (error) {
       console.error('Failed to record proctoring event:', error);
@@ -119,19 +116,13 @@ export class ExamProctoringService {
    */
   static async analyzeSession(sessionId: string): Promise<ProctoringResult> {
     try {
-      // Fetch session and events
-      const session = await db.query.proctoringSessions.findFirst({
-        where: eq(proctoringSessions.sessionId, sessionId),
-      });
-
+      // Fetch session and events from memory
+      const session = proctoringSessionsStore.get(sessionId);
       if (!session) {
         throw new Error('Session not found');
       }
 
-      // Fetch all events for this session
-      const events = await db.query.proctoringEvents.findMany({
-        where: eq(proctoringEvents.sessionId, sessionId),
-      });
+      const events = proctoringEventsStore.get(sessionId) || [];
 
       // Parse metadata
       const parsedEvents = events.map((e: any) => ({
@@ -207,8 +198,9 @@ Consider:
       });
 
       // Parse AI response
+      const content = aiResponse.choices[0].message.content;
       const analysisResult = JSON.parse(
-        aiResponse.choices[0].message.content || '{}',
+        typeof content === 'string' ? content : '{}',
       );
 
       // Determine certificate validity
@@ -220,14 +212,10 @@ Consider:
       }
 
       // Update session with analysis results
-      await db
-        .update(proctoringSessions)
-        .set({
-          status: 'completed',
-          integrityScore: analysisResult.integrityScore,
-          certificateValidity,
-        })
-        .where(eq(proctoringSessions.sessionId, sessionId));
+      session.status = 'completed';
+      session.integrityScore = analysisResult.integrityScore;
+      session.certificateValidity = certificateValidity;
+      proctoringSessionsStore.set(sessionId, session);
 
       // Filter suspicious events
       const suspiciousEvents = parsedEvents.filter((e: any) => e.severity !== 'low');
@@ -251,17 +239,12 @@ Consider:
    */
   static async getSession(sessionId: string) {
     try {
-      const session = await db.query.proctoringSessions.findFirst({
-        where: eq(proctoringSessions.sessionId, sessionId),
-      });
-
+      const session = proctoringSessionsStore.get(sessionId);
       if (!session) {
         throw new Error('Session not found');
       }
 
-      const events = await db.query.proctoringEvents.findMany({
-        where: eq(proctoringEvents.sessionId, sessionId),
-      });
+      const events = proctoringEventsStore.get(sessionId) || [];
 
       return {
         ...session,
@@ -281,10 +264,12 @@ Consider:
    */
   static async getUserSessions(userId: string) {
     try {
-      const sessions = await db.query.proctoringSessions.findMany({
-        where: eq(proctoringSessions.userId, userId),
+      const sessions: any[] = [];
+      proctoringSessionsStore.forEach((session) => {
+        if (session.userId === userId) {
+          sessions.push(session);
+        }
       });
-
       return sessions;
     } catch (error) {
       console.error('Failed to get user proctoring sessions:', error);
@@ -297,11 +282,12 @@ Consider:
    */
   static async getStatistics(startDate: Date, endDate: Date) {
     try {
-      const sessions = await db.query.proctoringSessions.findMany({
-        where: and(
-          gte(proctoringSessions.createdAt, startDate),
-          lte(proctoringSessions.createdAt, endDate),
-        ),
+      const sessions: any[] = [];
+      proctoringSessionsStore.forEach((session) => {
+        const createdAt = new Date(session.createdAt);
+        if (createdAt >= startDate && createdAt <= endDate) {
+          sessions.push(session);
+        }
       });
 
       const totalSessions = sessions.length;

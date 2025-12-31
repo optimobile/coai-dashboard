@@ -16,8 +16,8 @@ const webhookSubscriptions = new Map<string, {
   events: string[];
   secret: string;
   isActive: boolean;
-  createdAt: Date;
-  lastTriggeredAt?: Date;
+  createdAt: string | Date;
+  lastTriggeredAt?: string | Date;
 }>();
 
 const webhookDeliveries = new Map<string, {
@@ -28,9 +28,9 @@ const webhookDeliveries = new Map<string, {
   httpStatus?: number;
   error?: string;
   attemptCount: number;
-  nextRetryAt?: Date;
-  deliveredAt?: Date;
-  createdAt: Date;
+  nextRetryAt?: string | Date;
+  deliveredAt?: string | Date;
+  createdAt: string | Date;
 }>();
 
 export const webhooksRouter = router({
@@ -312,7 +312,7 @@ export const webhooksRouter = router({
             id: `delivery_${Date.now()}`,
             subscriptionId: input.subscriptionId,
             eventType: 'webhook.test',
-            status: response.ok ? 'delivered' : 'failed' as const,
+            status: (response.ok ? 'delivered' : 'failed') as 'pending' | 'failed' | 'delivered' | 'retrying',
             httpStatus: response.status,
             attemptCount: 1,
             deliveredAt: response.ok ? new Date().toISOString() : undefined,
@@ -365,7 +365,7 @@ export const webhooksRouter = router({
         framework: z.string(),
         jurisdiction: z.string(),
         changeType: z.enum(['created', 'updated', 'deleted']),
-        changes: z.record(z.any()).optional(),
+        changes: z.record(z.string(), z.any()).optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {

@@ -108,7 +108,7 @@ export const jobsRouter = router({
       const [job] = await db
         .select()
         .from(jobPostings)
-        .where(eq(jobPostings.id, input.id))
+        .where(eq(jobPostings?.id, input?.id))
         .limit(1);
 
       if (!job) return null;
@@ -117,7 +117,7 @@ export const jobsRouter = router({
       await db
         .update(jobPostings)
         .set({ viewCount: sql`${jobPostings.viewCount} + 1` })
-        .where(eq(jobPostings.id, input.id));
+        .where(eq(jobPostings?.id, input?.id));
 
       return job;
     }),
@@ -139,13 +139,13 @@ export const jobsRouter = router({
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
-      const userId = Number(ctx.user.id);
+      const userId = Number(ctx.user?.id);
 
       // Check if job exists
       const [job] = await db
         .select()
         .from(jobPostings)
-        .where(eq(jobPostings.id, input.jobId))
+        .where(eq(jobPostings?.id, input.jobId))
         .limit(1);
 
       if (!job) {
@@ -187,11 +187,11 @@ export const jobsRouter = router({
       await db
         .update(jobPostings)
         .set({ applicationCount: sql`${jobPostings.applicationCount} + 1` })
-        .where(eq(jobPostings.id, input.jobId));
+        .where(eq(jobPostings?.id, input.jobId));
 
       return {
         success: true,
-        applicationId: application.id,
+        applicationId: (application as any)?.id || 0,
       };
     }),
 
@@ -286,11 +286,11 @@ export const jobsRouter = router({
     const db = await getDb();
     if (!db) return [];
 
-    const userId = Number(ctx.user.id);
+    const userId = Number(ctx.user?.id);
 
     const applications = await db
       .select({
-        id: jobApplications.id,
+        id: jobApplications?.id,
         jobId: jobApplications.jobId,
         coverLetter: jobApplications.coverLetter,
         resumeUrl: jobApplications.resumeUrl,
@@ -307,7 +307,7 @@ export const jobsRouter = router({
         currency: jobPostings.payCurrency,
       })
       .from(jobApplications)
-      .leftJoin(jobPostings, eq(jobApplications.jobId, jobPostings.id))
+      .leftJoin(jobPostings, eq(jobApplications.jobId, jobPostings?.id))
       .where(eq(jobApplications.userId, userId))
       .orderBy(desc(jobApplications.createdAt));
 
@@ -342,7 +342,7 @@ export const jobsRouter = router({
           employerResponse: input.employerResponse,
           statusUpdatedAt: new Date().toISOString(),
         })
-        .where(eq(jobApplications.id, input.applicationId));
+        .where(eq(jobApplications?.id, input.applicationId));
 
       return {
         success: true,

@@ -248,7 +248,7 @@ export const recommendationsRouter = router({
         )) : [];
 
       const dismissedIds = new Set(dismissedInteractions.map(d => d.recommendationId));
-      const now = new Date().toISOString();
+      const now = new Date();
       const activeSnoozedIds = new Set(
         snoozedInteractions
           .filter(s => s.snoozeUntil && new Date(s.snoozeUntil) > now)
@@ -726,14 +726,14 @@ export const recommendationsRouter = router({
         action: input.action,
         feedback: input.feedback,
         feedbackNote: input.feedbackNote,
-        snoozeUntil,
+        snoozeUntil: snoozeUntil?.toISOString() || null,
         aiSystemId: input.aiSystemId,
         frameworkId: input.frameworkId,
         metadata: input.metadata,
       });
 
       // Update analytics
-      const now = new Date().toISOString();
+      const now = new Date();
       const period = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
       
       // Try to update existing analytics record, or create new one
@@ -809,7 +809,7 @@ export const recommendationsRouter = router({
     const db = await getDb();
     if (!db) return { dismissedIds: [], snoozedIds: [] };
 
-    const now = new Date().toISOString();
+    const now = new Date();
 
     // Get dismissed recommendations
     const dismissed = await db
@@ -946,15 +946,21 @@ export const recommendationsRouter = router({
         .where(eq(recommendationPreferences.userId, ctx.user.id))
         .limit(1);
 
+      // Convert boolean to number for database
+      const dbInput: any = { ...input };
+      if (input.emailDigestEnabled !== undefined) {
+        dbInput.emailDigestEnabled = input.emailDigestEnabled ? 1 : 0;
+      }
+
       if (existing.length === 0) {
         await db.insert(recommendationPreferences).values({
           userId: ctx.user.id,
-          ...input,
+          ...dbInput,
         });
       } else {
         await db
           .update(recommendationPreferences)
-          .set(input)
+          .set(dbInput)
           .where(eq(recommendationPreferences.userId, ctx.user.id));
       }
 

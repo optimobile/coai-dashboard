@@ -1,6 +1,6 @@
 import { getDb } from "../db";
-import { adminMetrics, websocketConnections, realtimeEvents } from "../../drizzle/schema";
-import { eq, gte, desc, sql, count } from "drizzle-orm";
+import { websocketConnections, realtimeEvents } from "../../drizzle/schema";
+import { eq, gte, desc, count } from "drizzle-orm";
 
 export interface DashboardMetrics {
   activeConnections: number;
@@ -25,6 +25,16 @@ export interface DashboardStats {
   };
 }
 
+// In-memory metrics storage (until adminMetrics table is added to schema)
+const metricsStore: Array<{
+  id: number;
+  metricType: string;
+  value: number;
+  metadata: string | null;
+  recordedAt: Date;
+}> = [];
+let metricsIdCounter = 1;
+
 export class AdminDashboard {
   /**
    * Record metrics
@@ -34,14 +44,21 @@ export class AdminDashboard {
     value: number,
     metadata?: Record<string, any>
   ) {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
-
-    return await db.insert(adminMetrics).values({
-      metricType: metricType as any,
+    // Store in memory
+    metricsStore.push({
+      id: metricsIdCounter++,
+      metricType,
       value,
       metadata: metadata ? JSON.stringify(metadata) : null,
+      recordedAt: new Date(),
     });
+    
+    // Keep only last 1000 metrics
+    if (metricsStore.length > 1000) {
+      metricsStore.shift();
+    }
+    
+    return { id: metricsIdCounter - 1 };
   }
 
   /**
@@ -49,37 +66,37 @@ export class AdminDashboard {
    */
   static async getCurrentMetrics(): Promise<DashboardMetrics> {
     const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
+    
+    let activeConnections = 0;
+    if (db) {
+      try {
+        const connectionsResult = await db
+          .select({ count: count() })
+          .from(websocketConnections)
+          .where(eq(websocketConnections.isActive, true));
+        activeConnections = connectionsResult[0]?.count || 0;
+      } catch {
+        activeConnections = 0;
+      }
+    }
 
-    // Get active connections
-    const connectionsResult = await db
-      .select({ count: count() })
-      .from(websocketConnections)
-      .where(eq(websocketConnections.isActive, true));
-
-    const activeConnections = connectionsResult[0]?.count || 0;
-
-    // Get recent metrics
+    // Get recent metrics from memory
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-
-    const metricsResult = await db
-      .select()
-      .from(adminMetrics)
-      .where(gte(adminMetrics.recordedAt, fiveMinutesAgo.toISOString() as any))
-      .orderBy(desc(adminMetrics.recordedAt))
-      .limit(100);
+    const recentMetrics = metricsStore.filter(
+      (m) => m.recordedAt >= fiveMinutesAgo
+    );
 
     // Calculate averages
-    const throughputMetrics = metricsResult.filter(
+    const throughputMetrics = recentMetrics.filter(
       (m) => m.metricType === "event_throughput"
     );
-    const latencyMetrics = metricsResult.filter(
+    const latencyMetrics = recentMetrics.filter(
       (m) => m.metricType === "latency"
     );
-    const errorMetrics = metricsResult.filter(
+    const errorMetrics = recentMetrics.filter(
       (m) => m.metricType === "error_rate"
     );
-    const healthMetrics = metricsResult.filter(
+    const healthMetrics = recentMetrics.filter(
       (m) => m.metricType === "system_health"
     );
 
@@ -111,7 +128,7 @@ export class AdminDashboard {
       systemHealth: avgHealth,
       averageLatency: avgLatency,
       errorRate: avgErrorRate,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date(),
     };
   }
 
@@ -120,55 +137,64 @@ export class AdminDashboard {
    */
   static async getDashboardStats(): Promise<DashboardStats> {
     const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
+    
+    let totalEvents = 0;
+    let eventsByType: Record<string, number> = {};
+    let eventsBySeverity: Record<string, number> = {};
+    let recentEventsData: any[] = [];
 
-    // Get total events
-    const totalEventsResult = await db
-      .select({ count: count() })
-      .from(realtimeEvents);
+    if (db) {
+      try {
+        // Get total events
+        const totalEventsResult = await db
+          .select({ count: count() })
+          .from(realtimeEvents);
+        totalEvents = totalEventsResult[0]?.count || 0;
 
-    const totalEvents = totalEventsResult[0]?.count || 0;
+        // Get events by type
+        const eventsByTypeResult = await db
+          .select({
+            type: realtimeEvents.eventType,
+            count: count(),
+          })
+          .from(realtimeEvents)
+          .groupBy(realtimeEvents.eventType);
 
-    // Get events by type
-    const eventsByTypeResult = await db
-      .select({
-        type: realtimeEvents.eventType,
-        count: count(),
-      })
-      .from(realtimeEvents)
-      .groupBy(realtimeEvents.eventType);
+        eventsByType = eventsByTypeResult.reduce(
+          (acc, row) => {
+            acc[row.type || "unknown"] = row.count;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
 
-    const eventsByType = eventsByTypeResult.reduce(
-      (acc, row) => {
-        acc[row.type || "unknown"] = row.count;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+        // Get events by severity
+        const eventsBySeverityResult = await db
+          .select({
+            severity: realtimeEvents.severity,
+            count: count(),
+          })
+          .from(realtimeEvents)
+          .groupBy(realtimeEvents.severity);
 
-    // Get events by severity
-    const eventsBySeverityResult = await db
-      .select({
-        severity: realtimeEvents.severity,
-        count: count(),
-      })
-      .from(realtimeEvents)
-      .groupBy(realtimeEvents.severity);
+        eventsBySeverity = eventsBySeverityResult.reduce(
+          (acc, row) => {
+            acc[row.severity || "unknown"] = row.count;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
 
-    const eventsBySeverity = eventsBySeverityResult.reduce(
-      (acc, row) => {
-        acc[row.severity || "unknown"] = row.count;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
-    // Get recent events
-    const recentEvents = await db
-      .select()
-      .from(realtimeEvents)
-      .orderBy(desc(realtimeEvents.createdAt))
-      .limit(20);
+        // Get recent events
+        recentEventsData = await db
+          .select()
+          .from(realtimeEvents)
+          .orderBy(desc(realtimeEvents.createdAt))
+          .limit(20);
+      } catch {
+        // Use defaults
+      }
+    }
 
     // Get current metrics
     const metrics = await this.getCurrentMetrics();
@@ -177,13 +203,13 @@ export class AdminDashboard {
       totalEvents,
       eventsByType,
       eventsBySeverity,
-      topJurisdictions: [], // To be populated from compliance data
-      recentEvents,
+      topJurisdictions: [],
+      recentEvents: recentEventsData,
       systemHealth: {
-        uptime: Date.now() / 1000, // Simplified
+        uptime: Date.now() / 1000,
         activeConnections: metrics.activeConnections,
-        memoryUsage: process.memoryUsage().heapUsed / 1024 / 1024, // MB
-        cpuUsage: 0, // Would need OS-level metrics
+        memoryUsage: process.memoryUsage().heapUsed / 1024 / 1024,
+        cpuUsage: 0,
       },
     };
   }
@@ -195,16 +221,11 @@ export class AdminDashboard {
     metricType: string,
     hoursBack: number = 24
   ) {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
-
     const cutoffTime = new Date(Date.now() - hoursBack * 60 * 60 * 1000);
-
-    return await db
-      .select()
-      .from(adminMetrics)
-      .where(gte(adminMetrics.recordedAt, cutoffTime))
-      .orderBy(adminMetrics.recordedAt);
+    
+    return metricsStore
+      .filter((m) => m.metricType === metricType && m.recordedAt >= cutoffTime)
+      .sort((a, b) => a.recordedAt.getTime() - b.recordedAt.getTime());
   }
 
   /**
@@ -212,31 +233,35 @@ export class AdminDashboard {
    */
   static async getConnectionTimeline(hoursBack: number = 24) {
     const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
+    if (!db) return [];
 
     const cutoffTime = new Date(Date.now() - hoursBack * 60 * 60 * 1000);
 
-    const connections = await db
-      .select()
-      .from(websocketConnections)
-      .where(gte(websocketConnections.createdAt, cutoffTime))
-      .orderBy(websocketConnections.createdAt);
+    try {
+      const connections = await db
+        .select()
+        .from(websocketConnections)
+        .where(gte(websocketConnections.createdAt, cutoffTime.toISOString()))
+        .orderBy(websocketConnections.createdAt);
 
-    // Group by hour
-    const timeline = connections.reduce(
-      (acc, conn) => {
-        const hour = new Date(conn.createdAt).toISOString().slice(0, 13);
-        if (!acc[hour]) acc[hour] = 0;
-        acc[hour]++;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+      // Group by hour
+      const timeline = connections.reduce(
+        (acc, conn) => {
+          const hour = new Date(conn.createdAt).toISOString().slice(0, 13);
+          if (!acc[hour]) acc[hour] = 0;
+          acc[hour]++;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
-    return Object.entries(timeline).map(([time, count]) => ({
-      time,
-      connections: count,
-    }));
+      return Object.entries(timeline).map(([time, count]) => ({
+        time,
+        connections: count,
+      }));
+    } catch {
+      return [];
+    }
   }
 
   /**

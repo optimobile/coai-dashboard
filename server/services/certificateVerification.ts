@@ -10,8 +10,8 @@ export interface CEASACertificate {
   organizationId: number;
   analystName: string;
   certificationLevel: 'fundamentals' | 'professional' | 'expert';
-  issuanceDate: Date;
-  expiryDate: Date;
+  issuanceDate: string | Date;
+  expiryDate: string | Date;
   score: number;
   issuer: string;
   verificationHash: string;
@@ -22,7 +22,7 @@ export interface CEASACertificate {
 export interface VerificationResult {
   valid: boolean;
   certificate: CEASACertificate | null;
-  verificationDate: Date;
+  verificationDate: string | Date;
   blockchainVerified: boolean;
   governmentPortalVerified: boolean;
   message: string;
@@ -53,8 +53,9 @@ export class CertificateVerificationService {
       const certificateId = this.generateCertificateId(organizationId, analystName);
 
       // Set expiry dates based on level
-      const issuanceDate = new Date().toISOString();
-      const expiryDate = this.calculateExpiryDate(certificationLevel, issuanceDate);
+      const issuanceDateObj = new Date();
+      const issuanceDate = issuanceDateObj.toISOString();
+      const expiryDate = this.calculateExpiryDate(certificationLevel, issuanceDateObj);
 
       // Create certificate object
       const certificate: CEASACertificate = {
@@ -123,7 +124,8 @@ export class CertificateVerificationService {
       );
 
       // Check expiry
-      const isExpired = new Date().toISOString() > certificate.expiryDate;
+      const expiryDateStr = typeof certificate.expiryDate === 'string' ? certificate.expiryDate : certificate.expiryDate.toISOString();
+      const isExpired = new Date().toISOString() > expiryDateStr;
 
       const valid =
         hashValid && blockchainVerified && governmentPortalVerified && !isExpired;
@@ -183,7 +185,7 @@ export class CertificateVerificationService {
           JSON.stringify({
             certificateId: certificate.certificateId,
             analystName: certificate.analystName,
-            issuanceDate: certificate.issuanceDate.toISOString(),
+            issuanceDate: typeof certificate.issuanceDate === 'string' ? certificate.issuanceDate : certificate.issuanceDate.toISOString(),
             verificationHash: certificate.verificationHash,
             timestamp: new Date().toISOString(),
           })
@@ -253,8 +255,8 @@ export class CertificateVerificationService {
       organizationId: certificate.organizationId,
       analystName: certificate.analystName,
       certificationLevel: certificate.certificationLevel,
-      issuanceDate: certificate.issuanceDate.toISOString(),
-      expiryDate: certificate.expiryDate.toISOString(),
+      issuanceDate: typeof certificate.issuanceDate === 'string' ? certificate.issuanceDate : certificate.issuanceDate.toISOString(),
+      expiryDate: typeof certificate.expiryDate === 'string' ? certificate.expiryDate : certificate.expiryDate.toISOString(),
       score: certificate.score,
       issuer: certificate.issuer,
     });

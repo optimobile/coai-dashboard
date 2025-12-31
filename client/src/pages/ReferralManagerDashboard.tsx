@@ -3,7 +3,7 @@
  * Dashboard for referral managers to view team performance and manage commissions
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -74,12 +74,14 @@ export default function ReferralManagerDashboard() {
   const [rejectingId, setRejectingId] = useState<number | null>(null);
 
   // Fetch pending approvals
-  const { data: approvalsResponse, isLoading: isFetchingApprovals, refetch: refetchApprovals } = trpc.referral.getPendingApprovals.useQuery(undefined, {
-    onError: (error) => {
+  const { data: approvalsResponse, isLoading: isFetchingApprovals, refetch: refetchApprovals, error: approvalsError } = trpc.referral.getPendingApprovals.useQuery();
+
+  useEffect(() => {
+    if (approvalsError) {
       toast.error('Failed to load pending approvals');
-      console.error('Approvals error:', error);
-    },
-  });
+      console.error('Approvals error:', approvalsError);
+    }
+  }, [approvalsError]);
 
   const pendingApprovals = approvalsResponse?.data || [];
 
@@ -116,11 +118,13 @@ export default function ReferralManagerDashboard() {
   });
 
   // Get commission stats
-  const { data: statsResponse, isLoading: isFetchingStats } = trpc.referral.getCommissionStats.useQuery(undefined, {
-    onError: (error) => {
-      console.error('Stats error:', error);
-    },
-  });
+  const { data: statsResponse, isLoading: isFetchingStats, error: statsError } = trpc.referral.getCommissionStats.useQuery();
+
+  useEffect(() => {
+    if (statsError) {
+      console.error('Stats error:', statsError);
+    }
+  }, [statsError]);
 
   const stats = statsResponse?.data || {
     totalEarned: 0,

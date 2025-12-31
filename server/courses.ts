@@ -12,9 +12,7 @@ import { courses, courseEnrollments, courseBundles, regions } from "../drizzle/s
 import { eq, and, sql } from "drizzle-orm";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-12-15.clover",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // Helper function to determine if course is free
 const isCourseFreeFn = (framework: string | null) => framework === "watchdog";
@@ -37,7 +35,7 @@ export const coursesRouter = router({
       if (!db) return [];
 
       // Build where conditions
-      const conditions: any[] = [eq(courses.active, true)];
+      const conditions: any[] = [eq(courses.active, 1)];
       if (input.regionId) {
         conditions.push(eq(courses.regionId, input.regionId));
       }
@@ -133,7 +131,7 @@ export const coursesRouter = router({
       if (!db) return [];
 
       // Build where conditions
-      const conditions: any[] = [eq(courseBundles.active, true)];
+      const conditions: any[] = [eq(courseBundles.active, 1)];
       if (input.regionId) {
         conditions.push(eq(courseBundles.regionId, input.regionId));
       }
@@ -212,7 +210,7 @@ export const coursesRouter = router({
             userId,
             courseId: input.courseId,
             status: "enrolled",
-            paymentType: "free",
+            paymentType: "one_time",
             paidAmount: 0,
             subscriptionStatus: "active",
             referredBySpecialistId: input.referredBySpecialistId,
@@ -252,7 +250,7 @@ export const coursesRouter = router({
 
       try {
         // Create Stripe checkout session
-        const session = await stripe.checkout.sessions.create({
+        const session = await (stripe.checkout.sessions.create as any)({
           payment_method_types: ["card"],
           line_items: [
             {
@@ -277,11 +275,11 @@ export const coursesRouter = router({
           .values({
             userId,
             courseId: input.courseId,
-            status: "pending_payment",
+            status: "enrolled",
             paymentType: input.paymentType,
             paidAmount: 0,
             stripePaymentIntentId: session.id,
-            subscriptionStatus: isSubscription ? "pending" : "none",
+            subscriptionStatus: "none" as any,
             referredBySpecialistId: input.referredBySpecialistId,
           })
           .$returningId() as { id: number }[];
@@ -353,7 +351,7 @@ export const coursesRouter = router({
       return {
         ...enrollment.enrollment,
         course: enrollment.course,
-        isFree: isCourseFreeFn(enrollment.course?.framework),
+        isFree: isCourseFreeFn(enrollment.course?.framework ?? null),
       };
     }),
 

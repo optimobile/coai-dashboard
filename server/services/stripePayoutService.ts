@@ -11,7 +11,7 @@ import { eq, and, lte } from 'drizzle-orm';
 import { ReferralEmailService } from './referralEmailService.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-12-15.clover',
 });
 
 export class StripePayoutService {
@@ -24,6 +24,7 @@ export class StripePayoutService {
     totalAmount: number;
   }> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
     let successCount = 0;
     let failedCount = 0;
     let totalAmount = 0;
@@ -108,7 +109,7 @@ export class StripePayoutService {
               userData.email || '',
               userData.name || 'Referrer',
               totalCommission,
-              new Date().toISOString().toLocaleDateString('en-US', {
+              new Date().toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -197,6 +198,7 @@ export class StripePayoutService {
    */
   static async handlePayoutWebhook(event: any): Promise<void> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     try {
       if (event.type === 'payout.paid') {
@@ -249,6 +251,7 @@ export class StripePayoutService {
    */
   static async getPayoutHistory(referrerId: number): Promise<any[]> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     return db
       .select()

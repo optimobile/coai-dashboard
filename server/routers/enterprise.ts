@@ -36,7 +36,7 @@ export const enterpriseRouter = router({
     );
 
     const deliveries = [
-      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date().toISOString() },
+      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date() },
       { status: 'delivered' as const, deliveryTime: 312, createdAt: new Date(Date.now() - 60000) },
       { status: 'failed' as const, createdAt: new Date(Date.now() - 120000) },
     ];
@@ -95,7 +95,7 @@ export const enterpriseRouter = router({
    */
   getWebhookMetrics: publicProcedure.query(async () => {
     const deliveries = [
-      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date().toISOString() },
+      { status: 'delivered' as const, deliveryTime: 245, createdAt: new Date() },
       { status: 'delivered' as const, deliveryTime: 312, createdAt: new Date(Date.now() - 60000) },
       { status: 'delivered' as const, deliveryTime: 198, createdAt: new Date(Date.now() - 120000) },
       { status: 'failed' as const, createdAt: new Date(Date.now() - 180000) },
@@ -322,7 +322,7 @@ export const enterpriseRouter = router({
         addonId: z.string(),
         apiKey: z.string(),
         apiSecret: z.string(),
-        configuration: z.record(z.any()).optional(),
+        configuration: z.record(z.string(), z.any()).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -375,7 +375,7 @@ export const enterpriseRouter = router({
             order: z.number(),
             type: z.enum(['notification', 'automation', 'escalation', 'remediation']),
             target: z.string(),
-            payload: z.record(z.any()),
+            payload: z.record(z.string(), z.any()),
           })
         ),
       })

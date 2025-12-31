@@ -21,8 +21,8 @@ export interface MarketplaceAddon {
   requiredScopes: string[];
   isActive: boolean;
   installedCount: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface IntegrationConnection {
@@ -35,11 +35,11 @@ export interface IntegrationConnection {
   apiSecret: string; // encrypted
   webhookUrl: string;
   webhookSecret: string; // encrypted
-  lastSyncTime: Date | null;
+  lastSyncTime: string | Date | null;
   lastErrorMessage: string | null;
   configuration: Record<string, any>;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface RemediationWorkflow {
@@ -58,8 +58,8 @@ export interface RemediationWorkflow {
     payload: Record<string, any>;
   }>;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface SIEMIntegration {
@@ -69,7 +69,7 @@ export interface SIEMIntegration {
   logFormat: 'json' | 'syslog' | 'cef';
   eventTypes: string[];
   isConnected: boolean;
-  lastEventTime: Date | null;
+  lastEventTime: string | Date | null;
 }
 
 export interface SOARIntegration {
@@ -472,8 +472,8 @@ export class ComplianceMarketplaceService {
   static getIntegrationHealth(connection: IntegrationConnection): {
     status: 'healthy' | 'degraded' | 'offline';
     uptime: number; // percentage
-    lastCheck: Date;
-    nextCheck: Date;
+    lastCheck: Date | string;
+    nextCheck: Date | string;
   } {
     if (connection.status === 'error') {
       return {

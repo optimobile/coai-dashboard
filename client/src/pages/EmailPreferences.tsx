@@ -36,7 +36,7 @@ export default function EmailPreferences() {
 
   const handleSave = async () => {
     try {
-      await updateMutation.mutateAsync(preferences);
+      await updateMutation.mutateAsync(preferences as any);
       // Show success message
       console.log('Email preferences updated successfully');
     } catch (error) {

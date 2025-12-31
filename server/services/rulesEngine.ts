@@ -1,6 +1,8 @@
-import { getDb } from "../db";
-import { complianceRules, ruleUpdates } from "../../drizzle/schema";
-import { eq, and, or, desc } from "drizzle-orm";
+/**
+ * Rules Engine Service
+ * Manages compliance rules across jurisdictions
+ * Note: Using in-memory storage until complianceRules/ruleUpdates tables are added
+ */
 
 export interface ComplianceRule {
   jurisdiction: string;
@@ -16,68 +18,84 @@ export interface ComplianceRule {
   evidenceRequired?: Record<string, any>;
 }
 
+interface StoredRule extends ComplianceRule {
+  id: number;
+  version: number;
+  isActive: boolean;
+  deprecatedDate?: string;
+  createdAt: Date;
+}
+
+interface RuleUpdate {
+  id: number;
+  ruleId: number;
+  changeType: 'created' | 'updated' | 'deprecated';
+  previousValue?: any;
+  newValue?: any;
+  changeReason: string;
+  notificationSent: boolean;
+  createdAt: Date;
+}
+
+// In-memory storage
+const rulesStore: StoredRule[] = [];
+const updatesStore: RuleUpdate[] = [];
+let ruleIdCounter = 1;
+let updateIdCounter = 1;
+
 export class RulesEngine {
   /**
    * Create or update a compliance rule
    */
   static async upsertRule(rule: ComplianceRule) {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
+    const existing = rulesStore.find(
+      r => r.jurisdiction === rule.jurisdiction &&
+           r.framework === rule.framework &&
+           r.ruleCode === rule.ruleCode
+    );
 
-    const existing = await db
-      .select()
-      .from(complianceRules)
-      .where(
-        and(
-          eq(complianceRules.jurisdiction, rule.jurisdiction),
-          eq(complianceRules.framework, rule.framework),
-          eq(complianceRules.ruleCode, rule.ruleCode)
-        )
-      )
-      .limit(1);
-
-    if (existing.length > 0) {
+    if (existing) {
       // Update existing rule
-      const result = await db
-        .update(complianceRules)
-        .set({
-          ...rule,
-          version: (existing[0].version || 0) + 1,
-        })
-        .where(eq(complianceRules.id, existing[0].id));
+      const previousValue = { ...existing };
+      Object.assign(existing, rule);
+      existing.version = (existing.version || 0) + 1;
 
       // Log the update
-      await db.insert(ruleUpdates).values({
-        ruleId: existing[0].id,
-        changeType: "updated",
-        previousValue: existing[0],
+      updatesStore.push({
+        id: updateIdCounter++,
+        ruleId: existing.id,
+        changeType: 'updated',
+        previousValue,
         newValue: rule,
-        changeReason: "Rule updated",
+        changeReason: 'Rule updated',
         notificationSent: false,
+        createdAt: new Date(),
       });
 
-      return result;
+      return existing;
     } else {
       // Create new rule
-      const result = await db.insert(complianceRules).values({
+      const newRule: StoredRule = {
+        id: ruleIdCounter++,
         ...rule,
         version: 1,
         isActive: true,
-      });
+        createdAt: new Date(),
+      };
+      rulesStore.push(newRule);
 
       // Log the creation
-      const insertedId = (result as any).insertId;
-      if (insertedId) {
-        await db.insert(ruleUpdates).values({
-          ruleId: insertedId,
-          changeType: "created",
-          newValue: rule,
-          changeReason: "New rule created",
-          notificationSent: false,
-        });
-      }
+      updatesStore.push({
+        id: updateIdCounter++,
+        ruleId: newRule.id,
+        changeType: 'created',
+        newValue: rule,
+        changeReason: 'New rule created',
+        notificationSent: false,
+        createdAt: new Date(),
+      });
 
-      return result;
+      return newRule;
     }
   }
 
@@ -89,115 +107,82 @@ export class RulesEngine {
     framework?: string,
     riskLevel?: string
   ) {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
-
-    let query = db
-      .select()
-      .from(complianceRules)
-      .where(
-        and(
-          eq(complianceRules.jurisdiction, jurisdiction),
-          eq(complianceRules.isActive, true)
-        )
-      );
+    let results = rulesStore.filter(
+      r => r.jurisdiction === jurisdiction && r.isActive
+    );
 
     if (framework) {
-      query = query.where(eq(complianceRules.framework, framework));
+      results = results.filter(r => r.framework === framework);
     }
 
     if (riskLevel) {
-      query = query.where(eq(complianceRules.applicableToRiskLevel, riskLevel));
+      results = results.filter(r => r.applicableToRiskLevel === riskLevel);
     }
 
-    return await query;
+    return results;
   }
 
   /**
    * Get all active rules
    */
   static async getAllActiveRules() {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
-
-    return await db
-      .select()
-      .from(complianceRules)
-      .where(eq(complianceRules.isActive, true))
-      .orderBy(complianceRules.jurisdiction, complianceRules.framework);
+    return rulesStore
+      .filter(r => r.isActive)
+      .sort((a, b) => {
+        const jurisdictionCompare = a.jurisdiction.localeCompare(b.jurisdiction);
+        if (jurisdictionCompare !== 0) return jurisdictionCompare;
+        return a.framework.localeCompare(b.framework);
+      });
   }
 
   /**
    * Deprecate a rule
    */
   static async deprecateRule(ruleId: number, reason: string) {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
+    const rule = rulesStore.find(r => r.id === ruleId);
+    if (!rule) throw new Error("Rule not found");
 
-    const rule = await db
-      .select()
-      .from(complianceRules)
-      .where(eq(complianceRules.id, ruleId))
-      .limit(1);
-
-    if (!rule[0]) throw new Error("Rule not found");
-
-    const result = await db
-      .update(complianceRules)
-      .set({
-        isActive: false,
-        deprecatedDate: new Date().toISOString(),
-      })
-      .where(eq(complianceRules.id, ruleId));
+    const previousValue = { ...rule };
+    rule.isActive = false;
+    rule.deprecatedDate = new Date().toISOString();
 
     // Log the deprecation
-    await db.insert(ruleUpdates).values({
+    updatesStore.push({
+      id: updateIdCounter++,
       ruleId,
-      changeType: "deprecated",
-      previousValue: rule[0],
+      changeType: 'deprecated',
+      previousValue,
       changeReason: reason,
       notificationSent: false,
+      createdAt: new Date(),
     });
 
-    return result;
+    return rule;
   }
 
   /**
    * Get rule update history
    */
   static async getRuleUpdateHistory(ruleId: number, limit = 50) {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
-
-    return await db
-      .select()
-      .from(ruleUpdates)
-      .where(eq(ruleUpdates.ruleId, ruleId))
-      .orderBy(desc(ruleUpdates.createdAt))
-      .limit(limit);
+    return updatesStore
+      .filter(u => u.ruleId === ruleId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(0, limit);
   }
 
   /**
    * Get recent rule updates across all rules
    */
   static async getRecentUpdates(limit = 100) {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
-
-    return await db
-      .select()
-      .from(ruleUpdates)
-      .orderBy(desc(ruleUpdates.createdAt))
-      .limit(limit);
+    return updatesStore
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(0, limit);
   }
 
   /**
    * Seed initial compliance rules for major frameworks
    */
   static async seedInitialRules() {
-    const db = await getDb();
-    if (!db) throw new Error("Database connection failed");
-
     const euAiActRules: ComplianceRule[] = [
       {
         jurisdiction: "EU",

@@ -32,7 +32,7 @@ export interface RemediationAction {
 
 export interface ComplianceRoadmap {
   organizationId: string;
-  generatedAt: Date;
+  generatedAt: Date | string;
   totalGaps: number;
   criticalGaps: number;
   estimatedTotalHours: number;
@@ -412,7 +412,7 @@ Compliance Roadmap Summary
 ==========================
 
 Organization: ${roadmap.organizationId}
-Generated: ${roadmap.generatedAt.toLocaleDateString()}
+Generated: ${roadmap.generatedAt.toString()}
 
 Overview:
 - Total Compliance Gaps: ${roadmap.totalGaps}

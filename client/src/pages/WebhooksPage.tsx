@@ -2,9 +2,7 @@
  * Webhooks Management Page
  * Manage webhook subscriptions for rule updates and compliance events
  */
-
 import { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, Copy, Trash2, TestTube, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { AlertCircle, Copy, Trash2, TestTube, CheckCircle, XCircle, Clock, Plus, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function WebhooksPage() {
@@ -22,7 +20,7 @@ export function WebhooksPage() {
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const eventOptions = [
+  const availableEvents = [
     { id: 'rule.created', label: 'Rule Created' },
     { id: 'rule.updated', label: 'Rule Updated' },
     { id: 'rule.deleted', label: 'Rule Deleted' },
@@ -31,26 +29,11 @@ export function WebhooksPage() {
     { id: 'compliance.requirement.changed', label: 'Compliance Requirement Changed' },
   ];
 
-  // Fetch webhooks
-  const { data: webhooks, refetch: refetchWebhooks } = useQuery({
-    queryKey: ['webhooks'],
-    queryFn: async () => {
-      return await trpc.webhooks.getSubscriptions.query({});
-    },
-  });
+  // Fetch webhooks using trpc hooks
+  const { data: webhooks, refetch: refetchWebhooks } = trpc.webhooks.getSubscriptions.useQuery(undefined);
 
   // Create webhook mutation
-  const createWebhookMutation = useMutation({
-    mutationFn: async () => {
-      if (!webhookUrl || selectedEvents.length === 0) {
-        throw new Error('Please enter a URL and select at least one event');
-      }
-
-      return await trpc.webhooks.createSubscription.mutate({
-        url: webhookUrl,
-        events: selectedEvents as any,
-      });
-    },
+  const createWebhookMutation = trpc.webhooks.createSubscription.useMutation({
     onSuccess: (data) => {
       toast({
         title: 'Webhook Created',
@@ -60,17 +43,13 @@ export function WebhooksPage() {
       setSelectedEvents([]);
       refetchWebhooks();
     },
+    onError: (error) => {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    },
   });
 
   // Update webhook mutation
-  const updateWebhookMutation = useMutation({
-    mutationFn: async (subscriptionId: string) => {
-      return await trpc.webhooks.updateSubscription.mutate({
-        subscriptionId,
-        url: webhookUrl,
-        events: selectedEvents as any,
-      });
-    },
+  const updateWebhookMutation = trpc.webhooks.updateSubscription.useMutation({
     onSuccess: () => {
       toast({
         title: 'Webhook Updated',
@@ -81,15 +60,13 @@ export function WebhooksPage() {
       setEditingId(null);
       refetchWebhooks();
     },
+    onError: (error) => {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    },
   });
 
   // Delete webhook mutation
-  const deleteWebhookMutation = useMutation({
-    mutationFn: async (subscriptionId: string) => {
-      return await trpc.webhooks.deleteSubscription.mutate({
-        subscriptionId,
-      });
-    },
+  const deleteWebhookMutation = trpc.webhooks.deleteSubscription.useMutation({
     onSuccess: () => {
       toast({
         title: 'Webhook Deleted',
@@ -97,111 +74,182 @@ export function WebhooksPage() {
       });
       refetchWebhooks();
     },
+    onError: (error) => {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    },
   });
 
   // Test webhook mutation
-  const testWebhookMutation = useMutation({
-    mutationFn: async (subscriptionId: string) => {
-      return await trpc.webhooks.testWebhook.mutate({
-        subscriptionId,
-      });
-    },
-    onSuccess: (data) => {
+  const testWebhookMutation = trpc.webhooks.testWebhook.useMutation({
+    onSuccess: () => {
       toast({
-        title: data.success ? 'Test Successful' : 'Test Failed',
-        description: data.message,
-        variant: data.success ? 'default' : 'destructive',
+        title: 'Test Sent',
+        description: 'Test webhook event sent successfully',
       });
+    },
+    onError: (error) => {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
     },
   });
 
-  // Fetch delivery history
-  const { data: deliveryHistory } = useQuery({
-    queryKey: ['webhookDelivery'],
-    queryFn: async () => {
-      if (!webhooks?.subscriptions[0]) return null;
-      return await trpc.webhooks.getDeliveryHistory.query({
-        subscriptionId: webhooks.subscriptions[0].id,
-        limit: 10,
-      });
-    },
-  });
-
-  const handleToggleEvent = (eventId: string) => {
-    setSelectedEvents((prev) =>
-      prev.includes(eventId) ? prev.filter((e) => e !== eventId) : [...prev, eventId]
-    );
+  const handleCreateWebhook = () => {
+    if (!webhookUrl || selectedEvents.length === 0) {
+      toast({ title: 'Error', description: 'Please enter a URL and select at least one event', variant: 'destructive' });
+      return;
+    }
+    createWebhookMutation.mutate({
+      url: webhookUrl,
+      events: selectedEvents as any,
+    });
   };
 
-  const handleEdit = (webhook: any) => {
-    setEditingId(webhook.id);
-    setWebhookUrl(webhook.url);
-    setSelectedEvents(webhook.events);
+  const handleUpdateWebhook = (subscriptionId: string) => {
+    updateWebhookMutation.mutate({
+      subscriptionId,
+      url: webhookUrl,
+      events: selectedEvents as any,
+    });
   };
 
-  const handleCancel = () => {
-    setEditingId(null);
-    setWebhookUrl('');
-    setSelectedEvents([]);
+  const handleDeleteWebhook = (subscriptionId: string) => {
+    deleteWebhookMutation.mutate({ subscriptionId });
   };
+
+  const handleTestWebhook = (subscriptionId: string) => {
+    testWebhookMutation.mutate({ subscriptionId });
+  };
+
+  const toggleEvent = (eventId: string) => {
+    if (selectedEvents.includes(eventId)) {
+      setSelectedEvents(selectedEvents.filter((e) => e !== eventId));
+    } else {
+      setSelectedEvents([...selectedEvents, eventId]);
+    }
+  };
+
+  const subscriptions = webhooks?.subscriptions || [];
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-4xl font-bold tracking-tight">Webhooks</h1>
-        <p className="text-lg text-muted-foreground mt-2">
-          Manage webhook subscriptions for real-time compliance updates
+    <div className="container mx-auto py-8 max-w-6xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Webhook Management</h1>
+        <p className="text-muted-foreground">
+          Configure webhooks to receive real-time notifications about rule changes and compliance events
         </p>
       </div>
 
-      {/* Main Tabs */}
-      <Tabs defaultValue="subscriptions" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+      <Tabs defaultValue="subscriptions" className="space-y-6">
+        <TabsList>
           <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
-          <TabsTrigger value="delivery">Delivery History</TabsTrigger>
+          <TabsTrigger value="create">Create New</TabsTrigger>
+          <TabsTrigger value="logs">Delivery Logs</TabsTrigger>
         </TabsList>
 
-        {/* Subscriptions Tab */}
-        <TabsContent value="subscriptions" className="space-y-6">
-          {/* Create/Edit Webhook Card */}
+        <TabsContent value="subscriptions" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Active Subscriptions</h2>
+            <Button variant="outline" size="sm" onClick={() => refetchWebhooks()}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+
+          {subscriptions.length === 0 ? (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">No webhook subscriptions yet</p>
+                <p className="text-sm text-muted-foreground">Create your first webhook to receive real-time updates</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {subscriptions.map((subscription: any) => (
+                <Card key={subscription.id}>
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <CardTitle className="text-base font-mono">{subscription.url}</CardTitle>
+                        <Badge variant={subscription.isActive ? 'default' : 'secondary'}>
+                          {subscription.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleTestWebhook(subscription.id)}
+                          disabled={testWebhookMutation.isPending}
+                        >
+                          <TestTube className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteWebhook(subscription.id)}
+                          disabled={deleteWebhookMutation.isPending}
+                        >
+                          <Trash2 className="w-4 h-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {subscription.events.map((event: string) => (
+                        <Badge key={event} variant="outline">
+                          {event}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Created: {new Date(subscription.createdAt).toLocaleDateString()}
+                      {subscription.lastTriggeredAt && (
+                        <span> | Last triggered: {new Date(subscription.lastTriggeredAt).toLocaleDateString()}</span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="create">
           <Card>
             <CardHeader>
-              <CardTitle>{editingId ? 'Edit Webhook' : 'Create New Webhook'}</CardTitle>
+              <CardTitle>Create Webhook Subscription</CardTitle>
               <CardDescription>
-                Subscribe to compliance events and receive real-time notifications
+                Configure a new webhook endpoint to receive notifications
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Webhook URL */}
               <div className="space-y-2">
                 <Label htmlFor="webhook-url">Webhook URL</Label>
                 <Input
                   id="webhook-url"
-                  placeholder="https://your-domain.com/webhooks/compliance"
+                  placeholder="https://your-server.com/webhook"
                   value={webhookUrl}
                   onChange={(e) => setWebhookUrl(e.target.value)}
-                  type="url"
                 />
                 <p className="text-sm text-muted-foreground">
-                  Must be a valid HTTPS URL that can receive POST requests
+                  This URL will receive POST requests when events occur
                 </p>
               </div>
 
-              {/* Event Selection */}
               <div className="space-y-3">
                 <Label>Events to Subscribe</Label>
-                <div className="space-y-2">
-                  {eventOptions.map((event) => (
+                <div className="grid grid-cols-2 gap-4">
+                  {availableEvents.map((event) => (
                     <div key={event.id} className="flex items-center space-x-2">
                       <Checkbox
                         id={event.id}
                         checked={selectedEvents.includes(event.id)}
-                        onCheckedChange={() => handleToggleEvent(event.id)}
+                        onCheckedChange={() => toggleEvent(event.id)}
                       />
                       <label
                         htmlFor={event.id}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         {event.label}
                       </label>
@@ -210,192 +258,28 @@ export function WebhooksPage() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-2">
-                <Button
-                  onClick={() =>
-                    editingId
-                      ? updateWebhookMutation.mutate(editingId)
-                      : createWebhookMutation.mutate()
-                  }
-                  disabled={
-                    !webhookUrl ||
-                    selectedEvents.length === 0 ||
-                    createWebhookMutation.isPending ||
-                    updateWebhookMutation.isPending
-                  }
-                  className="flex-1"
-                >
-                  {editingId ? 'Update Webhook' : 'Create Webhook'}
-                </Button>
-                {editingId && (
-                  <Button variant="outline" onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                )}
-              </div>
+              <Button
+                onClick={handleCreateWebhook}
+                disabled={createWebhookMutation.isPending || !webhookUrl || selectedEvents.length === 0}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {createWebhookMutation.isPending ? 'Creating...' : 'Create Webhook'}
+              </Button>
             </CardContent>
           </Card>
-
-          {/* Webhooks List */}
-          {webhooks?.subscriptions && webhooks.subscriptions.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Active Webhooks ({webhooks.subscriptions.length})</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {webhooks.subscriptions.map((webhook: any) => (
-                    <div key={webhook.id} className="p-4 border rounded-lg space-y-3">
-                      {/* Webhook URL */}
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1 flex-1">
-                          <p className="font-mono text-sm break-all">{webhook.url}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Created: {new Date(webhook.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge variant={webhook.isActive ? 'default' : 'secondary'}>
-                          {webhook.isActive ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </div>
-
-                      {/* Events */}
-                      <div className="flex flex-wrap gap-1">
-                        {webhook.events.map((event: string) => (
-                          <Badge key={event} variant="outline" className="text-xs">
-                            {event}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      {/* Last Triggered */}
-                      {webhook.lastTriggeredAt && (
-                        <p className="text-xs text-muted-foreground">
-                          Last triggered: {new Date(webhook.lastTriggeredAt).toLocaleString()}
-                        </p>
-                      )}
-
-                      {/* Actions */}
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(webhook)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => testWebhookMutation.mutate(webhook.id)}
-                          disabled={testWebhookMutation.isPending}
-                        >
-                          <TestTube className="w-4 h-4 mr-1" />
-                          Test
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            navigator.clipboard.writeText(webhook.id);
-                            toast({
-                              title: 'Copied',
-                              description: 'Webhook ID copied to clipboard',
-                            });
-                          }}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteWebhookMutation.mutate(webhook.id)}
-                          disabled={deleteWebhookMutation.isPending}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {!webhooks?.subscriptions || webhooks.subscriptions.length === 0 && (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center py-8">
-                  <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">No webhooks configured yet</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Create your first webhook above to start receiving compliance updates
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </TabsContent>
 
-        {/* Delivery History Tab */}
-        <TabsContent value="delivery" className="space-y-6">
+        <TabsContent value="logs">
           <Card>
             <CardHeader>
-              <CardTitle>Delivery History</CardTitle>
-              <CardDescription>
-                View webhook delivery attempts and status
-              </CardDescription>
+              <CardTitle>Delivery Logs</CardTitle>
+              <CardDescription>Recent webhook delivery attempts</CardDescription>
             </CardHeader>
             <CardContent>
-              {deliveryHistory?.deliveries && deliveryHistory.deliveries.length > 0 ? (
-                <div className="space-y-3">
-                  {deliveryHistory.deliveries.map((delivery: any) => (
-                    <div key={delivery.id} className="flex items-center justify-between p-3 border rounded">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center gap-2">
-                          {delivery.status === 'delivered' && (
-                            <CheckCircle className="w-4 h-4 text-green-600" />
-                          )}
-                          {delivery.status === 'failed' && (
-                            <XCircle className="w-4 h-4 text-red-600" />
-                          )}
-                          {delivery.status === 'retrying' && (
-                            <Clock className="w-4 h-4 text-yellow-600" />
-                          )}
-                          <span className="font-mono text-sm">{delivery.eventType}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(delivery.createdAt).toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="text-right space-y-1">
-                        <Badge
-                          variant={
-                            delivery.status === 'delivered'
-                              ? 'default'
-                              : delivery.status === 'failed'
-                              ? 'destructive'
-                              : 'secondary'
-                          }
-                        >
-                          {delivery.status}
-                        </Badge>
-                        {delivery.httpStatus && (
-                          <p className="text-xs text-muted-foreground">
-                            HTTP {delivery.httpStatus}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">No delivery history yet</p>
-                </div>
-              )}
+              <div className="text-center py-8 text-muted-foreground">
+                <Clock className="w-12 h-12 mx-auto mb-4" />
+                <p>Delivery logs will appear here once webhooks are triggered</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

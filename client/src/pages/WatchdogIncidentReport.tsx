@@ -26,22 +26,21 @@ export default function WatchdogIncidentReportPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch recent reports
-  const { data: recentReports = [] } = trpc.watchdog.getPublicReports.useQuery(
-    { limit: 10 },
-    { enabled: true }
-  );
+  const { data: recentReports = [] } = trpc.watchdog.list.useQuery();
+  const submitMutation = trpc.watchdog.submit.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       // Submit incident report
-      await trpc.watchdog.submitIncidentReport.mutate({
-        systemName: formData.systemName,
+      await submitMutation.mutateAsync({
+        title: formData.systemName,
         description: formData.description,
-        riskLevel: formData.riskLevel,
-        framework: formData.framework,
-        email: formData.email || undefined,
+        aiSystemName: formData.systemName,
+        incidentType: 'safety' as const,
+        severity: formData.riskLevel === 'high' ? 'critical' : formData.riskLevel,
+        reporterEmail: formData.email || undefined,
       });
       setSubmitted(true);
       setFormData({

@@ -169,7 +169,7 @@ Format your response as JSON with keys: "whyCorrect", "keyConcept", "example", "
       };
 
       try {
-        const response = await invokeLLM({ prompt: explanationPrompt });
+        const response = await invokeLLM({ messages: [{ role: 'user', content: explanationPrompt }] });
         if (typeof response === 'string') {
           const parsed = JSON.parse(response);
           aiExplanation = {

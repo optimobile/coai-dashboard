@@ -290,7 +290,7 @@ export const translationsRouter = router({
             learningObjectives: input.learningObjectives,
             duration: input.duration,
             difficulty: input.difficulty,
-            isPublished: input.isPublished,
+            isPublished: input.isPublished ? 1 : 0,
           })
           .where(eq(courseTranslations.id, existing[0].id));
       } else {
@@ -304,7 +304,7 @@ export const translationsRouter = router({
           learningObjectives: input.learningObjectives,
           duration: input.duration,
           difficulty: input.difficulty,
-          isPublished: input.isPublished || false,
+          isPublished: input.isPublished ? 1 : 0,
         });
       }
     }),
@@ -357,7 +357,7 @@ export const translationsRouter = router({
             learningObjectives: input.learningObjectives,
             keyTakeaways: input.keyTakeaways,
             duration: input.duration,
-            isPublished: input.isPublished,
+            isPublished: input.isPublished ? 1 : 0,
           })
           .where(eq(moduleTranslations.id, existing[0].id));
       } else {
@@ -370,7 +370,7 @@ export const translationsRouter = router({
           learningObjectives: input.learningObjectives,
           keyTakeaways: input.keyTakeaways,
           duration: input.duration,
-          isPublished: input.isPublished || false,
+          isPublished: input.isPublished ? 1 : 0,
         });
       }
     }),
@@ -431,7 +431,7 @@ export const translationsRouter = router({
             videoUrl: input.videoUrl,
             videoCaptions: input.videoCaptions,
             resources: input.resources,
-            isPublished: input.isPublished,
+            isPublished: input.isPublished ? 1 : 0,
           })
           .where(eq(lessonTranslations.id, existing[0].id));
       } else {
@@ -444,7 +444,7 @@ export const translationsRouter = router({
           videoUrl: input.videoUrl,
           videoCaptions: input.videoCaptions,
           resources: input.resources,
-          isPublished: input.isPublished || false,
+          isPublished: input.isPublished ? 1 : 0,
         });
       }
     }),

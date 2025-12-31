@@ -49,20 +49,7 @@ export function ReportsPage() {
   });
 
   // Generate report mutation
-  const generateReportMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedSystem || !selectedFramework) {
-        throw new Error('Please select both system and framework');
-      }
-
-      const response = await trpc.reports.generateReport.mutate({
-        aiSystemId: parseInt(selectedSystem),
-        frameworkId: parseInt(selectedFramework),
-        format: reportFormat,
-      });
-
-      return response;
-    },
+  const generateReportMutation = trpc.reports.generateReport.useMutation({
     onSuccess: (data) => {
       // Trigger download
       const link = document.createElement('a');
@@ -73,42 +60,38 @@ export function ReportsPage() {
       document.body.removeChild(link);
     },
   });
+  
+  const handleGenerateReport = () => {
+    if (!selectedSystem || !selectedFramework) return;
+    generateReportMutation.mutate({
+      aiSystemId: parseInt(selectedSystem),
+      frameworkId: parseInt(selectedFramework),
+      format: reportFormat,
+    });
+  };
 
   // Schedule report mutation
-  const scheduleReportMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedSystem || !selectedFramework || !recipients) {
-        throw new Error('Please fill in all fields');
-      }
-
-      return await trpc.reports.scheduleReport.mutate({
-        aiSystemId: parseInt(selectedSystem),
-        frameworkId: parseInt(selectedFramework),
-        format: reportFormat,
-        frequency,
-        recipients: recipients.split(',').map((e) => e.trim()),
-        startDate: new Date().toISOString().split('T')[0],
-      });
-    },
-  });
+  const scheduleReportMutation = trpc.reports.scheduleReport.useMutation();
+  
+  const handleScheduleReport = () => {
+    if (!selectedSystem || !selectedFramework || !recipients) return;
+    scheduleReportMutation.mutate({
+      aiSystemId: parseInt(selectedSystem),
+      frameworkId: parseInt(selectedFramework),
+      format: reportFormat,
+      frequency,
+      recipients: recipients.split(',').map((e) => e.trim()),
+      startDate: new Date().toISOString().split('T')[0],
+    });
+  };
 
   // Fetch scheduled reports
-  const { data: scheduledReports } = useQuery({
-    queryKey: ['scheduledReports'],
-    queryFn: async () => {
-      return await trpc.reports.getScheduledReports.query({});
-    },
-  });
+  const { data: scheduledReports } = trpc.reports.getScheduledReports.useQuery({});
 
   // Fetch report history
-  const { data: reportHistory } = useQuery({
-    queryKey: ['reportHistory'],
-    queryFn: async () => {
-      return await trpc.reports.getReportHistory.query({
-        limit: 10,
-        offset: 0,
-      });
-    },
+  const { data: reportHistory } = trpc.reports.getReportHistory.useQuery({
+    limit: 10,
+    offset: 0,
   });
 
   return (
@@ -189,7 +172,7 @@ export function ReportsPage() {
 
               {/* Generate Button */}
               <Button
-                onClick={() => generateReportMutation.mutate()}
+                onClick={handleGenerateReport}
                 disabled={!selectedSystem || !selectedFramework || generateReportMutation.isPending}
                 className="w-full"
                 size="lg"
@@ -201,7 +184,7 @@ export function ReportsPage() {
               {generateReportMutation.isError && (
                 <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg">
                   <AlertCircle className="w-4 h-4" />
-                  <span>{(generateReportMutation.error as Error).message}</span>
+                  <span>{generateReportMutation.error?.message || 'An error occurred'}</span>
                 </div>
               )}
             </CardContent>
@@ -280,7 +263,7 @@ export function ReportsPage() {
 
               {/* Schedule Button */}
               <Button
-                onClick={() => scheduleReportMutation.mutate()}
+                onClick={handleScheduleReport}
                 disabled={!selectedSystem || !selectedFramework || !recipients || scheduleReportMutation.isPending}
                 className="w-full"
                 size="lg"

@@ -52,51 +52,31 @@ export const defaultSequenceConfig: Record<string, EmailSequenceConfig[]> = {
 };
 
 /**
- * Send email (mock implementation - replace with actual email service)
+ * Mock email sending function
  */
-export async function sendEmail(
-  to: string,
-  subject: string,
-  htmlContent: string,
-  textContent: string
-): Promise<{ success: boolean; messageId?: string; error?: string }> {
-  try {
-    // TODO: Integrate with Resend, SendGrid, or other email service
-    // For now, this is a mock implementation
-    console.log(`📧 Email sent to ${to}`);
-    console.log(`Subject: ${subject}`);
-    console.log(`HTML: ${htmlContent.substring(0, 100)}...`);
-    
-    return {
-      success: true,
-      messageId: `msg_${Date.now()}`,
-    };
-  } catch (error) {
-    console.error("Failed to send email:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
-  }
+async function sendEmail(to: string, subject: string, html: string, text?: string): Promise<void> {
+  console.log(`[EmailAutomation] Sending email to ${to}: ${subject}`);
+  // In production, integrate with actual email service
 }
 
 /**
- * Trigger email sequence for a user
+ * Trigger an email sequence for a user
  */
 export async function triggerEmailSequence(
   userId: number,
-  sequenceType: "welcome" | "course_recommendation" | "exam_prep" | "success_stories" | "certification_path",
+  sequenceType: string,
   metadata?: Record<string, any>
 ): Promise<{ success: boolean; sequenceId?: number; error?: string }> {
   try {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    // Get user details
+    // Get user info
     const userRecord = await db
       .select()
       .from(users)
-      .where(eq(users.id, userId));
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!userRecord.length) {
       return { success: false, error: "User not found" };
@@ -107,19 +87,17 @@ export async function triggerEmailSequence(
     // Create email sequence record
     const result = await db.insert(emailSequences).values({
       userId,
-      sequenceType,
-      status: "active",
-      currentStep: 1,
-      metadata: JSON.stringify(metadata || {}),
+      sequenceId: sequenceType,
+      step: 1,
+      status: "pending",
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     });
 
     // Send first email in sequence
     const config = defaultSequenceConfig[sequenceType];
     if (config && config.length > 0) {
       const firstEmail = config[0];
-      if (firstEmail.enabled) {
+      if (firstEmail.enabled && user.email) {
         const rendered = renderEmailTemplate(firstEmail.templateId, {
           firstName: user.name?.split(" ")[0] || "there",
           dashboardUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/dashboard`,
@@ -135,7 +113,7 @@ export async function triggerEmailSequence(
 
     return {
       success: true,
-      sequenceId: result.insertId,
+      sequenceId: (result as any)[0]?.insertId || 0,
     };
   } catch (error) {
     console.error("Failed to trigger email sequence:", error);
@@ -149,123 +127,101 @@ export async function triggerEmailSequence(
 /**
  * Process scheduled emails (call this periodically from a cron job)
  */
-export async function processScheduledEmails(): Promise<{
-  processed: number;
-  failed: number;
-  errors: string[];
-}> {
+export async function processScheduledEmails(): Promise<void> {
   try {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    let processed = 0;
-    let failed = 0;
-    const errors: string[] = [];
-
-    // Get all active sequences
-    const activeSequences = await db
+    // Get all pending sequences
+    const pendingSequences = await db
       .select()
       .from(emailSequences)
-      .where(eq(emailSequences.status, "active"));
+      .where(eq(emailSequences.status, "pending"));
 
-    for (const sequence of activeSequences) {
-      try {
-        const sequenceType = sequence.sequenceType as keyof typeof defaultSequenceConfig;
-        const config = defaultSequenceConfig[sequenceType];
+    console.log(`[EmailAutomation] Processing ${pendingSequences.length} pending sequences`);
 
-        if (!config) continue;
+    for (const sequence of pendingSequences) {
+      const config = defaultSequenceConfig[sequence.sequenceId];
+      if (!config) continue;
 
-        // Get the next email to send
-        const nextEmail = config[sequence.currentStep];
-        if (!nextEmail) {
-          // Sequence complete
+      const currentStep = sequence.step;
+      const stepConfig = config[currentStep - 1];
+      if (!stepConfig) {
+        // Sequence completed
+        await db
+          .update(emailSequences)
+          .set({ status: "sent" })
+          .where(eq(emailSequences.id, sequence.id));
+        continue;
+      }
+
+      // Check if enough time has passed
+      const createdAt = new Date(sequence.createdAt);
+      const delayMs = stepConfig.delayDays * 24 * 60 * 60 * 1000;
+      const sendAt = new Date(createdAt.getTime() + delayMs);
+
+      if (new Date() >= sendAt) {
+        // Get user
+        const userRecord = await db
+          .select()
+          .from(users)
+          .where(eq(users.id, sequence.userId))
+          .limit(1);
+
+        if (userRecord.length && userRecord[0].email) {
+          const user = userRecord[0];
+          const rendered = renderEmailTemplate(stepConfig.templateId, {
+            firstName: user.name?.split(" ")[0] || "there",
+            dashboardUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/dashboard`,
+            coursesUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/courses`,
+            communityUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/community`,
+          });
+
+          if (rendered) {
+            await sendEmail(user.email!, rendered.subject, rendered.html, rendered.text);
+          }
+
+          // Update sequence step
           await db
             .update(emailSequences)
-            .set({ status: "completed", updatedAt: new Date().toISOString() })
+            .set({
+              step: currentStep + 1,
+              sentDate: new Date().toISOString(),
+            })
             .where(eq(emailSequences.id, sequence.id));
-          continue;
         }
-
-        // Check if it's time to send this email
-        const createdDate = new Date(sequence.createdAt);
-        const scheduledDate = new Date(createdDate.getTime() + nextEmail.delayDays * 24 * 60 * 60 * 1000);
-
-        if (new Date().toISOString() >= scheduledDate && nextEmail.enabled) {
-          // Get user details
-          const userRecord = await db
-            .select()
-            .from(users)
-            .where(eq(users.id, sequence.userId));
-
-          if (userRecord.length > 0) {
-            const user = userRecord[0];
-            const rendered = renderEmailTemplate(nextEmail.templateId, {
-              firstName: user.name?.split(" ")[0] || "there",
-              dashboardUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/dashboard`,
-              coursesUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/courses`,
-              communityUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/community`,
-            });
-
-            if (rendered) {
-              const result = await sendEmail(
-                user.email,
-                rendered.subject,
-                rendered.html,
-                rendered.text
-              );
-
-              if (result.success) {
-                // Update sequence to next step
-                await db
-                  .update(emailSequences)
-                  .set({
-                    currentStep: sequence.currentStep + 1,
-                    updatedAt: new Date().toISOString(),
-                  })
-                  .where(eq(emailSequences.id, sequence.id));
-
-                processed++;
-              } else {
-                failed++;
-                errors.push(`Failed to send email for sequence ${sequence.id}: ${result.error}`);
-              }
-            }
-          }
-        }
-      } catch (error) {
-        failed++;
-        errors.push(
-          `Error processing sequence ${sequence.id}: ${error instanceof Error ? error.message : "Unknown error"}`
-        );
       }
     }
-
-    return { processed, failed, errors };
   } catch (error) {
     console.error("Failed to process scheduled emails:", error);
-    return {
-      processed: 0,
-      failed: 0,
-      errors: [error instanceof Error ? error.message : "Unknown error"],
-    };
   }
 }
 
 /**
- * Cancel email sequence for a user
+ * Cancel an email sequence for a user
  */
-export async function cancelEmailSequence(sequenceId: number): Promise<{ success: boolean; error?: string }> {
+export async function cancelEmailSequence(
+  userId: number,
+  sequenceType: string
+): Promise<{ success: boolean; error?: string }> {
   try {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
     await db
       .update(emailSequences)
-      .set({ status: "cancelled", updatedAt: new Date().toISOString() })
-      .where(eq(emailSequences.id, sequenceId));
+      .set({ status: "bounced" }) // Using bounced as cancelled equivalent
+      .where(
+        and(
+          eq(emailSequences.userId, userId),
+          eq(emailSequences.sequenceId, sequenceType),
+          eq(emailSequences.status, "pending")
+        )
+      );
 
     return { success: true };
   } catch (error) {
+    console.error("Failed to cancel email sequence:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
@@ -274,36 +230,37 @@ export async function cancelEmailSequence(sequenceId: number): Promise<{ success
 }
 
 /**
- * Get sequence status
+ * Get email sequence status for a user
  */
-export async function getSequenceStatus(
-  sequenceId: number
-): Promise<{
-  success: boolean;
-  sequence?: any;
-  error?: string;
-}> {
+export async function getEmailSequenceStatus(
+  userId: number,
+  sequenceType: string
+): Promise<{ active: boolean; currentStep: number; totalSteps: number } | null> {
   try {
     const db = await getDb();
-    if (!db) throw new Error("Database not available");
+    if (!db) return null;
 
     const sequence = await db
       .select()
       .from(emailSequences)
-      .where(eq(emailSequences.id, sequenceId));
+      .where(
+        and(
+          eq(emailSequences.userId, userId),
+          eq(emailSequences.sequenceId, sequenceType)
+        )
+      )
+      .limit(1);
 
-    if (!sequence.length) {
-      return { success: false, error: "Sequence not found" };
-    }
+    if (!sequence.length) return null;
 
+    const config = defaultSequenceConfig[sequenceType];
     return {
-      success: true,
-      sequence: sequence[0],
+      active: sequence[0].status === "pending",
+      currentStep: sequence[0].step,
+      totalSteps: config?.length || 0,
     };
   } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    console.error("Failed to get email sequence status:", error);
+    return null;
   }
 }

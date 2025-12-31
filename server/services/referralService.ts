@@ -31,6 +31,7 @@ export class ReferralService {
    */
   static async generateReferralCode(userId: number): Promise<string> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
     
     // Generate unique code
     let code: string;
@@ -65,6 +66,7 @@ export class ReferralService {
    */
   static async getUserReferralCode(userId: number): Promise<ReferralCodeInfo | null> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
     
     const result = await db
       .select()
@@ -95,6 +97,7 @@ export class ReferralService {
     source?: string
   ): Promise<boolean> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     // Find referral code
     const refCode = await db
@@ -138,6 +141,7 @@ export class ReferralService {
     certificationPrice: number
   ): Promise<boolean> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     // Find referral code
     const refCode = await db
@@ -187,6 +191,7 @@ export class ReferralService {
    */
   static async getReferralStats(userId: number): Promise<ReferralStats> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     // Get referral code
     const refCode = await db
@@ -233,6 +238,7 @@ export class ReferralService {
    */
   static async calculatePendingCommissions(userId: number): Promise<number> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     const result = await db
       .select({
@@ -261,6 +267,7 @@ export class ReferralService {
     resendMessageId?: string
   ): Promise<void> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     await db.insert(referralEmailLogs).values({
       referrerId,
@@ -279,6 +286,7 @@ export class ReferralService {
    */
   static async getReferralCodeByCode(code: string): Promise<any | null> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     const result = await db
       .select()

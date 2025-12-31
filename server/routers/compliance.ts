@@ -75,9 +75,7 @@ export const complianceRouter = router({
         }
 
         // Verify user has access to this AI system
-        const system = await db.query.aiSystems.findFirst({
-          where: eq(aiSystems.id, input.aiSystemId),
-        });
+        const [system] = await db.select().from(aiSystems).where(eq(aiSystems.id, input.aiSystemId));
 
         if (!system || system.userId !== ctx.user.id) {
           throw new TRPCError({
@@ -236,9 +234,7 @@ export const complianceRouter = router({
         }
 
         // Verify user has access to this AI system
-        const system = await db.query.aiSystems.findFirst({
-          where: eq(aiSystems.id, input.aiSystemId),
-        });
+        const [system] = await db.select().from(aiSystems).where(eq(aiSystems.id, input.aiSystemId));
 
         if (!system || system.userId !== ctx.user.id) {
           throw new TRPCError({
@@ -294,9 +290,7 @@ export const complianceRouter = router({
         }
 
         // Verify user has access to this AI system
-        const system = await db.query.aiSystems.findFirst({
-          where: eq(aiSystems.id, input.aiSystemId),
-        });
+        const [system] = await db.select().from(aiSystems).where(eq(aiSystems.id, input.aiSystemId));
 
         if (!system || system.userId !== ctx.user.id) {
           throw new TRPCError({

@@ -10,7 +10,7 @@ export interface AuditLogEntry {
   entityType: 'compliance_decision' | 'assessment' | 'certification' | 'webhook' | 'onboarding' | 'system';
   entityId: string;
   changes: Record<string, { before: any; after: any }>;
-  timestamp: Date;
+  timestamp: string | Date;
   ipAddress: string;
   userAgent: string;
   status: 'success' | 'failure';
@@ -20,7 +20,7 @@ export interface AuditLogEntry {
 
 export interface ComplianceExportData {
   organizationName: string;
-  exportDate: Date;
+  exportDate: string | Date;
   exportedBy: string;
   systems: Array<{
     id: string;
@@ -29,12 +29,12 @@ export interface ComplianceExportData {
     riskLevel: string;
     complianceScore: number;
     certificationLevel: string;
-    lastAssessment: Date;
+    lastAssessment: string | Date;
     controls: Array<{
       id: string;
       name: string;
       status: 'compliant' | 'partial' | 'non-compliant';
-      evidence: string[];
+      evidence?: string[];
     }>;
   }>;
   auditLog: AuditLogEntry[];
@@ -42,8 +42,8 @@ export interface ComplianceExportData {
     id: string;
     systemId: string;
     level: string;
-    issuedDate: Date;
-    expiryDate: Date;
+    issuedDate: string | Date;
+    expiryDate: string | Date;
     issuer: string;
   }>;
   assessments: Array<{
@@ -51,7 +51,7 @@ export interface ComplianceExportData {
     systemId: string;
     framework: string;
     score: number;
-    date: Date;
+    date: string | Date;
     assessor: string;
     findings: string[];
   }>;
@@ -83,7 +83,7 @@ export class AuditTrailService {
       entityType,
       entityId,
       changes,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date()?.toString() || new Date().toISOString(),
       ipAddress,
       userAgent,
       status,
@@ -358,7 +358,7 @@ export class ComplianceExportService {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<ComplianceReport>\n';
     xml += `  <Organization>${this.escapeXml(data.organizationName)}</Organization>\n`;
-    xml += `  <ExportDate>${data.exportDate.toISOString()}</ExportDate>\n`;
+    xml += `  <ExportDate>${typeof data.exportDate === 'string' ? data.exportDate : data.exportDate?.toString() || new Date().toISOString()}</ExportDate>\n`;
     xml += `  <ExportedBy>${this.escapeXml(data.exportedBy)}</ExportedBy>\n`;
 
     xml += '  <Systems>\n';
@@ -370,7 +370,7 @@ export class ComplianceExportService {
       xml += `      <RiskLevel>${this.escapeXml(system.riskLevel)}</RiskLevel>\n`;
       xml += `      <ComplianceScore>${system.complianceScore}</ComplianceScore>\n`;
       xml += `      <CertificationLevel>${this.escapeXml(system.certificationLevel)}</CertificationLevel>\n`;
-      xml += `      <LastAssessment>${system.lastAssessment.toISOString()}</LastAssessment>\n`;
+      xml += `      <LastAssessment>${typeof system.lastAssessment === 'string' ? system.lastAssessment : system.lastAssessment?.toString() || new Date().toISOString()}</LastAssessment>\n`;
 
       xml += '      <Controls>\n';
       system.controls.forEach((control) => {
@@ -379,7 +379,7 @@ export class ComplianceExportService {
         xml += `          <Name>${this.escapeXml(control.name)}</Name>\n`;
         xml += `          <Status>${this.escapeXml(control.status)}</Status>\n`;
         xml += '          <Evidence>\n';
-        control.evidence.forEach((evidence) => {
+        (control.evidence || []).forEach((evidence) => {
           xml += `            <Item>${this.escapeXml(evidence)}</Item>\n`;
         });
         xml += '          </Evidence>\n';
@@ -397,8 +397,8 @@ export class ComplianceExportService {
       xml += `      <ID>${this.escapeXml(cert.id)}</ID>\n`;
       xml += `      <SystemID>${this.escapeXml(cert.systemId)}</SystemID>\n`;
       xml += `      <Level>${this.escapeXml(cert.level)}</Level>\n`;
-      xml += `      <IssuedDate>${cert.issuedDate.toISOString()}</IssuedDate>\n`;
-      xml += `      <ExpiryDate>${cert.expiryDate.toISOString()}</ExpiryDate>\n`;
+      xml += `      <IssuedDate>${typeof cert.issuedDate === 'string' ? cert.issuedDate : cert.issuedDate?.toString() || new Date().toISOString()}</IssuedDate>\n`;
+      xml += `      <ExpiryDate>${typeof cert.expiryDate === 'string' ? cert.expiryDate : cert.expiryDate?.toString() || new Date().toISOString()}</ExpiryDate>\n`;
       xml += `      <Issuer>${this.escapeXml(cert.issuer)}</Issuer>\n`;
       xml += '    </Certification>\n';
     });
@@ -410,7 +410,7 @@ export class ComplianceExportService {
       xml += `      <ID>${this.escapeXml(entry.id)}</ID>\n`;
       xml += `      <UserID>${this.escapeXml(entry.userId)}</UserID>\n`;
       xml += `      <Action>${this.escapeXml(entry.action)}</Action>\n`;
-      xml += `      <Timestamp>${entry.timestamp.toISOString()}</Timestamp>\n`;
+      xml += `      <Timestamp>${entry.timestamp?.toString() || new Date().toISOString()}</Timestamp>\n`;
       xml += `      <Status>${this.escapeXml(entry.status)}</Status>\n`;
       xml += '    </Entry>\n';
     });
@@ -434,7 +434,7 @@ export class ComplianceExportService {
     let csv = 'System ID,System Name,Type,Risk Level,Compliance Score,Certification Level,Last Assessment\n';
 
     data.systems.forEach((system) => {
-      csv += `"${this.escapeCsv(system.id)}","${this.escapeCsv(system.name)}","${this.escapeCsv(system.type)}","${this.escapeCsv(system.riskLevel)}",${system.complianceScore},"${this.escapeCsv(system.certificationLevel)}","${system.lastAssessment.toISOString()}"\n`;
+      csv += `"${this.escapeCsv(system.id)}","${this.escapeCsv(system.name)}","${this.escapeCsv(system.type)}","${this.escapeCsv(system.riskLevel)}",${system.complianceScore},"${this.escapeCsv(system.certificationLevel)}","${typeof system.lastAssessment === 'string' ? system.lastAssessment : system.lastAssessment?.toString() || new Date().toISOString()}"\n`;
     });
 
     return csv;
@@ -448,7 +448,7 @@ export class ComplianceExportService {
     content += '='.repeat(80) + '\n\n';
 
     content += `Organization: ${data.organizationName}\n`;
-    content += `Export Date: ${data.exportDate.toISOString()}\n`;
+    content += `Export Date: ${typeof data.exportDate === 'string' ? data.exportDate : data.exportDate?.toString() || new Date().toISOString()}\n`;
     content += `Exported By: ${data.exportedBy}\n\n`;
 
     content += 'SYSTEMS\n';
@@ -459,7 +459,7 @@ export class ComplianceExportService {
       content += `  Risk Level: ${system.riskLevel}\n`;
       content += `  Compliance Score: ${system.complianceScore}%\n`;
       content += `  Certification Level: ${system.certificationLevel}\n`;
-      content += `  Last Assessment: ${system.lastAssessment.toISOString()}\n`;
+      content += `  Last Assessment: ${typeof system.lastAssessment === 'string' ? system.lastAssessment : system.lastAssessment?.toString() || new Date().toISOString()}\n`;
       content += `  Controls:\n`;
       system.controls.forEach((control) => {
         content += `    - ${control.name}: ${control.status}\n`;
@@ -469,7 +469,7 @@ export class ComplianceExportService {
     content += '\n\nCERTIFICATIONS\n';
     content += '-'.repeat(80) + '\n';
     data.certifications.forEach((cert) => {
-      content += `${cert.level} - System ${cert.systemId} (Issued: ${cert.issuedDate.toISOString()}, Expires: ${cert.expiryDate.toISOString()})\n`;
+      content += `${cert.level} - System ${cert.systemId} (Issued: ${typeof cert.issuedDate === 'string' ? cert.issuedDate : cert.issuedDate?.toString() || new Date().toISOString()}, Expires: ${typeof cert.expiryDate === 'string' ? cert.expiryDate : cert.expiryDate?.toString() || new Date().toISOString()})\n`;
     });
 
     return content;

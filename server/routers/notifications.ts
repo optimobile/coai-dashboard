@@ -67,7 +67,7 @@ export async function createNotification(params: {
       link: params.link,
       priority: params.priority || "medium",
       metadata: params.metadata,
-      isRead: false,
+      isRead: 0,
     })
     .$returningId();
 
@@ -112,12 +112,12 @@ export const notificationsRouter = router({
       const db = await getDb();
       if (!db) return { notifications: [], total: 0, unreadCount: 0 };
 
-      const userId = Number(ctx.user.id);
+      const userId = Number(ctx.user?.id);
 
       // Build conditions
       const conditions: any[] = [eq(notifications.userId, userId)];
       if (input.unreadOnly) {
-        conditions.push(eq(notifications.isRead, false));
+        conditions.push(eq(notifications.isRead, 0));
       }
 
       // Get notifications
@@ -139,7 +139,7 @@ export const notificationsRouter = router({
       const [{ unreadCount }] = await db
         .select({ unreadCount: sql<number>`count(*)` })
         .from(notifications)
-        .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)));
+        .where(and(eq(notifications.userId, userId), eq(notifications.isRead, 0)));
 
       return {
         notifications: notificationsList,
@@ -157,13 +157,13 @@ export const notificationsRouter = router({
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
-      const userId = Number(ctx.user.id);
+      const userId = Number(ctx.user?.id);
 
       // Verify ownership
       const [notification] = await db
         .select()
         .from(notifications)
-        .where(eq(notifications.id, input.id))
+        .where(eq(notifications?.id, input?.id))
         .limit(1);
 
       if (!notification || notification.userId !== userId) {
@@ -173,8 +173,8 @@ export const notificationsRouter = router({
       // Mark as read
       await db
         .update(notifications)
-        .set({ isRead: true, readAt: new Date().toISOString() })
-        .where(eq(notifications.id, input.id));
+        .set({ isRead: 1, readAt: new Date().toISOString() })
+        .where(eq(notifications?.id, input?.id));
 
       return { success: true };
     }),
@@ -186,12 +186,12 @@ export const notificationsRouter = router({
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
-    const userId = Number(ctx.user.id);
+    const userId = Number(ctx.user?.id);
 
     await db
       .update(notifications)
-      .set({ isRead: true, readAt: new Date().toISOString() })
-      .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)));
+      .set({ isRead: 1, readAt: new Date().toISOString() })
+      .where(and(eq(notifications.userId, userId), eq(notifications.isRead, 0)));
 
     return { success: true };
   }),
@@ -205,20 +205,20 @@ export const notificationsRouter = router({
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
-      const userId = Number(ctx.user.id);
+      const userId = Number(ctx.user?.id);
 
       // Verify ownership
       const [notification] = await db
         .select()
         .from(notifications)
-        .where(eq(notifications.id, input.id))
+        .where(eq(notifications?.id, input?.id))
         .limit(1);
 
       if (!notification || notification.userId !== userId) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Notification not found" });
       }
 
-      await db.delete(notifications).where(eq(notifications.id, input.id));
+      await db.delete(notifications).where(eq(notifications?.id, input?.id));
 
       return { success: true };
     }),
@@ -230,7 +230,7 @@ export const notificationsRouter = router({
     const db = await getDb();
     if (!db) return null;
 
-    const userId = Number(ctx.user.id);
+    const userId = Number(ctx.user?.id);
 
     const [prefs] = await db
       .select()
@@ -248,7 +248,7 @@ export const notificationsRouter = router({
       const [created] = await db
         .select()
         .from(notificationPreferences)
-        .where(eq(notificationPreferences.id, newPrefs.id))
+        .where(eq(notificationPreferences.id, (newPrefs as any)?.id || 0))
         .limit(1);
 
       return created;
@@ -280,7 +280,7 @@ export const notificationsRouter = router({
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
-      const userId = Number(ctx.user.id);
+      const userId = Number(ctx.user?.id);
 
       // Check if preferences exist
       const [existing] = await db
@@ -289,17 +289,31 @@ export const notificationsRouter = router({
         .where(eq(notificationPreferences.userId, userId))
         .limit(1);
 
+      // Convert boolean values to numbers for database
+      const dbInput: any = {};
+      if (input.emailEnabled !== undefined) dbInput.emailEnabled = input.emailEnabled ? 1 : 0;
+      if (input.slackEnabled !== undefined) dbInput.slackEnabled = input.slackEnabled ? 1 : 0;
+      if (input.slackWebhookUrl !== undefined) dbInput.slackWebhookUrl = input.slackWebhookUrl;
+      if (input.complianceAlerts !== undefined) dbInput.complianceAlerts = input.complianceAlerts ? 1 : 0;
+      if (input.systemUpdates !== undefined) dbInput.systemUpdates = input.systemUpdates ? 1 : 0;
+      if (input.jobApplications !== undefined) dbInput.jobApplications = input.jobApplications ? 1 : 0;
+      if (input.certificateIssued !== undefined) dbInput.certificateIssued = input.certificateIssued ? 1 : 0;
+      if (input.councilDecisions !== undefined) dbInput.councilDecisions = input.councilDecisions ? 1 : 0;
+      if (input.reportUpdates !== undefined) dbInput.reportUpdates = input.reportUpdates ? 1 : 0;
+      if (input.digestEnabled !== undefined) dbInput.digestEnabled = input.digestEnabled ? 1 : 0;
+      if (input.digestFrequency !== undefined) dbInput.digestFrequency = input.digestFrequency;
+
       if (existing) {
         // Update existing preferences
         await db
           .update(notificationPreferences)
-          .set(input)
+          .set(dbInput)
           .where(eq(notificationPreferences.userId, userId));
       } else {
         // Create new preferences
         await db.insert(notificationPreferences).values({
           userId,
-          ...input,
+          ...dbInput,
         });
       }
 
@@ -316,7 +330,7 @@ export const notificationsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = Number(ctx.user.id);
+      const userId = Number(ctx.user?.id);
 
       await createNotification({
         userId,

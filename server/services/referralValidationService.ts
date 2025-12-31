@@ -19,6 +19,7 @@ export class ReferralValidationService {
     error?: string;
   }> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     try {
       // Find the referral code
@@ -46,7 +47,7 @@ export class ReferralValidationService {
       }
 
       // Check if code has expired
-      if (referralCode.expiresAt && new Date(referralCode.expiresAt) < new Date().toISOString()) {
+      if (referralCode.expiresAt && new Date(referralCode.expiresAt) < new Date()) {
         return {
           valid: false,
           error: 'Referral code has expired',
@@ -95,6 +96,7 @@ export class ReferralValidationService {
     error?: string;
   }> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     try {
       // Validate the referral code
@@ -181,6 +183,7 @@ export class ReferralValidationService {
     referredAt?: string;
   }> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     try {
       // Find conversion record for this user
@@ -247,6 +250,7 @@ export class ReferralValidationService {
     error?: string;
   }> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     try {
       // Find the conversion record for this user
@@ -310,6 +314,7 @@ export class ReferralValidationService {
    */
   private static async getTotalEarnings(referralCodeId: number): Promise<string> {
     const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
     try {
       const conversions = await db

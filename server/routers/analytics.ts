@@ -32,7 +32,7 @@ export const analyticsRouter = router({
           "exam_failed",
         ]),
         userId: z.number().optional(),
-        metadata: z.record(z.any()).optional(),
+        metadata: z.record(z.string(), z.any()).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -63,16 +63,18 @@ export const analyticsRouter = router({
       if (!db) return null;
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date().toISOString();
+      const endDate = input.endDate || new Date();
 
       // Get funnel data aggregated from conversionFunnels table
+      const startDateStr = startDate instanceof Date ? startDate.toISOString() : startDate;
+      const endDateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
       const funnelData = await db
         .select()
         .from(conversionFunnels)
         .where(
           and(
-            gte(conversionFunnels.timestamp, startDate.toISOString()),
-            lte(conversionFunnels.timestamp, endDate.toISOString())
+            gte(conversionFunnels.timestamp, startDateStr),
+            lte(conversionFunnels.timestamp, endDateStr)
           )
         )
         .orderBy(desc(conversionFunnels.timestamp));
@@ -106,15 +108,17 @@ export const analyticsRouter = router({
       if (!db) return null;
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date().toISOString();
+      const endDate = input.endDate || new Date();
+      const startDateStr2 = startDate instanceof Date ? startDate.toISOString() : startDate;
+      const endDateStr2 = endDate instanceof Date ? endDate.toISOString() : endDate;
 
       const metrics = await db
         .select()
         .from(paymentAnalytics)
         .where(
           and(
-            gte(paymentAnalytics.createdAt, startDate.toISOString()),
-            lte(paymentAnalytics.createdAt, endDate.toISOString())
+            gte(paymentAnalytics.createdAt, startDateStr2),
+            lte(paymentAnalytics.createdAt, endDateStr2)
           )
         )
         .orderBy(desc(paymentAnalytics.createdAt));
@@ -156,11 +160,13 @@ export const analyticsRouter = router({
       if (!db) return null;
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date().toISOString();
+      const endDate = input.endDate || new Date();
+      const startDateStr3 = startDate instanceof Date ? startDate.toISOString() : startDate;
+      const endDateStr3 = endDate instanceof Date ? endDate.toISOString() : endDate;
 
       let whereConditions = and(
-        gte(courseCompletionTracking.createdAt, startDate.toISOString()),
-        lte(courseCompletionTracking.createdAt, endDate.toISOString())
+        gte(courseCompletionTracking.createdAt, startDateStr3),
+        lte(courseCompletionTracking.createdAt, endDateStr3)
       );
 
       if (input.courseId) {
@@ -206,7 +212,9 @@ export const analyticsRouter = router({
       if (!db) throw new Error("Database not available");
 
       const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      const endDate = input.endDate || new Date().toISOString();
+      const endDate = input.endDate || new Date();
+      const startDateStr4 = startDate instanceof Date ? startDate.toISOString() : startDate;
+      const endDateStr4 = endDate instanceof Date ? endDate.toISOString() : endDate;
 
       // Get recommendation analytics for the user
       const analytics = await db
@@ -214,8 +222,8 @@ export const analyticsRouter = router({
         .from(recommendationAnalytics)
         .where(
           and(
-            gte(recommendationAnalytics.createdAt, startDate.toISOString()),
-            lte(recommendationAnalytics.createdAt, endDate.toISOString())
+            gte(recommendationAnalytics.createdAt, startDateStr4),
+            lte(recommendationAnalytics.createdAt, endDateStr4)
           )
         )
         .orderBy(desc(recommendationAnalytics.createdAt));

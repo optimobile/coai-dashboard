@@ -224,7 +224,7 @@ export default function AnalyticsDashboard() {
                   </div>
                   <div className="flex justify-between mt-2">
                     <span className="text-sm font-medium">Avg Time to Complete</span>
-                    <span className="text-sm font-bold">{courses.averageTimeToCompletion?.toFixed(0) || 0} hours</span>
+                    <span className="text-sm font-bold">{(courses as any).averageTimeToCompletion?.toFixed(0) || 0} hours</span>
                   </div>
                 </div>
               </div>

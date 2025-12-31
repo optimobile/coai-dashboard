@@ -41,8 +41,7 @@ async function startServer() {
   try {
     const { appRouter } = await import("./routers.js");
     const { createExpressMiddleware } = await import("@trpc/server/adapters/express");
-    const { createTRPCMsw } = await import("@trpc/server/adapters/express");
-    app.use("/api/trpc", createExpressMiddleware({ router: appRouter, createContext: () => ({}) }));
+    app.use("/api/trpc", createExpressMiddleware({ router: appRouter, createContext: () => ({} as any) }));
   } catch (e) {
     console.log("tRPC router not available, skipping");
   }

@@ -2,11 +2,9 @@
  * Government Portal Authentication & Authorization Service
  * OAuth2 integration for EU Commission, EDPB, and national authorities
  * Role-based access control with audit logging
+ * Note: Using in-memory storage until governmentPortalAccess table is added
  */
 
-import { db } from '../db';
-import { governmentPortalAccess } from '../../drizzle/schema';
-import { eq, and } from 'drizzle-orm';
 import crypto from 'crypto';
 
 export interface GovernmentUser {
@@ -28,6 +26,22 @@ export interface AuditLog {
   ipAddress?: string;
   userAgent?: string;
 }
+
+// In-memory storage
+interface StoredPortalAccess {
+  userId: string;
+  agencyName: string;
+  jurisdiction: string;
+  role: string;
+  permissions: string;
+  accessToken: string | null;
+  refreshToken: string | null;
+  tokenExpiresAt: Date | null;
+  lastAccessedAt: Date;
+}
+
+const portalAccessStore = new Map<string, StoredPortalAccess>();
+const auditLogsStore: AuditLog[] = [];
 
 /**
  * Government Authentication Service
@@ -127,38 +141,19 @@ export class GovernmentAuthService {
     try {
       const permissions = this.ROLE_PERMISSIONS[role];
 
-      // Check if user already exists
-      const existing = await db.query.governmentPortalAccess.findFirst({
-        where: eq(governmentPortalAccess.userId, userId),
-      });
+      const portalAccess: StoredPortalAccess = {
+        userId,
+        agencyName,
+        jurisdiction,
+        role,
+        permissions: JSON.stringify(permissions),
+        accessToken,
+        refreshToken,
+        tokenExpiresAt: new Date(Date.now() + 3600 * 1000),
+        lastAccessedAt: new Date(),
+      };
 
-      if (existing) {
-        // Update existing user
-        await db
-          .update(governmentPortalAccess)
-          .set({
-            role,
-            permissions: JSON.stringify(permissions),
-            accessToken,
-            refreshToken,
-            tokenExpiresAt: new Date(Date.now() + 3600 * 1000),
-            lastAccessedAt: new Date().toISOString(),
-          })
-          .where(eq(governmentPortalAccess.userId, userId));
-      } else {
-        // Create new user
-        await db.insert(governmentPortalAccess).values({
-          userId,
-          agencyName,
-          jurisdiction,
-          role,
-          permissions: JSON.stringify(permissions),
-          accessToken,
-          refreshToken,
-          tokenExpiresAt: new Date(Date.now() + 3600 * 1000),
-          lastAccessedAt: new Date().toISOString(),
-        });
-      }
+      portalAccessStore.set(userId, portalAccess);
 
       return {
         id: userId,
@@ -179,21 +174,19 @@ export class GovernmentAuthService {
    */
   static async verifyAccess(userId: string, requiredPermission: string): Promise<boolean> {
     try {
-      const user = await db.query.governmentPortalAccess.findFirst({
-        where: eq(governmentPortalAccess.userId, userId),
-      });
+      const user = portalAccessStore.get(userId);
 
       if (!user) {
         return false;
       }
 
       // Check token expiration
-      if (user.tokenExpiresAt && new Date().toISOString() > user.tokenExpiresAt) {
+      if (user.tokenExpiresAt && new Date() > user.tokenExpiresAt) {
         return false;
       }
 
       // Parse permissions
-      const permissions = user.permissions ? JSON.parse(user.permissions as string) : [];
+      const permissions = user.permissions ? JSON.parse(user.permissions) : [];
 
       return permissions.includes(requiredPermission);
     } catch (error) {
@@ -214,23 +207,19 @@ export class GovernmentAuthService {
     userAgent?: string,
   ): Promise<void> {
     try {
-      // In production, insert into audit_logs table
-      // For now, log to console
       const auditLog: AuditLog = {
         id: `AUDIT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         userId,
         action,
         resource,
         details,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(),
         ipAddress,
         userAgent,
       };
 
+      auditLogsStore.push(auditLog);
       console.log('Audit Log:', JSON.stringify(auditLog, null, 2));
-
-      // In production:
-      // await db.insert(auditLogs).values(auditLog);
     } catch (error) {
       console.error('Failed to log action:', error);
     }
@@ -246,9 +235,25 @@ export class GovernmentAuthService {
     endDate?: Date,
   ): Promise<AuditLog[]> {
     try {
-      // In production, query audit_logs table
-      // For now, return empty array
-      return [];
+      let logs = [...auditLogsStore];
+
+      if (userId) {
+        logs = logs.filter(l => l.userId === userId);
+      }
+
+      if (resource) {
+        logs = logs.filter(l => l.resource === resource);
+      }
+
+      if (startDate) {
+        logs = logs.filter(l => l.timestamp >= startDate);
+      }
+
+      if (endDate) {
+        logs = logs.filter(l => l.timestamp <= endDate);
+      }
+
+      return logs;
     } catch (error) {
       console.error('Failed to get audit logs:', error);
       throw new Error('Failed to get audit logs');
@@ -263,9 +268,7 @@ export class GovernmentAuthService {
     expiresIn: number;
   }> {
     try {
-      const user = await db.query.governmentPortalAccess.findFirst({
-        where: eq(governmentPortalAccess.userId, userId),
-      });
+      const user = portalAccessStore.get(userId);
 
       if (!user || !user.refreshToken) {
         throw new Error('Refresh token not found');
@@ -274,13 +277,9 @@ export class GovernmentAuthService {
       // In production, exchange refresh token with OAuth provider
       const newAccessToken = crypto.randomBytes(32).toString('hex');
 
-      await db
-        .update(governmentPortalAccess)
-        .set({
-          accessToken: newAccessToken,
-          tokenExpiresAt: new Date(Date.now() + 3600 * 1000),
-        })
-        .where(eq(governmentPortalAccess.userId, userId));
+      user.accessToken = newAccessToken;
+      user.tokenExpiresAt = new Date(Date.now() + 3600 * 1000);
+      portalAccessStore.set(userId, user);
 
       return {
         accessToken: newAccessToken,
@@ -297,14 +296,13 @@ export class GovernmentAuthService {
    */
   static async revokeAccess(userId: string): Promise<void> {
     try {
-      await db
-        .update(governmentPortalAccess)
-        .set({
-          accessToken: null,
-          refreshToken: null,
-          tokenExpiresAt: new Date().toISOString(),
-        })
-        .where(eq(governmentPortalAccess.userId, userId));
+      const user = portalAccessStore.get(userId);
+      if (user) {
+        user.accessToken = null;
+        user.refreshToken = null;
+        user.tokenExpiresAt = new Date();
+        portalAccessStore.set(userId, user);
+      }
 
       await this.logAction(userId, 'REVOKE_ACCESS', 'government_portal', {
         reason: 'User initiated revocation',
@@ -320,19 +318,17 @@ export class GovernmentAuthService {
    */
   static async getUser(userId: string): Promise<GovernmentUser | null> {
     try {
-      const user = await db.query.governmentPortalAccess.findFirst({
-        where: eq(governmentPortalAccess.userId, userId),
-      });
+      const user = portalAccessStore.get(userId);
 
       if (!user) {
         return null;
       }
 
-      const permissions = user.permissions ? JSON.parse(user.permissions as string) : [];
+      const permissions = user.permissions ? JSON.parse(user.permissions) : [];
 
       return {
         id: user.userId,
-        email: '', // Would need to fetch from users table
+        email: '',
         agencyName: user.agencyName,
         jurisdiction: user.jurisdiction as any,
         role: user.role as any,

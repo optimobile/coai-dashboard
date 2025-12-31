@@ -3,9 +3,9 @@
  * User and organization settings
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Settings as SettingsIcon, User, Building, Bell, Shield, Key, Palette, Globe, Wallet, Calendar } from "lucide-react";
+import { Settings as SettingsIcon, User, Building, Bell, Shield, Key, Palette, Globe, Wallet, Calendar, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
+import { trpc } from "@/lib/trpc";
 
 const settingsSections = [
   {
@@ -56,13 +57,34 @@ const settingsSections = [
 
 export default function Settings() {
   const [activeSection, setActiveSection] = useState("Profile");
-  const [payoutFrequency, setPayoutFrequency] = useState("monthly");
+  const [payoutFrequency, setPayoutFrequency] = useState<"weekly" | "biweekly" | "monthly">("monthly");
+
+  // Fetch payout settings from backend
+  const { data: payoutSettings, isLoading: isLoadingSettings } = trpc.referral.getPayoutSettings.useQuery();
+
+  // Update payout frequency mutation
+  const updatePayoutFrequencyMutation = trpc.referral.updatePayoutFrequency.useMutation({
+    onSuccess: (data) => {
+      toast.success("Payout settings saved", {
+        description: data.message,
+      });
+    },
+    onError: (error) => {
+      toast.error("Failed to save payout settings", {
+        description: error.message,
+      });
+    },
+  });
+
+  // Set initial payout frequency from backend
+  useEffect(() => {
+    if (payoutSettings?.data?.payoutFrequency) {
+      setPayoutFrequency(payoutSettings.data.payoutFrequency as "weekly" | "biweekly" | "monthly");
+    }
+  }, [payoutSettings]);
 
   const handleSavePayoutSettings = () => {
-    // In a real app, this would call the API to update the user's payout frequency
-    toast.success("Payout settings saved", {
-      description: `Your payout frequency has been set to ${payoutFrequency}`,
-    });
+    updatePayoutFrequencyMutation.mutate({ frequency: payoutFrequency });
   };
 
   return (
@@ -208,99 +230,123 @@ export default function Settings() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    {/* Payout Frequency */}
-                    <div className="space-y-4">
-                      <h4 className="text-sm font-medium">Payout Frequency</h4>
-                      <p className="text-xs text-muted-foreground">
-                        Choose how often you want to receive your referral commission payouts. 
-                        Payouts are processed automatically based on your selected frequency.
-                      </p>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="payoutFrequency">Frequency</Label>
-                        <Select value={payoutFrequency} onValueChange={setPayoutFrequency}>
-                          <SelectTrigger className="w-full max-w-xs">
-                            <SelectValue placeholder="Select frequency" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="weekly">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                <span>Weekly</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="biweekly">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                <span>Bi-weekly (Every 2 weeks)</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="monthly">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                <span>Monthly</span>
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                    {isLoadingSettings ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                       </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Payout Information */}
-                    <div className="space-y-4">
-                      <h4 className="text-sm font-medium">Payout Information</h4>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 bg-muted/50 rounded-lg">
-                          <p className="text-xs text-muted-foreground">Minimum Payout</p>
-                          <p className="text-lg font-semibold">$50.00</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Payouts are processed when your balance reaches this threshold
+                    ) : (
+                      <>
+                        {/* Payout Frequency */}
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium">Payout Frequency</h4>
+                          <p className="text-xs text-muted-foreground">
+                            Choose how often you want to receive your referral commission payouts. 
+                            Payouts are processed automatically based on your selected frequency.
                           </p>
-                        </div>
-                        <div className="p-4 bg-muted/50 rounded-lg">
-                          <p className="text-xs text-muted-foreground">Processing Time</p>
-                          <p className="text-lg font-semibold">3-5 Business Days</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            After payout is initiated via Stripe
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Payout Method */}
-                    <div className="space-y-4">
-                      <h4 className="text-sm font-medium">Payout Method</h4>
-                      <div className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-primary/10 rounded">
-                            <Wallet className="h-5 w-5 text-primary" />
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="payoutFrequency">Frequency</Label>
+                            <Select value={payoutFrequency} onValueChange={(value) => setPayoutFrequency(value as "weekly" | "biweekly" | "monthly")}>
+                              <SelectTrigger className="w-full max-w-xs">
+                                <SelectValue placeholder="Select frequency" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="weekly">
+                                  <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Weekly</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="biweekly">
+                                  <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Bi-weekly (Every 2 weeks)</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="monthly">
+                                  <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Monthly</span>
+                                  </div>
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
-                          <div>
-                            <p className="text-sm font-medium">Stripe Connect</p>
+
+                          {payoutSettings?.data?.lastPayoutDate && (
                             <p className="text-xs text-muted-foreground">
-                              Payouts are sent directly to your connected Stripe account
+                              Last payout: {new Date(payoutSettings.data.lastPayoutDate).toLocaleDateString()}
                             </p>
+                          )}
+                        </div>
+
+                        <Separator />
+
+                        {/* Payout Information */}
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium">Payout Information</h4>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="p-4 bg-muted/50 rounded-lg">
+                              <p className="text-xs text-muted-foreground">Minimum Payout</p>
+                              <p className="text-lg font-semibold">$50.00</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Payouts are processed when your balance reaches this threshold
+                              </p>
+                            </div>
+                            <div className="p-4 bg-muted/50 rounded-lg">
+                              <p className="text-xs text-muted-foreground">Processing Time</p>
+                              <p className="text-lg font-semibold">3-5 Business Days</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                After payout is initiated via Stripe
+                              </p>
+                            </div>
                           </div>
                         </div>
-                        <Button variant="outline" size="sm" onClick={() => toast.info("Stripe Connect", { description: "Manage your Stripe account in the Billing section" })}>
-                          Manage
-                        </Button>
-                      </div>
-                    </div>
 
-                    <Separator />
+                        <Separator />
 
-                    {/* Save Button */}
-                    <div className="flex justify-end">
-                      <Button onClick={handleSavePayoutSettings}>
-                        Save Payout Settings
-                      </Button>
-                    </div>
+                        {/* Payout Method */}
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium">Payout Method</h4>
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-primary/10 rounded">
+                                <Wallet className="h-5 w-5 text-primary" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">Stripe Connect</p>
+                                <p className="text-xs text-muted-foreground">
+                                  Payouts are sent directly to your connected Stripe account
+                                </p>
+                              </div>
+                            </div>
+                            <Button variant="outline" size="sm" onClick={() => toast.info("Stripe Connect", { description: "Manage your Stripe account in the Billing section" })}>
+                              Manage
+                            </Button>
+                          </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* Save Button */}
+                        <div className="flex justify-end">
+                          <Button 
+                            onClick={handleSavePayoutSettings}
+                            disabled={updatePayoutFrequencyMutation.isPending}
+                          >
+                            {updatePayoutFrequencyMutation.isPending ? (
+                              <>
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                Saving...
+                              </>
+                            ) : (
+                              "Save Payout Settings"
+                            )}
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
               )}

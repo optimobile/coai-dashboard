@@ -14,8 +14,8 @@ export interface ProvisionedUser {
   organizationName: string;
   role: "admin" | "analyst" | "viewer";
   attributes: Record<string, unknown>;
-  createdAt: Date;
-  lastLogin: Date;
+  createdAt: string | Date;
+  lastLogin: string | Date;
   isActive: boolean;
 }
 
@@ -335,7 +335,7 @@ export class UserProvisioningService {
  */
 export class SessionManager {
   private tokenValidator: TokenValidator;
-  private sessions: Map<string, { token: string; expiresAt: Date }> = new Map();
+  private sessions: Map<string, { token: string; expiresAt: string }> = new Map();
 
   constructor(tokenValidator?: TokenValidator) {
     this.tokenValidator = tokenValidator || new TokenValidator();
@@ -346,7 +346,7 @@ export class SessionManager {
    */
   createSession(userId: string, token: string): string {
     const sessionId = crypto.randomUUID();
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
 
     this.sessions.set(sessionId, { token, expiresAt });
 

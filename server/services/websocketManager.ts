@@ -4,7 +4,7 @@
  */
 
 import { WebSocket, WebSocketServer } from 'ws';
-import { db } from '../db';
+import { getDb } from '../db';
 import { websocketConnections } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 
@@ -22,7 +22,7 @@ interface SubscribedClient {
   userId: number;
   connectionId: string;
   channels: Set<string>;
-  lastHeartbeat: Date;
+  lastHeartbeat: string | Date;
 }
 
 export class WebSocketManager {
@@ -246,9 +246,10 @@ export class WebSocketManager {
    */
   private startHeartbeat() {
     this.heartbeatInterval = setInterval(() => {
-      const now = new Date().toISOString();
+      const now = new Date();
       this.clients.forEach((client, connectionId) => {
-        const timeSinceLastHeartbeat = now.getTime() - client.lastHeartbeat.getTime();
+        const lastHeartbeat = typeof client.lastHeartbeat === 'string' ? new Date(client.lastHeartbeat) : client.lastHeartbeat;
+        const timeSinceLastHeartbeat = now.getTime() - lastHeartbeat.getTime();
 
         // Close stale connections (no heartbeat for 60 seconds)
         if (timeSinceLastHeartbeat > 60000) {
@@ -269,6 +270,8 @@ export class WebSocketManager {
    */
   private async saveConnection(userId: number, connectionId: string) {
     try {
+      const db = await getDb();
+      if (!db) return;
       await db.insert(websocketConnections).values({
         userId,
         connectionId,
@@ -284,6 +287,8 @@ export class WebSocketManager {
    */
   private async removeConnection(connectionId: string) {
     try {
+      const db = await getDb();
+      if (!db) return;
       await db.delete(websocketConnections).where(eq(websocketConnections.connectionId, connectionId));
     } catch (error) {
       console.error('[WS] Error removing connection:', error);

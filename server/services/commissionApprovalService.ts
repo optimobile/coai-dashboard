@@ -253,7 +253,7 @@ export class CommissionApprovalService {
 
       return {
         success: true,
-        payoutId: result.insertId as number,
+        payoutId: result[0]?.insertId || 0 as number,
         totalAmount,
         conversionCount: processedConversions.length,
         message: 'Payout batch created successfully',

@@ -56,16 +56,10 @@ export const emailOnboardingRouter = router({
 
       const [sequence] = await db.insert(emailSequences).values({
         userId: ctx.user.id,
-        sequenceType: input.sequenceType,
-        status: "active",
-        currentStep: 1,
-        metadata: JSON.stringify({
-          courseInterests: input.courseInterests || [],
-          experienceLevel: input.experienceLevel || "beginner",
-          startedAt: new Date().toISOString(),
-        }),
+        sequenceId: input.sequenceType,
+        step: 1,
+        status: "pending",
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       }).$returningId() as { id: number }[];
 
       return {
@@ -86,7 +80,7 @@ export const emailOnboardingRouter = router({
       .where(
         and(
           eq(emailSequences.userId, ctx.user.id),
-          eq(emailSequences.status, "active")
+          eq(emailSequences.status, "pending")
         )
       )
       .orderBy(desc(emailSequences.createdAt));
@@ -155,13 +149,13 @@ export const emailOnboardingRouter = router({
       const db = await getDb();
       if (!db) return [];
 
-      let query = db.select().from(emailTemplates);
+      const templates = await db.select().from(emailTemplates);
 
       if (input.sequenceType) {
-        query = query.where(eq(emailTemplates.sequenceType, input.sequenceType));
+        return templates.filter((t: any) => t.templateId.includes(input.sequenceType));
       }
 
-      return await query.orderBy(desc(emailTemplates.recordedAt));
+      return templates;
     }),
 
   // Get user email preferences

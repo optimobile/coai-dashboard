@@ -103,10 +103,12 @@ export const progressRouter = router({
 
       // Calculate per-module stats from enrollment data
       const moduleStats = modules.map((module: any, index: number) => {
+        const currentProgress = enrollment[0].progress || 0;
+        const moduleProgress = Math.floor(currentProgress / (100 / totalModules));
         return {
           moduleIndex: index,
           title: module.title || `Module ${index + 1}`,
-          completed: index < (enrollment[0].currentModule || 0),
+          completed: index < moduleProgress,
           timeSpentMinutes: 0,
           quizScore: null as number | null,
           quizAttempts: 0,
@@ -184,7 +186,7 @@ export const progressRouter = router({
       const courseEnrollment = enrollments.find((e: any) => e.courseId === courseId);
       return {
         topic: courseMap.get(courseId) || `Course ${courseId}`,
-        avgScore: courseEnrollment?.quizScore || 0,
+        avgScore: courseEnrollment?.score || 0,
         attempts: 1,
       };
     }).sort((a, b) => b.avgScore - a.avgScore);
@@ -272,21 +274,37 @@ export const progressRouter = router({
     // Recommend courses from frameworks user hasn't completed
     const recommendations = allCourses
       .filter((c: any) => !enrolledCourseIds.has(c.id))
-      .map((c: any) => ({
-        courseId: c.id,
-        courseName: c.title,
-        framework: c.framework,
-        level: c.level,
-        reason: completedFrameworks.has(c.framework)
+      .map((c: any) => {
+        const reasonText = completedFrameworks.has(c.framework)
           ? "Continue your learning in this framework"
-          : "Expand your knowledge to a new framework",
-        priority: completedFrameworks.has(c.framework) ? 2 : 1,
-      }))
+          : "Expand your knowledge to a new framework";
+        return {
+          id: `rec_${c.id}`,
+          courseId: c.id,
+          courseName: c.title,
+          framework: c.framework,
+          level: c.level,
+          reason: reasonText,
+          reasonText: reasonText,
+          priority: completedFrameworks.has(c.framework) ? 2 : 1,
+        };
+      })
       .sort((a, b) => a.priority - b.priority)
       .slice(0, 5);
 
     return recommendations;
   }),
+
+  /**
+   * Dismiss a recommendation
+   */
+  dismissRecommendation: protectedProcedure
+    .input(z.object({ recommendationId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      // In a real app, this would store the dismissal in the database
+      // For now, just return success
+      return { success: true };
+    }),
 
   /**
    * Get learning streak and activity data
@@ -301,7 +319,7 @@ export const progressRouter = router({
       .select()
       .from(userTrainingProgress)
       .where(eq(userTrainingProgress.userId, userId))
-      .orderBy(desc(userTrainingProgress.lastAccessedAt));
+      .orderBy(desc(userTrainingProgress.updatedAt));
 
     if (progress.length === 0) {
       return {
@@ -380,7 +398,6 @@ export const progressRouter = router({
       await db
         .update(courseEnrollments)
         .set({
-          currentModule: input.moduleIndex,
           progress: input.progress,
           status: input.progress >= 100 ? "completed" : "in_progress",
           updatedAt: new Date().toISOString(),

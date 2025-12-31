@@ -22,8 +22,8 @@ export interface Alert {
   description: string;
   organizationId: string;
   systemId?: string;
-  createdAt: Date;
-  resolvedAt?: Date;
+  createdAt: string | Date;
+  resolvedAt?: string | Date;
   metadata: Record<string, any>;
 }
 
@@ -88,7 +88,7 @@ export class AlertingSystem {
       description,
       organizationId,
       systemId,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date()?.toString() || new Date().toISOString(),
       metadata,
     };
 
@@ -366,7 +366,7 @@ export class AlertingSystem {
         description: alert.description,
         severity: alert.severity,
         read: false,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date()?.toString() || new Date().toISOString(),
       };
 
       console.log(`In-app notification created: ${JSON.stringify(notification)}`);
@@ -397,7 +397,7 @@ export class AlertingSystem {
               { title: 'Severity', value: alert.severity, short: true },
               { title: 'Type', value: alert.type, short: true },
               { title: 'Organization', value: alert.organizationId, short: true },
-              { title: 'Time', value: alert.createdAt.toISOString(), short: true },
+              { title: 'Time', value: alert.createdAt?.toString() || new Date().toISOString(), short: true },
             ],
           },
         ],
@@ -457,7 +457,7 @@ export class AlertingSystem {
               <p><strong>Severity:</strong> <span style="color: ${severityColor}; font-weight: bold;">${alert.severity.toUpperCase()}</span></p>
               <p><strong>Type:</strong> ${alert.type}</p>
               <p><strong>Organization:</strong> ${alert.organizationId}</p>
-              <p><strong>Time:</strong> ${alert.createdAt.toISOString()}</p>
+              <p><strong>Time:</strong> ${alert.createdAt?.toString() || new Date().toISOString()}</p>
             </div>
             <p style="color: #666; font-size: 12px;">
               This is an automated alert from COAI Compliance Platform. 
@@ -473,7 +473,7 @@ export class AlertingSystem {
    * Check if current time is in quiet hours
    */
   private isInQuietHours(quietHours: { start: string; end: string }): boolean {
-    const now = new Date().toISOString();
+    const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
 
     const [startHour, startMin] = quietHours.start.split(':').map(Number);
@@ -510,7 +510,7 @@ export class AlertingSystem {
   resolveAlert(alertId: string): Alert | undefined {
     const alert = this.alerts.get(alertId);
     if (alert) {
-      alert.resolvedAt = new Date().toISOString();
+      alert.resolvedAt = new Date()?.toString() || new Date().toISOString();
     }
     return alert;
   }

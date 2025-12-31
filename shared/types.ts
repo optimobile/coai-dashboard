@@ -13,8 +13,8 @@ export interface GovernmentPortalUser {
   email: string;
   jurisdiction: string; // EU, US, China, etc.
   role: "admin" | "analyst" | "viewer";
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
 export interface ComplianceRequirement {
@@ -23,10 +23,10 @@ export interface ComplianceRequirement {
   requirement: string;
   description: string;
   priority: "critical" | "high" | "medium" | "low";
-  effectiveDate: Date;
+  effectiveDate: Date | string;
   createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
   version: number;
 }
 
@@ -36,8 +36,8 @@ export interface ComplianceUpdate {
   previousVersion: number;
   newVersion: number;
   changeDescription: string;
-  publishedAt: Date;
-  effectiveDate: Date;
+  publishedAt: Date | string;
+  effectiveDate: Date | string;
   jurisdiction: string[];
 }
 
@@ -46,15 +46,15 @@ export interface ComplianceStatus {
   companyId: string;
   complianceScore: number; // 0-100
   status: "compliant" | "non-compliant" | "under-review" | "flagged";
-  lastAudit: Date;
-  nextAuditDue: Date;
+  lastAudit: Date | string;
+  nextAuditDue: Date | string;
   frameworks: {
     euAiAct: number;
     nistRmf: number;
     iso42001: number;
     tc260: number;
   };
-  updatedAt: Date;
+  updatedAt: Date | string;
 }
 
 export interface EnforcementAction {
@@ -65,10 +65,10 @@ export interface EnforcementAction {
   severity: "critical" | "high" | "medium" | "low";
   action: "warning" | "audit-required" | "monitoring" | "suspension" | "shutdown";
   issuedBy: string;
-  issuedAt: Date;
-  dueDate?: Date;
+  issuedAt: Date | string;
+  dueDate?: Date | string;
   status: "open" | "in-progress" | "resolved" | "escalated";
-  updatedAt: Date;
+  updatedAt: Date | string;
 }
 
 export interface WatchdogIncident {
@@ -78,10 +78,10 @@ export interface WatchdogIncident {
   description: string;
   affectedSystemId?: string;
   affectedCompanyId?: string;
-  reportedAt: Date;
+  reportedAt: Date | string;
   reportedBy: string;
   status: "open" | "investigating" | "resolved" | "dismissed";
-  updatedAt: Date;
+  updatedAt: Date | string;
 }
 
 // Enterprise Integration Types
@@ -92,9 +92,9 @@ export interface EnterpriseAPIKey {
   name: string;
   permissions: string[];
   rateLimit: number; // requests per minute
-  createdAt: Date;
-  lastUsedAt?: Date;
-  expiresAt?: Date;
+  createdAt: Date | string;
+  lastUsedAt?: Date | string;
+  expiresAt?: Date | string;
   isActive: boolean;
 }
 
@@ -108,8 +108,8 @@ export interface ComplianceCheckResponse {
   systemId: string;
   complianceScore: number;
   status: "compliant" | "non-compliant" | "under-review";
-  lastAudit: Date;
-  nextAuditDue: Date;
+  lastAudit: Date | string;
+  nextAuditDue: Date | string;
   frameworks: {
     euAiAct: number;
     nistRmf: number;
@@ -135,15 +135,15 @@ export interface AuditResponse {
   auditId: string;
   systemId: string;
   status: "scheduled" | "in-progress" | "completed" | "failed";
-  estimatedCompletion: Date;
+  estimatedCompletion: Date | string;
   assignedAnalyst?: string;
-  createdAt: Date;
+  createdAt: Date | string;
 }
 
 export interface WebhookEvent {
   eventId: string;
   eventType: "compliance.requirement.updated" | "compliance.score.changed" | "audit.required" | "enforcement.action" | "incident.reported";
-  timestamp: Date;
+  timestamp: Date | string;
   data: Record<string, unknown>;
   companyId: string;
 }
@@ -154,8 +154,8 @@ export interface WebhookSubscription {
   url: string;
   events: string[];
   isActive: boolean;
-  createdAt: Date;
-  lastTriggeredAt?: Date;
+  createdAt: string | Date;
+  lastTriggeredAt?: string | Date;
 }
 
 // Government Portal Analytics
@@ -174,7 +174,7 @@ export interface ComplianceStatistics {
   };
   byIndustry: Record<string, number>;
   byRegion: Record<string, number>;
-  timestamp: Date;
+  timestamp: string | Date;
 }
 
 export interface EnforcementStatistics {
@@ -195,7 +195,7 @@ export interface EnforcementStatistics {
     suspension: number;
     shutdown: number;
   };
-  timestamp: Date;
+  timestamp: string | Date;
 }
 
 // API Response Types
@@ -207,7 +207,7 @@ export interface APIResponse<T> {
     message: string;
     details?: Record<string, unknown>;
   };
-  timestamp: Date;
+  timestamp: string | Date;
 }
 
 export interface PaginatedResponse<T> {

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Download, TrendingUp, Users, DollarSign, ClickIcon, Loader2 } from 'lucide-react';
+import { Download, TrendingUp, Users, DollarSign, MousePointerClick, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
@@ -86,20 +86,23 @@ export default function ReferralAnalyticsDashboard() {
   const [isExporting, setIsExporting] = useState(false);
 
   // Fetch analytics data from API
-  const { data: analyticsResponse, isLoading: isFetching } = trpc.referral.getReferralAnalytics.useQuery(
-    { dateRange },
-    {
-      onSuccess: (response) => {
-        if (response.success && response.data) {
-          setAnalyticsData(response.data);
-        }
-      },
-      onError: (error) => {
-        toast.error('Failed to load analytics data');
-        console.error('Analytics error:', error);
-      },
-    }
+  const { data: analyticsResponse, isLoading: isFetching, error: analyticsError } = trpc.referral.getReferralAnalytics.useQuery(
+    { dateRange }
   );
+
+  // Handle analytics data updates
+  useEffect(() => {
+    if (analyticsResponse?.success && analyticsResponse?.data) {
+      setAnalyticsData(analyticsResponse.data as AnalyticsData);
+    }
+  }, [analyticsResponse]);
+
+  useEffect(() => {
+    if (analyticsError) {
+      toast.error('Failed to load analytics data');
+      console.error('Analytics error:', analyticsError);
+    }
+  }, [analyticsError]);
 
   // Export CSV mutation
   const exportCsvMutation = trpc.referral.exportAnalyticsAsCSV.useMutation({
@@ -245,7 +248,7 @@ export default function ReferralAnalyticsDashboard() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <ClickIcon className="h-4 w-4 text-emerald-600" />
+                <MousePointerClick className="h-4 w-4 text-emerald-600" />
                 Total Clicks
               </CardTitle>
             </CardHeader>

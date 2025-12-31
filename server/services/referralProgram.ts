@@ -4,7 +4,7 @@
  * 20% commission per referred analyst certification
  */
 
-import { db } from '../db';
+import { getDb } from '../db';
 import { users } from '../../drizzle/schema';
 import { eq } from 'drizzle-orm';
 import crypto from 'crypto';

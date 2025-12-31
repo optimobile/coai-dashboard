@@ -1,5 +1,6 @@
 import { getDb } from '../db';
 import { realtimeEvents } from '../../drizzle/schema';
+import { eq, and, desc } from 'drizzle-orm';
 import { broadcastToUser, broadcastToUsers, RealtimeMessage } from '../websocket/server';
 
 export type EventType = 
@@ -34,7 +35,7 @@ export async function createRealtimeEvent(input: CreateEventInput) {
   try {
     if (!db) throw new Error('Database connection failed');
     // Insert event into database
-    const result = await db.insert(realtimeEvents).values({
+    const [result] = await db.insert(realtimeEvents).values({
       userId: input.userId,
       organizationId: input.organizationId,
       aiSystemId: input.aiSystemId,
@@ -43,15 +44,15 @@ export async function createRealtimeEvent(input: CreateEventInput) {
       description: input.description,
       severity: input.severity || 'info',
       data: input.data,
-      isRead: false,
-    });
+      isRead: 0,
+    }).$returningId();
 
     // Broadcast to user if userId is provided
     if (input.userId) {
       const message: RealtimeMessage = {
         type: input.eventType as any,
         data: {
-          id: result.insertId,
+          id: (result as any).id,
           ...input,
         },
         timestamp: Date.now(),
@@ -238,7 +239,7 @@ export async function markEventAsRead(eventId: number) {
     return await db
       .update(realtimeEvents)
       .set({
-        isRead: true,
+        isRead: 1,
         readAt: new Date().toISOString(),
       })
       .where(eq(realtimeEvents.id, eventId));
@@ -259,7 +260,7 @@ export async function getUnreadEvents(userId: number) {
     return await db
       .select()
       .from(realtimeEvents)
-      .where(eq(realtimeEvents.userId, userId) && eq(realtimeEvents.isRead, false));
+      .where(and(eq(realtimeEvents.userId, userId), eq(realtimeEvents.isRead, 0)));
   } catch (error) {
     console.error('Failed to get unread events:', error);
     throw error;
@@ -287,5 +288,4 @@ export async function getEvents(userId: number, limit: number = 50, offset: numb
   }
 }
 
-// Import missing functions
-import { eq, desc } from 'drizzle-orm';
+

@@ -44,9 +44,9 @@ export interface Notification {
   message: string;
   data: Record<string, unknown>;
   channels: NotificationChannel[];
-  createdAt: Date;
-  sentAt?: Date;
-  readAt?: Date;
+  createdAt: string | Date;
+  sentAt?: string | Date;
+  readAt?: string | Date;
   status: "pending" | "sent" | "failed" | "read";
 }
 
@@ -247,7 +247,7 @@ export class NotificationService {
 
     // Check if in quiet hours
     if (preferences.quietHours?.enabled) {
-      const now = new Date().toISOString();
+      const now = new Date();
       const currentTime = now.toLocaleTimeString("en-US", {
         hour12: false,
         hour: "2-digit",

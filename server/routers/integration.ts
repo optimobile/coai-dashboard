@@ -54,7 +54,7 @@ export const examSessionRouter = router({
         attemptId: z.number(),
         proctoringSessionId: z.string().optional(),
         score: z.number().min(0).max(100),
-        answers: z.record(z.string()),
+        answers: z.record(z.string(), z.string()),
       }),
     )
     .mutation(async ({ input }) => {
@@ -63,7 +63,7 @@ export const examSessionRouter = router({
           input.attemptId,
           input.proctoringSessionId || null,
           input.score,
-          input.answers,
+          input.answers as Record<string, string>,
         );
 
         return result;
@@ -195,7 +195,7 @@ export const governmentAuthRouter = router({
     .input(z.object({ permission: z.string() }))
     .query(async ({ input, ctx }) => {
       try {
-        const hasAccess = await GovernmentAuthService.verifyAccess(ctx.user.id, input.permission);
+        const hasAccess = await GovernmentAuthService.verifyAccess(String(ctx.user.id), input.permission);
         return { hasAccess };
       } catch (error) {
         throw new TRPCError({
@@ -210,7 +210,7 @@ export const governmentAuthRouter = router({
    */
   getUser: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const user = await GovernmentAuthService.getUser(ctx.user.id);
+      const user = await GovernmentAuthService.getUser(String(ctx.user.id));
       return user;
     } catch (error) {
       throw new TRPCError({
@@ -225,7 +225,7 @@ export const governmentAuthRouter = router({
    */
   refreshToken: protectedProcedure.mutation(async ({ ctx }) => {
     try {
-      const result = await GovernmentAuthService.refreshAccessToken(ctx.user.id);
+      const result = await GovernmentAuthService.refreshAccessToken(String(ctx.user.id));
       return result;
     } catch (error) {
       throw new TRPCError({
@@ -240,7 +240,7 @@ export const governmentAuthRouter = router({
    */
   revokeAccess: protectedProcedure.mutation(async ({ ctx }) => {
     try {
-      await GovernmentAuthService.revokeAccess(ctx.user.id);
+      await GovernmentAuthService.revokeAccess(String(ctx.user.id));
       return { success: true };
     } catch (error) {
       throw new TRPCError({
@@ -270,7 +270,7 @@ export const stripePayoutRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const commissionId = await StripePayoutService.createCommission({
-          referrerId: ctx.user.id,
+          referrerId: String(ctx.user.id),
           referralId: input.referralId,
           courseId: input.courseId,
           commissionRate: input.commissionRate,
@@ -291,7 +291,7 @@ export const stripePayoutRouter = router({
    */
   getPendingCommissions: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const amount = await StripePayoutService.calculatePendingCommissions(ctx.user.id);
+      const amount = await StripePayoutService.calculatePendingCommissions(String(ctx.user.id));
       return {
         pendingAmount: amount,
         readyForPayout: amount >= 5000, // $50 minimum
@@ -309,7 +309,7 @@ export const stripePayoutRouter = router({
    */
   getPayoutHistory: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const history = await StripePayoutService.getPayoutHistory(ctx.user.id);
+      const history = await StripePayoutService.getPayoutHistory(String(ctx.user.id));
       return history;
     } catch (error) {
       throw new TRPCError({

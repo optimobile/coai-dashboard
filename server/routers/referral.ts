@@ -646,6 +646,92 @@ export const referralRouter = router({
     }),
 
   /**
-   * Send approval notification
+   * Get payout settings for the authenticated user
    */
+  getPayoutSettings: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const { getDb } = await import('../db.js');
+        const { users } = await import('../../drizzle/schema.js');
+        const { eq } = await import('drizzle-orm');
+        
+        const db = await getDb();
+        if (!db) throw new Error('Database not available');
+        
+        const user = await db
+          .select({
+            payoutFrequency: users.payoutFrequency,
+            lastPayoutDate: users.lastPayoutDate,
+          })
+          .from(users)
+          .where(eq(users.id, ctx.user.id))
+          .limit(1);
+
+        return {
+          success: true,
+          data: {
+            payoutFrequency: user[0]?.payoutFrequency || 'monthly',
+            lastPayoutDate: user[0]?.lastPayoutDate || null,
+          },
+        };
+      } catch (error) {
+        console.error('Error fetching payout settings:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch payout settings',
+        });
+      }
+    }),
+
+  /**
+   * Update payout frequency for the authenticated user
+   */
+  updatePayoutFrequency: protectedProcedure
+    .input(
+      z.object({
+        frequency: z.enum(['weekly', 'biweekly', 'monthly']),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        const { getDb } = await import('../db.js');
+        const { users } = await import('../../drizzle/schema.js');
+        const { eq } = await import('drizzle-orm');
+        
+        const db = await getDb();
+        if (!db) throw new Error('Database not available');
+        
+        await db
+          .update(users)
+          .set({
+            payoutFrequency: input.frequency,
+          })
+          .where(eq(users.id, ctx.user.id));
+
+        return {
+          success: true,
+          message: `Payout frequency updated to ${input.frequency}`,
+        };
+      } catch (error) {
+        console.error('Error updating payout frequency:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update payout frequency',
+        });
+      }
+    }),
 });

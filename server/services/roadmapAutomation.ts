@@ -3,7 +3,7 @@
  * Handles automatic phase progression and email notifications
  */
 
-import { db } from '../db';
+import { getDb } from '../db';
 import { notifications } from '../../drizzle/schema';
 import { wsManager } from './websocketManager';
 import { sendgridService } from './sendgridService';
@@ -15,10 +15,10 @@ interface RoadmapPhase {
     id: string;
     title: string;
     completed: boolean;
-    completedAt?: Date;
+    completedAt?: string | Date;
   }>;
-  completedAt?: Date;
-  estimatedCompletionDate?: Date;
+  completedAt?: string | Date;
+  estimatedCompletionDate?: string | Date;
 }
 
 interface RoadmapData {
@@ -101,12 +101,15 @@ export class RoadmapAutomationService {
         phase: phase.phase,
         phaseName: phase.name,
         organizationId,
-        completedAt: phase.completedAt?.toISOString(),
+        completedAt: typeof phase.completedAt === 'string' ? phase.completedAt : phase.completedAt?.toISOString(),
       },
     };
 
     // Save notification to database
-    await db.insert(notifications).values(notification);
+    const db = await getDb();
+    if (db) {
+      await db.insert(notifications).values(notification);
+    }
 
     // Send email notification (placeholder - would need user email from database)
     try {
@@ -159,12 +162,12 @@ export class RoadmapAutomationService {
   /**
    * Calculate estimated completion date for a phase
    */
-  private calculateEstimatedCompletion(actionCount: number): Date {
+  private calculateEstimatedCompletion(actionCount: number): string {
     // Estimate: 2 hours per action on average
     const estimatedHours = actionCount * 2;
-    const estimatedDate = new Date().toISOString();
+    const estimatedDate = new Date();
     estimatedDate.setHours(estimatedDate.getHours() + estimatedHours);
-    return estimatedDate;
+    return estimatedDate.toISOString();
   }
 
   /**
@@ -188,8 +191,8 @@ export class RoadmapAutomationService {
   public getPhaseTimeline(roadmap: RoadmapData): Array<{
     phase: number;
     name: string;
-    completedAt?: Date;
-    estimatedCompletionDate?: Date;
+    completedAt?: Date | string;
+    estimatedCompletionDate?: Date | string;
     status: 'completed' | 'in_progress' | 'pending';
   }> {
     return roadmap.phases.map((phase, index) => {

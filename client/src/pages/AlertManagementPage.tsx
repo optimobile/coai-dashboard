@@ -160,7 +160,7 @@ export const AlertManagementPage: React.FC = () => {
   });
 
   // Fetch notification preferences from tRPC
-  const { data: prefsData } = trpc.enterprise.getNotificationPreferences.useQuery({});
+  const { data: prefsData } = trpc.enterprise.getNotificationPreferences.useQuery();
 
   React.useEffect(() => {
     if (alertsData?.alerts) {
@@ -216,9 +216,10 @@ export const AlertManagementPage: React.FC = () => {
     }
   };
 
+  const bulkResolveMutation = trpc.enterprise.bulkResolveAlerts.useMutation();
   const handleBulkResolve = async () => {
     try {
-      await trpc.enterprise.bulkResolveAlerts.mutate({ alertIds: Array.from(selectedAlerts) });
+      await bulkResolveMutation.mutateAsync({ alertIds: Array.from(selectedAlerts) });
       setAlerts(alerts.map((a) => (selectedAlerts.has(a.id) ? { ...a, resolvedAt: new Date() } : a)));
       setSelectedAlerts(new Set());
     } catch (error) {
@@ -226,10 +227,11 @@ export const AlertManagementPage: React.FC = () => {
     }
   };
 
+  const snoozeMutation = trpc.enterprise.snoozeAlert.useMutation();
   const handleBulkSnooze = async () => {
     try {
       for (const alertId of selectedAlerts) {
-        await trpc.enterprise.snoozeAlert.mutate({ alertId, duration: '1d' });
+        await snoozeMutation.mutateAsync({ alertId, duration: '1d' });
       }
       setAlerts(alerts.map((a) => (selectedAlerts.has(a.id) ? { ...a, snoozedUntil: new Date(Date.now() + 24 * 60 * 60 * 1000) } : a)));
       setSelectedAlerts(new Set());
@@ -239,10 +241,11 @@ export const AlertManagementPage: React.FC = () => {
     setSelectedAlerts(new Set());
   };
 
+  const archiveMutation = trpc.enterprise.archiveAlert.useMutation();
   const handleBulkArchive = async () => {
     try {
       for (const alertId of selectedAlerts) {
-        await trpc.enterprise.archiveAlert.mutate({ alertId });
+        await archiveMutation.mutateAsync({ alertId });
       }
       setAlerts(alerts.filter((a) => !selectedAlerts.has(a.id)));
       setSelectedAlerts(new Set());

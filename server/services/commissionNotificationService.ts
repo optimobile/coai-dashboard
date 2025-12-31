@@ -4,7 +4,8 @@
  */
 
 import { getDb } from '../db.js';
-import { users, referralConversions } from '../../drizzle/schema.js';
+import { users } from '../../drizzle/schema.js';
+import { referralConversions } from '../../drizzle/schema-referral.js';
 import { eq } from 'drizzle-orm';
 
 interface EmailNotification {
@@ -28,6 +29,7 @@ export class CommissionNotificationService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
       // Get conversion details
       const conversion = await db
@@ -106,6 +108,7 @@ export class CommissionNotificationService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
       // Get conversion details
       const conversion = await db
@@ -186,6 +189,7 @@ export class CommissionNotificationService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
       // Get referrer details
       const referrer = await db
@@ -251,6 +255,7 @@ export class CommissionNotificationService {
   }> {
     try {
       const db = await getDb();
+    if (!db) throw new Error("Database not available");
 
       // Get referrer details
       const referrer = await db
@@ -275,8 +280,8 @@ export class CommissionNotificationService {
         template: 'weekly_summary',
         data: {
           referrerName: referrerUser.name || 'Referrer',
-          weekStartDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-          weekEndDate: new Date().toISOString().toLocaleDateString(),
+          weekStartDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toString(),
+          weekEndDate: new Date().toISOString().toString(),
           clicks: weekData.clicks,
           conversions: weekData.conversions,
           earnings: weekData.earnings,

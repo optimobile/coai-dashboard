@@ -84,6 +84,7 @@ import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
 import ReferralLandingPage from "./pages/ReferralLandingPage";
 import NotificationSettings from "./pages/NotificationSettings";
+import PayoutHistory from "./pages/PayoutHistory";
 import MyApplications from "./pages/MyApplications";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import AgentCouncilFeature from "./pages/features/AgentCouncilFeature";
@@ -209,6 +210,7 @@ function App() {
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
+                  <Route path="/settings/payouts" component={PayoutHistory} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
                   <Route path="/email-preferences" component={EmailPreferences} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />

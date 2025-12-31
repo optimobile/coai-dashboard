@@ -51,7 +51,7 @@ export default function AustraliaAIGovernancePage() {
       certificationInfo={{
         examLength: 90,
         passingScore: 70,
-        validity: 2,
+        validity: '2 years',
       }}
     />
   );

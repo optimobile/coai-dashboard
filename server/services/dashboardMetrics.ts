@@ -10,7 +10,7 @@ export interface ComplianceScoreCard {
   trend: 'up' | 'down' | 'stable';
   trendPercentage: number;
   certificationLevel: 'bronze' | 'silver' | 'gold' | 'platinum';
-  lastUpdated: Date;
+  lastUpdated: Date | string;
   riskLevel: 'minimal' | 'limited' | 'high';
 }
 
@@ -22,7 +22,7 @@ export interface WebhookMetrics {
   failedDeliveries: number;
   averageDeliveryTime: number; // milliseconds
   successRate: number; // percentage
-  lastDeliveryTime: Date | null;
+  lastDeliveryTime: Date | string | null;
 }
 
 export interface OnboardingFunnelAnalytics {
@@ -44,7 +44,7 @@ export interface OnboardingFunnelAnalytics {
 }
 
 export interface ComplianceTrendData {
-  date: Date;
+  date: Date | string;
   score: number;
   systemId: number;
 }
@@ -64,7 +64,7 @@ export interface ExecutiveDashboard {
     priority: 'critical' | 'high' | 'medium' | 'low';
     title: string;
     description: string;
-    dueDate: Date;
+    dueDate: Date | string;
     systemId?: number;
   }>;
 }
@@ -110,7 +110,7 @@ export class DashboardMetricsService {
     deliveries: Array<{
       status: 'delivered' | 'failed' | 'retrying';
       deliveryTime?: number;
-      createdAt: Date;
+      createdAt: Date | string;
     }>
   ): WebhookMetrics {
     const successfulDeliveries = deliveries.filter((d: any) => d.status === 'delivered').length;
@@ -150,8 +150,8 @@ export class DashboardMetricsService {
       id: string;
       currentStep: number;
       completedSteps: number[];
-      createdAt: Date;
-      updatedAt: Date;
+      createdAt: Date | string;
+      updatedAt: Date | string;
     }>
   ): OnboardingFunnelAnalytics {
     const totalStarted = sessions.length;
@@ -210,7 +210,7 @@ export class DashboardMetricsService {
     historicalScores: Array<{
       systemId: number;
       score: number;
-      timestamp: Date;
+      timestamp: Date | string;
     }>
   ): ComplianceTrendData[] {
     return historicalScores.map((record) => ({
@@ -244,7 +244,7 @@ export class DashboardMetricsService {
       id: number;
       name: string;
       complianceScore: number;
-      lastAssessmentDate: Date;
+      lastAssessmentDate: Date | string;
     }>,
     webhookMetrics: WebhookMetrics,
     onboardingAnalytics: OnboardingFunnelAnalytics
@@ -253,7 +253,7 @@ export class DashboardMetricsService {
     priority: 'critical' | 'high' | 'medium' | 'low';
     title: string;
     description: string;
-    dueDate: Date;
+    dueDate: Date | string;
     systemId?: number;
   }> {
     const items: Array<{
@@ -261,7 +261,7 @@ export class DashboardMetricsService {
       priority: 'critical' | 'high' | 'medium' | 'low';
       title: string;
       description: string;
-      dueDate: Date;
+      dueDate: Date | string;
       systemId?: number;
     }> = [];
 

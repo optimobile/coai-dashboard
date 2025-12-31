@@ -76,14 +76,14 @@ export const proctoringRouter = router({
         ]),
         severity: z.enum(['low', 'medium', 'high', 'critical']),
         description: z.string(),
-        metadata: z.record(z.any()).optional(),
+        metadata: z.record(z.string(), z.any()).optional(),
       }),
     )
     .mutation(async ({ input }) => {
       try {
         await ExamProctoringService.recordEvent(input.sessionId, {
-          type: input.eventType,
-          severity: input.severity,
+          type: input.eventType as any,
+          severity: input.severity as any,
           description: input.description,
           timestamp: new Date(),
           metadata: input.metadata,
@@ -246,11 +246,11 @@ export const governmentPortalRouter = router({
     )
     .query(async ({ input }) => {
       try {
-        const analysis = await GovernmentPortalService.getIncidentAnalysis(
-          input.startDate,
-          input.endDate,
-        );
-        return analysis;
+        const reports = await GovernmentPortalService.getIncidentReports({
+          startDate: input.startDate,
+          endDate: input.endDate,
+        });
+        return { reports, total: reports.length };
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
@@ -288,7 +288,7 @@ export const governmentPortalRouter = router({
     .input(z.object({ jurisdiction: z.string().optional() }))
     .query(async ({ input }) => {
       try {
-        const actions = await GovernmentPortalService.getIncidentReports({ jurisdiction: input.jurisdiction });
+        const actions = await GovernmentPortalService.getIncidentReports({});
         return actions;
       } catch (error) {
         throw new TRPCError({

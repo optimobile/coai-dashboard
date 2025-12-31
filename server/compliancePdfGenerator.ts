@@ -21,7 +21,7 @@ interface RequirementData {
   title: string;
   description: string | null;
   category: string | null;
-  isMandatory: boolean;
+  isMandatory: boolean | number;
 }
 
 interface AssessmentItemData {
@@ -39,8 +39,8 @@ interface AssessmentData {
   overallScore: string | null;
   findings: string | null;
   recommendations: string | null;
-  completedAt: Date | null;
-  createdAt: Date;
+  completedAt: string | Date | null;
+  createdAt: string | Date;
 }
 
 interface AISystemData {

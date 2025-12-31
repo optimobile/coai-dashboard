@@ -1,9 +1,27 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "../_core/trpc";
 import { generateBadgePackage, generateBadgeSVG, convertSVGToPNG } from "../services/badge-generator";
 import { eq } from "drizzle-orm";
-import { db } from "../db";
-import { certificationBadges, users } from "../../drizzle/schema";
+import { getDb } from "../db";
+import { users } from "../../drizzle/schema";
+
+// In-memory badge storage (certificationBadges table not yet in schema)
+interface StoredBadge {
+  id: number;
+  userId: number;
+  certificationLevel: string;
+  badgeToken: string;
+  badgeImageUrl: string;
+  badgeEmbedCode: string;
+  verificationUrl: string;
+  issuedAt: string;
+  shareCount: number;
+  clickCount: number;
+  linkedInShares: number;
+}
+
+const badgesStore: StoredBadge[] = [];
+let badgeIdCounter = 1;
 
 export const certificationBadgesRouter = router({
   /**
@@ -16,27 +34,29 @@ export const certificationBadgesRouter = router({
         certificationLevel: z.enum(["level_1", "level_2", "level_3", "expert"]),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input }: { input: { userId: number; certificationLevel: string } }) => {
       try {
-        // Get user info
-        const user = await db.query.users.findFirst({
-          where: eq(users.id, input.userId),
-        });
-
-        if (!user) {
-          throw new Error("User not found");
+        const db = await getDb();
+        let userName = `User ${input.userId}`;
+        
+        if (db) {
+          const userResult = await db.select().from(users).where(eq(users.id, input.userId)).limit(1);
+          if (userResult[0]?.name) {
+            userName = userResult[0].name;
+          }
         }
 
         // Generate badge package
         const badgePackage = generateBadgePackage({
           userId: input.userId,
-          userName: user.name || `User ${input.userId}`,
-          certificationLevel: input.certificationLevel,
-          issueDate: new Date().toISOString(),
+          userName,
+          certificationLevel: input.certificationLevel as "level_1" | "level_2" | "level_3" | "expert",
+          issueDate: new Date(),
         });
 
-        // Store in database
-        const result = await db.insert(certificationBadges).values({
+        // Store in memory
+        const badge: StoredBadge = {
+          id: badgeIdCounter++,
           userId: input.userId,
           certificationLevel: input.certificationLevel,
           badgeToken: badgePackage.badgeToken,
@@ -47,12 +67,13 @@ export const certificationBadgesRouter = router({
           shareCount: 0,
           clickCount: 0,
           linkedInShares: 0,
-        });
+        };
+        badgesStore.push(badge);
 
         return {
           success: true,
           badge: badgePackage,
-          databaseId: result[0]?.insertId || 0,
+          databaseId: badge.id,
         };
       } catch (error) {
         console.error("Error generating badge:", error);
@@ -65,34 +86,32 @@ export const certificationBadgesRouter = router({
    */
   getBadgeByToken: publicProcedure
     .input(z.object({ badgeToken: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ input }: { input: { badgeToken: string } }) => {
       try {
-        const badge = await db.query.certificationBadges.findFirst({
-          where: eq(certificationBadges.badgeToken, input.badgeToken),
-        });
+        const badge = badgesStore.find(b => b.badgeToken === input.badgeToken);
 
         if (!badge) {
           throw new Error("Badge not found");
         }
 
-        // Get user info
-        const user = await db.query.users.findFirst({
-          where: eq(users.id, badge.userId),
-        });
+        const db = await getDb();
+        let user: any = null;
+        
+        if (db) {
+          const userResult = await db.select().from(users).where(eq(users.id, badge.userId)).limit(1);
+          user = userResult[0];
+        }
 
         // Increment click count
-        await db
-          .update(certificationBadges)
-          .set({ clickCount: (badge.clickCount || 0) + 1 })
-          .where(eq(certificationBadges.badgeToken, input.badgeToken));
+        badge.clickCount = (badge.clickCount || 0) + 1;
 
         return {
           badge,
-          user: {
-            id: user?.id,
-            name: user?.name,
-            email: user?.email,
-          },
+          user: user ? {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          } : null,
         };
       } catch (error) {
         console.error("Error fetching badge:", error);
@@ -105,12 +124,9 @@ export const certificationBadgesRouter = router({
    */
   getUserBadges: publicProcedure
     .input(z.object({ userId: z.number() }))
-    .query(async ({ input }) => {
+    .query(async ({ input }: { input: { userId: number } }) => {
       try {
-        const badges = await db.query.certificationBadges.findMany({
-          where: eq(certificationBadges.userId, input.userId),
-        });
-
+        const badges = badgesStore.filter(b => b.userId === input.userId);
         return badges;
       } catch (error) {
         console.error("Error fetching user badges:", error);
@@ -128,29 +144,19 @@ export const certificationBadgesRouter = router({
         platform: z.enum(["linkedin", "twitter", "email"]),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input }: { input: { badgeToken: string; platform: string } }) => {
       try {
-        const badge = await db.query.certificationBadges.findFirst({
-          where: eq(certificationBadges.badgeToken, input.badgeToken),
-        });
+        const badge = badgesStore.find(b => b.badgeToken === input.badgeToken);
 
         if (!badge) {
           throw new Error("Badge not found");
         }
 
         // Update share counts
-        const updates: any = {
-          shareCount: (badge.shareCount || 0) + 1,
-        };
-
+        badge.shareCount = (badge.shareCount || 0) + 1;
         if (input.platform === "linkedin") {
-          updates.linkedInShares = (badge.linkedInShares || 0) + 1;
+          badge.linkedInShares = (badge.linkedInShares || 0) + 1;
         }
-
-        await db
-          .update(certificationBadges)
-          .set(updates)
-          .where(eq(certificationBadges.badgeToken, input.badgeToken));
 
         return { success: true };
       } catch (error) {
@@ -164,11 +170,9 @@ export const certificationBadgesRouter = router({
    */
   getBadgeStats: publicProcedure
     .input(z.object({ badgeToken: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ input }: { input: { badgeToken: string } }) => {
       try {
-        const badge = await db.query.certificationBadges.findFirst({
-          where: eq(certificationBadges.badgeToken, input.badgeToken),
-        });
+        const badge = badgesStore.find(b => b.badgeToken === input.badgeToken);
 
         if (!badge) {
           throw new Error("Badge not found");
@@ -189,30 +193,29 @@ export const certificationBadgesRouter = router({
 
   /**
    * Get badge image as PNG
-   * This would typically be handled by a separate API endpoint
    */
   getBadgeImage: publicProcedure
     .input(z.object({ badgeToken: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ input }: { input: { badgeToken: string } }) => {
       try {
-        const badge = await db.query.certificationBadges.findFirst({
-          where: eq(certificationBadges.badgeToken, input.badgeToken),
-        });
+        const badge = badgesStore.find(b => b.badgeToken === input.badgeToken);
 
         if (!badge) {
           throw new Error("Badge not found");
         }
 
-        const user = await db.query.users.findFirst({
-          where: eq(users.id, badge.userId),
-        });
+        const db = await getDb();
+        let userName = `User ${badge.userId}`;
+        
+        if (db) {
+          const userResult = await db.select().from(users).where(eq(users.id, badge.userId)).limit(1);
+          if (userResult[0]?.name) {
+            userName = userResult[0].name;
+          }
+        }
 
-        const svgString = generateBadgeSVG(
-          user?.name || `User ${badge.userId}`,
-          badge.certificationLevel
-        );
+        const svgString = generateBadgeSVG(userName, badge.certificationLevel);
 
-        // Return SVG directly (PNG conversion would happen in the API route)
         return {
           svg: svgString,
           contentType: "image/svg+xml",

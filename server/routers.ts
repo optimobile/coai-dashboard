@@ -48,6 +48,7 @@ import { webhooksRouter } from "./routers/webhooks";
 import { onboardingRouter } from "./routers/onboarding";
 import { complianceRouter as euComplianceRouter } from "./routers/compliance";
 import { enterpriseRouter } from "./routers/enterprise";
+import { certificationBadgesRouter } from "./routers/certificationBadges";
 import { referralRouter } from "./routers/referral.js";
 import { analyticsRouter } from "./routers/analytics";
 import { emailOnboardingRouter } from "./routers/emailOnboarding";
@@ -2380,7 +2381,7 @@ const apiKeysRouter = router({
       const { key, prefix, hash } = generateApiKey();
       
       const expiresAt = input.expiresInDays 
-        ? new Date(Date.now() + input.expiresInDays * 24 * 60 * 60 * 1000)
+        ? new Date(Date.now() + input.expiresInDays * 24 * 60 * 60 * 1000).toISOString()
         : null;
 
       const rateLimit = input.tier === "enterprise" ? 1000 
@@ -2821,6 +2822,7 @@ export const appRouter = router({
   emailAutomation: emailAutomationRouter,
   aiTutor: aiTutorRouter,
   stripeProducts: stripeProductsRouter,
+  certificationBadges: certificationBadgesRouter,
 });
 
 export type AppRouter = typeof appRouter;
