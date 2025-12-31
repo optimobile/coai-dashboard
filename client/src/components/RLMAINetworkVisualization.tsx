@@ -1,78 +1,78 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// 27 Companies in the RLMAI Network
-const companies = [
-  // AI Safety (13) - Blue
-  { name: 'CSOAI', fullName: 'CSOAI.org', category: 'ai-safety', angle: 0, distance: 0.35 },
-  { name: 'CEASAI', fullName: 'CEASAI.org', category: 'ai-safety', angle: 30, distance: 0.4 },
-  { name: 'CouncilOf', fullName: 'CouncilOf.ai', category: 'ai-safety', angle: 60, distance: 0.45 },
-  { name: 'SafetyOf', fullName: 'SafetyOf.ai', category: 'ai-safety', angle: 90, distance: 0.38 },
-  { name: 'BiasDetection', fullName: 'BiasDetectionOf.ai', category: 'ai-safety', angle: 120, distance: 0.5 },
-  { name: 'Transparency', fullName: 'TransparencyOf.ai', category: 'ai-safety', angle: 150, distance: 0.42 },
-  { name: 'AGISafe', fullName: 'AGISafe.ai', category: 'ai-safety', angle: 180, distance: 0.48 },
-  { name: 'ASISecurity', fullName: 'ASISecurity.ai', category: 'ai-safety', angle: 210, distance: 0.36 },
-  { name: 'DataPrivacy', fullName: 'DataPrivacyOf.ai', category: 'ai-safety', angle: 240, distance: 0.52 },
-  { name: 'SuicideStop', fullName: 'SuicideStop.ai', category: 'ai-safety', angle: 270, distance: 0.44 },
-  { name: 'EthicalGov', fullName: 'EthicalGovernanceOf.ai', category: 'ai-safety', angle: 300, distance: 0.4 },
-  { name: 'LoopFactory', fullName: 'LoopFactory.ai', category: 'ai-safety', angle: 330, distance: 0.46 },
-  { name: 'ProofOf', fullName: 'ProofOf.ai', category: 'ai-safety', angle: 15, distance: 0.55 },
-  
-  // SaaS AI (7) - Emerald
-  { name: 'KoiKeeper', fullName: 'KoiKeeper.ai', category: 'saas-ai', angle: 45, distance: 0.6 },
-  { name: 'FishKeeper', fullName: 'FishKeeper.ai', category: 'saas-ai', angle: 75, distance: 0.58 },
-  { name: 'PlantHire', fullName: 'PlantHire.ai', category: 'saas-ai', angle: 135, distance: 0.62 },
-  { name: 'Muckaway', fullName: 'Muckaway.ai', category: 'saas-ai', angle: 165, distance: 0.56 },
-  { name: 'GrabHire', fullName: 'GrabHire.ai', category: 'saas-ai', angle: 225, distance: 0.64 },
-  { name: 'Commercial', fullName: 'CommercialVehicle.ai', category: 'saas-ai', angle: 285, distance: 0.58 },
-  { name: 'OptiMobile', fullName: 'OptiMobile.ai', category: 'saas-ai', angle: 315, distance: 0.6 },
-  
-  // Traditional (6) - Purple
-  { name: 'LandLaw', fullName: 'LandLaw.ai', category: 'traditional', angle: 105, distance: 0.7 },
-  { name: 'DIYHelp', fullName: 'DIYHelp.ai', category: 'traditional', angle: 195, distance: 0.68 },
-  { name: 'PokerHUD', fullName: 'PokerHUD.ai', category: 'traditional', angle: 255, distance: 0.72 },
-  { name: 'NetworkNick', fullName: 'NetworkNick.co.uk', category: 'traditional', angle: 345, distance: 0.66 },
-  { name: 'Opticians', fullName: 'Templeman-Opticians.com', category: 'traditional', angle: 50, distance: 0.74 },
-  { name: 'IOK Farm', fullName: 'IOKFarm.co.uk', category: 'traditional', angle: 200, distance: 0.76 },
+// Government Regulators & Legislation
+const governmentRegulators = [
+  { name: 'EU AI Act', country: 'EU', flag: '🇪🇺', type: 'legislation', color: '#3b82f6' },
+  { name: 'UK AISI', country: 'UK', flag: '🇬🇧', type: 'institute', color: '#ef4444' },
+  { name: 'US NIST RMF', country: 'US', flag: '🇺🇸', type: 'framework', color: '#f59e0b' },
+  { name: 'China TC260', country: 'CN', flag: '🇨🇳', type: 'standard', color: '#ef4444' },
+  { name: 'Canada AIDA', country: 'CA', flag: '🇨🇦', type: 'legislation', color: '#dc2626' },
+  { name: 'Australia AI Ethics', country: 'AU', flag: '🇦🇺', type: 'framework', color: '#16a34a' },
+  { name: 'Singapore IMDA', country: 'SG', flag: '🇸🇬', type: 'governance', color: '#dc2626' },
+  { name: 'Japan METI', country: 'JP', flag: '🇯🇵', type: 'strategy', color: '#dc2626' },
+  { name: 'South Korea AI Act', country: 'KR', flag: '🇰🇷', type: 'legislation', color: '#3b82f6' },
+  { name: 'Brazil AI Bill', country: 'BR', flag: '🇧🇷', type: 'legislation', color: '#16a34a' },
+  { name: 'India NITI Aayog', country: 'IN', flag: '🇮🇳', type: 'framework', color: '#f97316' },
+  { name: 'ISO/IEC 42001', country: 'Intl', flag: '🌐', type: 'standard', color: '#8b5cf6' },
 ];
 
-const categoryColors = {
-  'ai-safety': {
-    bg: 'bg-blue-500/20',
-    border: 'border-blue-400',
-    text: 'text-blue-300',
-    glow: 'shadow-blue-500/50',
-    dot: 'bg-blue-400',
-  },
-  'saas-ai': {
-    bg: 'bg-emerald-500/20',
-    border: 'border-emerald-400',
-    text: 'text-emerald-300',
-    glow: 'shadow-emerald-500/50',
-    dot: 'bg-emerald-400',
-  },
-  'traditional': {
-    bg: 'bg-purple-500/20',
-    border: 'border-purple-400',
-    text: 'text-purple-300',
-    glow: 'shadow-purple-500/50',
-    dot: 'bg-purple-400',
-  },
-};
+// 13 AI Safety Companies
+const safetyCompanies = [
+  { name: 'CSOAI', fullName: 'CSOAI.org', description: 'Council of AIs Platform' },
+  { name: 'CEASAI', fullName: 'CEASAI.org', description: 'AI Safety Certification' },
+  { name: 'CouncilOf', fullName: 'CouncilOf.ai', description: 'Multi-Agent Governance' },
+  { name: 'SafetyOf', fullName: 'SafetyOf.ai', description: 'Safety Assessment' },
+  { name: 'BiasDetection', fullName: 'BiasDetectionOf.ai', description: 'Bias Analysis' },
+  { name: 'Transparency', fullName: 'TransparencyOf.ai', description: 'AI Transparency' },
+  { name: 'AGISafe', fullName: 'AGISafe.ai', description: 'AGI Safety Research' },
+  { name: 'ASISecurity', fullName: 'ASISecurity.ai', description: 'AI Security' },
+  { name: 'DataPrivacy', fullName: 'DataPrivacyOf.ai', description: 'Privacy Protection' },
+  { name: 'SuicideStop', fullName: 'SuicideStop.ai', description: 'Mental Health AI Safety' },
+  { name: 'EthicalGov', fullName: 'EthicalGovernanceOf.ai', description: 'Ethical Governance' },
+  { name: 'LoopFactory', fullName: 'LoopFactory.ai', description: 'PDCA Automation' },
+  { name: 'ProofOf', fullName: 'ProofOf.ai', description: 'Verification Systems' },
+];
+
+// 33 Byzantine Council AI Agents (expanded AI providers)
+const aiProviders = [
+  'OpenAI', 'Anthropic', 'Google DeepMind', 'Meta AI', 'Mistral', 'Cohere', 
+  'xAI', 'Inflection', 'Stability AI', 'Hugging Face', 'AI21 Labs', 'Aleph Alpha',
+  'Baidu', 'Alibaba', 'Tencent', 'ByteDance', 'SenseTime', 'Megvii',
+  'Amazon Bedrock', 'Microsoft Azure', 'IBM Watson', 'Oracle AI', 'SAP AI',
+  'Nvidia NeMo', 'AMD MI', 'Intel Gaudi', 'Cerebras', 'Graphcore', 'SambaNova',
+  'Groq', 'Together AI', 'Replicate', 'Perplexity'
+];
+
+const byzantineAgents = Array.from({ length: 33 }, (_, i) => ({
+  id: i + 1,
+  name: `Agent ${i + 1}`,
+  provider: aiProviders[i % aiProviders.length],
+  status: 'active',
+}));
+
+// 100 Human AI Analysts
+const humanAnalysts = Array.from({ length: 100 }, (_, i) => ({
+  id: i + 1,
+  region: ['EU', 'US', 'UK', 'APAC', 'LATAM', 'MEA'][i % 6],
+  specialty: ['EU AI Act', 'NIST RMF', 'ISO 42001', 'TC260', 'Ethics', 'Incident Response'][i % 6],
+}));
 
 interface DataFlow {
   id: number;
+  type: 'company' | 'agent' | 'analyst' | 'regulator';
   fromIndex: number;
-  toCenter: boolean;
   progress: number;
 }
 
 export function RLMAINetworkVisualization() {
   const [dailyDecisions, setDailyDecisions] = useState(12847);
-  const [activeNodes, setActiveNodes] = useState<Set<number>>(new Set());
+  const [activeCompanies, setActiveCompanies] = useState<Set<number>>(new Set());
+  const [activeAgents, setActiveAgents] = useState<Set<number>>(new Set());
+  const [activeAnalysts, setActiveAnalysts] = useState<Set<number>>(new Set());
+  const [activeRegulators, setActiveRegulators] = useState<Set<number>>(new Set());
   const [dataFlows, setDataFlows] = useState<DataFlow[]>([]);
-  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [hoveredItem, setHoveredItem] = useState<{ type: string; index: number } | null>(null);
   const flowIdRef = useRef(0);
 
   // Increment daily decisions counter
@@ -86,55 +86,119 @@ export function RLMAINetworkVisualization() {
   // Randomly activate nodes to show activity
   useEffect(() => {
     const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * companies.length);
-      setActiveNodes(prev => {
+      // Activate random regulator (feeding in)
+      const regulatorIndex = Math.floor(Math.random() * governmentRegulators.length);
+      setActiveRegulators(prev => {
         const newSet = new Set(prev);
-        newSet.add(randomIndex);
+        newSet.add(regulatorIndex);
         return newSet;
       });
       
-      // Create data flow animation
-      const newFlow: DataFlow = {
+      const regulatorFlow: DataFlow = {
         id: flowIdRef.current++,
-        fromIndex: randomIndex,
-        toCenter: true,
+        type: 'regulator',
+        fromIndex: regulatorIndex,
         progress: 0,
       };
-      setDataFlows(prev => [...prev, newFlow]);
+      setDataFlows(prev => [...prev, regulatorFlow]);
       
-      // Remove active state after animation
       setTimeout(() => {
-        setActiveNodes(prev => {
+        setActiveRegulators(prev => {
           const newSet = new Set(prev);
-          newSet.delete(randomIndex);
+          newSet.delete(regulatorIndex);
           return newSet;
         });
-      }, 1000);
+        setDataFlows(prev => prev.filter(f => f.id !== regulatorFlow.id));
+      }, 2000);
       
-      // Remove flow after animation completes
+      // Activate random company
+      const companyIndex = Math.floor(Math.random() * safetyCompanies.length);
+      setActiveCompanies(prev => {
+        const newSet = new Set(prev);
+        newSet.add(companyIndex);
+        return newSet;
+      });
+      
+      // Activate random agents (3-5 at a time)
+      const numAgents = Math.floor(Math.random() * 3) + 3;
+      for (let i = 0; i < numAgents; i++) {
+        const agentIndex = Math.floor(Math.random() * byzantineAgents.length);
+        setActiveAgents(prev => {
+          const newSet = new Set(prev);
+          newSet.add(agentIndex);
+          return newSet;
+        });
+        
+        const agentFlow: DataFlow = {
+          id: flowIdRef.current++,
+          type: 'agent',
+          fromIndex: agentIndex,
+          progress: 0,
+        };
+        setDataFlows(prev => [...prev, agentFlow]);
+        
+        setTimeout(() => {
+          setActiveAgents(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(agentIndex);
+            return newSet;
+          });
+          setDataFlows(prev => prev.filter(f => f.id !== agentFlow.id));
+        }, 1500);
+      }
+      
+      // Activate random analysts (2-4 at a time)
+      const numAnalysts = Math.floor(Math.random() * 3) + 2;
+      for (let i = 0; i < numAnalysts; i++) {
+        const analystIndex = Math.floor(Math.random() * humanAnalysts.length);
+        setActiveAnalysts(prev => {
+          const newSet = new Set(prev);
+          newSet.add(analystIndex);
+          return newSet;
+        });
+        
+        setTimeout(() => {
+          setActiveAnalysts(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(analystIndex);
+            return newSet;
+          });
+        }, 2000);
+      }
+      
+      const companyFlow: DataFlow = {
+        id: flowIdRef.current++,
+        type: 'company',
+        fromIndex: companyIndex,
+        progress: 0,
+      };
+      setDataFlows(prev => [...prev, companyFlow]);
+      
       setTimeout(() => {
-        setDataFlows(prev => prev.filter(f => f.id !== newFlow.id));
+        setActiveCompanies(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(companyIndex);
+          return newSet;
+        });
+        setDataFlows(prev => prev.filter(f => f.id !== companyFlow.id));
       }, 1500);
-    }, 300);
+    }, 350);
     
     return () => clearInterval(interval);
   }, []);
 
-  const getNodePosition = (angle: number, distance: number, containerSize: number) => {
-    const centerX = containerSize / 2;
-    const centerY = containerSize / 2;
-    const maxRadius = containerSize / 2 - 60;
-    const radians = (angle * Math.PI) / 180;
-    
+  // Calculate positions
+  const getPosition = (index: number, total: number, radius: number, offsetAngle: number = 0) => {
+    const angle = (index / total) * 2 * Math.PI - Math.PI / 2 + offsetAngle;
     return {
-      x: centerX + Math.cos(radians) * maxRadius * distance,
-      y: centerY + Math.sin(radians) * maxRadius * distance,
+      x: 350 + Math.cos(angle) * radius,
+      y: 350 + Math.sin(angle) * radius,
     };
   };
 
   return (
     <div className="relative w-full py-16 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
-      {/* Background grid pattern */}
+      {/* Background effects */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)`,
@@ -142,129 +206,213 @@ export function RLMAINetworkVisualization() {
         }} />
       </div>
       
-      {/* Glowing orbs background */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
+      {/* Glowing orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute top-1/3 right-1/3 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
       
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
             <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-blue-300 text-sm font-medium">RLMAI Cross-Training Network</span>
+            <span className="text-blue-300 text-sm font-medium">Global AI Safety Ecosystem</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            27 AI Companies. <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">One Neural Network.</span>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-blue-400 to-emerald-400">
+              12 Regulators. 13 Companies. 33 AI Agents. 100 Analysts.
+            </span>
           </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Watch real-time data flow between products. Each decision improves the entire network.
+          <p className="text-slate-400 text-lg max-w-3xl mx-auto">
+            Real-time collaboration between global regulators, AI safety organizations, 
+            Byzantine Council AI agents, and certified human analysts.
           </p>
         </div>
 
-        {/* Network Visualization */}
-        <div 
-          ref={containerRef}
-          className="relative mx-auto aspect-square max-w-3xl"
-        >
-          {/* SVG for connection lines */}
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 600">
-            {/* Static connection lines to center */}
-            {companies.map((company, index) => {
-              const pos = getNodePosition(company.angle, company.distance, 600);
+        {/* Main Network Visualization */}
+        <div className="relative mx-auto aspect-square max-w-4xl">
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 700 700">
+            {/* Glow filter */}
+            <defs>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+              <filter id="strongGlow">
+                <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            
+            {/* Connection lines from regulators (outermost) */}
+            {governmentRegulators.map((reg, index) => {
+              const pos = getPosition(index, governmentRegulators.length, 310);
               return (
                 <line
-                  key={`line-${index}`}
-                  x1={300}
-                  y1={300}
+                  key={`reg-line-${index}`}
+                  x1={350}
+                  y1={350}
                   x2={pos.x}
                   y2={pos.y}
-                  stroke="rgba(100, 150, 255, 0.1)"
+                  stroke={`${reg.color}30`}
+                  strokeWidth="2"
+                  strokeDasharray="5,5"
+                />
+              );
+            })}
+            
+            {/* Connection lines from companies */}
+            {safetyCompanies.map((_, index) => {
+              const pos = getPosition(index, safetyCompanies.length, 220);
+              return (
+                <line
+                  key={`company-line-${index}`}
+                  x1={350}
+                  y1={350}
+                  x2={pos.x}
+                  y2={pos.y}
+                  stroke="rgba(59, 130, 246, 0.15)"
                   strokeWidth="1"
                 />
               );
             })}
             
-            {/* Animated data flow particles */}
-            {dataFlows.map((flow) => {
-              const company = companies[flow.fromIndex];
-              const pos = getNodePosition(company.angle, company.distance, 600);
-              const colors = categoryColors[company.category as keyof typeof categoryColors];
-              
+            {/* Connection lines from agents */}
+            {byzantineAgents.map((_, index) => {
+              const pos = getPosition(index, byzantineAgents.length, 140);
               return (
-                <motion.circle
-                  key={flow.id}
-                  r="4"
-                  fill={company.category === 'ai-safety' ? '#60a5fa' : company.category === 'saas-ai' ? '#34d399' : '#a78bfa'}
-                  initial={{ cx: pos.x, cy: pos.y, opacity: 1 }}
-                  animate={{ cx: 300, cy: 300, opacity: 0 }}
-                  transition={{ duration: 1.2, ease: "easeInOut" }}
+                <line
+                  key={`agent-line-${index}`}
+                  x1={350}
+                  y1={350}
+                  x2={pos.x}
+                  y2={pos.y}
+                  stroke="rgba(168, 85, 247, 0.1)"
+                  strokeWidth="0.5"
                 />
               );
             })}
+            
+            {/* Animated data flows */}
+            {dataFlows.map((flow) => {
+              if (flow.type === 'regulator') {
+                const reg = governmentRegulators[flow.fromIndex];
+                const pos = getPosition(flow.fromIndex, governmentRegulators.length, 310);
+                return (
+                  <motion.circle
+                    key={flow.id}
+                    r="6"
+                    fill={reg.color}
+                    filter="url(#strongGlow)"
+                    initial={{ cx: pos.x, cy: pos.y, opacity: 1 }}
+                    animate={{ cx: 350, cy: 350, opacity: 0 }}
+                    transition={{ duration: 1.8, ease: "easeInOut" }}
+                  />
+                );
+              } else if (flow.type === 'company') {
+                const pos = getPosition(flow.fromIndex, safetyCompanies.length, 220);
+                return (
+                  <motion.circle
+                    key={flow.id}
+                    r="5"
+                    fill="#60a5fa"
+                    filter="url(#glow)"
+                    initial={{ cx: pos.x, cy: pos.y, opacity: 1 }}
+                    animate={{ cx: 350, cy: 350, opacity: 0 }}
+                    transition={{ duration: 1.2, ease: "easeInOut" }}
+                  />
+                );
+              } else if (flow.type === 'agent') {
+                const pos = getPosition(flow.fromIndex, byzantineAgents.length, 140);
+                return (
+                  <motion.circle
+                    key={flow.id}
+                    r="3"
+                    fill="#a855f7"
+                    filter="url(#glow)"
+                    initial={{ cx: pos.x, cy: pos.y, opacity: 1 }}
+                    animate={{ cx: 350, cy: 350, opacity: 0 }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                  />
+                );
+              }
+              return null;
+            })}
           </svg>
 
-          {/* Central RLMAI Hub */}
+          {/* Central Hub */}
           <motion.div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30"
             animate={{
               boxShadow: [
-                '0 0 20px rgba(59, 130, 246, 0.3)',
-                '0 0 40px rgba(59, 130, 246, 0.5)',
-                '0 0 20px rgba(59, 130, 246, 0.3)',
+                '0 0 30px rgba(59, 130, 246, 0.3)',
+                '0 0 80px rgba(59, 130, 246, 0.5)',
+                '0 0 30px rgba(59, 130, 246, 0.3)',
               ],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 border-4 border-blue-400 flex flex-col items-center justify-center">
-              <span className="text-white font-bold text-xl">RLMAI</span>
-              <span className="text-blue-200 text-xs mt-1">{dailyDecisions.toLocaleString()}+ daily</span>
+            <div className="w-40 h-40 rounded-full bg-gradient-to-br from-amber-500 via-blue-600 to-emerald-600 border-4 border-blue-400 flex flex-col items-center justify-center">
+              <span className="text-white font-bold text-2xl">CSOAI</span>
+              <span className="text-blue-200 text-xs mt-1">Global Safety Hub</span>
+              <span className="text-blue-100 text-[10px] mt-0.5">{dailyDecisions.toLocaleString()}+ daily</span>
             </div>
           </motion.div>
 
-          {/* Company Nodes */}
-          {companies.map((company, index) => {
-            const pos = getNodePosition(company.angle, company.distance, 600);
-            const colors = categoryColors[company.category as keyof typeof categoryColors];
-            const isActive = activeNodes.has(index);
-            const isHovered = hoveredNode === index;
-            
-            // Convert to percentage for positioning
-            const leftPercent = (pos.x / 600) * 100;
-            const topPercent = (pos.y / 600) * 100;
+          {/* Government Regulators (Outermost Ring) */}
+          {governmentRegulators.map((reg, index) => {
+            const pos = getPosition(index, governmentRegulators.length, 310);
+            const leftPercent = (pos.x / 700) * 100;
+            const topPercent = (pos.y / 700) * 100;
+            const isActive = activeRegulators.has(index);
+            const isHovered = hoveredItem?.type === 'regulator' && hoveredItem.index === index;
             
             return (
               <motion.div
-                key={company.name}
+                key={`reg-${index}`}
                 className="absolute z-10"
                 style={{
                   left: `${leftPercent}%`,
                   top: `${topPercent}%`,
                   transform: 'translate(-50%, -50%)',
                 }}
-                onMouseEnter={() => setHoveredNode(index)}
-                onMouseLeave={() => setHoveredNode(null)}
+                onMouseEnter={() => setHoveredItem({ type: 'regulator', index })}
+                onMouseLeave={() => setHoveredItem(null)}
                 animate={{
-                  scale: isActive ? 1.2 : isHovered ? 1.15 : 1,
+                  scale: isActive ? 1.25 : isHovered ? 1.15 : 1,
                 }}
                 transition={{ duration: 0.2 }}
               >
                 <div
                   className={`
-                    relative px-3 py-2 rounded-full border-2 backdrop-blur-sm cursor-pointer
-                    transition-all duration-300
-                    ${colors.bg} ${colors.border}
-                    ${isActive ? `shadow-lg ${colors.glow}` : ''}
+                    relative px-2 py-1.5 rounded-lg border-2 backdrop-blur-sm cursor-pointer
+                    transition-all duration-300 bg-slate-800/80
+                    ${isActive ? 'shadow-lg' : ''}
                     ${isHovered ? 'shadow-xl' : ''}
                   `}
+                  style={{ 
+                    borderColor: isActive ? reg.color : `${reg.color}60`,
+                    boxShadow: isActive ? `0 0 20px ${reg.color}50` : 'none'
+                  }}
                 >
-                  <span className={`text-xs font-medium whitespace-nowrap ${colors.text}`}>
-                    {company.name}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-lg">{reg.flag}</span>
+                    <span className="text-[10px] font-medium whitespace-nowrap text-white">
+                      {reg.name}
+                    </span>
+                  </div>
                   
-                  {/* Pulse effect when active */}
                   {isActive && (
                     <motion.div
-                      className={`absolute inset-0 rounded-full ${colors.border} border-2`}
+                      className="absolute inset-0 rounded-lg border-2"
+                      style={{ borderColor: reg.color }}
                       initial={{ scale: 1, opacity: 1 }}
                       animate={{ scale: 1.5, opacity: 0 }}
                       transition={{ duration: 0.8 }}
@@ -272,16 +420,139 @@ export function RLMAINetworkVisualization() {
                   )}
                 </div>
                 
-                {/* Tooltip on hover */}
                 <AnimatePresence>
                   {isHovered && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-30 whitespace-nowrap"
+                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-50 whitespace-nowrap"
+                    >
+                      <span className="text-white text-xs font-medium">{reg.name}</span>
+                      <span className="block text-slate-400 text-[10px]">{reg.type} • {reg.country}</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+
+          {/* 13 AI Safety Companies (Middle Ring) */}
+          {safetyCompanies.map((company, index) => {
+            const pos = getPosition(index, safetyCompanies.length, 220);
+            const leftPercent = (pos.x / 700) * 100;
+            const topPercent = (pos.y / 700) * 100;
+            const isActive = activeCompanies.has(index);
+            const isHovered = hoveredItem?.type === 'company' && hoveredItem.index === index;
+            
+            return (
+              <motion.div
+                key={company.name}
+                className="absolute z-15"
+                style={{
+                  left: `${leftPercent}%`,
+                  top: `${topPercent}%`,
+                  transform: 'translate(-50%, -50%)',
+                }}
+                onMouseEnter={() => setHoveredItem({ type: 'company', index })}
+                onMouseLeave={() => setHoveredItem(null)}
+                animate={{
+                  scale: isActive ? 1.2 : isHovered ? 1.15 : 1,
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                <div
+                  className={`
+                    relative px-2 py-1.5 rounded-full border-2 backdrop-blur-sm cursor-pointer
+                    transition-all duration-300
+                    bg-blue-500/20 border-blue-400
+                    ${isActive ? 'shadow-lg shadow-blue-500/50' : ''}
+                    ${isHovered ? 'shadow-xl' : ''}
+                  `}
+                >
+                  <span className="text-[10px] font-medium whitespace-nowrap text-blue-300">
+                    {company.name}
+                  </span>
+                  
+                  {isActive && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full border-2 border-blue-400"
+                      initial={{ scale: 1, opacity: 1 }}
+                      animate={{ scale: 1.5, opacity: 0 }}
+                      transition={{ duration: 0.8 }}
+                    />
+                  )}
+                </div>
+                
+                <AnimatePresence>
+                  {isHovered && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-slate-800 border border-blue-500/30 rounded-lg shadow-xl z-50 whitespace-nowrap"
                     >
                       <span className="text-white text-xs font-medium">{company.fullName}</span>
+                      <span className="block text-slate-400 text-[10px]">{company.description}</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+
+          {/* 33 Byzantine Council AI Agents (Inner Ring) */}
+          {byzantineAgents.map((agent, index) => {
+            const pos = getPosition(index, byzantineAgents.length, 140);
+            const leftPercent = (pos.x / 700) * 100;
+            const topPercent = (pos.y / 700) * 100;
+            const isActive = activeAgents.has(index);
+            const isHovered = hoveredItem?.type === 'agent' && hoveredItem.index === index;
+            
+            return (
+              <motion.div
+                key={`agent-${agent.id}`}
+                className="absolute z-20"
+                style={{
+                  left: `${leftPercent}%`,
+                  top: `${topPercent}%`,
+                  transform: 'translate(-50%, -50%)',
+                }}
+                onMouseEnter={() => setHoveredItem({ type: 'agent', index })}
+                onMouseLeave={() => setHoveredItem(null)}
+                animate={{
+                  scale: isActive ? 1.5 : isHovered ? 1.3 : 1,
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                <div
+                  className={`
+                    w-3.5 h-3.5 rounded-full cursor-pointer transition-all duration-300
+                    ${isActive 
+                      ? 'bg-purple-400 shadow-lg shadow-purple-500/50' 
+                      : 'bg-purple-500/40 hover:bg-purple-400/60'}
+                  `}
+                >
+                  {isActive && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full border-2 border-purple-400"
+                      initial={{ scale: 1, opacity: 1 }}
+                      animate={{ scale: 2.5, opacity: 0 }}
+                      transition={{ duration: 0.8 }}
+                    />
+                  )}
+                </div>
+                
+                <AnimatePresence>
+                  {isHovered && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-slate-800 border border-purple-500/30 rounded-lg shadow-xl z-50 whitespace-nowrap"
+                    >
+                      <span className="text-purple-300 text-xs font-bold">{agent.name}</span>
+                      <span className="block text-slate-400 text-[10px]">{agent.provider}</span>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -290,35 +561,115 @@ export function RLMAINetworkVisualization() {
           })}
         </div>
 
-        {/* Legend and Stats */}
-        <div className="flex flex-wrap items-center justify-center gap-8 mt-12">
-          {/* Category Legend */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-blue-400" />
-              <span className="text-slate-400 text-sm">AI Safety</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-emerald-400" />
-              <span className="text-slate-400 text-sm">SaaS AI</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-purple-400" />
-              <span className="text-slate-400 text-sm">Traditional</span>
-            </div>
+        {/* Legend */}
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-gradient-to-r from-amber-500 to-red-500" />
+            <span className="text-slate-400 text-sm">12 Government Regulators</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-blue-400" />
+            <span className="text-slate-400 text-sm">13 AI Safety Companies</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-purple-400" />
+            <span className="text-slate-400 text-sm">33 Byzantine AI Agents</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-emerald-400" />
+            <span className="text-slate-400 text-sm">100 Human Analysts</span>
+          </div>
+        </div>
+        
+        {/* Human Analysts Grid */}
+        <div className="mt-12">
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-semibold text-white mb-2">Human AI Analysts Network</h3>
+            <p className="text-slate-400 text-sm">100 certified analysts providing human oversight across 6 global regions</p>
           </div>
           
-          {/* Live Stats */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-white font-semibold">{dailyDecisions.toLocaleString()}</span>
-              <span className="text-slate-400 text-sm">decisions today</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
-              <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-              <span className="text-slate-400 text-sm">Live network</span>
-            </div>
+          <div className="flex flex-wrap justify-center gap-1 max-w-4xl mx-auto">
+            {humanAnalysts.map((analyst, index) => {
+              const isActive = activeAnalysts.has(index);
+              const regionColors: Record<string, string> = {
+                'EU': 'bg-blue-500',
+                'US': 'bg-red-500',
+                'UK': 'bg-purple-500',
+                'APAC': 'bg-yellow-500',
+                'LATAM': 'bg-green-500',
+                'MEA': 'bg-orange-500',
+              };
+              
+              return (
+                <motion.div
+                  key={`analyst-${analyst.id}`}
+                  className={`
+                    w-3 h-3 rounded-full cursor-pointer transition-all duration-300
+                    ${regionColors[analyst.region]}
+                    ${isActive ? 'opacity-100 scale-150 shadow-lg' : 'opacity-40 hover:opacity-70'}
+                  `}
+                  animate={{
+                    scale: isActive ? 1.5 : 1,
+                    opacity: isActive ? 1 : 0.4,
+                  }}
+                  transition={{ duration: 0.2 }}
+                  title={`Analyst #${analyst.id} - ${analyst.region} - ${analyst.specialty}`}
+                />
+              );
+            })}
+          </div>
+          
+          {/* Region Legend */}
+          <div className="flex flex-wrap justify-center gap-4 mt-6">
+            {['EU', 'US', 'UK', 'APAC', 'LATAM', 'MEA'].map((region) => {
+              const regionColors: Record<string, string> = {
+                'EU': 'bg-blue-500',
+                'US': 'bg-red-500',
+                'UK': 'bg-purple-500',
+                'APAC': 'bg-yellow-500',
+                'LATAM': 'bg-green-500',
+                'MEA': 'bg-orange-500',
+              };
+              const regionNames: Record<string, string> = {
+                'EU': 'Europe',
+                'US': 'United States',
+                'UK': 'United Kingdom',
+                'APAC': 'Asia-Pacific',
+                'LATAM': 'Latin America',
+                'MEA': 'Middle East & Africa',
+              };
+              const count = humanAnalysts.filter(a => a.region === region).length;
+              
+              return (
+                <div key={region} className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${regionColors[region]}`} />
+                  <span className="text-slate-400 text-xs">{regionNames[region]} ({count})</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Live Stats */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-12">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-white font-semibold">{dailyDecisions.toLocaleString()}</span>
+            <span className="text-slate-400 text-sm">decisions today</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
+            <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-white font-semibold">12</span>
+            <span className="text-slate-400 text-sm">regulatory feeds</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
+            <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+            <span className="text-white font-semibold">23/33</span>
+            <span className="text-slate-400 text-sm">consensus required</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
+            <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+            <span className="text-slate-400 text-sm">Live network</span>
           </div>
         </div>
       </div>

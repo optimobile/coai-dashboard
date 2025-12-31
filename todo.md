@@ -5803,3 +5803,27 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Create "Apply for Free Certification" CTA
 - [x] Add countdown/limited spots indicator
 - [ ] Track giveaway applications in database
+
+## Phase 13: RLMAI Network Restructure & Course Pricing Update
+
+- [x] Remove SaaS and Traditional companies from RLMAI visualization
+- [x] Keep only 13 AI Safety companies in visualization
+- [x] Add 33 Byzantine Council AI Agents to visualization
+- [x] Add 100 Human AI Analysts to visualization
+- [x] Fix animation visibility issues
+- [x] Update all course pricing to £499/£999/£1,999
+- [x] Update course timing (6/12/16 weeks)
+- [x] Update course FAQs with new structure
+- [x] Ensure all exams align with new pricing ecosystem
+- [ ] Add more courses if needed for each tier
+- [x] Add government regulators/legislation to RLMAI visualization (EU AI Act, UK AISI, US NIST, etc.)
+- [x] Show data flows from regulators feeding into the safety ecosystem
+- [x] Add more AI model providers to the visualization
+
+## Phase 14: Pricing Structure Correction
+- [x] Update CEASAI course pricing to £499/£999/£1,999 tiers
+- [x] Ensure CSOAI Watchdog is clearly FREE
+- [x] Separate free Watchdog from paid CEASAI certification
+- [x] Update all pricing displays from $99-$499 to £499-£1,999
+- [x] Update FAQ with correct pricing structure
+- [x] Verify all course pages show correct GBP pricing

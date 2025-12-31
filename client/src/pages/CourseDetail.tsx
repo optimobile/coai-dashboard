@@ -128,7 +128,7 @@ export default function CourseDetail() {
             </div>
             <div className="text-right">
               {!course.isFree && (
-                <div className="text-4xl font-bold mb-2">${course.pricing.oneTime}</div>
+                <div className="text-4xl font-bold mb-2">£{course.pricing.oneTime}</div>
               )}
               {course.isFree && (
                 <div className="text-2xl font-bold mb-2 text-white/90">FREE</div>
@@ -208,7 +208,7 @@ export default function CourseDetail() {
                       />
                       <div>
                         <p className="font-semibold">One-Time Payment</p>
-                        <p className="text-gray-600 text-sm">${course.pricing.oneTime}</p>
+                        <p className="text-gray-600 text-sm">£{course.pricing.oneTime}</p>
                       </div>
                     </label>
                     
@@ -223,7 +223,7 @@ export default function CourseDetail() {
                         />
                         <div>
                           <p className="font-semibold">3-Month Plan</p>
-                          <p className="text-gray-600 text-sm">${course.pricing.threeMonth}/month</p>
+                          <p className="text-gray-600 text-sm">£{course.pricing.threeMonth}/month</p>
                         </div>
                       </label>
                     )}
@@ -239,7 +239,7 @@ export default function CourseDetail() {
                         />
                         <div>
                           <p className="font-semibold">6-Month Plan</p>
-                          <p className="text-gray-600 text-sm">${course.pricing.sixMonth}/month</p>
+                          <p className="text-gray-600 text-sm">£{course.pricing.sixMonth}/month</p>
                         </div>
                       </label>
                     )}
@@ -255,7 +255,7 @@ export default function CourseDetail() {
                         />
                         <div>
                           <p className="font-semibold">12-Month Plan</p>
-                          <p className="text-gray-600 text-sm">${course.pricing.twelveMonth}/month</p>
+                          <p className="text-gray-600 text-sm">£{course.pricing.twelveMonth}/month</p>
                         </div>
                       </label>
                     )}

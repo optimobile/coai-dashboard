@@ -217,11 +217,11 @@ function CourseCard({ course }: { course: any }) {
 
   const formatPrice = (cents: number | null | undefined) => {
     if (!cents) return "N/A";
-    return `$${(cents / 100).toFixed(2)}`;
+    return `£${(cents / 100).toFixed(2)}`;
   };
 
   const calculateMonthlyPayment = (totalCents: number, months: number) => {
-    return `$${((totalCents / months) / 100).toFixed(2)}/mo`;
+    return `£${((totalCents / months) / 100).toFixed(2)}/mo`;
   };
 
   const getLevelColor = (level: string) => {
@@ -354,7 +354,7 @@ function CourseCard({ course }: { course: any }) {
 function BundleCard({ bundle }: { bundle: any }) {
   const formatPrice = (cents: number | null | undefined) => {
     if (!cents) return "N/A";
-    return `$${(cents / 100).toFixed(2)}`;
+    return `£${(cents / 100).toFixed(2)}`;
   };
 
   return (

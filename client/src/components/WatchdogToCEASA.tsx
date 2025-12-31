@@ -288,7 +288,7 @@ export function WatchdogToCEASAFunnel({ userStep = 1, onProgress }: ConversionFu
             <CardContent className="space-y-4">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Investment</p>
-                <p className="text-2xl font-bold">$1,499</p>
+                <p className="text-2xl font-bold">£1,999</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">Salary Increase (Avg)</p>

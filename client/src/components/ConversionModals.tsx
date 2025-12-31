@@ -61,14 +61,14 @@ export function ConversionModals({ isOpen, onClose, type }: ConversionModalsProp
       case 'loi':
         return {
           title: 'Get Free Course + Early Access',
-          description: 'Join 10,000+ early adopters. First 10,000 get free $499 CEASAI course.',
+          description: 'Join 10,000+ early adopters. First 10,000 get free £499 CEASAI course.',
           fields: ['name', 'email', 'phone'],
           buttonText: 'Claim Free Course',
         };
       case 'course':
         return {
           title: 'Enroll in CEASAI Training',
-          description: '8-week professional certification in AI Safety. $99-$499.',
+          description: '8-week professional certification in AI Safety. £499-£1,999.',
           fields: ['name', 'email', 'phone', 'role'],
           buttonText: 'Start Training',
         };

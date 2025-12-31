@@ -36,6 +36,11 @@ import { trpc } from "@/lib/trpc";
 
 const benefits = [
   {
+    icon: Award,
+    title: "100% FREE Training",
+    description: "Complete Watchdog Analyst certification at no cost. CSOAI training is always free.",
+  },
+  {
     icon: Home,
     title: "Work From Home",
     description: "100% remote work. Audit AI systems from anywhere in the world.",
@@ -49,11 +54,6 @@ const benefits = [
     icon: DollarSign,
     title: "Competitive Pay",
     description: "Earn money while making AI safer for everyone.",
-  },
-  {
-    icon: Award,
-    title: "No Tech Background Required",
-    description: "We provide full training. Critical thinking is what matters.",
   },
 ];
 
@@ -153,6 +153,11 @@ export default function WatchdogSignup() {
               Are you worried about AI safety? Earn money while protecting humanity.
               Work from home, set your own hours, and make a real difference.
             </p>
+
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-semibold mb-6">
+              <CheckCircle className="h-5 w-5" />
+              <span>100% FREE Training & Certification</span>
+            </div>
 
             {/* LOI Counter */}
             <div className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-card border border-border mb-8">

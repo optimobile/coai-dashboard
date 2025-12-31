@@ -48,7 +48,7 @@ const programTiers: ProgramTier[] = [
     duration: '6 weeks',
     modules: 10,
     questions: 100,
-    price: 299,
+    price: 499,
     features: [
       'EU AI Act essentials',
       'Risk classification',
@@ -74,7 +74,7 @@ const programTiers: ProgramTier[] = [
     duration: '12 weeks',
     modules: 20,
     questions: 200,
-    price: 799,
+    price: 999,
     features: [
       'All Fundamentals content',
       'Advanced risk assessment',
@@ -106,7 +106,7 @@ const programTiers: ProgramTier[] = [
     duration: '16 weeks',
     modules: 30,
     questions: 300,
-    price: 1499,
+    price: 1999,
     features: [
       'All Professional content',
       'Advanced regulatory procedures',
@@ -173,7 +173,7 @@ function ProgramTierCard({ tier, isPopular, onSelect }: TierCardProps) {
           <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-4">
             <p className="text-gray-600 text-sm mb-1">Starting at</p>
             <p className="text-3xl font-bold">
-              ${tier.price}
+              £{tier.price}
               <span className="text-lg text-gray-600 font-normal">/program</span>
             </p>
           </div>
