@@ -10,9 +10,9 @@
  * - Australia AI Governance
  * 
  * Each framework has 3 tiers:
- * - Fundamentals: $99
- * - Professional: $199
- * - Expert: $499
+ * - Fundamentals: £499
+ * - Professional: £999
+ * - Expert: £1,999
  */
 
 import { z } from "zod";
@@ -70,9 +70,9 @@ const FRAMEWORKS = [
 ];
 
 const TIERS = [
-  { id: "fundamentals", name: "Fundamentals", price: 49900, description: "Essential concepts and basics" },
-  { id: "professional", name: "Professional", price: 99900, description: "In-depth knowledge and applications" },
-  { id: "expert", name: "Expert", price: 199900, description: "Advanced topics and certifications" },
+  { id: "fundamentals", name: "Fundamentals", price: 49900, description: "Essential AI safety concepts and compliance basics" },
+  { id: "professional", name: "Professional", price: 99900, description: "Advanced compliance frameworks and practical applications" },
+  { id: "expert", name: "Expert", price: 199900, description: "Expert-level certification with full framework mastery" },
 ];
 
 export const stripeProductsRouter = router({

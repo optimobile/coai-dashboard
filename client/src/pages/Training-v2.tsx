@@ -7,6 +7,7 @@ import { Link } from "wouter";
 import { BookOpen, Clock, CheckCircle, Award, TrendingUp, Shield, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FAQ, trainingFAQs } from "@/components/FAQ";
 
 export default function TrainingV2() {
   return (
@@ -30,9 +31,9 @@ export default function TrainingV2() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/courses">
+              <Link href="/courses?filter=free">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold">
-                  Start Training Now
+                  Start Free Training
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -312,6 +313,14 @@ export default function TrainingV2() {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQ 
+        title="Training FAQ"
+        subtitle="Common questions about our AI safety training program"
+        items={trainingFAQs}
+        className="bg-gray-50"
+      />
 
       {/* Next Steps */}
       <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 text-white">

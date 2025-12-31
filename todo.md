@@ -5955,9 +5955,45 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Research top 3 LinkedIn contacts per country (AI/regulatory leaders)
 - [x] Research top 10 government/regulatory contacts per country
 - [x] Create timezone-specific launch schedule for New Year
-- [ ] Set up scheduled tasks for global outreach automation
-- [ ] Prepare LinkedIn outreach templates
-- [ ] Prepare email campaign templates
-- [ ] Enterprise outreach to top 100 AI companies
-- [ ] Influencer partnership request templates
+- [x] Set up scheduled tasks for global outreach automation
+- [x] Prepare LinkedIn outreach templates
+- [x] Prepare email campaign templates
+- [x] Enterprise outreach to top 100 AI companies
+- [x] Influencer partnership request templates
 
+
+
+## Phase 26 - Critical Bug Fixes (Dec 31, 2024)
+
+### Course & Pricing Issues
+- [x] Update course pricing to £499/£999/£1999 (remove old £99/£149/£199)
+- [x] Fix free courses button to filter and show ONLY free courses
+- [x] Fix paid courses to show paid courses first, not free ones
+- [x] Fix monthly payment calculations to match one-time prices correctly
+- [x] Fix exam question counts (50 questions for capstone exam)
+- [x] Make CEASAI Watchdog Analyst Certification secondary focus
+- [x] Primary focus on £499, £999, £1999 courses
+
+### User Flow Issues
+- [x] Fix login redirect - should go to dashboard, not homepage
+- [x] Fix "Start Free Training" button to show free courses
+- [x] Fix course filtering and sorting
+
+### Content Issues
+- [x] Add FAQs to all major pages (Training, Pricing)
+- [x] Improve content and messaging clarity
+- [x] Fill content gaps on pages
+- [x] Proofread all pages
+
+### Platform Accounts
+- [x] Create content for top 100 platforms (ProductHunt, etc.) - ready to post
+- [x] Create social media content with branding - ready to post
+- [x] 10 posts prepared for each social media platform
+
+
+
+## Phase 27 - Bug Fixes (Dec 31, 2024)
+
+### Watchdog Incident Page Errors
+- [x] Fix TypeError: Cannot read properties of undefined (reading 'charAt')
+- [x] Fix nested anchor tag error (<a> cannot contain nested <a>)

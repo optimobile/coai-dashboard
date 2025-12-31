@@ -3,7 +3,8 @@
  * Browse regional AI compliance courses with flexible payment plans
  */
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useLocation, useSearch } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -21,9 +22,21 @@ import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 
 export default function Courses() {
+  const searchString = useSearch();
+  const urlParams = useMemo(() => new URLSearchParams(searchString), [searchString]);
+  const filterParam = urlParams.get('filter');
+  
   const [selectedRegion, setSelectedRegion] = useState<number | undefined>();
   const [selectedLevel, setSelectedLevel] = useState<"fundamentals" | "advanced" | "specialist" | undefined>();
   const [selectedFramework, setSelectedFramework] = useState<string | undefined>();
+  const [priceFilter, setPriceFilter] = useState<"all" | "free" | "paid">(filterParam === "free" ? "free" : filterParam === "paid" ? "paid" : "all");
+  
+  // Update filter when URL changes
+  useEffect(() => {
+    if (filterParam === "free") setPriceFilter("free");
+    else if (filterParam === "paid") setPriceFilter("paid");
+    else setPriceFilter("all");
+  }, [filterParam]);
 
   // Fetch regions
   const { data: regions = [] } = trpc.courses.getRegions.useQuery();
@@ -78,7 +91,7 @@ export default function Courses() {
         {/* Filters */}
         <Card className="p-6 shadow-lg">
           <h2 className="text-lg font-semibold mb-4">Filter Courses</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Region</label>
               <Select
@@ -134,6 +147,23 @@ export default function Courses() {
                 </SelectContent>
               </Select>
             </div>
+
+            <div>
+              <label className="text-sm font-medium mb-2 block">Price</label>
+              <Select
+                value={priceFilter}
+                onValueChange={(value: "all" | "free" | "paid") => setPriceFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All Prices" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Courses</SelectItem>
+                  <SelectItem value="free">Free Courses</SelectItem>
+                  <SelectItem value="paid">Paid Courses (£499-£1,999)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </Card>
 
@@ -159,9 +189,23 @@ export default function Courses() {
               </Card>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {courses.map((course: any) => (
-                  <CourseCard key={course.id} course={course} />
-                ))}
+                {courses
+                  .filter((course: any) => {
+                    if (priceFilter === "free") return course.isFree || course.price === 0 || course.price === null;
+                    if (priceFilter === "paid") return !course.isFree && course.price > 0;
+                    return true;
+                  })
+                  .sort((a: any, b: any) => {
+                    // If filtering paid, show paid first (higher price first)
+                    if (priceFilter === "paid") return (b.price || 0) - (a.price || 0);
+                    // If filtering free, show free first
+                    if (priceFilter === "free") return (a.price || 0) - (b.price || 0);
+                    // Default: show paid courses first
+                    return (b.price || 0) - (a.price || 0);
+                  })
+                  .map((course: any) => (
+                    <CourseCard key={course.id} course={course} />
+                  ))}
               </div>
             )}
           </TabsContent>
@@ -220,9 +264,14 @@ function CourseCard({ course }: { course: any }) {
     return `£${(cents / 100).toFixed(2)}`;
   };
 
-  const calculateMonthlyPayment = (totalCents: number, months: number) => {
-    return `£${((totalCents / months) / 100).toFixed(2)}/mo`;
+  // Calculate monthly payment - the total should equal the one-time price
+  const calculateMonthlyPayment = (oneTimeCents: number, months: number) => {
+    // Monthly payment = one-time price / number of months
+    return `£${((oneTimeCents / months) / 100).toFixed(2)}/mo`;
   };
+  
+  // Get the one-time price for calculating monthly payments
+  const oneTimePrice = course.pricing?.oneTime || 0;
 
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -281,7 +330,7 @@ function CourseCard({ course }: { course: any }) {
             <div className="text-xs text-green-600 font-medium">Best Value</div>
           </button>
 
-          {course.pricing.threeMonth && (
+          {oneTimePrice > 0 && (
             <button
               onClick={() => setSelectedPlan("threeMonth")}
               className={`p-3 rounded-lg border-2 transition-all ${
@@ -292,15 +341,15 @@ function CourseCard({ course }: { course: any }) {
             >
               <div className="text-xs text-muted-foreground mb-1">3 Months</div>
               <div className="font-bold text-lg">
-                {calculateMonthlyPayment(course.pricing.threeMonth, 3)}
+                {calculateMonthlyPayment(oneTimePrice, 3)}
               </div>
               <div className="text-xs text-muted-foreground">
-                {formatPrice(course.pricing.threeMonth)} total
+                {formatPrice(oneTimePrice)} total
               </div>
             </button>
           )}
 
-          {course.pricing.sixMonth && (
+          {oneTimePrice > 0 && (
             <button
               onClick={() => setSelectedPlan("sixMonth")}
               className={`p-3 rounded-lg border-2 transition-all ${
@@ -311,15 +360,15 @@ function CourseCard({ course }: { course: any }) {
             >
               <div className="text-xs text-muted-foreground mb-1">6 Months</div>
               <div className="font-bold text-lg">
-                {calculateMonthlyPayment(course.pricing.sixMonth, 6)}
+                {calculateMonthlyPayment(oneTimePrice, 6)}
               </div>
               <div className="text-xs text-muted-foreground">
-                {formatPrice(course.pricing.sixMonth)} total
+                {formatPrice(oneTimePrice)} total
               </div>
             </button>
           )}
 
-          {course.pricing.twelveMonth && (
+          {oneTimePrice > 0 && (
             <button
               onClick={() => setSelectedPlan("twelveMonth")}
               className={`p-3 rounded-lg border-2 transition-all ${
@@ -330,10 +379,10 @@ function CourseCard({ course }: { course: any }) {
             >
               <div className="text-xs text-muted-foreground mb-1">12 Months</div>
               <div className="font-bold text-lg">
-                {calculateMonthlyPayment(course.pricing.twelveMonth, 12)}
+                {calculateMonthlyPayment(oneTimePrice, 12)}
               </div>
               <div className="text-xs text-muted-foreground">
-                {formatPrice(course.pricing.twelveMonth)} total
+                {formatPrice(oneTimePrice)} total
               </div>
             </button>
           )}

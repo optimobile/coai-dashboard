@@ -165,28 +165,36 @@ const FEATURE_CATEGORIES = [
 
 const FAQ = [
   {
-    question: 'What happens when I exceed my plan limits?',
-    answer: 'You\'ll receive a notification when approaching limits. You can upgrade anytime, or we\'ll pause new registrations until the next billing cycle.',
+    question: 'What\'s included in each pricing tier?',
+    answer: 'Pro (£39/month) includes unlimited training access, basic compliance tools, and email support. Enterprise (£159/month) adds API access, team management, custom reports, and dedicated support. Both tiers include access to our job board and community forums.',
   },
   {
-    question: 'Can I switch plans at any time?',
-    answer: 'Yes! Upgrades take effect immediately with prorated billing. Downgrades take effect at the next billing cycle.',
+    question: 'Can I cancel my subscription anytime?',
+    answer: 'Yes, you can cancel your subscription at any time. Your access continues until the end of your current billing period. There are no cancellation fees or long-term commitments. If you cancel, you keep access to any certificates you\'ve earned.',
   },
   {
-    question: 'Is there a free trial for paid plans?',
-    answer: 'Yes, Pro plans include a 14-day free trial. Enterprise customers can request a custom pilot program.',
+    question: 'Do you offer discounts for teams or enterprises?',
+    answer: 'Yes! We offer volume discounts for teams of 5+ members. Enterprise customers with 50+ users receive custom pricing and dedicated account management. Contact our sales team for a custom quote tailored to your organization\'s needs.',
+  },
+  {
+    question: 'Is there a free trial?',
+    answer: 'We offer free foundation training that gives you a comprehensive introduction to AI safety. This lets you experience our platform before committing to a paid plan. Additionally, Pro subscribers get a 14-day money-back guarantee if they\'re not satisfied.',
+  },
+  {
+    question: 'What payment methods do you accept?',
+    answer: 'We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers for enterprise customers. All payments are processed securely through Stripe. We also support invoicing for enterprise accounts.',
   },
   {
     question: 'What compliance frameworks are supported?',
-    answer: 'We support EU AI Act, NIST AI RMF, and TC260 standards. Additional frameworks are added based on customer demand.',
+    answer: 'We support all major AI governance frameworks including the EU AI Act, NIST AI RMF, ISO/IEC 42001, China\'s TC260, UK AI Bill, Canada\'s AIDA, and Australia\'s AI governance framework. Our platform helps you track compliance across multiple frameworks simultaneously.',
   },
   {
     question: 'How does the 33-Agent Council work?',
-    answer: 'Our AI council evaluates safety scenarios using 33 specialized agents representing different stakeholder perspectives. Results inform compliance recommendations.',
+    answer: 'Our AI council evaluates safety scenarios using 33 specialized agents representing different stakeholder perspectives (regulators, ethicists, engineers, affected communities, etc.). Using Byzantine fault-tolerant consensus, they provide balanced recommendations that inform compliance decisions.',
   },
   {
     question: 'Can I get a custom enterprise quote?',
-    answer: 'Absolutely! Contact our sales team for custom pricing based on your organization\'s specific needs and scale.',
+    answer: 'Absolutely! Enterprise plans include unlimited users, custom integrations, dedicated account management, SLA guarantees, on-premise deployment options, and white-label reporting. Contact our sales team for pricing customized to your organization\'s size and needs.',
   },
 ];
 

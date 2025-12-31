@@ -238,9 +238,9 @@ export default function WatchdogIncidentReportPage() {
                 <p className="text-sm text-gray-700">
                   Help review and investigate AI safety incidents. Get paid $45-150/hour.
                 </p>
-                <Link href="/watchdog">
-                  <Button className="w-full" variant="outline">
-                    Learn More
+                <Link href="/watchdog" className="block w-full">
+                  <Button className="w-full" variant="outline" asChild>
+                    <span>Learn More</span>
                   </Button>
                 </Link>
               </CardContent>
@@ -258,9 +258,9 @@ export default function WatchdogIncidentReportPage() {
                 <p className="text-sm text-gray-700">
                   Sign in to view detailed reports, search by framework, and track incident trends.
                 </p>
-                <Link href="/login">
-                  <Button className="w-full" size="sm">
-                    Sign In
+                <Link href="/login" className="block w-full">
+                  <Button className="w-full" size="sm" asChild>
+                    <span>Sign In</span>
                   </Button>
                 </Link>
               </CardContent>
@@ -298,7 +298,7 @@ export default function WatchdogIncidentReportPage() {
                           )}
                           <div className="flex items-center gap-1">
                             <TrendingUp className="w-3 h-3" />
-                            {report.riskLevel.charAt(0).toUpperCase() + report.riskLevel.slice(1)} Risk
+                            {report.riskLevel ? report.riskLevel.charAt(0).toUpperCase() + report.riskLevel.slice(1) : 'Unknown'} Risk
                           </div>
                         </div>
                       </div>
@@ -317,9 +317,9 @@ export default function WatchdogIncidentReportPage() {
 
           {/* View More Button */}
           <div className="text-center mt-8">
-            <Link href="/login">
-              <Button size="lg" variant="outline">
-                Sign In to View More Reports
+            <Link href="/login" className="inline-block">
+              <Button size="lg" variant="outline" asChild>
+                <span>Sign In to View More Reports</span>
               </Button>
             </Link>
           </div>

@@ -46,8 +46,8 @@ export function Header() {
       href: '/training',
       submenu: [
         { name: 'How It Works', href: '/how-it-works/training', description: 'Training pipeline' },
-        { name: 'Free Courses', href: '/training', description: 'Foundation courses (no payment)' },
-        { name: 'Paid Courses', href: '/ceasai-training', description: 'CEASAI professional certification' },
+        { name: 'Free Courses', href: '/courses?filter=free', description: 'Foundation courses (no payment)' },
+        { name: 'Paid Courses', href: '/courses?filter=paid', description: 'Professional certification (£499-£1,999)' },
         { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses' },
       ]
     },

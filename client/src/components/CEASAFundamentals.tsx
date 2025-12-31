@@ -202,11 +202,11 @@ const ceasaModules: CEASAModule[] = [
     lessons: 1,
     euAiActArticles: ['All Articles'],
     complianceRequirements: [
-      'Pass 100-question exam (70% required)',
+      'Pass 50-question exam (70% required)',
       'Demonstrate comprehensive knowledge',
       'Receive CEASA certificate',
     ],
-    examQuestions: 100,
+    examQuestions: 50,
     realWorldCaseStudies: ['Multi-scenario compliance assessment'],
     completed: false,
   },
