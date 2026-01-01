@@ -94,6 +94,46 @@ export default function MembersDashboard() {
         side: 'bottom' as const,
       },
     },
+    {
+      element: '[href="/ai-systems"]',
+      popover: {
+        title: 'Register AI Systems',
+        description: 'Start by registering your AI systems. Click here to add new systems, specify their type (ML, NLP, Computer Vision, etc.), and assign risk levels according to regulatory frameworks.',
+        side: 'right' as const,
+      },
+    },
+    {
+      element: '[href="/compliance"]',
+      popover: {
+        title: 'Run Compliance Assessments',
+        description: 'Evaluate your AI systems against multiple frameworks (EU AI Act, NIST RMF, TC260). Run assessments to identify gaps and track your compliance progress over time.',
+        side: 'right' as const,
+      },
+    },
+    {
+      element: '[href="/watchdog"]',
+      popover: {
+        title: 'Submit Watchdog Reports',
+        description: 'Report AI safety incidents to the public Watchdog database. Your submissions help build transparency and improve AI safety across the industry. Reports are reviewed by the 33-Agent Council.',
+        side: 'right' as const,
+      },
+    },
+    {
+      element: '[href="/pdca-cycles"]',
+      popover: {
+        title: 'PDCA Cycle Management',
+        description: 'Implement continuous improvement with Plan-Do-Check-Act cycles. Track your AI governance workflows from planning through execution and review.',
+        side: 'right' as const,
+      },
+    },
+    {
+      element: '[href="/agent-council"]',
+      popover: {
+        title: '33-Agent Council',
+        description: 'View real-time voting sessions where 33 AI agents evaluate Watchdog reports and provide safety recommendations. This democratic system ensures balanced AI governance.',
+        side: 'right' as const,
+      },
+    },
   ];
 
   const handleViewIncident = (id: number) => {

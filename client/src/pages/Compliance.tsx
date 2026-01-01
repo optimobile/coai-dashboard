@@ -16,6 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { ComplianceSkeleton } from "@/components/skeletons/ComplianceSkeleton";
 import {
   Dialog,
   DialogContent,
@@ -200,8 +201,8 @@ export default function Compliance() {
   if (frameworksLoading) {
     return (
       <DashboardLayout>
-        <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="p-6">
+          <ComplianceSkeleton />
         </div>
       </DashboardLayout>
     );

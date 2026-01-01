@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
+import { CouncilSkeleton } from "@/components/skeletons/CouncilSkeleton";
 
 const agentGroups = [
   {
@@ -128,6 +129,16 @@ export default function AgentCouncil() {
       refetch();
     }, 2000);
   };
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="p-6">
+          <CouncilSkeleton />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>

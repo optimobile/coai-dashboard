@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { BookOpen, Clock, Award, Download, Calendar, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
+import { TrainingSkeleton } from "@/components/skeletons/TrainingSkeleton";
 import { formatDistanceToNow } from "date-fns";
 
 export default function MyCourses() {
@@ -65,8 +66,8 @@ export default function MyCourses() {
   if (isLoading) {
     return (
       <DashboardLayout>
-        <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="p-8">
+          <TrainingSkeleton />
         </div>
       </DashboardLayout>
     );

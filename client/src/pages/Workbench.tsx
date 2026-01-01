@@ -42,6 +42,7 @@ import {
 import { useLocation } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
+import { WorkbenchSkeleton } from "@/components/skeletons/WorkbenchSkeleton";
 import { toast } from "sonner";
 
 const severityColors: Record<string, string> = {
@@ -109,11 +110,11 @@ export default function Workbench() {
   );
 
   // Loading state
-  if (certsLoading) {
+  if (certsLoading || casesLoading) {
     return (
       <DashboardLayout>
-        <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <div className="p-6">
+          <WorkbenchSkeleton />
         </div>
       </DashboardLayout>
     );
