@@ -114,6 +114,7 @@ export function Header() {
       submenu: [
         { name: 'Main How It Works', href: '/how-it-works', description: 'Complete pipeline' },
         { name: 'About CSOAI', href: '/about', description: 'Our mission' },
+        { name: 'About CEASAI', href: '/about-ceasai', description: 'Training organization' },
         { name: 'FAQ', href: '/faq', description: 'Common questions' },
         { name: 'Government Links', href: '/government-links', description: 'Regulatory resources' },
         { name: 'Regulatory Compliance', href: '/regulatory-compliance', description: 'Compliance guide' },

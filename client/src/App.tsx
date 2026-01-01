@@ -72,6 +72,7 @@ import PublicWatchdogHub from "./pages/PublicWatchdogHub";
 import CouncilDetail from "./pages/CouncilDetail";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
+import AboutCEASAI from "./pages/AboutCEASAI";
 import HowItWorks from "./pages/HowItWorks";
 import FAQ from "./pages/FAQ";
 import CEASAITraining from "./pages/CEASAITraining";
@@ -182,6 +183,7 @@ function App() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/global-ai-safety-initiative" component={GlobalAISafetyInitiative} />
                   <Route path="/about" component={About} />
+                  <Route path="/about-ceasai" component={AboutCEASAI} />
                   <Route path="/how-it-works" component={HowItWorks} />
                   <Route path="/how-it-works/dashboard" component={DashboardHowItWorks} />
                   <Route path="/how-it-works/training" component={TrainingHowItWorks} />
