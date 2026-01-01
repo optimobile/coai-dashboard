@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { IncidentReportForm } from '@/components/IncidentReportForm';
+import { Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -813,6 +815,30 @@ export default function HomepageMaster() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          SECTION 7.5: INCIDENT REPORTING
+          ============================================ */}
+      <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Activity className="w-10 h-10 text-orange-500" />
+              <h2 className="text-4xl font-bold text-gray-900">Platform Status & Incident Reporting</h2>
+            </div>
+            <p className="text-xl text-gray-600 mb-4">
+              Experiencing issues with the platform? Help us maintain 99.9% uptime by reporting incidents.
+            </p>
+            <a href="/status" className="text-emerald-600 hover:underline font-semibold">
+              View Live System Status →
+            </a>
+          </motion.div>
+
+          <motion.div {...fadeInUp}>
+            <IncidentReportForm />
+          </motion.div>
         </div>
       </section>
 

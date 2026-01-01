@@ -61,6 +61,7 @@ import { watchdogIncidentsRouter } from "./routers/watchdogIncidents";
 import { newsletterRouter } from "./routers/newsletter";
 import { emailAuthRouter } from "./routers/emailAuth";
 import { stripeSetupRouter } from "./routers/stripeSetup";
+import { statusRouter } from "./routers/status";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2835,6 +2836,7 @@ export const appRouter = router({
   watchdogIncidents: watchdogIncidentsRouter,
   newsletter: newsletterRouter,
   stripeSetup: stripeSetupRouter,
+  status: statusRouter,
 });
 
 export type AppRouter = typeof appRouter;

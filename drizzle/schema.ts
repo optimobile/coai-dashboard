@@ -1,6 +1,9 @@
 import { mysqlTable, mysqlSchema, AnyMySqlColumn, int, varchar, mysqlEnum, decimal, text, timestamp, json, index, bigint, boolean } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm"
 
+// Import status monitoring tables
+export * from './schema-status';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),
