@@ -35,7 +35,7 @@ export default function PrivacyPolicy() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
               <p className="text-gray-600 mb-4">
-                CSOAI ("we," "our," or "us") is a Community Interest Company (CIC) and independent Standards Body committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services, including our CEASAI certification program, training courses, and Watchdog incident reporting platform.
+                CSOAI ("we," "our," or "us") platform and services are operated by CEASAI Limited (Company Number: [PENDING]), a UK-registered company committed to protecting your privacy. CSOAI standards and frameworks are maintained as an independent Standards Body. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services, including our CEASAI certification program, training courses, and Watchdog incident reporting platform.
               </p>
             </div>
 

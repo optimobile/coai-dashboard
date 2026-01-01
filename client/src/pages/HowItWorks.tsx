@@ -81,7 +81,7 @@ export default function HowItWorks() {
             </h2>
             <div className="prose prose-lg max-w-none text-gray-600 mb-8">
               <p className="text-lg leading-relaxed">
-                <strong>CSOAI (Council for the Safety of AI)</strong> is a Community Interest Company (CIC) and independent standards body registered in the United Kingdom. We are not a software company or a consulting firm—we are a <strong>regulatory body</strong> that provides the infrastructure for AI safety oversight.
+                <strong>CSOAI (Council for the Safety of AI)</strong> is operated by CEASAI Limited (Company Number: [PENDING]), a UK-registered company, as an independent standards body. We are not a software company or a consulting firm—we are a <strong>regulatory body</strong> that provides the infrastructure for AI safety oversight.
               </p>
               <p className="text-lg leading-relaxed mt-4">
                 Just as the FAA ensures aviation safety and the FDA ensures drug safety, CSOAI ensures AI safety. We develop standards, certify professionals, monitor compliance, and provide transparent oversight of AI systems across industries.
@@ -288,7 +288,7 @@ export default function HowItWorks() {
             <div className="space-y-4">
               <Card className="p-6 border border-gray-200">
                 <h3 className="font-bold text-gray-900 mb-2">Is CSOAI a government agency?</h3>
-                <p className="text-gray-600">No. CSOAI is an independent Community Interest Company (CIC)—a type of non-profit in the UK. We work with governments but are not part of any government. Our independence ensures impartiality.</p>
+                <p className="text-gray-600">No. CSOAI is operated by CEASAI Limited, an independent UK company. We work with governments but are not part of any government. Our independence ensures impartiality.</p>
               </Card>
               
               <Card className="p-6 border border-gray-200">

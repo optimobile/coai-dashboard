@@ -158,7 +158,7 @@ export async function sendWelcomeEmail(
     
     <div class="footer">
       <p><strong>CSOAI - Council of AIs</strong></p>
-      <p>Community Interest Company (CIC) | Independent Standards Body</p>
+      <p>Operated by CEASAI Limited (Company Number: [PENDING]) | Independent Standards Body</p>
       <p>
         <a href="${FRONTEND_URL}/dashboard">Dashboard</a> • 
         <a href="${FRONTEND_URL}/training">Training</a> • 
@@ -406,7 +406,7 @@ export async function sendCertificationEmail(
     
     <div class="footer">
       <p><strong>CSOAI - Council of AIs</strong></p>
-      <p>Community Interest Company (CIC) | Independent Standards Body</p>
+      <p>Operated by CEASAI Limited (Company Number: [PENDING]) | Independent Standards Body</p>
       <p>
         <a href="${FRONTEND_URL}/workbench">Analyst Workbench</a> • 
         <a href="${FRONTEND_URL}/certificates">My Certificates</a> • 
@@ -645,7 +645,7 @@ export async function sendPaymentConfirmationEmail(
     
     <div class="footer">
       <p><strong>CSOAI - Council of AIs</strong></p>
-      <p>Community Interest Company (CIC) | Independent Standards Body</p>
+      <p>Operated by CEASAI Limited (Company Number: [PENDING]) | Independent Standards Body</p>
       <p>
         <a href="${FRONTEND_URL}/dashboard">Dashboard</a> • 
         <a href="${FRONTEND_URL}/settings/billing">Billing Settings</a> • 
@@ -817,7 +817,7 @@ export async function sendPasswordResetEmail(
     
     <div class="footer">
       <p><strong>CSOAI - Council of AIs</strong></p>
-      <p>Community Interest Company (CIC) | Independent Standards Body</p>
+      <p>Operated by CEASAI Limited (Company Number: [PENDING]) | Independent Standards Body</p>
       <p>
         <a href="${FRONTEND_URL}/login">Sign In</a> • 
         <a href="${FRONTEND_URL}/knowledge-base">Help Center</a> • 

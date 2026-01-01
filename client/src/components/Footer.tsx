@@ -186,7 +186,7 @@ export function Footer() {
               CSOAI Legal Structure
             </h4>
             <p className="text-gray-600 text-xs">
-              CSOAI is a Community Interest Company (CIC) and independent Standards Body registered in the United Kingdom. We are dedicated to advancing AI safety through independent training, certification, and transparent oversight. We maintain strict independence from all commercial AI vendors and technology companies. Our mission is to serve the public interest by developing and promoting best practices in AI safety and compliance.
+              This platform is operated by CEASAI Limited (Company Number: [PENDING]), a UK-registered company. CSOAI standards and frameworks are maintained as an independent Standards Body. We are dedicated to advancing AI safety through independent training, certification, and transparent oversight. We maintain strict independence from all commercial AI vendors and technology companies. Our mission is to serve the public interest by developing and promoting best practices in AI safety and compliance.
             </p>
           </div>
           <div>

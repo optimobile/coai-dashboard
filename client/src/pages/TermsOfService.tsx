@@ -35,14 +35,14 @@ export default function TermsOfService() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Agreement to Terms</h2>
               <p className="text-gray-600 mb-4">
-                By accessing and using CSOAI's website and services, you accept and agree to be bound by the terms and provisions of this agreement. CSOAI is a Community Interest Company (CIC) and Standards Body dedicated to advancing AI safety through independent training, certification, and transparent oversight. If you do not agree to abide by these terms, please do not use this service.
+                By accessing and using CSOAI's website and services, you accept and agree to be bound by the terms and provisions of this agreement. This platform is operated by CEASAI Limited, a UK-registered company providing AI safety training, certification, and compliance services. CSOAI standards and frameworks are maintained as an independent Standards Body. If you do not agree to abide by these terms, please do not use this service.
               </p>
             </div>
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">2. About CSOAI</h2>
               <p className="text-gray-600 mb-4">
-                CSOAI (Community Standards Organization for AI) operates as a Community Interest Company (CIC) and independent Standards Body. We are committed to serving the public interest by developing, maintaining, and promoting best practices in AI safety, compliance, and governance. CSOAI maintains strict independence from all commercial AI vendors and technology companies. Our mission is to ensure that AI systems are developed and deployed safely, ethically, and in compliance with applicable regulations.
+                CSOAI (Community Standards Organization for AI) standards and frameworks are maintained as an independent Standards Body. This platform and its services are operated by CEASAI Limited (Company Number: [PENDING]), a UK-registered company. We are committed to serving the public interest by developing, maintaining, and promoting best practices in AI safety, compliance, and governance through training, certification, and transparency initiatives. CSOAI maintains strict independence from all commercial AI vendors and technology companies. Our mission is to ensure that AI systems are developed and deployed safely, ethically, and in compliance with applicable regulations.
               </p>
             </div>
 
@@ -127,7 +127,7 @@ export default function TermsOfService() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Governing Law and Jurisdiction</h2>
               <p className="text-gray-600 mb-4">
-                These terms and conditions are governed by and construed in accordance with the laws of the United Kingdom (as CSOAI is a UK-registered Community Interest Company), and you irrevocably submit to the exclusive jurisdiction of the courts in that location. However, CSOAI complies with all applicable international regulations including GDPR, CCPA, and other data protection laws.
+                These terms and conditions are governed by and construed in accordance with the laws of the United Kingdom (as this platform is operated by CEASAI Limited, a UK-registered company), and you irrevocably submit to the exclusive jurisdiction of the courts in that location. However, we comply with all applicable international regulations including GDPR, CCPA, and other data protection laws.
               </p>
             </div>
 

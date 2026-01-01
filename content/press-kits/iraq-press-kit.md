@@ -62,7 +62,7 @@ Capacity Building (£100K)
 
 ## About CSOAI
 
-The Council of Safe AI (CSOAI) is a UK-based Community Interest Company dedicated to making AI safety accessible globally. Our mission is to train 500,250 AI Safety Analysts worldwide through our £1 billion training giveaway program.
+The Council of Safe AI (CSOAI) is a UK-based company dedicated to making AI safety accessible globally. Our mission is to train 500,250 AI Safety Analysts worldwide through our £1 billion training giveaway program.
 
 ### Key Statistics
 - 118 countries currently lack AI governance frameworks
