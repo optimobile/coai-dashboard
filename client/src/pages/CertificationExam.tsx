@@ -82,7 +82,7 @@ export default function CertificationExam() {
     answers: {},
     flaggedQuestions: new Set(),
     startTime: null,
-    timeRemaining: 60 * 60, // 60 minutes default
+    timeRemaining: 90 * 60, // 90 minutes default
   });
 
   // Fetch test data

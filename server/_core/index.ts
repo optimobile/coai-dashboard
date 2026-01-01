@@ -10,6 +10,7 @@ import { serveStatic, setupVite } from "./vite";
 import { handleStripeWebhook } from "../stripe/webhookHandler";
 import { generatePDCATemplate } from "../utils/pdcaTemplateGenerator";
 import watchdogApiRouter from "../routes/watchdog-api";
+import { startHealthMonitoring } from "../services/healthMonitoring";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -102,6 +103,9 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    
+    // Start automated health monitoring
+    startHealthMonitoring();
   });
 }
 

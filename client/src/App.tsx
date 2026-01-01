@@ -52,6 +52,7 @@ import ExamReview from "./pages/ExamReview";
 import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
+import AdminIncidents from "./pages/AdminIncidents";
 import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
@@ -258,6 +259,7 @@ function App() {
                   <Route path="/my-applications" component={MyApplications} />
                   <Route path="/public" component={PublicHome} />
                   <Route path="/admin" component={Admin} />
+                  <Route path="/admin/incidents" component={AdminIncidents} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />
                   <Route path="/admin/enrollment-test" component={EnrollmentTest} />
                   <Route path="/api-docs" component={ApiDocs} />

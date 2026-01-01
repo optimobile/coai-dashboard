@@ -146,7 +146,7 @@ export const certificationTests = mysqlTable("certification_tests", {
 	title: varchar({ length: 255 }).notNull(),
 	description: text(),
 	passingScore: int().default(70).notNull(),
-	timeLimitMinutes: int().default(60).notNull(),
+	timeLimitMinutes: int().default(90).notNull(),
 	totalQuestions: int().default(50).notNull(),
 	isActive: boolean().default(true).notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),

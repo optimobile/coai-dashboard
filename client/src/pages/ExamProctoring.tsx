@@ -47,7 +47,7 @@ export function ExamProctoring() {
     status: 'initializing',
     integrityScore: 100,
     suspiciousEvents: 0,
-    timeRemaining: 3600, // 60 minutes
+    timeRemaining: 5400, // 90 minutes
     cameraActive: false,
     microphoneActive: false,
     screenSharing: false,
@@ -308,7 +308,7 @@ export function ExamProctoring() {
                 <p className="text-4xl font-bold text-emerald-600 font-mono">
                   {formatTime(status.timeRemaining)}
                 </p>
-                <p className="text-sm text-gray-600 mt-2">60 minutes total</p>
+                <p className="text-sm text-gray-600 mt-2">90 minutes total</p>
               </div>
             </CardContent>
           </Card>

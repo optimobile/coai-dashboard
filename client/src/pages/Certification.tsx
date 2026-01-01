@@ -92,7 +92,7 @@ export default function Certification() {
   const [testState, setTestState] = useState<TestState>("intro");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
-  const [timeRemaining, setTimeRemaining] = useState(60 * 60); // 60 minutes
+  const [timeRemaining, setTimeRemaining] = useState(90 * 60); // 90 minutes
   const [score, setScore] = useState<number | null>(null);
   const [passed, setPassed] = useState(false);
 
@@ -215,7 +215,7 @@ export default function Certification() {
                     <p className="text-sm text-muted-foreground">Questions</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold">60</p>
+                    <p className="text-2xl font-bold">90</p>
                     <p className="text-sm text-muted-foreground">Minutes</p>
                   </div>
                   <div className="text-center">

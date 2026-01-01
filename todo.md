@@ -6632,3 +6632,136 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Create historical incident archive page
 - [ ] Add status embed widget for enterprise dashboards
 - [ ] Implement status API for programmatic access
+
+
+## CRITICAL BLOCKERS FROM AUDIT (Kimmy's External Review - Jan 1, 2026)
+
+### Exam Information Inconsistencies
+- [x] Fix exam question count inconsistency (homepage says 50 questions, exam interface says 590 questions)
+- [x] Fix exam duration inconsistency (homepage says 90 minutes, exam interface says 60 minutes)
+- [x] Ensure all pages consistently show: 50 questions, 90 minutes, 70% pass rate
+- [ ] Update exam interface to match the advertised format
+
+### Prerequisite Contradictions
+- [ ] Remove contradictory prerequisite messaging on certification page
+- [ ] Clarify if training is required before exam or if exam can be taken immediately
+- [ ] Update certification page to have consistent messaging about prerequisites
+- [ ] Either enforce training completion before exam OR allow direct exam access (choose one path)
+
+### Branding Inconsistencies
+- [ ] Fix all instances of "COAI" in page titles to use "CSOAI" consistently
+- [ ] Audit all pages for brand name consistency (CSOAI vs COAI)
+- [ ] Update dashboard page title from "COAI" to "CSOAI"
+- [ ] Update certification page title from "COAI" to "CSOAI"
+
+### Pricing and Promotional Clarity
+- [ ] Clarify "free £999 course" vs "50% off" promotional messaging
+- [ ] Ensure pricing tiers are consistent across all pages
+- [ ] Document final pricing structure clearly
+- [ ] Remove any ambiguous pricing language
+
+### Navigation and User Flow
+- [ ] Add more prominent login link in main navigation
+- [ ] Streamline signup to login flow (reduce clicks)
+- [ ] Consider unified signup/login page
+- [ ] Add two-factor authentication (2FA) for enhanced security
+
+## NEW FEATURES - STATUS PAGE NOTIFICATIONS
+
+### Email Notification System
+- [ ] Implement email notifications when incidents are created
+- [ ] Implement email notifications when incidents are updated
+- [ ] Implement email notifications when incidents are resolved
+- [ ] Use existing status_subscriptions table for subscriber management
+- [ ] Integrate with Resend API for email delivery
+- [ ] Create email templates for incident notifications
+- [ ] Include incident details (title, description, status, affected services) in emails
+- [ ] Add unsubscribe functionality in notification emails
+
+## NEW FEATURES - ADMIN INCIDENT MANAGEMENT
+
+### Admin Dashboard for Incidents
+- [ ] Create /admin/incidents page for incident management
+- [ ] Build UI for creating new incidents
+- [ ] Build UI for updating incident status
+- [ ] Build UI for posting incident updates/messages
+- [ ] Build UI for marking incidents as resolved
+- [ ] Add real-time notification triggers when admins update incidents
+- [ ] Implement role-based access control (admin only)
+- [ ] Add incident history/timeline view
+- [ ] Add bulk actions for managing multiple incidents
+
+## NEW FEATURES - AUTOMATED HEALTH CHECKS
+
+### Monitoring System
+- [ ] Set up automated health check system (runs every 5 minutes)
+- [ ] Monitor all critical services defined in services table
+- [ ] Automatically create incidents when services go down
+- [ ] Automatically resolve incidents when services come back up
+- [ ] Implement health check endpoints for each service
+- [ ] Add configurable health check intervals
+- [ ] Add health check failure thresholds before creating incidents
+- [ ] Log all health check results for analytics
+- [ ] Add alerting for repeated health check failures
+
+## PRODUCTION READINESS (From Technical Audit)
+
+### Documentation
+- [ ] Create system architecture documentation
+- [ ] Document scalability plans for 250K analysts and 50K enterprises
+- [ ] Create disaster recovery (DR) plan documentation
+- [ ] Document backup and restoration procedures
+- [ ] Create operational runbooks for common tasks
+- [ ] Document incident response procedures
+
+### Monitoring and Observability
+- [ ] Implement comprehensive platform monitoring
+- [ ] Add application performance monitoring (APM)
+- [ ] Monitor AI-specific metrics (model drift, latency, token usage)
+- [ ] Create internal status dashboard for platform health
+- [ ] Set up alerting for critical system metrics
+
+### Security and Compliance
+- [ ] Pursue ISO/IEC 27001:2022 certification
+- [ ] Pursue SOC 2 Type II certification
+- [ ] Document security audit procedures
+- [ ] Publish security audit summaries
+- [ ] Implement regular vulnerability assessments
+- [ ] Document GDPR, CCPA, UK DPA compliance measures
+
+### High Availability
+- [ ] Document load balancing architecture
+- [ ] Implement failover mechanisms
+- [ ] Define and document RTOs (Recovery Time Objectives)
+- [ ] Define and document RPOs (Recovery Point Objectives)
+- [ ] Test disaster recovery procedures
+
+
+## COMPLETED FIXES - Jan 1, 2026
+
+### Exam Duration Consistency
+- [x] Fixed database schema: timeLimitMinutes changed from 60 to 90
+- [x] Fixed CertificationExam.tsx: default time from 60 to 90 minutes
+- [x] Fixed Certification.tsx: timer and display from 60 to 90 minutes
+- [x] Fixed ExamProctoring.tsx: timer from 60 to 90 minutes
+- [x] All pages now consistently show 50 questions, 90 minutes, 70% pass rate
+
+
+### Admin Incident Management Dashboard
+- [x] Created adminIncidents router with CRUD operations
+- [x] Integrated notification system with incident lifecycle
+- [x] Built AdminIncidents page at /admin/incidents
+- [x] Implemented create incident dialog with service selection
+- [x] Implemented update incident dialog with status changes
+- [x] Added automatic email notifications on create/update/resolve
+- [x] Added route to App.tsx
+
+
+### Automated Health Check Monitoring
+- [x] Created healthMonitoring service with periodic checks every 5 minutes
+- [x] Implemented service health check logic for API, dashboard, database
+- [x] Added automatic incident creation when services go down
+- [x] Added automatic incident resolution when services recover
+- [x] Integrated with notification system for subscriber alerts
+- [x] Initialized health monitoring on server startup
+- [x] Real-time status tracking now fully automated
