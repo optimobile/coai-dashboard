@@ -53,7 +53,7 @@ export default function HomepageMaster() {
           >
             {/* Free Course Giveaway Announcement */}
             <p className="text-sm sm:text-base md:text-lg font-bold text-emerald-700 mb-3">
-              🎁 We are giving away one million pounds worth of free courses to help
+              🎁 First 1,000 signups get 3 foundation courses FREE (£999 value)
             </p>
             
             <p className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 mb-2 sm:mb-3">
@@ -68,7 +68,7 @@ export default function HomepageMaster() {
                 size="lg"
                 className="bg-red-600 hover:bg-red-700 text-white font-bold text-base sm:text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
-                Get your free £999 course here
+                Start Free Training Now
               </Button>
             </div>
           </motion.div>
@@ -82,6 +82,31 @@ export default function HomepageMaster() {
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-gray-700 font-semibold mt-4 sm:mt-6">Four critical solutions. One unified platform.</p>
             <p className="text-sm sm:text-base md:text-lg text-red-600 font-semibold mt-3 sm:mt-4">Without 250,000 trained analysts by Feb 2, 2026, enterprises face compliance chaos. Our Byzantine Council ensures safety.</p>
+          </motion.div>
+
+          {/* Security & Compliance Badges */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-8 sm:mb-12"
+          >
+            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">
+              <Shield className="w-5 h-5 text-emerald-600" />
+              <span className="text-sm font-semibold text-gray-700">ISO 27001:2022</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">
+              <Lock className="w-5 h-5 text-emerald-600" />
+              <span className="text-sm font-semibold text-gray-700">SOC 2 Type II</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">
+              <CheckCircle className="w-5 h-5 text-emerald-600" />
+              <span className="text-sm font-semibold text-gray-700">GDPR Compliant</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">
+              <Eye className="w-5 h-5 text-emerald-600" />
+              <span className="text-sm font-semibold text-gray-700">WCAG 2.1 AA</span>
+            </div>
           </motion.div>
 
           {/* Critical Weaknesses - Bullet Points */}

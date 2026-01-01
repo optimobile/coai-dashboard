@@ -123,7 +123,7 @@ export default function Signup() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
             {signupSource && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 className="font-semibold text-blue-900 mb-2">

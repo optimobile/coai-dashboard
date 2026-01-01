@@ -70,7 +70,7 @@ export function EmailPasswordSignupForm() {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
@@ -177,7 +177,8 @@ export function EmailPasswordSignupForm() {
 
       <Button
         type="submit"
-        className="w-full"
+        size="lg"
+        className="w-full mt-6 mb-4"
         disabled={registerMutation.isPending || !passwordsMatch}
       >
         {registerMutation.isPending ? (

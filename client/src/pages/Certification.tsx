@@ -223,7 +223,7 @@ export default function Certification() {
                     <p className="text-sm text-muted-foreground">Passing Score</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold">1 Year</p>
+                    <p className="text-2xl font-bold">3 Years</p>
                     <p className="text-sm text-muted-foreground">Certificate Validity</p>
                   </div>
                 </div>

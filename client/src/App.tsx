@@ -98,6 +98,8 @@ import TrainingCertificationFeature from "./pages/features/TrainingCertification
 import WatchdogJobsFeature from "./pages/features/WatchdogJobsFeature";
 import StudentProgress from "./pages/StudentProgress";
 import Accreditation from "./pages/Accreditation";
+import Security from "./pages/Security";
+import Documentation from "./pages/Documentation";
 import SOAIPDCAFramework from "./pages/SOAIPDCAFramework";
 import PDCASimulator from "./pages/PDCASimulator";
 import CertificateVerification from "./pages/CertificateVerification";
@@ -187,6 +189,8 @@ function App() {
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
+                  <Route path="/security" component={Security} />
+                  <Route path="/docs" component={Documentation} />
                   <Route path="/global-ai-safety-initiative" component={GlobalAISafetyInitiative} />
                   <Route path="/about" component={About} />
                   <Route path="/about-ceasai" component={AboutCEASAI} />

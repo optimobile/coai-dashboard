@@ -201,7 +201,7 @@ const FAQ = [
 export default function Pricing() {
   const [, setLocation] = useLocation();
   const [isYearly, setIsYearly] = useState(true);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(0); // Default to first FAQ expanded
   
   const { data: user } = trpc.auth.me.useQuery();
   const checkoutMutation = trpc.stripe.createCheckoutSession.useMutation();
@@ -430,21 +430,11 @@ export default function Pricing() {
             {FAQ.map((item, index) => (
               <Card 
                 key={index}
-                className="bg-white dark:bg-gray-900 border-slate-700 cursor-pointer"
-                onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+                className="bg-white dark:bg-gray-900 border-slate-700"
               >
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium text-white">{item.question}</h3>
-                    {expandedFaq === index ? (
-                      <ChevronUp className="h-5 w-5 text-slate-400" />
-                    ) : (
-                      <ChevronDown className="h-5 w-5 text-slate-400" />
-                    )}
-                  </div>
-                  {expandedFaq === index && (
-                    <p className="mt-3 text-slate-400 text-sm">{item.answer}</p>
-                  )}
+                  <h3 className="font-medium text-white mb-2">{item.question}</h3>
+                  <p className="mt-3 text-slate-400 text-sm">{item.answer}</p>
                 </CardContent>
               </Card>
             ))}

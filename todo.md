@@ -6504,3 +6504,87 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Verify email delivery for all notification types
 - [x] Remove test mode banner from billing page
 - [ ] Fix publish timeout error
+
+
+## COMPREHENSIVE AUDIT FIXES - January 1, 2026
+
+### Critical Bug Fixes
+- [x] Fix signup button visibility issue
+- [ ] Fix free course offer messaging consistency across all pages
+- [ ] Fix FAQ answers rendering on pricing page
+- [ ] Fix certificate validity contradiction (1 year vs 3 years)
+- [ ] Add payment methods information to pricing page
+- [ ] Fix currency inconsistency (£/$/€)
+- [ ] Add job openings link to Watchdog page
+- [ ] Clarify free trial information
+
+### Global Payment Integration
+- [ ] Research Adyen payment gateway integration
+- [ ] Research Wise payment integration
+- [ ] Research PayPal Business integration
+- [ ] Implement multi-payment gateway support
+- [ ] Add currency selector to header
+- [ ] Update pricing page with payment options
+- [ ] Test payment flows for international users
+
+### Public Incident Reporting Feature
+- [ ] Create public incident reporting form (no login required)
+- [ ] Create incident database schema
+- [ ] Add incident reporting page at /watchdog/report
+- [ ] Add incident reporting section to homepage
+- [ ] Integrate incident reporting into dashboard
+- [ ] Create unified incident hub for analysts
+- [ ] Add public incident view (searchable database)
+- [ ] Add incident statistics dashboard
+
+### Testing & Validation
+- [ ] Test all user flows (analyst, enterprise, government, public)
+- [ ] Test payment integration
+- [ ] Test incident reporting flow
+- [ ] Create final checkpoint
+- [ ] Generate comprehensive final report
+
+
+## PRODUCTION READINESS (Kimi2 Audit - Jan 1, 2026)
+
+### Immediate Frontend Fixes
+- [x] Add security badges to homepage (ISO 27001, SOC 2, GDPR, WCAG)
+- [x] Create `/security` page with security practices
+- [x] Create `/docs` page with technical documentation
+- [ ] Create `/status` page with real-time system status
+- [ ] Add security/docs/status links to footer
+- [x] Update FAQ with payment methods (visible on pricing page)
+
+### Public Incident Reporting
+- [ ] Create public incident reporting form (no login required)
+- [ ] Add incident reporting CTA to homepage
+- [ ] Integrate incident reporting into dashboard
+- [ ] Create unified incident hub
+
+### Monitoring & Observability
+- [ ] Set up error tracking (Sentry)
+- [ ] Create performance monitoring dashboard
+- [ ] Set up uptime monitoring
+- [ ] Configure alerting system
+- [ ] Document SLAs and SLOs
+
+### Documentation
+- [x] Create architecture diagrams (in /docs page)
+- [x] Document technology stack (in /docs page)
+- [x] Create API documentation (already exists at /api-docs)
+- [ ] Write operational runbooks
+- [x] Document disaster recovery plan (in production readiness plan)
+
+### Security & Compliance
+- [ ] Document encryption standards
+- [ ] Create security whitepaper
+- [ ] Document backup procedures
+- [ ] Create incident response plan
+- [ ] Publish compliance documentation
+
+### Performance & Scalability
+- [ ] Conduct load testing
+- [ ] Implement auto-scaling
+- [ ] Optimize database queries
+- [ ] Set up CDN for static assets
+- [ ] Document performance benchmarks
