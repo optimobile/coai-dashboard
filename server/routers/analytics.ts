@@ -15,6 +15,8 @@ import {
   watchdogReports,
   assessments,
   users,
+  aiSystems,
+  frameworks,
 } from "../../drizzle/schema";
 import { eq, and, gte, lte, desc, sql, count } from "drizzle-orm";
 
@@ -251,6 +253,9 @@ export const analyticsRouter = router({
         startDate: z.date().optional(),
         endDate: z.date().optional(),
         groupBy: z.enum(["day", "week", "month"]).default("day"),
+        aiSystemId: z.number().optional(),
+        incidentType: z.enum(['bias','privacy','safety','misinformation','manipulation','other']).optional(),
+        severity: z.enum(['low','medium','high','critical']).optional(),
       })
     )
     .query(async ({ input }) => {
@@ -262,7 +267,23 @@ export const analyticsRouter = router({
       const startDateStr = startDate instanceof Date ? startDate.toISOString() : startDate;
       const endDateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
 
-      // Get all reports in date range
+      // Build filter conditions
+      const conditions = [
+        gte(watchdogReports.createdAt, startDateStr),
+        lte(watchdogReports.createdAt, endDateStr)
+      ];
+      
+      if (input.aiSystemId) {
+        conditions.push(eq(watchdogReports.aiSystemName, input.aiSystemId.toString()));
+      }
+      if (input.incidentType) {
+        conditions.push(eq(watchdogReports.incidentType, input.incidentType));
+      }
+      if (input.severity) {
+        conditions.push(eq(watchdogReports.severity, input.severity));
+      }
+
+      // Get all reports in date range with filters
       const reports = await db
         .select({
           createdAt: watchdogReports.createdAt,
@@ -271,12 +292,7 @@ export const analyticsRouter = router({
           status: watchdogReports.status,
         })
         .from(watchdogReports)
-        .where(
-          and(
-            gte(watchdogReports.createdAt, startDateStr),
-            lte(watchdogReports.createdAt, endDateStr)
-          )
-        )
+        .where(and(...conditions))
         .orderBy(watchdogReports.createdAt);
 
       // Group by date period
@@ -332,6 +348,7 @@ export const analyticsRouter = router({
     .input(
       z.object({
         aiSystemId: z.number().optional(),
+        frameworkId: z.number().optional(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
       })
@@ -345,17 +362,20 @@ export const analyticsRouter = router({
       const startDateStr = startDate instanceof Date ? startDate.toISOString() : startDate;
       const endDateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
 
-      let whereConditions = and(
+      const conditions = [
         gte(assessments.createdAt, startDateStr),
         lte(assessments.createdAt, endDateStr)
-      );
+      ];
 
       if (input.aiSystemId) {
-        whereConditions = and(
-          whereConditions,
-          eq(assessments.aiSystemId, input.aiSystemId)
-        );
+        conditions.push(eq(assessments.aiSystemId, input.aiSystemId));
       }
+      
+      if (input.frameworkId) {
+        conditions.push(eq(assessments.frameworkId, input.frameworkId));
+      }
+      
+      const whereConditions = and(...conditions);
 
       const assessmentData = await db
         .select({
@@ -557,5 +577,37 @@ export const analyticsRouter = router({
       paymentSuccessRate: totalPayments > 0 ? ((successCount / totalPayments) * 100).toFixed(2) : "0",
       timestamp: new Date().toISOString(),
     };
+  }),
+
+  // Get list of AI systems for filtering
+  getAISystemsList: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    const systems = await db
+      .select({
+        id: aiSystems.id,
+        name: aiSystems.name,
+      })
+      .from(aiSystems)
+      .orderBy(aiSystems.name);
+
+    return systems;
+  }),
+
+  // Get list of frameworks for filtering
+  getFrameworksList: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    const frameworksList = await db
+      .select({
+        id: frameworks.id,
+        name: frameworks.name,
+      })
+      .from(frameworks)
+      .orderBy(frameworks.name);
+
+    return frameworksList;
   }),
 });

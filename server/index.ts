@@ -8,6 +8,8 @@ import watchdogIncidentsRouter from "./api/watchdog-incidents.js";
 import badgesRouter from "./api/badges.js";
 import { initializeWebSocketServer } from "./websocket/server.js";
 import { registerOAuthRoutes } from "./_core/oauth.js";
+import { initializeDigestScheduler } from "./services/digestScheduler.js";
+import { setWebSocketServer } from "./websocket/analyticsEvents.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,6 +75,14 @@ async function startServer() {
   // Initialize WebSocket server
   const wss = initializeWebSocketServer(server);
   console.log('WebSocket server initialized');
+  
+  // Set WebSocket server for analytics events
+  setWebSocketServer(wss);
+  console.log('Analytics WebSocket events initialized');
+  
+  // Initialize digest scheduler
+  initializeDigestScheduler();
+  console.log('Digest scheduler initialized');
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);

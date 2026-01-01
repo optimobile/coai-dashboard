@@ -6865,3 +6865,9 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Connect subscription form to backend
 - [x] Add notification preferences UI
 - [x] Test email delivery and formatting
+
+## New Features - Phase 2
+
+- [x] Analytics Filtering UI - Add filters for AI systems, frameworks, and incident types
+- [x] Scheduled Email Digests - Daily/weekly summary emails for incidents and compliance changes
+- [x] Real-time Dashboard Updates - WebSocket integration for live incident and compliance updates

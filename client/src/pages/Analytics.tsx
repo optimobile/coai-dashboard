@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { X } from 'lucide-react';
 import { TrendingUp, AlertTriangle, Shield, Users, Download, FileImage, FileText, FileSpreadsheet } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import {
@@ -24,6 +26,8 @@ import {
 import { exportAsPNG, exportAsPDF, exportAsCSV, flattenDataForCSV } from '@/lib/exportUtils';
 import { toast } from 'sonner';
 import NotificationSubscriptionForm from '@/components/NotificationSubscriptionForm';
+import { useAnalyticsWebSocket } from '@/hooks/useAnalyticsWebSocket';
+import { Wifi, WifiOff } from 'lucide-react';
 
 const COLORS = {
   critical: '#ef4444',
@@ -38,6 +42,40 @@ const COLORS = {
 export default function Analytics() {
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d');
   const [groupBy, setGroupBy] = useState<'day' | 'week' | 'month'>('day');
+  
+  // Filter states
+  const [selectedAISystem, setSelectedAISystem] = useState<string>('all');
+  const [selectedFramework, setSelectedFramework] = useState<string>('all');
+  const [selectedIncidentType, setSelectedIncidentType] = useState<string>('all');
+  const [selectedSeverity, setSelectedSeverity] = useState<string>('all');
+  
+  // Fetch filter options
+  const { data: aiSystems } = trpc.analytics.getAISystemsList.useQuery();
+  const { data: frameworks } = trpc.analytics.getFrameworksList.useQuery();
+  
+  // TRPC utils for refetching
+  const utils = trpc.useContext();
+  
+  // WebSocket connection for real-time updates
+  const { isConnected: wsConnected, lastUpdate } = useAnalyticsWebSocket({
+    onIncidentCreated: useCallback(() => {
+      // Refetch incident trends when new incident is created
+      utils.analytics.getIncidentTrends.invalidate();
+    }, [utils]),
+    onIncidentUpdated: useCallback(() => {
+      // Refetch incident trends when incident is updated
+      utils.analytics.getIncidentTrends.invalidate();
+    }, [utils]),
+    onAssessmentCreated: useCallback(() => {
+      // Refetch compliance history when new assessment is created
+      utils.analytics.getComplianceHistory.invalidate();
+    }, [utils]),
+    onScoreChanged: useCallback(() => {
+      // Refetch compliance history when score changes
+      utils.analytics.getComplianceHistory.invalidate();
+    }, [utils]),
+    showToasts: true,
+  });
 
   // Calculate date range
   const { startDate, endDate } = useMemo(() => {
@@ -55,16 +93,21 @@ export default function Analytics() {
     return { startDate: start, endDate: end };
   }, [dateRange]);
 
-  // Fetch analytics data
+  // Fetch analytics data with filters
   const { data: incidentTrends, isLoading: incidentsLoading } = trpc.analytics.getIncidentTrends.useQuery({
     startDate,
     endDate,
     groupBy,
+    aiSystemId: selectedAISystem !== 'all' ? parseInt(selectedAISystem) : undefined,
+    incidentType: selectedIncidentType !== 'all' ? selectedIncidentType : undefined,
+    severity: selectedSeverity !== 'all' ? selectedSeverity : undefined,
   });
 
   const { data: complianceHistory, isLoading: complianceLoading } = trpc.analytics.getComplianceHistory.useQuery({
     startDate,
     endDate,
+    frameworkId: selectedFramework !== 'all' ? parseInt(selectedFramework) : undefined,
+    aiSystemId: selectedAISystem !== 'all' ? parseInt(selectedAISystem) : undefined,
   });
 
   const { data: userActivity, isLoading: activityLoading } = trpc.analytics.getUserActivityMetrics.useQuery({
@@ -192,7 +235,20 @@ export default function Analytics() {
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+              Analytics Dashboard
+              {wsConnected ? (
+                <span className="flex items-center gap-1.5 text-sm font-normal text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                  <Wifi className="h-4 w-4" />
+                  Live
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5 text-sm font-normal text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                  <WifiOff className="h-4 w-4" />
+                  Offline
+                </span>
+              )}
+            </h1>
             <p className="text-gray-600">Comprehensive insights into incidents, compliance, and user activity</p>
           </div>
           
@@ -212,8 +268,8 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex gap-4 mb-8">
+        {/* Date Range Filters */}
+        <div className="flex gap-4 mb-6">
           <div className="flex gap-2">
             {(['7d', '30d', '90d'] as const).map((range) => (
               <Button
@@ -238,6 +294,132 @@ export default function Analytics() {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Advanced Filters */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-lg">Filter Analytics</CardTitle>
+            <CardDescription>Drill down by AI systems, frameworks, or incident types</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* AI System Filter */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">AI System</label>
+                <Select value={selectedAISystem} onValueChange={setSelectedAISystem}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Systems" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Systems</SelectItem>
+                    {aiSystems?.map((system) => (
+                      <SelectItem key={system.id} value={system.id.toString()}>
+                        {system.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Framework Filter */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">Framework</label>
+                <Select value={selectedFramework} onValueChange={setSelectedFramework}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Frameworks" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Frameworks</SelectItem>
+                    {frameworks?.map((framework) => (
+                      <SelectItem key={framework.id} value={framework.id.toString()}>
+                        {framework.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Incident Type Filter */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">Incident Type</label>
+                <Select value={selectedIncidentType} onValueChange={setSelectedIncidentType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Types" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="bias">Bias</SelectItem>
+                    <SelectItem value="privacy">Privacy</SelectItem>
+                    <SelectItem value="safety">Safety</SelectItem>
+                    <SelectItem value="misinformation">Misinformation</SelectItem>
+                    <SelectItem value="manipulation">Manipulation</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Severity Filter */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">Severity</label>
+                <Select value={selectedSeverity} onValueChange={setSelectedSeverity}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Severities" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Severities</SelectItem>
+                    <SelectItem value="critical">Critical</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Active Filters Display */}
+            {(selectedAISystem !== 'all' || selectedFramework !== 'all' || selectedIncidentType !== 'all' || selectedSeverity !== 'all') && (
+              <div className="mt-4 flex flex-wrap gap-2 items-center">
+                <span className="text-sm font-medium text-gray-700">Active Filters:</span>
+                {selectedAISystem !== 'all' && (
+                  <Badge variant="secondary" className="gap-1">
+                    AI System: {aiSystems?.find(s => s.id.toString() === selectedAISystem)?.name}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => setSelectedAISystem('all')} />
+                  </Badge>
+                )}
+                {selectedFramework !== 'all' && (
+                  <Badge variant="secondary" className="gap-1">
+                    Framework: {frameworks?.find(f => f.id.toString() === selectedFramework)?.name}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => setSelectedFramework('all')} />
+                  </Badge>
+                )}
+                {selectedIncidentType !== 'all' && (
+                  <Badge variant="secondary" className="gap-1">
+                    Type: {selectedIncidentType.charAt(0).toUpperCase() + selectedIncidentType.slice(1)}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => setSelectedIncidentType('all')} />
+                  </Badge>
+                )}
+                {selectedSeverity !== 'all' && (
+                  <Badge variant="secondary" className="gap-1">
+                    Severity: {selectedSeverity.charAt(0).toUpperCase() + selectedSeverity.slice(1)}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => setSelectedSeverity('all')} />
+                  </Badge>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedAISystem('all');
+                    setSelectedFramework('all');
+                    setSelectedIncidentType('all');
+                    setSelectedSeverity('all');
+                  }}
+                >
+                  Clear All
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
