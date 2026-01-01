@@ -2,6 +2,7 @@ import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
@@ -62,9 +63,25 @@ export default function Admin() {
   return (
     <DashboardLayout>
       <div className="p-6 max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage LOI applications, analysts, and council sessions</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold mb-2">Admin Dashboard</h1>
+            <p className="text-muted-foreground">Manage LOI applications, analysts, and council sessions</p>
+          </div>
+          <div className="flex gap-2">
+            <Link href="/admin/analytics">
+              <Button variant="outline">
+                <Shield className="h-4 w-4 mr-2" />
+                Analytics
+              </Button>
+            </Link>
+            <Link href="/admin/incidents">
+              <Button variant="outline">
+                <AlertTriangle className="h-4 w-4 mr-2" />
+                Incidents
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Cards */}

@@ -6810,3 +6810,32 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Design empty states for all data views
 - [ ] Generate custom hero background image
 - [ ] Create branded icons and visual assets
+
+
+## Phase 12 - New Feature Requests (Jan 2026)
+
+### Admin Dashboard Analytics Enhancement
+- [x] Install recharts library for data visualization
+- [x] Create AdminAnalytics page component
+- [x] Build incident trends chart (line/area chart showing incidents over time)
+- [x] Build compliance scores over time chart (multi-line chart for different frameworks)
+- [x] Build user activity metrics chart (bar chart for signups, certifications, reports)
+- [x] Add analytics route to App.tsx
+- [x] Add analytics navigation link to admin sidebar
+
+### Dark Mode Toggle Enhancement
+- [x] Review existing theme toggle implementation
+- [x] Ensure theme switcher is visible in header
+- [x] Verify theme persistence works correctly
+- [x] Test theme switching across all pages
+- [x] Update any pages with theme issues
+
+### Public Status Page
+- [x] Create public Status page component (/status route)
+- [x] Display system uptime information (mock or real metrics)
+- [x] Show active incidents list from Watchdog reports
+- [x] Add notification subscription form (email collection)
+- [x] Style as public-facing page (no auth required)
+- [x] Add status page route to App.tsx
+- [x] Add status page link to public footer
+

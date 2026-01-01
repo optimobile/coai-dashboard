@@ -49,6 +49,7 @@ export function Footer() {
       links: [
         { name: 'Documentation', href: '/knowledge-base' },
         { name: 'Help Center', href: '/help-center' },
+        { name: 'System Status', href: '/status' },
         { name: 'Community', href: '/community' },
         { name: 'FAQ', href: '/faq' },
         { name: 'How It Works', href: '/how-it-works' },

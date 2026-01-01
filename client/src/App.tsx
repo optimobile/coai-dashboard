@@ -53,6 +53,7 @@ import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
 import AdminIncidents from "./pages/AdminIncidents";
+import AdminAnalytics from "./pages/AdminAnalytics";
 import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
@@ -100,6 +101,7 @@ import WatchdogJobsFeature from "./pages/features/WatchdogJobsFeature";
 import StudentProgress from "./pages/StudentProgress";
 import Accreditation from "./pages/Accreditation";
 import Status from "./pages/Status";
+import PublicStatus from "./pages/PublicStatus";
 import Security from "./pages/Security";
 import Documentation from "./pages/Documentation";
 import SOAIPDCAFramework from "./pages/SOAIPDCAFramework";
@@ -172,7 +174,7 @@ function ScrollToTop() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
+      <ThemeProvider defaultTheme="light" switchable={true}>
         <AuthProvider>
           <AlertToastProvider>
             <TooltipProvider>
@@ -260,6 +262,7 @@ function App() {
                   <Route path="/public" component={PublicHome} />
                   <Route path="/admin" component={Admin} />
                   <Route path="/admin/incidents" component={AdminIncidents} />
+                  <Route path="/admin/analytics" component={AdminAnalytics} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />
                   <Route path="/admin/enrollment-test" component={EnrollmentTest} />
                   <Route path="/api-docs" component={ApiDocs} />
@@ -275,7 +278,8 @@ function App() {
                   <Route path="/blog" component={Blog} />
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />
-                  <Route path="/status" component={Status} />
+                  <Route path="/status" component={PublicStatus} />
+                  <Route path="/system-status" component={Status} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
                   <Route path="/soai-pdca/government" component={GovernmentPortal} />
                   <Route path="/pdca-simulator" component={PDCASimulator} />
