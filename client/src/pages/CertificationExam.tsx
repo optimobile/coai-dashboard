@@ -86,10 +86,23 @@ export default function CertificationExam() {
   });
 
   // Fetch test data
-  const { data: testData, isLoading } = trpc.certification.getTestQuestions.useQuery(
+  const { data: testData, isLoading, error } = trpc.certification.getTestQuestions.useQuery(
     { testId: 1 },
-    { enabled: examState.status !== "results" }
+    { 
+      enabled: examState.status !== "results",
+      retry: 2
+    }
   );
+
+  // Log data loading for debugging
+  useEffect(() => {
+    if (testData) {
+      console.log("Test data loaded:", testData);
+    }
+    if (error) {
+      console.error("Failed to fetch test questions:", error);
+    }
+  }, [testData, error]);
 
   const startTestMutation = trpc.certification.startTest.useMutation();
   const submitTestMutation = trpc.certification.submitTest.useMutation();
@@ -242,12 +255,45 @@ export default function CertificationExam() {
     }
   };
 
+  // Error state
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center h-full p-6">
+          <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Failed to Load Exam</h2>
+          <p className="text-muted-foreground text-center mb-4">
+            {error.message || "Unable to load exam questions. Please try again."}
+          </p>
+          <Button onClick={() => navigate("/training")}>Back to Training</Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   // Loading state
   if (isLoading) {
     return (
       <DashboardLayout>
-        <div className="flex items-center justify-center h-full">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="flex flex-col items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-muted-foreground">Loading exam questions...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // No data state
+  if (!testData || !testData.questions || testData.questions.length === 0) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center h-full p-6">
+          <AlertTriangle className="h-12 w-12 text-yellow-500 mb-4" />
+          <h2 className="text-xl font-semibold mb-2">No Exam Questions Available</h2>
+          <p className="text-muted-foreground text-center mb-4">
+            The exam questions are not available at this time. Please contact support.
+          </p>
+          <Button onClick={() => navigate("/training")}>Back to Training</Button>
         </div>
       </DashboardLayout>
     );
