@@ -56,20 +56,24 @@ export default function PublicHome() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-purple-500/5 -z-10" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)] -z-10" />
+        
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 animate-fade-in-scale">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
               The Western AI Safety Governance Platform
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+            <h1 className="text-5xl md:text-7xl font-bold font-display tracking-tight mb-6">
               Council of AIs
-              <span className="block text-primary">Transparent. Accountable. Human-Verified.</span>
+              <span className="block text-primary mt-2">Transparent. Accountable. Human-Verified.</span>
             </h1>
             
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
               The first open-source AI safety governance platform for the West. 
               Multi-framework compliance, 33-agent Byzantine fault-tolerant voting, 
               and public accountability through The Watchdog program.

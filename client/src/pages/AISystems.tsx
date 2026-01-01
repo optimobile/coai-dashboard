@@ -274,8 +274,8 @@ export default function AISystems() {
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold font-primary">AI Systems</h1>
-            <p className="text-muted-foreground text-sm">
+            <h1 className="text-3xl font-bold font-display tracking-tight">AI Systems</h1>
+            <p className="text-muted-foreground text-sm mt-1">
               Manage and monitor your registered AI systems
             </p>
           </div>
@@ -320,7 +320,7 @@ export default function AISystems() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.15, delay: idx * 0.03 }}
                 >
-                  <Card className="bg-card border-border hover:bg-accent/30 transition-colors">
+                  <Card className="bg-card border-border card-elevated transition-smooth hover:scale-[1.01]">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4">
                         {/* Icon */}

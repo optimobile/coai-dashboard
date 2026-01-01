@@ -128,8 +128,8 @@ export default function Dashboard() {
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold font-primary">Dashboard</h1>
-            <p className="text-muted-foreground text-sm">
+            <h1 className="text-3xl font-bold font-display tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground text-sm mt-1">
               Western TC260 - AI Safety Governance for Humanity
             </p>
           </div>
@@ -175,7 +175,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: idx * 0.05 }}
               >
-                <Card className="bg-card border-border hover:shadow-md transition-shadow">
+                <Card className="bg-card border-border card-elevated">
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -223,7 +223,7 @@ export default function Dashboard() {
         >
           <Card className="bg-card border-border overflow-hidden">
             <CardHeader className="pb-3 bg-gradient-to-r from-blue-500/5 to-purple-500/5">
-              <CardTitle className="text-base font-medium flex items-center gap-2">
+              <CardTitle className="text-lg font-display font-semibold flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
                 SOAI-PDCA Continuous Improvement Loop
                 <span className="ml-2 text-xs font-normal text-muted-foreground">

@@ -139,7 +139,7 @@ export default function Watchdog() {
             <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-base px-4 py-1">
               The Watchdog Program
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
+            <h1 className="text-5xl md:text-7xl font-bold font-display mb-8 leading-tight tracking-tight">
               Become an AI Safety Analyst
             </h1>
             <p className="text-2xl text-gray-300 leading-relaxed mb-4 max-w-4xl mx-auto">
@@ -172,7 +172,7 @@ export default function Watchdog() {
           {stats.map((stat, idx) => {
             const Icon = stat.icon;
             return (
-              <Card key={idx} className="p-6 text-center border-2 border-gray-100">
+              <Card key={idx} className="p-6 text-center border-2 border-gray-100 card-elevated transition-smooth hover:scale-105">
                 <Icon className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <div className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
                 <div className="text-sm text-gray-600">{stat.label}</div>
@@ -187,7 +187,7 @@ export default function Watchdog() {
         <div className="container max-w-6xl">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Real Stories</Badge>
-            <h2 className="text-4xl font-bold mb-4">Meet Our Certified Analysts</h2>
+            <h2 className="text-4xl font-bold font-display mb-4 tracking-tight">Meet Our Certified Analysts</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Hear from real people who transformed their careers with CSOAI certification. 
               These aren't actors—they're working analysts earning real income.
@@ -196,7 +196,7 @@ export default function Watchdog() {
 
           <div className="space-y-8">
             {testimonials.map((testimonial, idx) => (
-              <Card key={idx} className="p-8 border-2 border-emerald-100">
+              <Card key={idx} className="p-8 border-2 border-emerald-100 card-elevated">
                 <div className="flex flex-col md:flex-row gap-8">
                   {/* Avatar & Stats */}
                   <div className="flex-shrink-0">

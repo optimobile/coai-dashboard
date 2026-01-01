@@ -213,8 +213,8 @@ export default function Compliance() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold font-primary">Compliance</h1>
-            <p className="text-muted-foreground text-sm">
+            <h1 className="text-3xl font-bold font-display tracking-tight">Compliance</h1>
+            <p className="text-muted-foreground text-sm mt-1">
               Track compliance across multiple AI safety frameworks
             </p>
           </div>
@@ -269,7 +269,7 @@ export default function Compliance() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: idx * 0.05 }}
             >
-              <Card className="bg-card border-border">
+              <Card className="bg-card border-border card-elevated">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -277,7 +277,7 @@ export default function Compliance() {
                         <FileCheck className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div>
-                        <CardTitle className="text-base font-medium">
+                        <CardTitle className="text-lg font-display font-semibold">
                           {fw.name}
                         </CardTitle>
                         <p className="text-xs text-muted-foreground">{fw.fullName}</p>

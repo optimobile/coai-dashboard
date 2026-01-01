@@ -61,13 +61,13 @@
   --color-gray-900: oklch(0.15 0 0);
   --color-gray-950: oklch(0.10 0 0);
 
-  /* Font families */
+  /* Font families - Strategic Typography */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-primary: "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.875rem;
   
   /* Light theme - CSOAI Professional Blue */
   --background: oklch(1 0 0);
@@ -79,8 +79,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0 0);
   
-  /* CSOAI Blue (#0066CC) - Trust, professionalism, learning */
-  --primary: oklch(0.52 0.19 255);
+  /* CSOAI Blue - Enhanced with depth */
+  --primary: oklch(0.55 0.20 255);
   --primary-foreground: oklch(1 0 0);
   
   --secondary: oklch(0.97 0 0);
@@ -95,7 +95,7 @@
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(1 0 0);
   
-  --border: oklch(0.90 0 0);
+  --border: oklch(0.92 0.005 255);
   --input: oklch(0.90 0 0);
   --ring: oklch(0.15 0 0);
   
@@ -242,9 +242,14 @@
     }
   }
 
-  /* Open WebUI style font classes */
+  /* Typography utilities */
+  .font-display {
+    font-family: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
   .font-primary {
-    font-family: "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   }
 
   /* Waterfall animation for suggestions - from Open WebUI */
@@ -341,4 +346,80 @@
   .suggestion-card:hover {
     @apply bg-black/5 dark:bg-white/5;
   }
+
+  /* Enhanced depth and shadows */
+  .card-elevated {
+    @apply shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+
+  .card-elevated-strong {
+    @apply shadow-md hover:shadow-lg transition-shadow duration-300;
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-subtle {
+    background: linear-gradient(135deg, oklch(1 0 0) 0%, oklch(0.99 0.01 255) 100%);
+  }
+
+  .dark .bg-gradient-subtle {
+    background: linear-gradient(135deg, oklch(0.10 0 0) 0%, oklch(0.12 0.02 255) 100%);
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply backdrop-blur-xl bg-white/70 dark:bg-gray-900/70;
+    border: 1px solid oklch(0.95 0 0);
+  }
+
+  .dark .glass {
+    border-color: oklch(0.20 0 0);
+  }
+
+  /* Smooth transitions for interactive elements */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Entrance animations */
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-fade-in-scale {
+    animation: fadeInScale 0.4s ease-out;
+  }
+
+  @keyframes slideInFromBottom {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-in {
+    animation: slideInFromBottom 0.5s ease-out;
+  }
+
+  /* Stagger children animations */
+  .stagger-children > * {
+    animation: fadeInUp 0.5s ease-out backwards;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+  .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+  .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+  .stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
 }

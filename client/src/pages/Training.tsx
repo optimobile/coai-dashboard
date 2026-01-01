@@ -105,8 +105,8 @@ export default function Training() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold">Watchdog Analyst Training</h1>
-            <p className="text-muted-foreground text-sm">
+            <h1 className="text-3xl font-bold font-display tracking-tight">Watchdog Analyst Training</h1>
+            <p className="text-muted-foreground text-sm mt-1">
               Complete all modules to unlock the certification test
             </p>
           </div>
@@ -155,7 +155,7 @@ export default function Training() {
 
         {/* Training Modules */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Training Modules</h2>
+          <h2 className="text-xl font-display font-semibold">Training Modules</h2>
           
           <div className="grid gap-4">
             {modules?.map((module, idx) => {
@@ -172,7 +172,7 @@ export default function Training() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: idx * 0.05 }}
                 >
-                  <Card className={`transition-all ${
+                  <Card className={`card-elevated transition-smooth ${
                     isCompleted 
                       ? "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800" 
                       : isLocked 
