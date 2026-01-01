@@ -6229,3 +6229,39 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Check for any broken links or 404 errors
 - [ ] Test on mobile devices
 - [ ] Final polish and bug fixes
+
+
+## ✅ COMPLETED: Certification Tier Restructuring (Jan 1, 2026)
+
+### Module Structure & Pricing Alignment
+- [x] Clarify relationship between 13 training modules and 33 Byzantine Council agents (33 agents = voting mechanism, NOT modules)
+- [x] Define £499 Fundamentals tier: 5 core modules (EU AI Act, NIST RMF, ISO 42001, AI Ethics, Incident Analysis)
+- [x] Define £999 Professional tier: Choose 5 additional modules from 8 regional frameworks
+- [x] Define £1,999 Expert tier: All 13 modules = Global AI Safety Analyst Expert certification
+- [ ] Update database schema to support module selection per tier
+- [ ] Update course enrollment logic to restrict modules based on tier purchased
+
+### Homepage FAQ Updates
+- [x] Review all FAQ questions on homepage for accuracy
+- [x] Update pricing information in FAQs (£499/£999/£1,999)
+- [x] Update course structure explanations in FAQs
+- [x] Update certification pathway information
+- [x] Update CSOAI vs CEASAI explanations
+- [x] Remove any outdated information about features/pricing
+- [x] Add £1M giveaway FAQ section
+- [x] Add white-label government solution FAQ
+- [x] Clarify 13 modules vs 33 agents distinction
+
+### Pricing Page Updates
+- [x] Update pricing page with tier-based module selection
+- [x] Add module selection explanation for £999 tier (choose 5 from 8)
+- [x] Clarify "Global AI Safety Analyst Expert" certification for £1,999 tier
+- [x] Update feature comparison table with module access details
+- [x] Add 13-module structure explanation card
+- [x] Update exam details (50/100/150 questions, 70%/75%/80% passing)
+
+### Documentation
+- [x] Create PRODUCTION_TESTING.md with complete verification
+- [x] Document 33 Byzantine Council agents and their relationship to modules (in FAQ)
+- [x] Update About CEASAI page with tier structure (via FAQ and pricing components)
+- [x] Verify all content for Product Hunt launch readiness

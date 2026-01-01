@@ -1,6 +1,9 @@
 /**
  * CEASAI Certification Pricing
- * £499 / £999 / £1,999 tiers with monthly payment options
+ * £499 / £999 / £1,999 tiers with correct module structure
+ * Fundamentals: 5 core modules
+ * Professional: Choose 5 from 8 regional frameworks
+ * Expert: All 13 modules = Global AI Safety Analyst Expert
  */
 
 import { useState } from 'react';
@@ -18,6 +21,7 @@ import {
   CreditCard,
   Gift,
   ArrowRight,
+  Sparkles,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,8 +36,9 @@ interface PricingTier {
   price: number;
   currency: string;
   duration: string;
-  modules: number;
+  modules: string;
   questions: number;
+  passingThreshold: string;
   features: string[];
   monthlyOptions: {
     months: number;
@@ -49,56 +54,63 @@ const pricingTiers: PricingTier[] = [
   {
     id: 'fundamentals',
     name: 'Fundamentals',
-    subtitle: 'EU AI Act Essentials',
+    subtitle: 'Core AI Safety Frameworks',
     price: 499,
     currency: '£',
-    duration: '6 weeks',
-    modules: 10,
-    questions: 100,
+    duration: '4-6 weeks',
+    modules: '5 core modules',
+    questions: 50,
+    passingThreshold: '70%',
     features: [
-      'EU AI Act fundamentals',
-      'Risk classification basics',
-      'Compliance overview',
-      'Digital certificate',
+      'EU AI Act essentials',
+      'NIST AI RMF basics',
+      'ISO 42001 introduction',
+      'AI Ethics & Bias training',
+      'Incident Analysis methods',
+      'Digital certificate (2-year validity)',
       'Lifetime course access',
-      '1-year certificate validity',
       'Community forum access',
+      'Job board access',
       'Email support',
     ],
     monthlyOptions: [
-      { months: 12, monthlyPrice: 42, totalPrice: 504 },
-      { months: 24, monthlyPrice: 21, totalPrice: 504 },
-      { months: 36, monthlyPrice: 14, totalPrice: 504 },
+      { months: 3, monthlyPrice: 170, totalPrice: 510 },
+      { months: 6, monthlyPrice: 85, totalPrice: 510 },
+      { months: 12, monthlyPrice: 43, totalPrice: 516 },
     ],
     color: 'emerald',
     icon: BookOpen,
   },
   {
-    id: 'advanced',
-    name: 'Advanced',
-    subtitle: 'Professional Certification',
+    id: 'professional',
+    name: 'Professional',
+    subtitle: 'Multi-Framework Specialist',
     price: 999,
     currency: '£',
-    duration: '12 weeks',
-    modules: 20,
-    questions: 200,
+    duration: '8-10 weeks',
+    modules: 'Choose 5 from 8 regional frameworks',
+    questions: 100,
+    passingThreshold: '75%',
     features: [
       'Everything in Fundamentals',
-      'Advanced risk assessment',
-      'NIST AI RMF framework',
-      'Conformity assessment',
-      'Quality management systems',
-      'Sector-specific compliance',
-      'Job board access',
-      'Professional community',
-      'Blockchain-verified certificate',
-      '2-year certificate validity',
+      'Choose 5 regional frameworks:',
+      '• UK AISI Framework',
+      '• Canada AIDA',
+      '• Australia AI Ethics',
+      '• China TC260',
+      '• Singapore IMDA',
+      '• Japan METI AI Strategy',
+      '• South Korea AI Act',
+      '• Brazil AI Bill',
+      'Blockchain-verified certificate (3-year validity)',
+      'Priority job placement',
+      'Professional community membership',
       'Priority email support',
     ],
     monthlyOptions: [
-      { months: 12, monthlyPrice: 84, totalPrice: 1008 },
-      { months: 24, monthlyPrice: 42, totalPrice: 1008 },
-      { months: 36, monthlyPrice: 28, totalPrice: 1008 },
+      { months: 3, monthlyPrice: 340, totalPrice: 1020 },
+      { months: 6, monthlyPrice: 170, totalPrice: 1020 },
+      { months: 12, monthlyPrice: 85, totalPrice: 1020 },
     ],
     popular: true,
     color: 'blue',
@@ -107,30 +119,32 @@ const pricingTiers: PricingTier[] = [
   {
     id: 'expert',
     name: 'Expert',
-    subtitle: 'Specialist Certification',
+    subtitle: 'Global AI Safety Analyst Expert',
     price: 1999,
     currency: '£',
-    duration: '16 weeks',
-    modules: 30,
-    questions: 300,
+    duration: '12-16 weeks',
+    modules: 'All 13 modules (5 core + 8 regional)',
+    questions: 150,
+    passingThreshold: '80%',
     features: [
-      'Everything in Advanced',
-      'TC260 framework mastery',
-      'Regulatory procedures',
-      'Policy development',
-      'International harmonization',
-      'Research project mentorship',
-      'Government agency access',
-      'Speaking opportunities',
-      'Multi-signature certificate',
-      '3-year certificate validity',
+      'Everything in Professional',
+      'All 5 Fundamentals modules',
+      'All 8 Regional framework modules',
+      'Earn "Global AI Safety Analyst Expert" certification',
+      'Qualified for government AI auditor roles in 124+ countries',
+      'White-label licensing opportunities',
+      'Government portal integration',
+      'Policy development training',
+      'International harmonization expertise',
+      'Multi-signature blockchain certificate (5-year validity)',
       'Dedicated account manager',
       'Lifetime professional network',
+      'Speaking & consulting opportunities',
     ],
     monthlyOptions: [
-      { months: 12, monthlyPrice: 167, totalPrice: 2004 },
-      { months: 24, monthlyPrice: 84, totalPrice: 2016 },
-      { months: 36, monthlyPrice: 56, totalPrice: 2016 },
+      { months: 3, monthlyPrice: 680, totalPrice: 2040 },
+      { months: 6, monthlyPrice: 340, totalPrice: 2040 },
+      { months: 12, monthlyPrice: 170, totalPrice: 2040 },
     ],
     color: 'purple',
     icon: Shield,
@@ -226,19 +240,19 @@ function PricingCard({ tier, paymentType, selectedMonths, onSelect }: PricingCar
           </div>
 
           {/* Program Stats */}
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-slate-500" />
-              <span className="text-slate-300">{tier.modules} modules</span>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-2">
+              <BookOpen className="w-4 h-4 text-slate-500 mt-0.5 flex-shrink-0" />
+              <span className="text-slate-300">{tier.modules}</span>
             </div>
             <div className="flex items-center gap-2">
               <Award className="w-4 h-4 text-slate-500" />
-              <span className="text-slate-300">{tier.questions} questions</span>
+              <span className="text-slate-300">{tier.questions} exam questions ({tier.passingThreshold} to pass)</span>
             </div>
           </div>
 
           {/* Features */}
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
             {tier.features.map((feature, idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <CheckCircle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${colors.text}`} />
@@ -264,7 +278,7 @@ function PricingCard({ tier, paymentType, selectedMonths, onSelect }: PricingCar
 
 export function CEASAIPricing() {
   const [paymentType, setPaymentType] = useState<'full' | 'monthly'>('full');
-  const [selectedMonths, setSelectedMonths] = useState(12);
+  const [selectedMonths, setSelectedMonths] = useState(6);
 
   const handleSelect = (tierId: string) => {
     const tier = pricingTiers.find(t => t.id === tierId);
@@ -288,14 +302,18 @@ export function CEASAIPricing() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
-          <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-            CEASAI Certification
+          <Badge className="mb-4 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 text-emerald-400 border-emerald-500/30">
+            <Sparkles className="w-4 h-4 mr-2" />
+            CEASAI Professional Certification
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Invest in Your Future
+            Become a Global AI Safety Expert
           </h2>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Get certified before the EU AI Act deadline. Join 250,000 AI Safety Analysts needed by February 2026.
+          <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-4">
+            Master 5 core frameworks or all 13 modules to earn the <strong className="text-white">Global AI Safety Analyst Expert</strong> certification. Qualified for government auditor roles in 124+ countries.
+          </p>
+          <p className="text-sm text-emerald-400 font-semibold">
+            🎁 £1M Training Giveaway until Feb 2, 2026 - Fundamentals tier FREE for early adopters!
           </p>
         </div>
 
@@ -309,7 +327,7 @@ export function CEASAIPricing() {
               </TabsTrigger>
               <TabsTrigger value="monthly" className="data-[state=active]:bg-emerald-600">
                 <Clock className="w-4 h-4 mr-2" />
-                Monthly
+                Monthly Installments
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -321,7 +339,7 @@ export function CEASAIPricing() {
               animate={{ opacity: 1, height: 'auto' }}
               className="flex gap-4"
             >
-              {[12, 24, 36].map((months) => (
+              {[3, 6, 12].map((months) => (
                 <button
                   key={months}
                   onClick={() => setSelectedMonths(months)}
@@ -339,7 +357,7 @@ export function CEASAIPricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
           {pricingTiers.map((tier) => (
             <PricingCard
               key={tier.id}
@@ -351,25 +369,69 @@ export function CEASAIPricing() {
           ))}
         </div>
 
+        {/* Module Structure Explanation */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-emerald-400" />
+                Understanding the 13-Module Structure
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-slate-300">
+              <div>
+                <h4 className="font-semibold text-white mb-2">5 Core Modules (Fundamentals - £499):</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>EU AI Act Essentials</li>
+                  <li>NIST AI RMF Basics</li>
+                  <li>ISO 42001 Introduction</li>
+                  <li>AI Ethics & Bias Training</li>
+                  <li>Incident Analysis Methods</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-white mb-2">8 Regional Frameworks (Professional - £999, choose 5):</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>UK AI Safety Institute (AISI) Framework</li>
+                  <li>Canada Artificial Intelligence and Data Act (AIDA)</li>
+                  <li>Australia AI Ethics Framework</li>
+                  <li>China TC260 AI Governance Standards</li>
+                  <li>Singapore IMDA AI Governance Framework</li>
+                  <li>Japan METI AI Strategy</li>
+                  <li>South Korea AI Act</li>
+                  <li>Brazil AI Bill</li>
+                </ul>
+              </div>
+              <div className="pt-4 border-t border-slate-700">
+                <h4 className="font-semibold text-white mb-2">Expert Tier (£1,999) = All 13 Modules:</h4>
+                <p className="text-sm">
+                  Master all 5 core + all 8 regional frameworks to earn the prestigious <strong className="text-emerald-400">Global AI Safety Analyst Expert</strong> certification. 
+                  This qualifies you for government AI auditor positions in 124+ countries and white-label licensing opportunities.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Trust Badges */}
         <div className="mt-16 text-center">
-          <p className="text-slate-500 mb-6">Trusted by professionals worldwide</p>
+          <p className="text-slate-500 mb-6">Trusted by professionals and governments worldwide</p>
           <div className="flex flex-wrap justify-center gap-8">
             <div className="flex items-center gap-2 text-slate-400">
               <Shield className="w-5 h-5" />
-              <span>Secure Payments</span>
+              <span>Blockchain-Verified Certificates</span>
             </div>
             <div className="flex items-center gap-2 text-slate-400">
               <Award className="w-5 h-5" />
-              <span>Industry Recognized</span>
+              <span>Government-Recognized</span>
             </div>
             <div className="flex items-center gap-2 text-slate-400">
               <Globe className="w-5 h-5" />
-              <span>Global Certification</span>
+              <span>124+ Countries</span>
             </div>
             <div className="flex items-center gap-2 text-slate-400">
               <Users className="w-5 h-5" />
-              <span>10,000+ Certified</span>
+              <span>10,000+ Certified Analysts</span>
             </div>
           </div>
         </div>
