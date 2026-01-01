@@ -12,6 +12,9 @@ import {
   paymentAnalytics,
   courseCompletionTracking,
   recommendationAnalytics,
+  watchdogReports,
+  assessments,
+  users,
 } from "../../drizzle/schema";
 import { eq, and, gte, lte, desc, sql, count } from "drizzle-orm";
 
@@ -239,6 +242,257 @@ export const analyticsRouter = router({
         notHelpfulCount: a.notHelpfulCount,
         recordedAt: a.createdAt,
       }));
+    }),
+
+  // Get incident trends over time
+  getIncidentTrends: publicProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        groupBy: z.enum(["day", "week", "month"]).default("day"),
+      })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const endDate = input.endDate || new Date();
+      const startDateStr = startDate instanceof Date ? startDate.toISOString() : startDate;
+      const endDateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
+
+      // Get all reports in date range
+      const reports = await db
+        .select({
+          createdAt: watchdogReports.createdAt,
+          severity: watchdogReports.severity,
+          incidentType: watchdogReports.incidentType,
+          status: watchdogReports.status,
+        })
+        .from(watchdogReports)
+        .where(
+          and(
+            gte(watchdogReports.createdAt, startDateStr),
+            lte(watchdogReports.createdAt, endDateStr)
+          )
+        )
+        .orderBy(watchdogReports.createdAt);
+
+      // Group by date period
+      const trendData: Record<string, any> = {};
+      reports.forEach((report) => {
+        const date = new Date(report.createdAt);
+        let key: string;
+        
+        if (input.groupBy === "day") {
+          key = date.toISOString().split("T")[0];
+        } else if (input.groupBy === "week") {
+          const weekStart = new Date(date);
+          weekStart.setDate(date.getDate() - date.getDay());
+          key = weekStart.toISOString().split("T")[0];
+        } else {
+          key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+        }
+
+        if (!trendData[key]) {
+          trendData[key] = {
+            date: key,
+            total: 0,
+            critical: 0,
+            high: 0,
+            medium: 0,
+            low: 0,
+            resolved: 0,
+            pending: 0,
+            byType: {} as Record<string, number>,
+          };
+        }
+
+        trendData[key].total++;
+        trendData[key][report.severity]++;
+        
+        if (report.status === "resolved") {
+          trendData[key].resolved++;
+        } else {
+          trendData[key].pending++;
+        }
+
+        const type = report.incidentType || "other";
+        trendData[key].byType[type] = (trendData[key].byType[type] || 0) + 1;
+      });
+
+      return Object.values(trendData).sort((a: any, b: any) => 
+        a.date.localeCompare(b.date)
+      );
+    }),
+
+  // Get compliance history over time
+  getComplianceHistory: publicProcedure
+    .input(
+      z.object({
+        aiSystemId: z.number().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const startDate = input.startDate || new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+      const endDate = input.endDate || new Date();
+      const startDateStr = startDate instanceof Date ? startDate.toISOString() : startDate;
+      const endDateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
+
+      let whereConditions = and(
+        gte(assessments.createdAt, startDateStr),
+        lte(assessments.createdAt, endDateStr)
+      );
+
+      if (input.aiSystemId) {
+        whereConditions = and(
+          whereConditions,
+          eq(assessments.aiSystemId, input.aiSystemId)
+        );
+      }
+
+      const assessmentData = await db
+        .select({
+          id: assessments.id,
+          aiSystemId: assessments.aiSystemId,
+          frameworkId: assessments.frameworkId,
+          overallScore: assessments.overallScore,
+          status: assessments.status,
+          createdAt: assessments.createdAt,
+        })
+        .from(assessments)
+        .where(whereConditions)
+        .orderBy(assessments.createdAt);
+
+      // Group by date and calculate averages
+      const historyData: Record<string, any> = {};
+      assessmentData.forEach((assessment) => {
+        const date = new Date(assessment.createdAt).toISOString().split("T")[0];
+        
+        if (!historyData[date]) {
+          historyData[date] = {
+            date,
+            scores: [],
+            frameworks: {} as Record<string, number>,
+          };
+        }
+
+        const score = assessment.overallScore ? parseFloat(assessment.overallScore as string) : 0;
+        historyData[date].scores.push(score);
+        
+        const framework = assessment.frameworkId || 0;
+        historyData[date].frameworks[framework] = 
+          (historyData[date].frameworks[framework] || 0) + 1;
+      });
+
+      return Object.values(historyData)
+        .map((item: any) => ({
+          date: item.date,
+          averageScore: item.scores.reduce((a: number, b: number) => a + b, 0) / item.scores.length,
+          assessmentCount: item.scores.length,
+          frameworks: item.frameworks,
+        }))
+        .sort((a: any, b: any) => a.date.localeCompare(b.date));
+    }),
+
+  // Get user activity metrics
+  getUserActivityMetrics: publicProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const startDate = input.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const endDate = input.endDate || new Date();
+      const startDateStr = startDate instanceof Date ? startDate.toISOString() : startDate;
+      const endDateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
+
+      // Get user registrations over time
+      const userRegistrations = await db
+        .select({
+          createdAt: users.createdAt,
+          role: users.role,
+        })
+        .from(users)
+        .where(
+          and(
+            gte(users.createdAt, startDateStr),
+            lte(users.createdAt, endDateStr)
+          )
+        )
+        .orderBy(users.createdAt);
+
+      // Get activity events
+      const activityEvents = await db
+        .select({
+          eventType: analyticsEvents.eventType,
+          userId: analyticsEvents.userId,
+          createdAt: analyticsEvents.createdAt,
+        })
+        .from(analyticsEvents)
+        .where(
+          and(
+            gte(analyticsEvents.createdAt, startDateStr),
+            lte(analyticsEvents.createdAt, endDateStr)
+          )
+        )
+        .orderBy(analyticsEvents.createdAt);
+
+      // Group by date
+      const activityData: Record<string, any> = {};
+      
+      userRegistrations.forEach((user) => {
+        const date = new Date(user.createdAt).toISOString().split("T")[0];
+        if (!activityData[date]) {
+          activityData[date] = {
+            date,
+            newUsers: 0,
+            activeUsers: new Set(),
+            events: {} as Record<string, number>,
+          };
+        }
+        activityData[date].newUsers++;
+      });
+
+      activityEvents.forEach((event) => {
+        const date = new Date(event.createdAt).toISOString().split("T")[0];
+        if (!activityData[date]) {
+          activityData[date] = {
+            date,
+            newUsers: 0,
+            activeUsers: new Set(),
+            events: {} as Record<string, number>,
+          };
+        }
+        
+        if (event.userId) {
+          activityData[date].activeUsers.add(event.userId);
+        }
+        
+        const eventType = event.eventType || "unknown";
+        activityData[date].events[eventType] = 
+          (activityData[date].events[eventType] || 0) + 1;
+      });
+
+      return Object.values(activityData)
+        .map((item: any) => ({
+          date: item.date,
+          newUsers: item.newUsers,
+          activeUsers: item.activeUsers.size,
+          events: item.events,
+        }))
+        .sort((a: any, b: any) => a.date.localeCompare(b.date));
     }),
 
   // Get real-time dashboard metrics
