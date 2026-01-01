@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DashboardLayout from '@/components/DashboardLayout';
 import WatchdogIncidentsPanel from '@/components/WatchdogIncidentsPanel';
+import { OnboardingTour } from '@/components/OnboardingTour';
 
 // Import feature components
 import Dashboard from './Dashboard';
@@ -74,6 +75,26 @@ export default function MembersDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [watchdogSubTab, setWatchdogSubTab] = useState('incidents');
   const [, setLocation] = useLocation();
+
+  // Onboarding tour steps
+  const tourSteps = [
+    {
+      element: '.px-6',
+      popover: {
+        title: 'Welcome to CSOAI Dashboard!',
+        description: 'This is your central hub for AI safety governance. Let\'s take a quick tour of the key features.',
+        side: 'bottom' as const,
+      },
+    },
+    {
+      element: '[role="tablist"]',
+      popover: {
+        title: 'Navigation Tabs',
+        description: 'Switch between Overview, Watchdog reports, Training courses, Certifications, and Regulatory tools. Each section provides specialized AI safety features.',
+        side: 'bottom' as const,
+      },
+    },
+  ];
 
   const handleViewIncident = (id: number) => {
     // Navigate to incident detail page
@@ -248,6 +269,13 @@ export default function MembersDashboard() {
           </Tabs>
         </div>
       </div>
+      
+      {/* Onboarding Tour */}
+      <OnboardingTour
+        tourId="members-dashboard"
+        steps={tourSteps}
+        onComplete={() => console.log('Tour completed!')}
+      />
     </DashboardLayout>
   );
 }

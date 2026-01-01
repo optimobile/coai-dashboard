@@ -33,6 +33,7 @@ import { useLocation, Link } from "wouter";
 // DashboardLayout removed - this component is now embedded in MembersDashboard
 import { trpc } from "@/lib/trpc";
 import { ReferralWidget } from "@/components/ReferralWidget";
+import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 
 const frameworkCompliance = [
   { name: "EU AI Act", score: 72, status: "In Progress", deadline: "Aug 2026", articles: 113 },
@@ -59,6 +60,11 @@ export default function Dashboard() {
   const { data: pdcaStats } = trpc.pdca.getStats.useQuery();
 
   const isLoading = loiLoading || councilLoading || statsLoading;
+
+  // Show skeleton while loading
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
 
   // Calculate real metrics
   const metrics = [

@@ -69,6 +69,7 @@ import {
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
+import { CardSkeleton } from "@/components/skeletons/CardSkeleton";
 
 type SystemType = "chatbot" | "recommendation" | "classification" | "generation" | "analysis" | "other";
 type RiskLevel = "minimal" | "limited" | "high" | "unacceptable";
@@ -303,8 +304,8 @@ export default function AISystems() {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <div className="space-y-3">
+            <CardSkeleton count={5} showHeader={false} />
           </div>
         )}
 
