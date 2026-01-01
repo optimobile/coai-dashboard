@@ -4,6 +4,10 @@ import crypto from "crypto";
 import { router, publicProcedure } from "../_core/trpc";
 import * as db from "../db";
 import { TRPCError } from "@trpc/server";
+import { Resend } from "resend";
+
+// Initialize Resend for email sending
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Rate limiting map (in-memory, resets on server restart)
 const loginAttempts = new Map<string, { count: number; resetAt: number }>();
@@ -183,11 +187,77 @@ export const emailAuthRouter = router({
         expiresAt: expiresAt.toISOString(),
       });
 
-      // TODO: Send email with reset link
-      // For now, just return success
-      console.log(
-        `[EmailAuth] Password reset token for ${email}: ${token}`
-      );
+      // Send password reset email
+      const resetUrl = `${process.env.VITE_FRONTEND_URL || 'https://csoai.org'}/reset-password?token=${token}`;
+      
+      if (resend) {
+        try {
+          await resend.emails.send({
+            from: "CEASAI <noreply@csoai.org>",
+            to: email,
+            subject: "Reset Your CSOAI Password",
+            html: `
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                </head>
+                <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+                  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+                    <h1 style="color: white; margin: 0; font-size: 28px;">CSOAI</h1>
+                    <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">AI Safety & Compliance Platform</p>
+                  </div>
+                  
+                  <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+                    <h2 style="color: #111827; margin-top: 0;">Reset Your Password</h2>
+                    
+                    <p style="color: #4b5563; font-size: 16px;">
+                      We received a request to reset your password for your CSOAI account. Click the button below to create a new password:
+                    </p>
+                    
+                    <div style="text-align: center; margin: 35px 0;">
+                      <a href="${resetUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 16px;">Reset Password</a>
+                    </div>
+                    
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+                      Or copy and paste this link into your browser:
+                    </p>
+                    <p style="color: #667eea; font-size: 14px; word-break: break-all; background: #f3f4f6; padding: 12px; border-radius: 6px;">
+                      ${resetUrl}
+                    </p>
+                    
+                    <div style="margin-top: 35px; padding-top: 25px; border-top: 1px solid #e5e7eb;">
+                      <p style="color: #6b7280; font-size: 13px; margin: 0;">
+                        <strong>This link will expire in 1 hour.</strong>
+                      </p>
+                      <p style="color: #6b7280; font-size: 13px; margin: 10px 0 0 0;">
+                        If you didn't request a password reset, you can safely ignore this email. Your password will not be changed.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div style="text-align: center; margin-top: 30px; color: #9ca3af; font-size: 12px;">
+                    <p>© 2026 CSOAI. All rights reserved.</p>
+                    <p style="margin-top: 10px;">
+                      <a href="https://csoai.org" style="color: #667eea; text-decoration: none;">Visit our website</a> |
+                      <a href="https://csoai.org/help" style="color: #667eea; text-decoration: none;">Help Center</a>
+                    </p>
+                  </div>
+                </body>
+              </html>
+            `,
+          });
+          console.log(`[EmailAuth] Password reset email sent to ${email}`);
+        } catch (error) {
+          console.error(`[EmailAuth] Failed to send password reset email:`, error);
+          // Don't fail the request if email fails - token is still valid
+        }
+      } else {
+        console.log(
+          `[EmailAuth] Resend not configured. Password reset token for ${email}: ${token}`
+        );
+      }
 
       return {
         success: true,

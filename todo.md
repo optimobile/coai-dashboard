@@ -6495,3 +6495,12 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add skeleton states to Training page
 - [x] Add skeleton states to Workbench page
 - [x] Add skeleton states to Council page
+
+## Urgent Production Issues
+
+- [ ] Switch Stripe from test mode to live mode (update environment variables)
+- [x] Fix password reset emails not being sent
+- [ ] Test live payment flow end-to-end
+- [ ] Verify email delivery for all notification types
+- [x] Remove test mode banner from billing page
+- [ ] Fix publish timeout error

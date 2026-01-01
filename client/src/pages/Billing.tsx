@@ -305,22 +305,7 @@ export default function Billing() {
           })}
         </div>
 
-        {/* Test Card Info */}
-        <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900 flex items-center justify-center flex-shrink-0">
-                <CreditCard className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-amber-900 dark:text-amber-100">Test Mode</h3>
-                <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-                  This is a test environment. Use card number <code className="bg-amber-100 dark:bg-amber-900 px-1.5 py-0.5 rounded font-mono">4242 4242 4242 4242</code> with any future expiry date and CVC to test payments.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Test mode banner removed - using live Stripe keys */}
 
         {/* FAQ Section */}
         <div className="space-y-4">
