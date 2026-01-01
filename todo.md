@@ -6088,3 +6088,12 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Update Pricing page to GBP (£499/£999/£1,999) with monthly payment options
 - [x] Create Newsletter Signup component with database integration
 - [x] Build Certificate Verification public endpoint (/verify/:certificateNumber)
+
+
+## New Year 2026 Tasks (Jan 1, 2026)
+- [x] Fix signup 404 error - authentication flow broken (OAuth double-encoding fixed)
+- [x] Update navigation - menus already collapsible with dropdowns
+- [x] Add Global AI Initiative (124 countries) link under Compliance menu
+- [x] Create 2025 Year in Review document
+- [x] Create 2026 Projections document with valuations, LOIs, roadmap
+- [x] Dragon Mode motivational content

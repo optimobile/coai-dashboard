@@ -14,8 +14,9 @@ export function registerOAuthRoutes(app: Express) {
   app.get("/api/auth/login", (req: Request, res: Response) => {
     const signup = req.query.signup === 'true';
     const ref = req.query.ref as string | undefined;
-    const redirectUri = encodeURIComponent(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
-    const state = btoa(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
+    // Don't double-encode: URLSearchParams already encodes values
+    const redirectUri = `${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`;
+    const state = btoa(redirectUri);
     
     const params = new URLSearchParams({
       client_id: process.env.VITE_FRONTEND_FORGE_API_KEY || '',
@@ -33,8 +34,9 @@ export function registerOAuthRoutes(app: Express) {
   app.get("/api/oauth/login", (req: Request, res: Response) => {
     const signup = req.query.signup === 'true';
     const ref = req.query.ref as string | undefined;
-    const redirectUri = encodeURIComponent(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
-    const state = btoa(`${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`);
+    // Don't double-encode: URLSearchParams already encodes values
+    const redirectUri = `${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/api/oauth/callback`;
+    const state = btoa(redirectUri);
     
     const params = new URLSearchParams({
       client_id: process.env.VITE_FRONTEND_FORGE_API_KEY || '',

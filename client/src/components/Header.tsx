@@ -87,6 +87,7 @@ export function Header() {
       href: '/compliance',
       submenu: [
         { name: 'How It Works', href: '/how-it-works/compliance', description: 'Compliance methodology' },
+        { name: 'Global AI Safety Initiative', href: '/global-ai-safety-initiative', description: '124 countries committed' },
         { name: 'EU AI Act', href: '/compliance/eu-ai-act', description: 'EU regulation' },
         { name: 'NIST AI RMF', href: '/compliance/nist-ai-rmf', description: 'US framework' },
         { name: 'TC260', href: '/compliance/tc260', description: 'China standards' },
