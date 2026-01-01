@@ -90,7 +90,7 @@ export default function Billing() {
       toast.info("Redirecting to checkout...", {
         description: "You'll be taken to Stripe to complete your purchase.",
       });
-      window.open(data.url, "_blank");
+      window.location.href = data.url;
     },
     onError: (error) => {
       toast.error("Checkout failed", { description: error.message });

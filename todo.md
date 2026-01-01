@@ -6161,4 +6161,33 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Update public-facing pages (HowItWorks) with "CEASAI Limited"
 - [ ] Add company number field to legal pages (awaiting user input)
 - [x] Verify all changes and ensure proper legal structure (0 CIC references in active code)
-- [ ] Create checkpoint for launch with CEASAI Limited
+- [x] Create checkpoint for launch with CEASAI Limited (version: a4ecf42b)
+
+
+## Phase: Email Delivery & Payment Testing (Jan 1, 2026)
+
+### Email Delivery Testing
+- [x] Check if RESEND_API_KEY is configured in environment
+- [x] Test welcome email delivery with signup flow
+- [x] Verify welcome email displays CEASAI Limited branding
+- [x] Test certification completion email with PDF attachment
+- [x] Verify certification email displays CEASAI Limited branding
+- [x] Test payment confirmation email
+- [x] Verify payment email displays CEASAI Limited branding
+- [x] Test password reset email (code verified, not sent)
+- [x] Verify all email templates are mobile-responsive
+
+### Production Payment Testing
+- [ ] Generate test promo code in Settings → Payment (feature not implemented yet)
+- [x] Complete test subscription purchase (£39 Pro tier)
+- [x] Verify Stripe checkout displays correct branding
+- [x] Verify payment confirmation email sent successfully
+- [ ] Test subscription management (cancel/reactivate) - requires production test
+- [ ] Verify webhook handling for payment events - requires production test
+- [ ] Test refund flow if needed - requires production test
+
+### Documentation
+- [x] Document all test results
+- [x] Create email testing report
+- [x] Create payment testing report
+- [x] Prepare checklist for company number update
