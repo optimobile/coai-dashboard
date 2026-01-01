@@ -48,6 +48,10 @@ import CertificationV2 from "./pages/Certification-v2";
 import CertificationExam from "./pages/CertificationExam";
 import CertificationResults from "./pages/CertificationResults";
 import MyCertificates from "./pages/MyCertificates";
+import TrainingCourses from "./pages/TrainingCourses";
+import TrainingCourseDetail from "./pages/TrainingCourseDetail";
+import LessonViewer from "./pages/LessonViewer";
+import MyTrainingCourses from "./pages/MyTrainingCourses";
 import ExamReview from "./pages/ExamReview";
 import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
@@ -244,6 +248,10 @@ function App() {
                   <Route path="/dashboard/progress" component={StudentProgress} />
                   <Route path="/dashboard/compliance" component={Compliance} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
+                  <Route path="/training-courses" component={TrainingCourses} />
+                  <Route path="/training-courses/:id" component={TrainingCourseDetail} />
+                  <Route path="/training-courses/:id/learn" component={LessonViewer} />
+                  <Route path="/my-training-courses" component={MyTrainingCourses} />
                   <Route path="/verify-certificate/:id" component={VerifyCertificate} />
                   <Route path="/verify/:certificateNumber" component={VerifyCertificate} />
                   <Route path="/features/33-agent-council" component={AgentCouncilFeature} />
