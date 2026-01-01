@@ -21,6 +21,8 @@ import { toast } from 'sonner';
 import { Quiz } from '@/components/Quiz';
 import { getModuleQuiz } from '@/data/quizzes';
 import type { QuizResult } from '@/types/quiz';
+import { CourseDiscussion } from '@/components/CourseDiscussion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface CourseModule {
   title: string;
@@ -302,12 +304,26 @@ export default function CoursePlayer() {
 
               <Separator className="my-6" />
 
-              {/* Module Content */}
-              <div className="prose prose-slate dark:prose-invert max-w-none">
-                <ReactMarkdown>
-                  {currentModule?.content || 'No content available for this module.'}
-                </ReactMarkdown>
-              </div>
+              {/* Tabs for Content and Discussion */}
+              <Tabs defaultValue="content" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="content">Module Content</TabsTrigger>
+                  <TabsTrigger value="discussion">Discussion</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="content" className="mt-6">
+                  {/* Module Content */}
+                  <div className="prose prose-slate dark:prose-invert max-w-none">
+                    <ReactMarkdown>
+                      {currentModule?.content || 'No content available for this module.'}
+                    </ReactMarkdown>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="discussion" className="mt-6">
+                  <CourseDiscussion courseId={courseId} lessonId={currentModuleIndex} />
+                </TabsContent>
+              </Tabs>
 
               <Separator className="my-8" />
 

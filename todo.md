@@ -6885,3 +6885,40 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add quiz functionality with scoring and feedback
 - [x] Implement certificate generation on course completion
 - [x] Test all course flows and interactions
+
+
+## Phase 13 - Backend Database Integration & Discussion Forums
+
+### Backend Database Integration
+- [x] Design database schema for user enrollments (using existing courseEnrollments table)
+- [x] Design database schema for user progress tracking (per lesson)
+- [x] Design database schema for quiz scores and attempts
+- [x] Create database migrations for user data persistence
+- [x] Implement backend API endpoints for enrollment management (using existing courses router)
+- [x] Implement backend API endpoints for progress tracking
+- [x] Implement backend API endpoints for quiz score management
+- [x] Replace static course data with database queries
+- [x] Update frontend to fetch and persist user progress
+- [x] Update frontend to fetch and persist enrollment data
+- [x] Update frontend to fetch and persist quiz scores
+- [x] Write unit tests for enrollment endpoints
+- [x] Write unit tests for progress tracking endpoints
+- [x] Write unit tests for quiz endpoints
+
+### Discussion Forums
+- [x] Design database schema for discussion threads
+- [x] Design database schema for forum posts and replies
+- [x] Design database schema for post reactions/likes
+- [x] Create database migrations for discussion forums
+- [x] Implement backend API endpoints for thread creation
+- [x] Implement backend API endpoints for posting and replying
+- [x] Implement backend API endpoints for thread listing and filtering
+- [x] Implement backend API endpoints for post reactions
+- [x] Build discussion forum UI component
+- [x] Build thread creation and management UI
+- [x] Build post/reply composition UI with rich text editor
+- [x] Integrate forum UI with backend APIs
+- [x] Add course-specific forum navigation
+- [x] Add forum notifications for replies
+- [x] Write unit tests for forum endpoints
+- [x] Test full forum workflow end-to-end

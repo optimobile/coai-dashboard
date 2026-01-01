@@ -64,6 +64,8 @@ import { stripeSetupRouter } from "./routers/stripeSetup";
 import { statusRouter } from "./routers/status";
 import { adminIncidentsRouter } from "./routers/adminIncidents";
 import { notificationSubscriptionsRouter } from "./routers/notificationSubscriptions";
+import { lessonProgressRouter } from "./routers/lessonProgress";
+import { forumsRouter } from "./routers/forums";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2841,6 +2843,8 @@ export const appRouter = router({
   status: statusRouter,
   adminIncidents: adminIncidentsRouter,
   notificationSubscriptions: notificationSubscriptionsRouter,
+  lessonProgress: lessonProgressRouter,
+  forums: forumsRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -4,6 +4,9 @@ import { sql } from "drizzle-orm"
 // Import status monitoring tables
 export * from './schema-status';
 
+// Import course and forum tables
+export * from './schema-courses-forums';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),
