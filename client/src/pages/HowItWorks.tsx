@@ -4,7 +4,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
-import { CheckCircle, ArrowRight, Users, BookOpen, Award, Briefcase, Shield, Zap } from "lucide-react";
+import { 
+  CheckCircle, 
+  ArrowRight, 
+  Shield, 
+  Scale, 
+  Eye, 
+  FileCheck, 
+  Users, 
+  Building2, 
+  Globe, 
+  AlertTriangle,
+  Gavel,
+  BookOpen,
+  Award,
+  Briefcase
+} from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 export default function HowItWorks() {
@@ -22,87 +37,22 @@ export default function HowItWorks() {
       <div className="min-h-screen bg-white">
         <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 py-24">
           <div className="container max-w-4xl space-y-4">
-            <Skeleton className="h-8 w-32 bg-white/10" />
-            <Skeleton className="h-16 w-full bg-white/10" />
-            <Skeleton className="h-16 w-3/4 bg-white/10" />
+            <Skeleton className="h-8 w-32 bg-emerald-200/50" />
+            <Skeleton className="h-16 w-full bg-emerald-200/50" />
+            <Skeleton className="h-16 w-3/4 bg-emerald-200/50" />
           </div>
         </div>
       </div>
     );
   }
 
-  const steps = [
-    {
-      number: 1,
-      title: "Sign Up",
-      description: "Create your free CSOAI account in 2 minutes. No credit card required.",
-      icon: Users,
-      details: [
-        "Email or OAuth signup",
-        "Instant account activation",
-        "Access to free training"
-      ]
-    },
-    {
-      number: 2,
-      title: "Learn & Train",
-      description: "Complete our comprehensive AI safety training covering EU AI Act, NIST AI RMF, and ISO 42001.",
-      icon: BookOpen,
-      details: [
-        "Self-paced learning (4-6 hours)",
-        "Real-world case studies",
-        "Interactive quizzes"
-      ]
-    },
-    {
-      number: 3,
-      title: "Get Certified",
-      description: "Pass our industry-recognized certification exam to become an official CSOAI Watchdog Analyst.",
-      icon: Award,
-      details: [
-        "50 multiple-choice questions",
-        "90-minute exam",
-        "70% passing threshold"
-      ]
-    },
-    {
-      number: 4,
-      title: "Start Earning",
-      description: "Browse available AI safety monitoring jobs and start earning $45-150/hour remotely.",
-      icon: Briefcase,
-      details: [
-        "Flexible work schedule",
-        "100% remote positions",
-        "Competitive compensation"
-      ]
-    }
-  ];
-
-  const features = [
-    {
-      title: "Byzantine Consensus",
-      description: "Our 33-Agent Council uses 12 different AI providers. No single vendor can manipulate outcomes.",
-      icon: Shield
-    },
-    {
-      title: "Complete Transparency",
-      description: "Every decision is public. Real-time compliance scores, voting records, and analyst reviews.",
-      icon: Zap
-    },
-    {
-      title: "Global Frameworks",
-      description: "Aligned with EU AI Act, NIST AI RMF, and ISO 42001—the three major global standards.",
-      icon: Award
-    }
-  ];
-
   return (
     <>
       <Helmet>
-        <title>How It Works - CSOAI | AI Safety Certification Platform</title>
-        <meta name="description" content="Learn how CSOAI works: sign up, train, get certified, and start earning as an AI Safety Analyst." />
-        <meta name="og:title" content="How It Works - CSOAI" />
-        <meta name="og:description" content="The complete process to become a certified AI Safety Analyst and start earning." />
+        <title>How CSOAI Works - AI Safety Regulatory Body | CSOAI</title>
+        <meta name="description" content="Learn how CSOAI operates as an independent regulatory body for AI safety. We provide oversight, compliance frameworks, and certification to ensure AI systems are safe for humanity." />
+        <meta name="og:title" content="How CSOAI Works - AI Safety Regulatory Body" />
+        <meta name="og:description" content="CSOAI is an independent regulatory body ensuring AI safety through oversight, compliance, and certification." />
       </Helmet>
 
       <div className="min-h-screen bg-white">
@@ -110,122 +60,224 @@ export default function HowItWorks() {
         <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 py-24">
           <div className="container max-w-4xl">
             <Badge className="mb-4 bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
-              Simple 4-Step Process
+              Independent Regulatory Body
             </Badge>
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              How CSOAI Works
+              How CSOAI Ensures AI Safety
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              From zero to certified AI Safety Analyst in just a few hours. Start your career protecting humanity from AI risks.
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl">
+              CSOAI is an independent regulatory body dedicated to ensuring AI systems are safe, compliant, and accountable. We provide the oversight infrastructure that governments, enterprises, and the public need to trust AI.
             </p>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="container max-w-4xl py-20">
-          {/* 4-Step Process */}
+        <div className="container max-w-5xl py-20">
+          
+          {/* What is CSOAI Section */}
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              What is CSOAI?
+            </h2>
+            <div className="prose prose-lg max-w-none text-gray-600 mb-8">
+              <p className="text-lg leading-relaxed">
+                <strong>CSOAI (Council for the Safety of AI)</strong> is a Community Interest Company (CIC) and independent standards body registered in the United Kingdom. We are not a software company or a consulting firm—we are a <strong>regulatory body</strong> that provides the infrastructure for AI safety oversight.
+              </p>
+              <p className="text-lg leading-relaxed mt-4">
+                Just as the FAA ensures aviation safety and the FDA ensures drug safety, CSOAI ensures AI safety. We develop standards, certify professionals, monitor compliance, and provide transparent oversight of AI systems across industries.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="p-6 border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <Scale className="h-10 w-10 text-emerald-600 mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Independent</h3>
+                <p className="text-gray-600">
+                  No ties to OpenAI, Google, Microsoft, or any AI vendor. Our only incentive is public safety.
+                </p>
+              </Card>
+              
+              <Card className="p-6 border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <Gavel className="h-10 w-10 text-emerald-600 mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Regulatory</h3>
+                <p className="text-gray-600">
+                  We set standards, enforce compliance, and hold AI systems accountable to safety requirements.
+                </p>
+              </Card>
+              
+              <Card className="p-6 border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <Globe className="h-10 w-10 text-emerald-600 mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Global</h3>
+                <p className="text-gray-600">
+                  Aligned with EU AI Act, NIST AI RMF, ISO 42001, and TC260—covering all major jurisdictions.
+                </p>
+              </Card>
+            </div>
+          </div>
+
+          {/* How We Ensure AI Safety */}
           <div className="mb-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
-              Your Path to Certification
+              How We Ensure AI Safety
             </h2>
             
-            <div className="space-y-8">
-              {steps.map((step, idx) => {
-                const Icon = step.icon;
-                return (
-                  <div key={idx} className="flex gap-6">
-                    {/* Step Number */}
-                    <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-600 text-white font-bold text-xl">
-                        {step.number}
-                      </div>
-                    </div>
-
-                    {/* Step Content */}
-                    <div className="flex-1 pt-2">
-                      <div className="flex items-center gap-3 mb-2">
-                        <Icon className="h-6 w-6 text-emerald-600" />
-                        <h3 className="text-2xl font-bold text-gray-900">{step.title}</h3>
-                      </div>
-                      <p className="text-gray-600 mb-4">{step.description}</p>
-                      <ul className="space-y-2">
-                        {step.details.map((detail, i) => (
-                          <li key={i} className="flex items-center gap-2 text-gray-700">
-                            <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0" />
-                            {detail}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Arrow */}
-                    {idx < steps.length - 1 && (
-                      <div className="hidden md:flex items-center justify-center">
-                        <ArrowRight className="h-6 w-6 text-gray-300 rotate-90 md:rotate-0" />
-                      </div>
-                    )}
+            <div className="space-y-12">
+              {/* Pillar 1: Oversight */}
+              <div className="flex gap-8 items-start">
+                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-emerald-600 flex items-center justify-center">
+                  <Eye className="h-8 w-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">1. Transparent Oversight</h3>
+                  <p className="text-gray-600 mb-4">
+                    Every AI system needs human oversight. Our <strong>33-Agent Byzantine Council</strong> uses 12 different AI providers plus human analysts to review AI systems. No single vendor can manipulate outcomes. Every decision is public and auditable.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Multi-vendor AI review</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Human analyst oversight</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Public voting records</Badge>
                   </div>
-                );
-              })}
+                </div>
+              </div>
+
+              {/* Pillar 2: Compliance */}
+              <div className="flex gap-8 items-start">
+                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-emerald-600 flex items-center justify-center">
+                  <FileCheck className="h-8 w-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">2. Compliance Framework</h3>
+                  <p className="text-gray-600 mb-4">
+                    We provide the <strong>SOAI-PDCA methodology</strong>—a continuous improvement cycle for AI governance. Plan, Do, Check, Act. This ensures AI systems don't just pass a one-time audit but maintain safety over time.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">EU AI Act compliance</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">NIST AI RMF alignment</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">ISO 42001 certification</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pillar 3: Incident Reporting */}
+              <div className="flex gap-8 items-start">
+                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-emerald-600 flex items-center justify-center">
+                  <AlertTriangle className="h-8 w-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">3. Public Incident Database</h3>
+                  <p className="text-gray-600 mb-4">
+                    Our <strong>Watchdog program</strong> maintains a transparent database of AI safety incidents. Anyone can report concerns. Certified analysts investigate. The public can see what's happening with AI systems in real-time.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Anonymous reporting</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Expert investigation</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Public transparency</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pillar 4: Certification */}
+              <div className="flex gap-8 items-start">
+                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-emerald-600 flex items-center justify-center">
+                  <Award className="h-8 w-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">4. Professional Certification</h3>
+                  <p className="text-gray-600 mb-4">
+                    We train and certify <strong>AI Safety Analysts</strong> through CEASAI (Certified Expert in AI Safety). These professionals provide the human oversight that AI systems require. Without certified analysts, there's no one qualified to monitor AI.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">ISO 17024 aligned</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Rigorous examination</Badge>
+                    <Badge variant="outline" className="text-emerald-700 border-emerald-300">Continuing education</Badge>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Key Features */}
-          <div className="mb-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
-              Why Choose CSOAI?
+          {/* Who We Serve */}
+          <div className="mb-20 bg-gray-50 rounded-2xl p-8 md:p-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+              Who We Serve
             </h2>
             
-            <div className="grid md:grid-cols-3 gap-8">
-              {features.map((feature, idx) => {
-                const Icon = feature.icon;
-                return (
-                  <Card key={idx} className="p-6 border border-gray-200 hover:border-emerald-600 transition-colors">
-                    <Icon className="h-8 w-8 text-emerald-600 mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </Card>
-                );
-              })}
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="flex gap-4">
+                <Building2 className="h-8 w-8 text-emerald-600 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Governments</h3>
+                  <p className="text-gray-600">
+                    We provide the compliance infrastructure governments need to enforce AI regulations like the EU AI Act. Our SOAI-PDCA framework is ready-to-deploy for regulators.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <Briefcase className="h-8 w-8 text-emerald-600 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Enterprises</h3>
+                  <p className="text-gray-600">
+                    Companies using AI need compliance. We provide multi-framework compliance monitoring, certified analyst access, and audit-ready documentation.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <Users className="h-8 w-8 text-emerald-600 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">The Public</h3>
+                  <p className="text-gray-600">
+                    Anyone can report AI safety concerns through our Watchdog program. Our incident database is public. Transparency protects everyone.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <BookOpen className="h-8 w-8 text-emerald-600 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Professionals</h3>
+                  <p className="text-gray-600">
+                    We train and certify AI Safety Analysts—creating a new profession that provides the human oversight AI systems require.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Timeline */}
-          <div className="mb-20 bg-gray-50 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Timeline</h2>
+          {/* The Certification Path */}
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
+              Become a Certified AI Safety Analyst
+            </h2>
+            <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+              Want to be part of the solution? Get certified and join the workforce ensuring AI safety.
+            </p>
             
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="text-emerald-600 font-bold min-w-fit">2 minutes</div>
-                <div>
-                  <p className="font-semibold text-gray-900">Create Account</p>
-                  <p className="text-gray-600">Sign up and verify your email</p>
-                </div>
-              </div>
+            <div className="grid md:grid-cols-4 gap-6">
+              <Card className="p-6 text-center border-2 border-emerald-100">
+                <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto mb-4 font-bold text-xl">1</div>
+                <h3 className="font-bold text-gray-900 mb-2">Sign Up</h3>
+                <p className="text-sm text-gray-600">Create your free account in 2 minutes</p>
+              </Card>
               
-              <div className="flex gap-4">
-                <div className="text-emerald-600 font-bold min-w-fit">4-6 hours</div>
-                <div>
-                  <p className="font-semibold text-gray-900">Complete Training</p>
-                  <p className="text-gray-600">Learn at your own pace, take breaks anytime</p>
-                </div>
-              </div>
+              <Card className="p-6 text-center border-2 border-emerald-100">
+                <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto mb-4 font-bold text-xl">2</div>
+                <h3 className="font-bold text-gray-900 mb-2">Train</h3>
+                <p className="text-sm text-gray-600">Complete our comprehensive training (4-6 hours)</p>
+              </Card>
               
-              <div className="flex gap-4">
-                <div className="text-emerald-600 font-bold min-w-fit">90 minutes</div>
-                <div>
-                  <p className="font-semibold text-gray-900">Take Exam</p>
-                  <p className="text-gray-600">50 questions, 70% to pass, unlimited retakes</p>
-                </div>
-              </div>
+              <Card className="p-6 text-center border-2 border-emerald-100">
+                <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto mb-4 font-bold text-xl">3</div>
+                <h3 className="font-bold text-gray-900 mb-2">Certify</h3>
+                <p className="text-sm text-gray-600">Pass the 50-question exam (70% to pass)</p>
+              </Card>
               
-              <div className="flex gap-4">
-                <div className="text-emerald-600 font-bold min-w-fit">Same day</div>
-                <div>
-                  <p className="font-semibold text-gray-900">Start Earning</p>
-                  <p className="text-gray-600">Browse jobs and apply immediately after certification</p>
-                </div>
-              </div>
+              <Card className="p-6 text-center border-2 border-emerald-100">
+                <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto mb-4 font-bold text-xl">4</div>
+                <h3 className="font-bold text-gray-900 mb-2">Work</h3>
+                <p className="text-sm text-gray-600">Start earning £45-150/hour remotely</p>
+              </Card>
             </div>
           </div>
 
@@ -235,38 +287,50 @@ export default function HowItWorks() {
             
             <div className="space-y-4">
               <Card className="p-6 border border-gray-200">
-                <h3 className="font-bold text-gray-900 mb-2">Do I need any prior experience?</h3>
-                <p className="text-gray-600">No. Our training teaches you everything from scratch. We only require critical thinking skills and attention to detail.</p>
+                <h3 className="font-bold text-gray-900 mb-2">Is CSOAI a government agency?</h3>
+                <p className="text-gray-600">No. CSOAI is an independent Community Interest Company (CIC)—a type of non-profit in the UK. We work with governments but are not part of any government. Our independence ensures impartiality.</p>
               </Card>
               
               <Card className="p-6 border border-gray-200">
-                <h3 className="font-bold text-gray-900 mb-2">Can I retake the exam if I fail?</h3>
-                <p className="text-gray-600">Yes, unlimited retakes. Most students pass on their first attempt. We provide detailed feedback to help you improve.</p>
+                <h3 className="font-bold text-gray-900 mb-2">How is CSOAI different from AI companies?</h3>
+                <p className="text-gray-600">AI companies build AI. We regulate it. We have no financial ties to OpenAI, Google, Microsoft, or any AI vendor. Our only incentive is public safety—not selling AI products.</p>
               </Card>
               
               <Card className="p-6 border border-gray-200">
-                <h3 className="font-bold text-gray-900 mb-2">Is the training really free?</h3>
-                <p className="text-gray-600">Yes, 100% free. We make money when you get certified and start earning as an analyst. Your success is our success.</p>
+                <h3 className="font-bold text-gray-900 mb-2">What authority does CSOAI have?</h3>
+                <p className="text-gray-600">We are a standards body, similar to ISO or BSI. We develop standards, certify professionals, and provide compliance infrastructure. Governments and enterprises adopt our frameworks voluntarily—or as required by regulations like the EU AI Act.</p>
               </Card>
               
               <Card className="p-6 border border-gray-200">
-                <h3 className="font-bold text-gray-900 mb-2">How do I get paid?</h3>
-                <p className="text-gray-600">We match you with AI safety monitoring jobs. You work directly with enterprises, get paid per hour, and manage your own schedule.</p>
+                <h3 className="font-bold text-gray-900 mb-2">Why should I trust CSOAI?</h3>
+                <p className="text-gray-600">Our 33-Agent Council uses 12 different AI providers—no single vendor can manipulate outcomes. Every decision is public. Our analysts are certified professionals. And we have no commercial incentive to favor any AI company.</p>
               </Card>
             </div>
           </div>
 
           {/* CTA Section */}
-          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-lg p-12 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">Ready to Start Your AI Safety Career?</h2>
-            <p className="text-lg mb-8 text-emerald-50">
-              Join thousands of analysts protecting humanity from AI risks. Start free training today.
+          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-2xl p-12 text-center text-white">
+            <h2 className="text-3xl font-bold mb-4">Ready to Get Involved?</h2>
+            <p className="text-lg mb-8 text-emerald-50 max-w-2xl mx-auto">
+              Whether you're an enterprise needing compliance, a professional seeking certification, or a citizen concerned about AI safety—CSOAI is here to help.
             </p>
-            <Link href="/signup">
-              <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
-                Get Started Free
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/signup">
+                <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
+                  Get Certified
+                </Button>
+              </Link>
+              <Link href="/enterprise">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-500">
+                  Enterprise Solutions
+                </Button>
+              </Link>
+              <Link href="/watchdog">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-500">
+                  Report an Incident
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

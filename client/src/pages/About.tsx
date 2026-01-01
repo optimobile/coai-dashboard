@@ -133,7 +133,7 @@ export default function About() {
             Companies rushed to comply. But one thing was missing: <span className="font-semibold">trained professionals who could actually monitor AI systems for safety.</span>
           </p>
           <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-            That's when CSOAI was born—not as another AI comp            <span className="text-emerald-600 dark:text-emerald-300 font-semibold">the solution to two problems at once</span>: 
+            That's when CSOAI was born—not as another AI company, but as <span className="text-emerald-600 dark:text-emerald-300 font-semibold">the solution to two problems at once</span>: 
             protecting humanity from AI risks while creating thousands of meaningful jobs for people displaced by automation.
           </p>
         </div>
