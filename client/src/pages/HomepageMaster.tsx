@@ -51,15 +51,15 @@ export default function HomepageMaster() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-center"
+            className="bg-gradient-to-r from-red-100 to-orange-100 border-2 border-red-400 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-center shadow-lg"
           >
             {/* Free Course Giveaway Announcement */}
             <p className="text-sm sm:text-base md:text-lg font-bold text-emerald-700 mb-3">
               🎁 First 1,000 signups get 3 foundation courses FREE (£999 value)
             </p>
             
-            <p className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 mb-2 sm:mb-3">
-              <span className="text-red-600">EU AI Act Enforcement Deadline</span> — We need <span className="font-bold text-red-700">250,000 AI Safety Analysts</span> in:
+            <p className="text-xs sm:text-sm md:text-base font-semibold text-gray-900 mb-2 sm:mb-3">
+              <span className="text-red-700 font-bold">EU AI Act Enforcement Deadline</span> — We need <span className="font-bold text-red-800">250,000 AI Safety Analysts</span> in:
             </p>
             <CountdownTimer />
             

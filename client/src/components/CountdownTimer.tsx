@@ -44,31 +44,39 @@ export function CountdownTimer() {
     <div className="flex items-center justify-center gap-2 text-center">
       <div className="flex gap-3">
         <div className="flex flex-col items-center">
-          <div className="text-3xl md:text-4xl font-bold text-red-600 tabular-nums">
-            {String(timeRemaining.days).padStart(2, '0')}
+          <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+              {String(timeRemaining.days).padStart(2, '0')}
+            </div>
           </div>
-          <div className="text-xs md:text-sm font-semibold text-gray-600 mt-1">Days</div>
+          <div className="text-xs md:text-sm font-bold text-gray-900 mt-2">Days</div>
         </div>
-        <div className="text-3xl md:text-4xl font-bold text-gray-400">:</div>
+        <div className="text-3xl md:text-4xl font-bold text-gray-900 self-start mt-2">:</div>
         <div className="flex flex-col items-center">
-          <div className="text-3xl md:text-4xl font-bold text-red-600 tabular-nums">
-            {String(timeRemaining.hours).padStart(2, '0')}
+          <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+              {String(timeRemaining.hours).padStart(2, '0')}
+            </div>
           </div>
-          <div className="text-xs md:text-sm font-semibold text-gray-600 mt-1">Hours</div>
+          <div className="text-xs md:text-sm font-bold text-gray-900 mt-2">Hours</div>
         </div>
-        <div className="text-3xl md:text-4xl font-bold text-gray-400">:</div>
+        <div className="text-3xl md:text-4xl font-bold text-gray-900 self-start mt-2">:</div>
         <div className="flex flex-col items-center">
-          <div className="text-3xl md:text-4xl font-bold text-red-600 tabular-nums">
-            {String(timeRemaining.minutes).padStart(2, '0')}
+          <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+              {String(timeRemaining.minutes).padStart(2, '0')}
+            </div>
           </div>
-          <div className="text-xs md:text-sm font-semibold text-gray-600 mt-1">Minutes</div>
+          <div className="text-xs md:text-sm font-bold text-gray-900 mt-2">Minutes</div>
         </div>
-        <div className="text-3xl md:text-4xl font-bold text-gray-400">:</div>
+        <div className="text-3xl md:text-4xl font-bold text-gray-900 self-start mt-2">:</div>
         <div className="flex flex-col items-center">
-          <div className="text-3xl md:text-4xl font-bold text-red-600 tabular-nums">
-            {String(timeRemaining.seconds).padStart(2, '0')}
+          <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+              {String(timeRemaining.seconds).padStart(2, '0')}
+            </div>
           </div>
-          <div className="text-xs md:text-sm font-semibold text-gray-600 mt-1">Seconds</div>
+          <div className="text-xs md:text-sm font-bold text-gray-900 mt-2">Seconds</div>
         </div>
       </div>
     </div>

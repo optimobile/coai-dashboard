@@ -172,11 +172,19 @@ async function handleIncidentLifecycle(service: any, result: HealthCheckResult) 
         reportedBy: null, // Auto-detected, not reported by user
       });
 
-    const incidentId = Number((incidentResult as any).insertId);
+    // Extract incident ID safely - handle both array and object responses
+    let incidentId: number | null = null;
+    if (Array.isArray(incidentResult) && incidentResult[0]?.insertId) {
+      incidentId = Number(incidentResult[0].insertId);
+    } else if ((incidentResult as any).insertId) {
+      incidentId = Number((incidentResult as any).insertId);
+    }
     
     // Send notifications only if we have a valid ID
-    if (incidentId && !isNaN(incidentId)) {
+    if (incidentId && !isNaN(incidentId) && incidentId > 0) {
       await notifyIncidentCreated(incidentId);
+    } else {
+      console.error(`Failed to create incident for ${service.serviceName}: Invalid incident ID`, incidentResult);
     }
     
   } else if (result.isHealthy && existingIncident && existingIncident.status !== 'resolved') {

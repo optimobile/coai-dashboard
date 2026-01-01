@@ -54,28 +54,42 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-const navItems = [
-  { path: "/", label: "New Chat", icon: PenSquare, isAction: true },
-  { path: "/dashboard", label: "Dashboard", icon: LayoutGrid },
-  { path: "/ai-systems", label: "AI Systems", icon: Shield },
-  { path: "/compliance", label: "Compliance", icon: FileCheck },
-  { path: "/agent-council", label: "33-Agent Council", icon: Users },
-  { path: "/reports", label: "Reports", icon: FileText },
-  { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
-  { path: "/training", label: "Training Courses", icon: BookMarked },
-  { path: "/my-courses", label: "My Courses", icon: GraduationCap },
-  { path: "/certificates", label: "My Certificates", icon: Award },
-  { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
-  { path: "/public", label: "Public Site", icon: Globe },
-  { path: "/api-docs", label: "API Docs", icon: Code },
-  { path: "/api-keys", label: "API Keys", icon: Key },
-  { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
-  { path: "/settings/billing", label: "Billing", icon: CreditCard },
-  { path: "/knowledge-base", label: "Knowledge Base", icon: Brain },
-  { path: "/recommendations", label: "Recommendations", icon: Lightbulb },
-  { path: "/standards", label: "Standards", icon: BookOpen },
-  { path: "/resources", label: "Resources", icon: FolderOpen },
-  { path: "/about", label: "About", icon: Info },
+// Organized navigation with sections
+const navSections = [
+  {
+    title: "Core",
+    items: [
+      { path: "/dashboard", label: "Dashboard", icon: LayoutGrid },
+      { path: "/ai-systems", label: "AI Systems", icon: Shield },
+      { path: "/compliance", label: "Compliance", icon: FileCheck },
+      { path: "/agent-council", label: "33-Agent Council", icon: Users },
+      { path: "/workbench", label: "Analyst Workbench", icon: Briefcase },
+    ],
+  },
+  {
+    title: "Learning",
+    items: [
+      { path: "/training", label: "Training Courses", icon: BookMarked },
+      { path: "/my-courses", label: "My Courses", icon: GraduationCap },
+      { path: "/certificates", label: "Certificates", icon: Award },
+    ],
+  },
+  {
+    title: "Tools",
+    items: [
+      { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
+      { path: "/reports", label: "Reports", icon: FileText },
+      { path: "/api-keys", label: "API Keys", icon: Key },
+    ],
+  },
+  {
+    title: "Resources",
+    items: [
+      { path: "/knowledge-base", label: "Knowledge Base", icon: Brain },
+      { path: "/standards", label: "Standards", icon: BookOpen },
+      { path: "/api-docs", label: "API Docs", icon: Code },
+    ],
+  },
 ];
 
 // Note: Watchdog, Training, Certification, and Regulatory are now integrated into the Members Dashboard
@@ -123,29 +137,40 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </Tooltip>
         </div>
 
-        {/* Navigation Items */}
-        <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5">
-          {navItems.slice(1).map((item) => {
-            const isActive = location === item.path;
-            const Icon = item.icon;
+        {/* Navigation Items - Organized by Sections */}
+        <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-4">
+          {navSections.map((section) => (
+            <div key={section.title}>
+              <div className="px-3 mb-2">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {section.title}
+                </h3>
+              </div>
+              <div className="space-y-0.5">
+                {section.items.map((item) => {
+                  const isActive = location === item.path;
+                  const Icon = item.icon;
 
-            return (
-              <Link key={item.path} href={item.path}>
-                <motion.div
-                  whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    isActive
-                      ? "bg-accent text-foreground font-medium"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Icon className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{item.label}</span>
-                </motion.div>
-              </Link>
-            );
-          })}
+                  return (
+                    <Link key={item.path} href={item.path}>
+                      <motion.div
+                        whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                          isActive
+                            ? "bg-accent text-foreground font-medium"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <Icon className="h-4 w-4 flex-shrink-0" />
+                        <span className="truncate">{item.label}</span>
+                      </motion.div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
 
           {/* Search */}
           <div className="pt-2">
@@ -193,7 +218,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               />
             </Button>
             <span className="text-sm font-medium">
-              {navItems.find((item) => item.path === location)?.label || "CSOAI"}
+              {navSections.flatMap(s => s.items).find((item) => item.path === location)?.label || "CSOAI"}
             </span>
           </div>
 
