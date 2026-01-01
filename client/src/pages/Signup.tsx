@@ -8,6 +8,7 @@ import { useLocation, useSearch } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Shield, ArrowRight, CheckCircle2, Star, Gift } from 'lucide-react';
+import { EmailPasswordSignupForm } from '@/components/EmailPasswordSignupForm';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Signup() {
@@ -41,13 +42,7 @@ export default function Signup() {
     }
   }, [user, setLocation, search]);
 
-  const handleSignup = () => {
-    // Redirect to OAuth login with referral code if available
-    const loginUrl = referralCode 
-      ? `/api/oauth/login?ref=${encodeURIComponent(referralCode)}&signup=true`
-      : '/api/oauth/login?signup=true';
-    window.location.href = loginUrl;
-  };
+  // OAuth signup removed - using email/password instead
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center py-12 px-4">
@@ -168,15 +163,7 @@ export default function Signup() {
               </div>
             )}
 
-            <Button
-              size="lg"
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
-              onClick={handleSignup}
-              title="Sign up now and get instant access to your dashboard"
-            >
-              Sign Up with OAuth
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <EmailPasswordSignupForm />
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

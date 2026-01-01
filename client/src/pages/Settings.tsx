@@ -60,31 +60,34 @@ export default function Settings() {
   const [payoutFrequency, setPayoutFrequency] = useState<"weekly" | "biweekly" | "monthly">("monthly");
 
   // Fetch payout settings from backend
-  const { data: payoutSettings, isLoading: isLoadingSettings } = trpc.referral.getPayoutSettings.useQuery();
+  // DISABLED: Referral feature temporarily disabled for launch
+  // const { data: payoutSettings, isLoading: isLoadingSettings } = trpc.referral.getPayoutSettings.useQuery();
+  const isLoadingSettings = false;
+  const payoutSettings = null;
 
   // Update payout frequency mutation
-  const updatePayoutFrequencyMutation = trpc.referral.updatePayoutFrequency.useMutation({
-    onSuccess: (data) => {
-      toast.success("Payout settings saved", {
-        description: data.message,
-      });
-    },
-    onError: (error) => {
-      toast.error("Failed to save payout settings", {
-        description: error.message,
-      });
-    },
-  });
+  // const updatePayoutFrequencyMutation = trpc.referral.updatePayoutFrequency.useMutation({
+  //   onSuccess: (data) => {
+  //     toast.success("Payout settings saved", {
+  //       description: data.message,
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     toast.error("Failed to save payout settings", {
+  //       description: error.message,
+  //     });
+  // });
 
   // Set initial payout frequency from backend
-  useEffect(() => {
-    if (payoutSettings?.data?.payoutFrequency) {
-      setPayoutFrequency(payoutSettings.data.payoutFrequency as "weekly" | "biweekly" | "monthly");
-    }
-  }, [payoutSettings]);
+  // useEffect(() => {
+  //   if (payoutSettings?.data?.payoutFrequency) {
+  //     setPayoutFrequency(payoutSettings.data.payoutFrequency as "weekly" | "biweekly" | "monthly");
+  //   }
+  // }, [payoutSettings]);
 
   const handleSavePayoutSettings = () => {
-    updatePayoutFrequencyMutation.mutate({ frequency: payoutFrequency });
+    // updatePayoutFrequencyMutation.mutate({ frequency: payoutFrequency });
+    toast.info("Payout settings feature temporarily disabled");
   };
 
   return (
@@ -273,11 +276,11 @@ export default function Settings() {
                             </Select>
                           </div>
 
-                          {payoutSettings?.data?.lastPayoutDate && (
+                          {/* payoutSettings?.data?.lastPayoutDate && (
                             <p className="text-xs text-muted-foreground">
                               Last payout: {new Date(payoutSettings.data.lastPayoutDate).toLocaleDateString()}
                             </p>
-                          )}
+                          ) */}
                         </div>
 
                         <Separator />
@@ -333,9 +336,9 @@ export default function Settings() {
                         <div className="flex justify-end">
                           <Button 
                             onClick={handleSavePayoutSettings}
-                            disabled={updatePayoutFrequencyMutation.isPending}
+                            disabled={false}
                           >
-                            {updatePayoutFrequencyMutation.isPending ? (
+                            {false ? (
                               <>
                                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                 Saving...

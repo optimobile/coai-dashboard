@@ -587,6 +587,7 @@ export const trainingModules = mysqlTable("training_modules", {
 	title: varchar({ length: 255 }).notNull(),
 	description: text(),
 	content: text().notNull(),
+	courseId: int(),
 	orderIndex: int().default(0).notNull(),
 	durationMinutes: int().default(30).notNull(),
 	isRequired: int().default(1).notNull(),
@@ -645,6 +646,7 @@ export const users = mysqlTable("users", {
 	openId: varchar({ length: 64 }).notNull(),
 	name: text(),
 	email: varchar({ length: 320 }),
+	password: varchar({ length: 255 }),
 	loginMethod: varchar({ length: 64 }),
 	role: mysqlEnum(['user','admin','watchdog_analyst','regulator','enterprise_admin','compliance_officer']).default('user').notNull(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
@@ -992,6 +994,21 @@ export type TestQuestion = typeof testQuestions.$inferSelect;
 export type InsertTestQuestion = typeof testQuestions.$inferInsert;
 export type UserCertificate = typeof userCertificates.$inferSelect;
 export type InsertUserCertificate = typeof userCertificates.$inferInsert;
+
+export const passwordResetTokens = mysqlTable("password_reset_tokens", {
+	id: int().autoincrement().notNull(),
+	userId: int().notNull(),
+	token: varchar({ length: 255 }).notNull(),
+	expiresAt: timestamp({ mode: 'string' }).notNull(),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+},
+(table) => [
+	index("password_reset_tokens_userId_idx").on(table.userId),
+	index("password_reset_tokens_token_idx").on(table.token),
+]);
+
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
+export type InsertPasswordResetToken = typeof passwordResetTokens.$inferInsert;
 export type UserTestAttempt = typeof userTestAttempts.$inferSelect;
 export type InsertUserTestAttempt = typeof userTestAttempts.$inferInsert;
 export type UserTrainingProgress = typeof userTrainingProgress.$inferSelect;

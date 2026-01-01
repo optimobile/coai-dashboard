@@ -59,6 +59,8 @@ import { stripeConnectRouter } from "./routers/stripeConnect";
 import { giveawayRouter } from "./routers/giveaway";
 import { watchdogIncidentsRouter } from "./routers/watchdogIncidents";
 import { newsletterRouter } from "./routers/newsletter";
+import { emailAuthRouter } from "./routers/emailAuth";
+import { stripeSetupRouter } from "./routers/stripeSetup";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2787,6 +2789,7 @@ export const appRouter = router({
       return { success: true } as const;
     }),
   }),
+  emailAuth: emailAuthRouter,
   
   // Feature routers
   watchdog: watchdogRouter,
@@ -2831,6 +2834,7 @@ export const appRouter = router({
   giveaway: giveawayRouter,
   watchdogIncidents: watchdogIncidentsRouter,
   newsletter: newsletterRouter,
+  stripeSetup: stripeSetupRouter,
 });
 
 export type AppRouter = typeof appRouter;

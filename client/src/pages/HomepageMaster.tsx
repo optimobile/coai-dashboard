@@ -51,10 +51,26 @@ export default function HomepageMaster() {
             transition={{ duration: 0.6 }}
             className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-center"
           >
+            {/* Free Course Giveaway Announcement */}
+            <p className="text-sm sm:text-base md:text-lg font-bold text-emerald-700 mb-3">
+              🎁 We are giving away one million pounds worth of free courses to help
+            </p>
+            
             <p className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 mb-2 sm:mb-3">
               <span className="text-red-600">EU AI Act Enforcement Deadline</span> — We need <span className="font-bold text-red-700">250,000 AI Safety Analysts</span> in:
             </p>
             <CountdownTimer />
+            
+            {/* Free Course CTA Button */}
+            <div className="mt-6">
+              <Button
+                onClick={() => handleCTA('hero-free-course')}
+                size="lg"
+                className="bg-red-600 hover:bg-red-700 text-white font-bold text-base sm:text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                Get your free £999 course here
+              </Button>
+            </div>
           </motion.div>
 
           {/* Main Headline */}

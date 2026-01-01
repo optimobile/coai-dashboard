@@ -29,12 +29,11 @@ export default function Courses() {
   const [selectedRegion, setSelectedRegion] = useState<number | undefined>();
   const [selectedLevel, setSelectedLevel] = useState<"fundamentals" | "advanced" | "specialist" | undefined>();
   const [selectedFramework, setSelectedFramework] = useState<string | undefined>();
-  const [priceFilter, setPriceFilter] = useState<"all" | "free" | "paid">(filterParam === "free" ? "free" : filterParam === "paid" ? "paid" : "all");
+  const [priceFilter, setPriceFilter] = useState<"all" | "paid">(filterParam === "paid" ? "paid" : "all");
   
   // Update filter when URL changes
   useEffect(() => {
-    if (filterParam === "free") setPriceFilter("free");
-    else if (filterParam === "paid") setPriceFilter("paid");
+    if (filterParam === "paid") setPriceFilter("paid");
     else setPriceFilter("all");
   }, [filterParam]);
 
@@ -152,14 +151,13 @@ export default function Courses() {
               <label className="text-sm font-medium mb-2 block">Price</label>
               <Select
                 value={priceFilter}
-                onValueChange={(value: "all" | "free" | "paid") => setPriceFilter(value)}
+                onValueChange={(value: "all" | "paid") => setPriceFilter(value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="All Prices" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Courses</SelectItem>
-                  <SelectItem value="free">Free Courses</SelectItem>
                   <SelectItem value="paid">Paid Courses (£499-£1,999)</SelectItem>
                 </SelectContent>
               </Select>
@@ -191,17 +189,12 @@ export default function Courses() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {courses
                   .filter((course: any) => {
-                    if (priceFilter === "free") return course.isFree || course.price === 0 || course.price === null;
                     if (priceFilter === "paid") return !course.isFree && course.price > 0;
                     return true;
                   })
                   .sort((a: any, b: any) => {
-                    // If filtering paid, show paid first (higher price first)
-                    if (priceFilter === "paid") return (b.price || 0) - (a.price || 0);
-                    // If filtering free, show free first
-                    if (priceFilter === "free") return (a.price || 0) - (b.price || 0);
-                    // Default: show paid courses first
-                    return (b.price || 0) - (a.price || 0);
+                    // Show lower priced courses first (fundamentals before advanced)
+                    return (a.price || 0) - (b.price || 0);
                   })
                   .map((course: any) => (
                     <CourseCard key={course.id} course={course} />
@@ -238,6 +231,8 @@ function CourseCard({ course }: { course: any }) {
 
   const handleEnroll = async () => {
     try {
+      console.log('[Frontend] handleEnroll started', { courseId: course.id, selectedPlan });
+      
       const paymentTypeMap = {
         oneTime: "one_time",
         threeMonth: "3_month",
@@ -245,16 +240,23 @@ function CourseCard({ course }: { course: any }) {
         twelveMonth: "12_month",
       };
 
+      console.log('[Frontend] Calling enrollInCourse mutation...');
       const result = await enrollMutation.mutateAsync({
         courseId: course.id,
         paymentType: paymentTypeMap[selectedPlan] as any,
       });
 
+      console.log('[Frontend] Enrollment result:', result);
+
       // Redirect to Stripe checkout
       if (result.checkoutUrl) {
+        console.log('[Frontend] Redirecting to Stripe:', result.checkoutUrl);
         window.location.href = result.checkoutUrl;
+      } else {
+        console.warn('[Frontend] No checkoutUrl in result');
       }
     } catch (error: any) {
+      console.error('[Frontend] Enrollment error:', error);
       toast.error(error.message || "Failed to enroll in course");
     }
   };

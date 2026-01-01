@@ -95,3 +95,83 @@ export const db = {
 };
 
 // TODO: add feature queries here as your schema grows.
+
+// Email/Password Authentication Functions
+
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user by email: database not available");
+    return undefined;
+  }
+
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createUser(user: InsertUser): Promise<number> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("[Database] Cannot create user: database not available");
+  }
+
+  const result = await db.insert(users).values(user);
+  return Number(result[0].insertId);
+}
+
+export async function updateUserLastSignedIn(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update last signed in: database not available");
+    return;
+  }
+
+  await db.update(users)
+    .set({ lastSignedIn: new Date().toISOString() })
+    .where(eq(users.id, userId));
+}
+
+export async function updateUserPassword(userId: number, passwordHash: string): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("[Database] Cannot update password: database not available");
+  }
+
+  await db.update(users)
+    .set({ password: passwordHash })
+    .where(eq(users.id, userId));
+}
+
+export async function createPasswordResetToken(data: { userId: number; token: string; expiresAt: string }): Promise<number> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("[Database] Cannot create reset token: database not available");
+  }
+
+  const { passwordResetTokens } = await import("../drizzle/schema");
+  const result = await db.insert(passwordResetTokens).values(data);
+  return Number(result[0].insertId);
+}
+
+export async function getPasswordResetToken(token: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get reset token: database not available");
+    return undefined;
+  }
+
+  const { passwordResetTokens } = await import("../drizzle/schema");
+  const result = await db.select().from(passwordResetTokens).where(eq(passwordResetTokens.token, token)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function deletePasswordResetToken(tokenId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot delete reset token: database not available");
+    return;
+  }
+
+  const { passwordResetTokens } = await import("../drizzle/schema");
+  await db.delete(passwordResetTokens).where(eq(passwordResetTokens.id, tokenId));
+}

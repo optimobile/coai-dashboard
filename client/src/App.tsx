@@ -80,6 +80,10 @@ import NewHomeV2 from "./pages/NewHome-v2";
 import HomepageMaster from "./pages/HomepageMaster";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import StripeSetup from "./pages/StripeSetup";
+import EnrollmentTest from "./pages/EnrollmentTest";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
@@ -177,7 +181,9 @@ function App() {
                   <Route path="/" component={HomepageMaster} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
-                  <Route path="/referral" component={ReferralLandingPage} />
+                  <Route path="/forgot-password" component={ForgotPassword} />
+                  <Route path="/reset-password" component={ResetPassword} />
+                  {/* <Route path="/referral" component={ReferralLandingPage} /> */}
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
@@ -247,6 +253,8 @@ function App() {
                   <Route path="/my-applications" component={MyApplications} />
                   <Route path="/public" component={PublicHome} />
                   <Route path="/admin" component={Admin} />
+                  <Route path="/admin/stripe-setup" component={StripeSetup} />
+                  <Route path="/admin/enrollment-test" component={EnrollmentTest} />
                   <Route path="/api-docs" component={ApiDocs} />
                   <Route path="/api-keys" component={ApiKeys} />
                   <Route path="/pdca" component={PDCACycles} />

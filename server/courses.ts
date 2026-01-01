@@ -8,7 +8,7 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
-import { courses, courseEnrollments, courseBundles, regions } from "../drizzle/schema";
+import { courses, courseEnrollments, courseBundles, regions, trainingModules } from "../drizzle/schema";
 import { eq, and, sql } from "drizzle-orm";
 import Stripe from "stripe";
 
@@ -93,10 +93,17 @@ export const coursesRouter = router({
         .from(courseEnrollments)
         .where(eq(courseEnrollments.courseId, input.courseId));
 
+      // Get training modules for this course
+      const modules = await db
+        .select()
+        .from(trainingModules)
+        .where(eq(trainingModules.courseId, input.courseId));
+
       return {
         ...course,
         isFree: isCourseFreeFn(course.framework),
         enrollmentCount: enrollmentStats?.count || 0,
+        modules: modules || [],
         pricing: {
           oneTime: course.price,
           threeMonth: course.price3Month,
@@ -172,7 +179,10 @@ export const coursesRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const db = await getDb();
+      try {
+        console.log('[enrollInCourse] Starting enrollment:', { input, userId: ctx.user.id });
+        
+        const db = await getDb();
       if (!db) throw new Error("Database not available");
 
       const userId = ctx.user.id;
@@ -201,6 +211,15 @@ export const coursesRouter = router({
       if (!course) {
         throw new Error("Course not found");
       }
+      
+      console.log('[enrollInCourse] Course found:', { 
+        id: course.id, 
+        title: course.title,
+        stripePriceId: course.stripePriceId,
+        stripePriceId3Month: course.stripePriceId3Month,
+        stripePriceId6Month: course.stripePriceId6Month,
+        stripePriceId12Month: course.stripePriceId12Month
+      });
 
       // FREE COURSES (Watchdog) - Instant enrollment
       if (isCourseFreeFn(course.framework)) {
@@ -240,8 +259,17 @@ export const coursesRouter = router({
 
       const stripePriceIdKey = paymentTypeMap[input.paymentType];
       const stripePriceId = course[stripePriceIdKey];
+      
+      console.log('[enrollInCourse] Stripe price lookup:', {
+        paymentType: input.paymentType,
+        stripePriceIdKey,
+        stripePriceId,
+        courseId: course.id,
+        courseTitle: course.title
+      });
 
       if (!stripePriceId) {
+        console.error('[enrollInCourse] Missing Stripe price ID:', { courseId: course.id, paymentType: input.paymentType });
         throw new Error(`Payment plan not available for this course. Please contact support.`);
       }
 
@@ -249,6 +277,8 @@ export const coursesRouter = router({
       const isSubscription = input.paymentType !== "one_time";
 
       try {
+        console.log('[enrollInCourse] Creating Stripe checkout session...');
+        
         // Create Stripe checkout session
         const session = await (stripe.checkout.sessions.create as any)({
           payment_method_types: ["card"],
@@ -259,8 +289,8 @@ export const coursesRouter = router({
             },
           ],
           mode: isSubscription ? "subscription" : "payment",
-          success_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/my-courses?success=true&courseId=${input.courseId}`,
-          cancel_url: `${process.env.VITE_FRONTEND_FORGE_API_URL}/courses?cancelled=true`,
+          success_url: `${process.env.VITE_FRONTEND_URL}/my-courses?success=true&courseId=${input.courseId}`,
+          cancel_url: `${process.env.VITE_FRONTEND_URL}/courses?cancelled=true`,
           client_reference_id: `${userId}`,
           metadata: {
             courseId: input.courseId.toString(),
@@ -268,9 +298,11 @@ export const coursesRouter = router({
             paymentType: input.paymentType,
           },
         });
+        
+        console.log('[enrollInCourse] Stripe session created:', { sessionId: session.id, url: session.url });
 
         // Create enrollment record (pending payment)
-        const [enrollment] = await db
+        const insertResult = await db
           .insert(courseEnrollments)
           .values({
             userId,
@@ -281,18 +313,25 @@ export const coursesRouter = router({
             stripePaymentIntentId: session.id,
             subscriptionStatus: "none" as any,
             referredBySpecialistId: input.referredBySpecialistId,
-          })
-          .$returningId() as { id: number }[];
+          });
+
+        const enrollmentId = Number((insertResult as any).insertId);
+        console.log('[enrollInCourse] Enrollment created:', { enrollmentId });
 
         return {
-          enrollmentId: enrollment.id,
+          enrollmentId,
           checkoutUrl: session.url,
           paymentType: input.paymentType,
           isFree: false,
           message: "Redirecting to payment...",
         };
       } catch (error: any) {
+        console.error('[enrollInCourse] Stripe error:', error);
         throw new Error(`Stripe error: ${error.message}`);
+      }
+      } catch (error: any) {
+        console.error('[enrollInCourse] FATAL ERROR:', error);
+        throw new Error(`Enrollment failed: ${error.message}`);
       }
     }),
 

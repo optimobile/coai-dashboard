@@ -8,6 +8,7 @@ import { useLocation } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Shield, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { EmailPasswordLoginForm } from '@/components/EmailPasswordLoginForm';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Login() {
@@ -21,10 +22,7 @@ export default function Login() {
     }
   }, [user, setLocation]);
 
-  const handleLogin = () => {
-    // Redirect to OAuth endpoint
-    window.location.href = '/api/auth/login';
-  };
+  // OAuth login removed - using email/password instead
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center py-12 px-4">
@@ -86,19 +84,12 @@ export default function Login() {
             </div>
             <CardTitle className="text-lg sm:text-xl md:text-2xl">Sign In to CSOAI</CardTitle>
             <CardDescription>
-              Secure authentication powered by OAuth
+              Sign in to access your dashboard and training
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-6">
-            <Button
-              size="lg"
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
-              onClick={handleLogin}
-            >
-              Sign In with OAuth
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <EmailPasswordLoginForm />
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

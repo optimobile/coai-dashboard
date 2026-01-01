@@ -46,7 +46,7 @@ export function Header() {
       href: '/training',
       submenu: [
         { name: 'How It Works', href: '/how-it-works/training', description: 'Training pipeline' },
-        { name: 'Free Courses', href: '/courses?filter=free', description: 'Foundation courses (no payment)' },
+        { name: 'All Courses', href: '/courses', description: 'Browse all training courses' },
         { name: 'Paid Courses', href: '/courses?filter=paid', description: 'Professional certification (£499-£1,999)' },
         { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses' },
       ]
@@ -77,7 +77,7 @@ export function Header() {
         { name: 'Help Protect Humanity', href: '/watchdog/help-protect-humanity', description: 'Join the movement' },
         { name: 'How It Works', href: '/how-it-works/watchdog', description: 'Watchdog program' },
         { name: 'Report Incident', href: '/watchdog/incident', description: 'Report AI safety incident' },
-        { name: 'Free Courses', href: '/training', description: 'Foundation analyst training' },
+        { name: 'Training Courses', href: '/courses', description: 'AI safety analyst training' },
         { name: 'Analyst Jobs', href: '/jobs', description: 'Available positions' },
         { name: 'Leaderboard', href: '/watchdog-leaderboard', description: 'Top analysts' },
       ]
