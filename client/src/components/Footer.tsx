@@ -5,6 +5,7 @@
 
 import { Link } from 'wouter';
 import { Github, Twitter, Linkedin, Mail, CheckCircle } from 'lucide-react';
+import { NewsletterSignup } from './NewsletterSignup';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -125,6 +126,13 @@ export function Footer() {
               </ul>
             </div>
           ))}
+        </div>
+
+        {/* Newsletter Signup Section */}
+        <div className="border-t border-gray-200 pt-8 mb-8">
+          <div className="max-w-md">
+            <NewsletterSignup source="footer" variant="inline" />
+          </div>
         </div>
 
         {/* Certifications & Compliance Section */}

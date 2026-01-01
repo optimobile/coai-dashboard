@@ -913,6 +913,20 @@ export const userEmailPreferences = mysqlTable("user_email_preferences", {
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 }, (table) => [index("idx_userId_prefs").on(table.userId)]);
 
+// Newsletter Subscribers Table
+export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
+	id: int().autoincrement().notNull(),
+	email: varchar({ length: 320 }).notNull(),
+	name: varchar({ length: 255 }),
+	company: varchar({ length: 255 }),
+	source: varchar({ length: 100 }), // where they signed up from (footer, landing, etc)
+	status: mysqlEnum(['active','unsubscribed','bounced']).default('active').notNull(),
+	confirmedAt: timestamp({ mode: 'string' }),
+	unsubscribedAt: timestamp({ mode: 'string' }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("idx_email_newsletter").on(table.email), index("idx_status_newsletter").on(table.status)]);
+
 // Giveaway Applications Table - £1M Training Giveaway Campaign
 export const giveawayApplications = mysqlTable("giveaway_applications", {
 	id: int().autoincrement().notNull(),
@@ -1024,3 +1038,5 @@ export type RecommendationAnalytic = typeof recommendationAnalytics.$inferSelect
 export type InsertRecommendationAnalytic = typeof recommendationAnalytics.$inferInsert;
 export type GiveawayApplication = typeof giveawayApplications.$inferSelect;
 export type InsertGiveawayApplication = typeof giveawayApplications.$inferInsert;
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;

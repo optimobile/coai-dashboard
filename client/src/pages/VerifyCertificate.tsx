@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
@@ -16,31 +16,77 @@ import {
 } from 'lucide-react';
 
 export default function VerifyCertificate() {
-  const params = useParams();
-  const certificateId = params.id || '';
+  const params = useParams<{ id?: string; certificateNumber?: string }>();
+  // Support both /verify-certificate/:id and /verify/:certificateNumber routes
+  const certificateId = params.id || params.certificateNumber || '';
+  const [searchInput, setSearchInput] = useState(certificateId);
+  const [hasSearched, setHasSearched] = useState(!!certificateId);
 
-  // Verify certificate query
-  const { data, isLoading, error } = trpc.certificates.verify.useQuery(
-    { certificateId },
-    { enabled: !!certificateId }
-  );
+  // Verify certificate mutation for search functionality
+  const verifyMutation = trpc.certificates.verifyCertificate.useMutation();
+  
+  // Auto-verify on mount if certificateId is provided
+  useEffect(() => {
+    if (certificateId) {
+      setSearchInput(certificateId);
+      setHasSearched(true);
+      verifyMutation.mutate({ certificateNumber: certificateId });
+    }
+  }, [certificateId]);
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchInput.trim()) return;
+    setHasSearched(true);
+    verifyMutation.mutate({ certificateNumber: searchInput.trim() });
+  };
+  
+  const data = verifyMutation.data;
+  const isLoading = verifyMutation.isPending;
+  const error = verifyMutation.error;
 
-  if (!certificateId) {
+  // Show search form if no certificate ID provided
+  if (!certificateId && !hasSearched) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="max-w-md w-full p-8 text-center">
-          <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Invalid Certificate ID</h1>
-          <p className="text-muted-foreground mb-6">
-            Please provide a valid certificate ID to verify.
-          </p>
-          <Link href="/">
-            <Button>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
-          </Link>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center mb-8">
+            <Link href="/">
+              <Button variant="ghost" className="mb-4">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Shield className="w-12 h-12 text-green-600 dark:text-green-400" />
+              <h1 className="text-4xl font-bold">Certificate Verification</h1>
+            </div>
+            <p className="text-muted-foreground">
+              Verify CEASAI certificates for employers and organizations
+            </p>
+          </div>
+          
+          <Card className="max-w-xl mx-auto p-8">
+            <h2 className="text-xl font-semibold mb-4">Enter Certificate Number</h2>
+            <form onSubmit={handleSearch} className="space-y-4">
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="e.g., COAI-EUAI-1234567890-ABCD1234"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+                <Button type="submit" disabled={!searchInput.trim()}>
+                  Verify
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Enter the certificate number found on the credential to verify its authenticity.
+              </p>
+            </form>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -151,7 +197,7 @@ export default function VerifyCertificate() {
                   Certificate ID
                 </div>
                 <div className="font-mono text-sm bg-background/50 p-3 rounded border">
-                  {certificate.certificateId}
+                  {certificate.certificateNumber}
                 </div>
               </div>
 
@@ -188,7 +234,7 @@ export default function VerifyCertificate() {
                   Framework
                 </div>
                 <Badge variant="secondary" className="text-sm px-3 py-1">
-                  {certificate.framework}
+                  {certificate.level}
                 </Badge>
               </div>
             </div>

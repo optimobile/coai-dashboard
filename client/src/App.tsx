@@ -229,6 +229,7 @@ function App() {
                   <Route path="/dashboard/compliance" component={Compliance} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/verify-certificate/:id" component={VerifyCertificate} />
+                  <Route path="/verify/:certificateNumber" component={VerifyCertificate} />
                   <Route path="/features/33-agent-council" component={AgentCouncilFeature} />
                   <Route path="/features/pdca-framework" component={PDCAFrameworkFeature} />
                   <Route path="/features/training-certification" component={TrainingCertificationFeature} />

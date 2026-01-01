@@ -6083,3 +6083,8 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] "View Certification" → /certification ✓
 - [x] Header "Get Started" → /signup ✓
 - [x] Header "Sign In" → /signin ✓
+
+## New Feature Requests (Jan 1, 2026)
+- [x] Update Pricing page to GBP (£499/£999/£1,999) with monthly payment options
+- [x] Create Newsletter Signup component with database integration
+- [x] Build Certificate Verification public endpoint (/verify/:certificateNumber)

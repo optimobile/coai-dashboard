@@ -58,6 +58,7 @@ import { stripeProductsRouter } from "./routers/stripeProducts";
 import { stripeConnectRouter } from "./routers/stripeConnect";
 import { giveawayRouter } from "./routers/giveaway";
 import { watchdogIncidentsRouter } from "./routers/watchdogIncidents";
+import { newsletterRouter } from "./routers/newsletter";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2829,6 +2830,7 @@ export const appRouter = router({
   stripeConnect: stripeConnectRouter,
   giveaway: giveawayRouter,
   watchdogIncidents: watchdogIncidentsRouter,
+  newsletter: newsletterRouter,
 });
 
 export type AppRouter = typeof appRouter;

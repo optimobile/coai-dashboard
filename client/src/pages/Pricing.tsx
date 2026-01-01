@@ -25,50 +25,19 @@ import {
 
 const PRICING_TIERS = [
   {
-    id: 'free',
-    name: 'Free',
-    description: 'For individuals exploring AI governance',
-    monthlyPrice: 0,
-    yearlyPrice: 0,
+    id: 'starter',
+    name: 'Starter',
+    description: 'For small teams getting started with AI governance',
+    monthlyPrice: 499,
+    yearlyPrice: 399,
     icon: Zap,
-    color: 'text-slate-400',
-    bgColor: 'bg-slate-500/20',
-    borderColor: 'border-slate-500/30',
+    color: 'text-blue-500 dark:text-blue-400',
+    bgColor: 'bg-blue-500/20',
+    borderColor: 'border-blue-500/30',
     features: {
-      aiSystems: 1,
-      assessments: 3,
-      teamMembers: 1,
-      frameworks: ['EU AI Act'],
-      support: 'Community',
-      apiAccess: false,
-      pdfReports: false,
-      emailDelivery: false,
-      bulkRegistration: false,
-      customIntegrations: false,
-      dedicatedSupport: false,
-      sla: 'None',
-      councilAccess: 'View only',
-      watchdogReports: 5,
-      pdcaCycles: 1,
-      knowledgeBase: 'Limited',
-    },
-    cta: 'Get Started Free',
-    popular: false,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    description: 'For growing teams with compliance needs',
-    monthlyPrice: 39,
-    yearlyPrice: 31,
-    icon: Rocket,
-    color: 'text-emerald-500 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/20',
-    borderColor: 'border-emerald-500/50',
-    features: {
-      aiSystems: 10,
-      assessments: 'Unlimited',
-      teamMembers: 5,
+      aiSystems: 5,
+      assessments: 25,
+      teamMembers: 3,
       frameworks: ['EU AI Act', 'NIST RMF'],
       support: 'Email',
       apiAccess: true,
@@ -79,28 +48,59 @@ const PRICING_TIERS = [
       dedicatedSupport: false,
       sla: '48-hour response',
       councilAccess: 'Full access',
-      watchdogReports: 'Unlimited',
-      pdcaCycles: 10,
+      watchdogReports: 25,
+      pdcaCycles: 5,
       knowledgeBase: 'Full',
     },
-    cta: 'Start Pro Trial',
+    cta: 'Start with Starter',
+    popular: false,
+  },
+  {
+    id: 'pro',
+    name: 'Professional',
+    description: 'For growing organizations with compliance needs',
+    monthlyPrice: 999,
+    yearlyPrice: 799,
+    icon: Rocket,
+    color: 'text-emerald-500 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/20',
+    borderColor: 'border-emerald-500/50',
+    features: {
+      aiSystems: 25,
+      assessments: 'Unlimited',
+      teamMembers: 10,
+      frameworks: ['EU AI Act', 'NIST RMF', 'TC260'],
+      support: 'Priority Email',
+      apiAccess: true,
+      pdfReports: true,
+      emailDelivery: true,
+      bulkRegistration: true,
+      customIntegrations: false,
+      dedicatedSupport: false,
+      sla: '24-hour response',
+      councilAccess: 'Full access',
+      watchdogReports: 'Unlimited',
+      pdcaCycles: 25,
+      knowledgeBase: 'Full',
+    },
+    cta: 'Start Professional',
     popular: true,
   },
   {
     id: 'enterprise',
     name: 'Enterprise',
-    description: 'For organizations requiring full compliance',
-    monthlyPrice: 159,
-    yearlyPrice: 127,
+    description: 'For large organizations requiring full compliance',
+    monthlyPrice: 1999,
+    yearlyPrice: 1599,
     icon: Building2,
-    color: 'text-gray-400',
-    bgColor: 'bg-gray-500/20',
-    borderColor: 'border-gray-500/50',
+    color: 'text-purple-500 dark:text-purple-400',
+    bgColor: 'bg-purple-500/20',
+    borderColor: 'border-purple-500/50',
     features: {
       aiSystems: 'Unlimited',
       assessments: 'Unlimited',
       teamMembers: 'Unlimited',
-      frameworks: ['EU AI Act', 'NIST RMF', 'TC260'],
+      frameworks: ['EU AI Act', 'NIST RMF', 'TC260', 'ISO 42001'],
       support: 'Priority + Phone',
       apiAccess: true,
       pdfReports: true,
@@ -166,7 +166,7 @@ const FEATURE_CATEGORIES = [
 const FAQ = [
   {
     question: 'What\'s included in each pricing tier?',
-    answer: 'Pro (£39/month) includes unlimited training access, basic compliance tools, and email support. Enterprise (£159/month) adds API access, team management, custom reports, and dedicated support. Both tiers include access to our job board and community forums.',
+    answer: 'Starter (£499/month) includes 5 AI systems, 25 assessments, and email support. Professional (£999/month) adds 25 AI systems, unlimited assessments, bulk registration, and priority support. Enterprise (£1,999/month) includes unlimited everything, custom integrations, dedicated support, and 4-hour SLA. All tiers include API access and PDF reports.',
   },
   {
     question: 'Can I cancel my subscription anytime?',
@@ -207,8 +207,19 @@ export default function Pricing() {
   const checkoutMutation = trpc.stripe.createCheckoutSession.useMutation();
   
   const handleSubscribe = async (tierId: string) => {
-    if (tierId === 'free') {
-      setLocation('/dashboard');
+    if (tierId === 'starter') {
+      // Starter tier goes through Stripe checkout
+      try {
+        const result = await checkoutMutation.mutateAsync({
+          tier: 'pro' as 'pro' | 'enterprise', // Map starter to pro for now
+          billingPeriod: isYearly ? 'yearly' : 'monthly',
+        });
+        if (result.url) {
+          window.location.href = result.url;
+        }
+      } catch (error) {
+        console.error('Checkout failed:', error);
+      }
       return;
     }
     
@@ -300,11 +311,11 @@ export default function Pricing() {
                 </CardHeader>
                 <CardContent className="text-center">
                   <div className="mb-6">
-                    <span className="text-5xl font-bold text-gray-900 dark:text-white">£{price}</span>
+                    <span className="text-4xl font-bold text-gray-900 dark:text-white">£{price.toLocaleString()}</span>
                     <span className="text-gray-600 dark:text-gray-400">/month</span>
                     {isYearly && tier.monthlyPrice > 0 && (
                       <p className="text-sm text-gray-600 dark:text-gray-500 mt-1">
-                        Billed £{price * 12}/year
+                        Billed £{(price * 12).toLocaleString()}/year
                       </p>
                     )}
                   </div>
