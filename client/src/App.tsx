@@ -98,6 +98,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import StripeSetup from "./pages/StripeSetup";
 import EnrollmentTest from "./pages/EnrollmentTest";
+import FoundingMembers from "./pages/FoundingMembers";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
 import Jobs from "./pages/Jobs";
@@ -261,6 +262,7 @@ function App() {
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/training-courses" component={TrainingCourses} />
                   <Route path="/paid-courses" component={PaidCourses} />
+                  <Route path="/founding-members" component={FoundingMembers} />
                   <Route path="/checkout" component={Checkout} />
                   <Route path="/training-courses/:id" component={TrainingCourseDetail} />
                   <Route path="/training-courses/:id/learn" component={LessonViewer} />

@@ -7,9 +7,8 @@ import { toast } from 'sonner';
 import { Loader2, Check, Tag } from 'lucide-react';
 
 export default function Checkout() {
-  const [location] = useLocation();
   const [, setLocation] = useLocation();
-  const searchParams = new URLSearchParams(location.split('?')[1]);
+  const searchParams = new URLSearchParams(window.location.search);
   
   const itemType = searchParams.get('type'); // 'course' or 'bundle'
   const itemId = searchParams.get('id');
@@ -69,7 +68,29 @@ export default function Checkout() {
       
       if (data.valid) {
         setAppliedCoupon(data.coupon);
-        toast.success(`Coupon applied! ${data.coupon.discountValue}% off`);
+        
+        // Calculate discount amount
+        const originalPrice = (itemType === 'bundle' ? item.price : item.price) / 100;
+        let discountAmount = 0;
+        
+        if (data.coupon.discountType === 'percentage') {
+          discountAmount = (originalPrice * data.coupon.discountValue) / 100;
+        } else {
+          discountAmount = data.coupon.discountValue;
+        }
+        
+        // Show success message with discount details
+        if (discountAmount >= originalPrice) {
+          toast.success(
+            `🎉 Coupon "${data.coupon.code}" applied! You save £${originalPrice.toFixed(2)} - This course is now FREE!`,
+            { duration: 5000 }
+          );
+        } else {
+          toast.success(
+            `✅ Coupon "${data.coupon.code}" applied! You save £${discountAmount.toFixed(2)} (${data.coupon.discountValue}% off)`,
+            { duration: 4000 }
+          );
+        }
       } else {
         toast.error(data.error || 'Invalid coupon code');
       }
@@ -245,10 +266,21 @@ export default function Checkout() {
               </div>
               
               {appliedCoupon && (
-                <div className="mt-3 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md">
-                  <p className="text-sm text-green-800 dark:text-green-200">
-                    {appliedCoupon.description}
-                  </p>
+                <div className="mt-3 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md">
+                  <div className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-green-800 dark:text-green-200">
+                        Coupon Applied Successfully!
+                      </p>
+                      <p className="text-sm text-green-700 dark:text-green-300">
+                        {appliedCoupon.description}
+                      </p>
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-2">
+                        💰 You're saving £{savings.toFixed(2)} with code "{appliedCoupon.code}"
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
             </Card>

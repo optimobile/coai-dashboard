@@ -7258,3 +7258,7 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Update homepage messaging to reflect FOUNDING10K coupon (10,000 signups, £1,999 value)
 - [x] Add "Paid Courses" as top-level navigation item in header
 - [x] Test complete enrollment flow with test user and FOUNDING10K coupon
+
+- [x] Test complete checkout flow with FOUNDING10K coupon (manual verification)
+- [x] Add coupon validation feedback with success message showing discount amount
+- [x] Create dedicated /founding-members landing page with FAQs and enrollment instructions
