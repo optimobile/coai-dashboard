@@ -7093,3 +7093,28 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Remove all blockers for production launch
 - [x] Final polish and quality assurance
 - [x] Verify all features work in production environment
+
+## Critical Navigation & Course Enrollment Fixes (Jan 2, 2026 - Pre-Launch)
+
+### Dashboard Navigation Issues
+- [x] Simplify confusing navigation (Learning, Training Modules, Training Courses)
+- [x] Add "Paid Courses" menu item for clear separation
+- [x] Reorganize sidebar menu for better UX
+- [x] Ensure clear distinction between free training and paid courses
+
+### Course Enrollment Issues
+- [x] Fix "Enroll Now" button - currently just shows "Processing" indefinitely
+- [x] Ensure "Enroll Now" navigates to correct course page
+- [x] Fix course enrollment flow to work properly
+- [x] Test enrollment for all course types
+
+### Test Data Cleanup
+- [x] Hide test placeholder courses (Test Course for Lessons, Test Course for Forums)
+- [x] Remove courses with no real content from public display
+- [x] Ensure only production-ready courses are visible
+
+### Course Navigation Flow
+- [x] Test navigation from Courses list to Course detail page
+- [x] Test navigation from Course detail to Course player
+- [x] Verify course content loads correctly
+- [x] Ensure smooth user experience throughout enrollment flow

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRoute, Link } from 'wouter';
+import { useRoute, Link, useLocation } from 'wouter';
 import { ArrowLeft, Play, FileText, HelpCircle, Clock, Users, Star, Award, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -64,8 +64,16 @@ export default function TrainingCourseDetail() {
     }
   };
 
+  const [, setLocation] = useLocation();
+
   const handleEnroll = () => {
     toast.success('Enrolled in course! Start learning now.');
+    // Navigate to the first lesson
+    const firstModule = course.modules[0];
+    const firstLesson = firstModule?.lessons[0];
+    if (firstLesson) {
+      setLocation(`/training-courses/${course.id}/learn?lesson=${firstLesson.id}`);
+    }
   };
 
   return (
