@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import Stripe from 'stripe';
 import { getDb } from '../db';
-import { courseEnrollments, courses, courseBundles, coupons, couponUsage } from '../../drizzle/schema';
+import { courseEnrollments, courses, courseBundles, coupons, couponUsage, users } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 import { createCourseCheckoutSession } from '../stripe/stripeService';
 import { sendEnrollmentConfirmationEmail } from '../services/courseEmailService';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-12-15.clover',
 });
 
 // Create payment intent or enroll for free
@@ -100,9 +100,10 @@ router.post('/enrollment/create', async (req, res) => {
       
       // Send enrollment confirmation email
       try {
-        // TODO: Get actual user email from auth system
-        const userEmail = `user${userId}@example.com`;
-        const userName = `User ${userId}`;
+        // Get actual user email from database
+        const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+        const userEmail = user?.email || `user${userId}@example.com`;
+        const userName = user?.name || `User ${userId}`;
         
         await sendEnrollmentConfirmationEmail({
           userEmail,
@@ -133,8 +134,9 @@ router.post('/enrollment/create', async (req, res) => {
       return res.status(400).json({ error: 'Stripe price not configured for this item' });
     }
     
-    // Get user email (mock for now - should come from auth)
-    const userEmail = `user${userId}@example.com`;
+    // Get user email from database
+    const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+    const userEmail = user?.email || `user${userId}@example.com`;
     
     const frontendUrl = process.env.VITE_FRONTEND_URL || 'http://localhost:3000';
     const { url, sessionId } = await createCourseCheckoutSession({

@@ -67,6 +67,7 @@ import { notificationSubscriptionsRouter } from "./routers/notificationSubscript
 import { lessonProgressRouter } from "./routers/lessonProgress";
 import { forumsRouter } from "./routers/forums";
 import { forumModerationRouter } from "./routers/forumModeration";
+import { promoCodeManagementRouter } from "./routers/promoCodeManagement";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2998,6 +2999,7 @@ export const appRouter = router({
   lessonProgress: lessonProgressRouter,
   forums: forumsRouter,
   forumModeration: forumModerationRouter,
+  promoCodeManagement: promoCodeManagementRouter,
 });
 
 export type AppRouter = typeof appRouter;

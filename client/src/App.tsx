@@ -98,6 +98,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import StripeSetup from "./pages/StripeSetup";
 import EnrollmentTest from "./pages/EnrollmentTest";
+import PromoCodeManagement from "./pages/PromoCodeManagement";
 import FoundingMembers from "./pages/FoundingMembers";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import BulkAISystemImport from "./pages/BulkAISystemImport";
@@ -290,6 +291,7 @@ function App() {
                   <Route path="/admin/incidents" component={AdminIncidents} />
                   <Route path="/admin/analytics" component={AdminAnalytics} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />
+                  <Route path="/admin/promo-codes" component={PromoCodeManagement} />
                   <Route path="/admin/enrollment-test" component={EnrollmentTest} />
                   <Route path="/api-docs" component={ApiDocs} />
                   <Route path="/api-keys" component={ApiKeys} />

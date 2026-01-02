@@ -37,7 +37,6 @@ export const notificationSubscriptionsRouter = router({
           .update(newsletterSubscribers)
           .set({
             status: 'active',
-            preferences: JSON.stringify({ categories: input.categories }),
             updatedAt: new Date().toISOString(),
           })
           .where(eq(newsletterSubscribers.email, input.email));
@@ -50,9 +49,7 @@ export const notificationSubscriptionsRouter = router({
         email: input.email,
         name: input.name || null,
         status: 'active',
-        preferences: JSON.stringify({ categories: input.categories }),
-        subscribedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
+        confirmedAt: new Date().toISOString(),
       });
 
       // Send welcome email
@@ -128,8 +125,8 @@ export const notificationSubscriptionsRouter = router({
         email: sub.email,
         name: sub.name,
         status: sub.status,
-        preferences: sub.preferences ? JSON.parse(sub.preferences as string) : { categories: ['all'] },
-        subscribedAt: sub.subscribedAt,
+        createdAt: sub.createdAt,
+        confirmedAt: sub.confirmedAt,
       };
     }),
 
@@ -163,19 +160,8 @@ export const notificationSubscriptionsRouter = router({
         .from(newsletterSubscribers)
         .where(eq(newsletterSubscribers.status, 'active'));
 
-      // Filter subscribers based on severity preferences
-      const relevantSubscribers = subscribers.filter(sub => {
-        if (!sub.preferences) return true; // Send to all if no preferences
-        
-        try {
-          const prefs = JSON.parse(sub.preferences as string);
-          const categories = prefs.categories || ['all'];
-          
-          return categories.includes('all') || categories.includes(incident.severity);
-        } catch {
-          return true;
-        }
-      });
+      // Send to all active subscribers (no preference filtering since preferences field doesn't exist)
+      const relevantSubscribers = subscribers;
 
       // Send emails to all relevant subscribers
       const emailPromises = relevantSubscribers.map(subscriber =>

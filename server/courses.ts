@@ -436,8 +436,8 @@ export const coursesRouter = router({
           .from(courses)
           .where(eq(courses.id, enrollment.courseId));
         
-        // TODO: Get actual user email from auth system
-        const userEmail = `user${ctx.user.id}@example.com`;
+        // Get actual user email from auth context
+        const userEmail = ctx.user.email || `user${ctx.user.id}@example.com`;
         const userName = ctx.user.name || `User ${ctx.user.id}`;
         
         await sendCompletionCertificateEmail({
