@@ -1163,8 +1163,12 @@ const certificationRouter = router({
   getTestQuestions: publicProcedure
     .input(z.object({ testId: z.number() }))
     .query(async ({ input }) => {
+      console.log('🔍 getTestQuestions called with input:', JSON.stringify(input));
       const db = await getDb();
-      if (!db) return null;
+      if (!db) {
+        console.error('❌ Database not available');
+        return null;
+      }
 
       const [test] = await db
         .select()
@@ -1189,6 +1193,7 @@ const certificationRouter = router({
           eq(testQuestions.isActive, true)
         ));
 
+      console.log(`✅ Found ${questions.length} questions for test ${input.testId}`);
       return { test, questions };
     }),
 
