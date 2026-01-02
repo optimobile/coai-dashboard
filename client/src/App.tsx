@@ -53,6 +53,7 @@ import TrainingCourseDetail from "./pages/TrainingCourseDetail";
 import LessonViewer from "./pages/LessonViewer";
 import MyTrainingCourses from "./pages/MyTrainingCourses";
 import ExamReview from "./pages/ExamReview";
+import ExamDebug from "./pages/ExamDebug";
 import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
@@ -263,6 +264,7 @@ function App() {
                   <Route path="/certification" component={CertificationV2} />
                   <Route path="/exam" component={CertificationExam} />
                   <Route path="/certification/exam" component={CertificationExam} />
+                  <Route path="/exam/debug" component={ExamDebug} />
                   <Route path="/certification/results" component={CertificationResults} />
                   <Route path="/certificates" component={MyCertificates} />
                   <Route path="/certification/review" component={ExamReview} />

@@ -6985,3 +6985,15 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Test payment flow end-to-end
 - [ ] Performance testing with load
 - [ ] Security audit
+
+
+## CRITICAL PRODUCTION BLOCKERS - FIX NOW
+
+- [x] Fix exam questions not loading (testQuestions.getByTestId returns empty)
+- [x] Fix database schema for exam questions (ensure proper foreign keys and seeding)
+- [x] Fix exam loading logic in TakeExam.tsx (handle empty questions gracefully)
+- [x] Fix navigation from Training page to exam (ensure proper routing)
+- [x] Remove all placeholder toast notifications ("Feature coming soon") - None found
+- [x] Fix broken links in sidebar and navigation
+- [x] Test complete exam flow end-to-end (start → answer → submit → certificate)
+- [x] Verify all critical user journeys work without errors

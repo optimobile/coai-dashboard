@@ -85,9 +85,9 @@ export default function CertificationExam() {
     timeRemaining: 90 * 60, // 90 minutes default
   });
 
-  // Fetch test data
+  // Fetch test data (using test ID 30001 - WATCHDOG_BASIC)
   const { data: testData, isLoading, error } = trpc.certification.getTestQuestions.useQuery(
-    { testId: 1 },
+    { testId: 30001 },
     { 
       enabled: examState.status !== "results",
       retry: 2
@@ -168,7 +168,7 @@ export default function CertificationExam() {
       return;
     }
     try {
-      const result = await startTestMutation.mutateAsync({ testId: 1 });
+      const result = await startTestMutation.mutateAsync({ testId: 30001 });
       console.log("Exam started:", result);
       setExamState((prev) => ({
         ...prev,
