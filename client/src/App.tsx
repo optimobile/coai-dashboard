@@ -65,6 +65,9 @@ import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
 import Billing from "./pages/Billing";
+import Payment from "./pages/Payment";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
 import PublicDashboard from "./pages/PublicDashboard";
 import ComplianceScorecard from "./pages/ComplianceScorecard";
 import KnowledgeBase from "./pages/KnowledgeBase";
@@ -237,6 +240,9 @@ function App() {
                   <Route path="/reports" component={Reports} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/settings/billing" component={Billing} />
+                  <Route path="/payment" component={Payment} />
+                  <Route path="/payment/success" component={PaymentSuccess} />
+                  <Route path="/payment/cancel" component={PaymentCancel} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/settings/payouts" component={PayoutHistory} />
                   <Route path="/analytics" component={AnalyticsDashboard} />

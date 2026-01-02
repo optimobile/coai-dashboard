@@ -320,7 +320,12 @@ function CourseCard({ course }: { course: any }) {
         <label className="text-sm font-semibold mb-3 block">Choose Payment Plan</label>
         <div className="grid grid-cols-2 gap-2 mb-3">
           <button
-            onClick={() => setSelectedPlan("oneTime")}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSelectedPlan("oneTime");
+            }}
             className={`p-3 rounded-lg border-2 transition-all ${
               selectedPlan === "oneTime"
                 ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
@@ -334,7 +339,12 @@ function CourseCard({ course }: { course: any }) {
 
           {oneTimePrice > 0 && (
             <button
-              onClick={() => setSelectedPlan("threeMonth")}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedPlan("threeMonth");
+              }}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "threeMonth"
                   ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
@@ -353,7 +363,12 @@ function CourseCard({ course }: { course: any }) {
 
           {oneTimePrice > 0 && (
             <button
-              onClick={() => setSelectedPlan("sixMonth")}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedPlan("sixMonth");
+              }}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "sixMonth"
                   ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
@@ -372,7 +387,12 @@ function CourseCard({ course }: { course: any }) {
 
           {oneTimePrice > 0 && (
             <button
-              onClick={() => setSelectedPlan("twelveMonth")}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedPlan("twelveMonth");
+              }}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "twelveMonth"
                   ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
