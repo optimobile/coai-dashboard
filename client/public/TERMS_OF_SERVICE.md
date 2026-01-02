@@ -217,7 +217,7 @@ You agree to the exclusive jurisdiction of UK courts for disputes.
 
 ### 9.4 Contact for Disputes
 - Email: legal@csoai.org
-- Address: CSOAI Legal Department, London, UK
+- Address: CSOAI LTD (Council Safety of Artificial Intelligence LTD), Company Number: 16939677, 86-90 Paul Street, London, EC2A 4NE, United Kingdom
 - Phone: +44 (0) 20 XXXX XXXX
 
 ---

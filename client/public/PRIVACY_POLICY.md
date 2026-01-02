@@ -5,7 +5,7 @@
 
 ## 1. Introduction
 
-CSOAI ("we," "us," "our," or "Company") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform, including all related applications, websites, and services (collectively, the "Service").
+CSOAI LTD (Council Safety of Artificial Intelligence LTD), Company Number: 16939677, registered at 86-90 Paul Street, London, EC2A 4NE, United Kingdom ("we," "us," "our," or "Company") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform, including all related applications, websites, and services (collectively, the "Service").
 
 ---
 
@@ -369,6 +369,11 @@ We may update this policy:
 ---
 
 ## 13. Contact Information
+
+**Company Details:**  
+CSOAI LTD (Council Safety of Artificial Intelligence LTD)  
+Company Number: 16939677  
+86-90 Paul Street, London, EC2A 4NE, United Kingdom
 
 **Data Protection Officer:**  
 dpo@csoai.org

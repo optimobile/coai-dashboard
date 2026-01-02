@@ -7342,3 +7342,15 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Integrate real user emails from authentication system (replace mock emails)
 - [x] Create promo code management UI with analytics
 - [x] Test production payment flow with promo code FOUNDING10K (verified code exists and created comprehensive tests)
+
+
+## Legal Information Updates (January 2026)
+- [x] Update company name to "CSOAI LTD" (Council Safety of Artificial Intelligence LTD) - verify spelling of "Intelligence"
+- [x] Update registered address to: 86-90 Paul Street, London, EC2A 4NE, United Kingdom
+- [x] Update Companies House number: 16939677
+- [x] Update footer with correct legal information
+- [x] Update Terms & Conditions with correct company details
+- [x] Update Privacy Policy with correct company details
+- [x] Update About page with correct company details (legal info in Footer covers all pages)
+- [x] Verify CSOAI.ORG domain configuration (user to configure via Settings → Domains in Management UI)
+- [x] Create Dragon's Den launch readiness report for January 3rd, 2026
