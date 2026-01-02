@@ -10,9 +10,85 @@ import {
   users,
   courses
 } from "../../drizzle/schema";
-import { eq, and, desc, sql, or, isNull } from "drizzle-orm";
+import { eq, and, desc, sql, or, isNull, like, count, avg, sum } from "drizzle-orm";
+
+/**
+ * Extract @mentions from content
+ * Returns array of usernames mentioned (without @ symbol)
+ */
+function extractMentions(content: string): string[] {
+  const mentionRegex = /@([a-zA-Z0-9_.-]+)/g;
+  const mentions: string[] = [];
+  let match;
+  
+  while ((match = mentionRegex.exec(content)) !== null) {
+    mentions.push(match[1]);
+  }
+  
+  return [...new Set(mentions)]; // Remove duplicates
+}
 
 export const forumsRouter = router({
+  /**
+   * Search threads across courses
+   */
+  searchThreads: protectedProcedure
+    .input(z.object({
+      query: z.string().min(1),
+      courseId: z.number().optional(),
+      sortBy: z.enum(['recent', 'popular', 'replies']).optional().default('recent'),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
+      let query = db
+        .select({
+          thread: forumThreads,
+          user: {
+            id: users.id,
+            name: users.name,
+            email: users.email,
+          },
+          course: {
+            id: courses.id,
+            title: courses.title,
+          },
+        })
+        .from(forumThreads)
+        .leftJoin(users, eq(forumThreads.userId, users.id))
+        .leftJoin(courses, eq(forumThreads.courseId, courses.id))
+        .where(
+          or(
+            like(forumThreads.title, `%${input.query}%`),
+            like(forumThreads.content, `%${input.query}%`)
+          )
+        )
+        .$dynamic();
+
+      // Filter by course if provided
+      if (input.courseId) {
+        query = query.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      // Apply sorting
+      if (input.sortBy === 'recent') {
+        query = query.orderBy(desc(forumThreads.lastActivityAt));
+      } else if (input.sortBy === 'popular') {
+        query = query.orderBy(desc(forumThreads.viewCount));
+      } else if (input.sortBy === 'replies') {
+        query = query.orderBy(desc(forumThreads.replyCount));
+      }
+
+      const threads = await query.limit(50);
+
+      return threads.map(t => ({
+        ...t.thread,
+        author: t.user,
+        course: t.course,
+      }));
+    }),
+
   /**
    * Get all threads for a course
    */
@@ -274,6 +350,32 @@ export const forumsRouter = router({
             isRead: false,
             createdAt: now,
           });
+        }
+      }
+
+      // Handle @mentions - extract and create notifications
+      const mentions = extractMentions(input.content);
+      if (mentions.length > 0) {
+        // Find users by name (case-insensitive)
+        const mentionedUsers = await db
+          .select({ id: users.id, name: users.name })
+          .from(users)
+          .where(
+            or(...mentions.map(m => sql`LOWER(${users.name}) = LOWER(${m})`))
+          );
+
+        // Create mention notifications for each mentioned user (except self)
+        for (const mentionedUser of mentionedUsers) {
+          if (mentionedUser.id !== userId) {
+            await db.insert(forumNotifications).values({
+              userId: mentionedUser.id,
+              threadId: input.threadId,
+              postId: Number(result.insertId),
+              type: 'mention',
+              isRead: false,
+              createdAt: now,
+            });
+          }
         }
       }
 
@@ -581,5 +683,168 @@ export const forumsRouter = router({
         .where(eq(forumThreads.id, input.threadId));
 
       return { success: true };
+    }),
+
+  /**
+   * Get forum analytics for instructors/admins
+   */
+  getForumAnalytics: protectedProcedure
+    .input(z.object({
+      courseId: z.number().optional(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
+      // Build date filter
+      let dateFilter = sql`1=1`;
+      if (input.startDate && input.endDate) {
+        dateFilter = sql`${forumThreads.createdAt} BETWEEN ${input.startDate} AND ${input.endDate}`;
+      }
+
+      // Total threads
+      const totalThreadsQuery = db
+        .select({ count: count() })
+        .from(forumThreads)
+        .where(dateFilter)
+        .$dynamic();
+
+      if (input.courseId) {
+        totalThreadsQuery.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      const totalThreadsResult = await totalThreadsQuery;
+      const totalThreads = totalThreadsResult[0]?.count || 0;
+
+      // Total posts
+      let postsQuery = db
+        .select({ count: count() })
+        .from(forumPosts)
+        .leftJoin(forumThreads, eq(forumPosts.threadId, forumThreads.id))
+        .where(dateFilter)
+        .$dynamic();
+
+      if (input.courseId) {
+        postsQuery = postsQuery.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      const totalPostsResult = await postsQuery;
+      const totalPosts = totalPostsResult[0]?.count || 0;
+
+      // Active threads (with replies)
+      let activeThreadsQuery = db
+        .select({ count: count() })
+        .from(forumThreads)
+        .where(and(dateFilter, sql`${forumThreads.replyCount} > 0`))
+        .$dynamic();
+
+      if (input.courseId) {
+        activeThreadsQuery = activeThreadsQuery.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      const activeThreadsResult = await activeThreadsQuery;
+      const activeThreads = activeThreadsResult[0]?.count || 0;
+
+      // Threads with solutions
+      let solvedThreadsQuery = db
+        .select({ count: sql`COUNT(DISTINCT ${forumThreads.id})` })
+        .from(forumThreads)
+        .leftJoin(forumPosts, eq(forumPosts.threadId, forumThreads.id))
+        .where(and(dateFilter, eq(forumPosts.isSolution, true)))
+        .$dynamic();
+
+      if (input.courseId) {
+        solvedThreadsQuery = solvedThreadsQuery.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      const solvedThreadsResult = await solvedThreadsQuery;
+      const solvedThreads = Number(solvedThreadsResult[0]?.count) || 0;
+
+      // Average response time (time between thread creation and first reply)
+      let avgResponseQuery = db
+        .select({
+          avgMinutes: sql`AVG(TIMESTAMPDIFF(MINUTE, ${forumThreads.createdAt}, ${forumPosts.createdAt}))`
+        })
+        .from(forumThreads)
+        .leftJoin(
+          forumPosts,
+          and(
+            eq(forumPosts.threadId, forumThreads.id),
+            sql`${forumPosts.id} = (SELECT MIN(id) FROM forum_posts WHERE threadId = ${forumThreads.id})`
+          )
+        )
+        .where(dateFilter)
+        .$dynamic();
+
+      if (input.courseId) {
+        avgResponseQuery = avgResponseQuery.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      const avgResponseResult = await avgResponseQuery;
+      const avgResponseTimeMinutes = Number(avgResponseResult[0]?.avgMinutes) || 0;
+
+      // Top contributors (most posts)
+      let topContributorsQuery = db
+        .select({
+          userId: forumPosts.userId,
+          userName: users.name,
+          postCount: count(),
+        })
+        .from(forumPosts)
+        .leftJoin(users, eq(forumPosts.userId, users.id))
+        .leftJoin(forumThreads, eq(forumPosts.threadId, forumThreads.id))
+        .where(dateFilter)
+        .groupBy(forumPosts.userId, users.name)
+        .orderBy(desc(count()))
+        .limit(10)
+        .$dynamic();
+
+      if (input.courseId) {
+        topContributorsQuery = topContributorsQuery.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      const topContributors = await topContributorsQuery;
+
+      // Most active threads
+      let mostActiveQuery = db
+        .select({
+          thread: forumThreads,
+          author: {
+            id: users.id,
+            name: users.name,
+          },
+        })
+        .from(forumThreads)
+        .leftJoin(users, eq(forumThreads.userId, users.id))
+        .where(dateFilter)
+        .orderBy(desc(forumThreads.replyCount))
+        .limit(10)
+        .$dynamic();
+
+      if (input.courseId) {
+        mostActiveQuery = mostActiveQuery.where(eq(forumThreads.courseId, input.courseId));
+      }
+
+      const mostActiveThreads = await mostActiveQuery;
+
+      return {
+        totalThreads,
+        totalPosts,
+        activeThreads,
+        solvedThreads,
+        solutionRate: totalThreads > 0 ? (solvedThreads / totalThreads) * 100 : 0,
+        avgResponseTimeMinutes,
+        topContributors: topContributors.map(c => ({
+          userId: c.userId,
+          userName: c.userName,
+          postCount: c.postCount,
+        })),
+        mostActiveThreads: mostActiveThreads.map(t => ({
+          ...t.thread,
+          author: t.author,
+        })),
+      };
     }),
 });

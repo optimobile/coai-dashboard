@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { RichTextEditor } from './RichTextEditor';
 import { ForumModerationTools } from './ForumModerationTools';
+import { MentionHighlight } from './MentionHighlight';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { 
@@ -19,7 +20,10 @@ import {
   Plus,
   Send,
   Edit2,
-  Trash2
+  Trash2,
+  Search,
+  Filter,
+  X
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
@@ -38,15 +42,31 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
   const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const [useRichText] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
 
   const utils = trpc.useUtils();
 
-  // Fetch threads
-  const { data: threads, isLoading } = trpc.forums.getCourseThreads.useQuery({
-    courseId,
-    lessonId,
-    sortBy,
-  });
+  // Fetch threads (either search or regular list)
+  const { data: searchResults, isLoading: isSearching } = trpc.forums.searchThreads.useQuery(
+    {
+      query: searchQuery,
+      courseId,
+      sortBy: sortBy === 'unanswered' ? 'recent' : sortBy,
+    },
+    { enabled: showSearch && searchQuery.length > 0 }
+  );
+
+  const { data: threads, isLoading } = trpc.forums.getCourseThreads.useQuery(
+    {
+      courseId,
+      lessonId,
+      sortBy,
+    },
+    { enabled: !showSearch || searchQuery.length === 0 }
+  );
+
+  const displayThreads = showSearch && searchQuery.length > 0 ? searchResults : threads;
 
   // Fetch selected thread details
   const { data: threadDetails } = trpc.forums.getThread.useQuery(
@@ -142,11 +162,39 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
             <MessageSquare className="h-5 w-5" />
             Discussion Forum
           </h3>
-          <Button onClick={() => setShowNewThread(!showNewThread)} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            New Thread
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => {
+                setShowSearch(!showSearch);
+                if (showSearch) setSearchQuery('');
+              }} 
+              size="sm" 
+              variant="outline"
+            >
+              {showSearch ? <X className="h-4 w-4 mr-2" /> : <Search className="h-4 w-4 mr-2" />}
+              {showSearch ? 'Close Search' : 'Search'}
+            </Button>
+            <Button onClick={() => setShowNewThread(!showNewThread)} size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              New Thread
+            </Button>
+          </div>
         </div>
+
+        {/* Search Bar */}
+        {showSearch && (
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search threads by title or content..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Sort options */}
         <div className="flex gap-2">
@@ -208,8 +256,13 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
 
         {/* Thread list */}
         <div className="space-y-2">
-          {threads && threads.length > 0 ? (
-            threads.map((thread) => (
+          {(isLoading || isSearching) && (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          )}
+          {!isLoading && !isSearching && displayThreads && displayThreads.length > 0 ? (
+            displayThreads.map((thread) => (
               <Card
                 key={thread.id}
                 className="p-4 hover:bg-accent/50 cursor-pointer transition-colors"
@@ -295,9 +348,7 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
                 </div>
               </div>
             </div>
-            <div className="prose prose-sm max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: threadDetails.content }} />
-            </div>
+            <MentionHighlight content={threadDetails.content} />
           </Card>
 
           <Separator />
@@ -345,8 +396,8 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
                           <span className="text-xs text-muted-foreground">(edited)</span>
                         )}
                       </div>
-                      <div className="prose prose-sm max-w-none mb-3">
-                        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                      <div className="mb-3">
+                        <MentionHighlight content={post.content} />
                       </div>
                       <div className="flex items-center gap-3">
                         <Button

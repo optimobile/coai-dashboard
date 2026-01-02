@@ -58,6 +58,7 @@ import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
 import AdminIncidents from "./pages/AdminIncidents";
 import AdminAnalytics from "./pages/AdminAnalytics";
+import ForumAnalytics from "./pages/ForumAnalytics";
 import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
@@ -252,6 +253,7 @@ function App() {
                   <Route path="/training-courses/:id" component={TrainingCourseDetail} />
                   <Route path="/training-courses/:id/learn" component={LessonViewer} />
                   <Route path="/my-training-courses" component={MyTrainingCourses} />
+                  <Route path="/forum-analytics" component={ForumAnalytics} />
                   <Route path="/verify-certificate/:id" component={VerifyCertificate} />
                   <Route path="/verify/:certificateNumber" component={VerifyCertificate} />
                   <Route path="/features/33-agent-council" component={AgentCouncilFeature} />
