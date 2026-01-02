@@ -4,6 +4,7 @@ import { getDb } from '../db';
 import { courseEnrollments, courses, courseBundles, coupons, couponUsage } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
 import { createCourseCheckoutSession } from '../stripe/stripeService';
+import { sendEnrollmentConfirmationEmail } from '../services/courseEmailService';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -66,6 +67,23 @@ router.post('/enrollment/create', async (req, res) => {
         couponId: couponId || null,
       });
       
+      // If it's a bundle, create individual enrollments for each course
+      if (type === 'bundle' && item.courseIds) {
+        const courseIds = Array.isArray(item.courseIds) ? item.courseIds : JSON.parse(item.courseIds);
+        
+        for (const courseId of courseIds) {
+          await db.insert(courseEnrollments).values({
+            userId,
+            courseId: parseInt(courseId),
+            bundleId: itemId,
+            enrollmentType: 'course',
+            paymentStatus: 'free',
+            amountPaid: 0,
+            couponId: couponId || null,
+          });
+        }
+      }
+      
       // Record coupon usage
       if (couponId && appliedCoupon) {
         await db.insert(couponUsage).values({
@@ -78,6 +96,29 @@ router.post('/enrollment/create', async (req, res) => {
           .update(coupons)
           .set({ usedCount: appliedCoupon.usedCount + 1 })
           .where(eq(coupons.id, couponId));
+      }
+      
+      // Send enrollment confirmation email
+      try {
+        // TODO: Get actual user email from auth system
+        const userEmail = `user${userId}@example.com`;
+        const userName = `User ${userId}`;
+        
+        await sendEnrollmentConfirmationEmail({
+          userEmail,
+          userName,
+          courseName: item.title || item.name,
+          courseDescription: item.description,
+          enrollmentDate: new Date().toISOString(),
+          isFree: true,
+          amountPaid: 0,
+          couponCode: appliedCoupon?.code,
+        });
+        
+        console.log(`[Enrollment] Sent confirmation email to ${userEmail}`);
+      } catch (emailError) {
+        console.error('[Enrollment] Failed to send confirmation email:', emailError);
+        // Don't fail the enrollment if email fails
       }
       
       return res.json({

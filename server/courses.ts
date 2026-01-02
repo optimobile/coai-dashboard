@@ -7,6 +7,7 @@
 
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { sendCompletionCertificateEmail } from './services/courseEmailService';
 import { getDb } from "./db";
 import { courses, courseEnrollments, courseBundles, regions, trainingModules } from "../drizzle/schema";
 import { eq, and, sql } from "drizzle-orm";
@@ -418,13 +419,41 @@ export const coursesRouter = router({
       }
 
       // Update enrollment status to completed
+      const completionDate = new Date().toISOString();
       await db
         .update(courseEnrollments)
         .set({
           status: "completed",
-          completedAt: new Date().toISOString(),
+          completedAt: completionDate,
         })
         .where(eq(courseEnrollments.id, input.enrollmentId));
+
+      // Send completion certificate email
+      try {
+        // Get course details
+        const [course] = await db
+          .select()
+          .from(courses)
+          .where(eq(courses.id, enrollment.courseId));
+        
+        // TODO: Get actual user email from auth system
+        const userEmail = `user${ctx.user.id}@example.com`;
+        const userName = ctx.user.name || `User ${ctx.user.id}`;
+        
+        await sendCompletionCertificateEmail({
+          userEmail,
+          userName,
+          courseName: course?.title || 'Course',
+          completionDate,
+          score: enrollment.score || undefined,
+          certificateUrl: `${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/certificates`,
+        });
+        
+        console.log(`[Course Completion] Sent certificate email to ${userEmail}`);
+      } catch (emailError) {
+        console.error('[Course Completion] Failed to send certificate email:', emailError);
+        // Don't fail the completion if email fails
+      }
 
       return {
         success: true,

@@ -6,7 +6,8 @@
 import type { Request, Response } from "express";
 import Stripe from "stripe";
 import { getDb } from "../db";
-import { users, courseEnrollments } from "../../drizzle/schema";
+import { users, courseEnrollments, courseBundles, courses } from "../../drizzle/schema";
+import { sendEnrollmentConfirmationEmail } from '../services/courseEmailService';
 import { eq } from "drizzle-orm";
 import { mapSubscriptionStatus, getTierFromPriceId } from "./stripeService";
 
@@ -117,7 +118,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       // Update enrollment with payment details
       await db.update(courseEnrollments)
         .set({
-          paidAmount: session.amount_total || 0,
+          amountPaid: session.amount_total || 0,
           stripeSubscriptionId: subscriptionId || null,
           subscriptionStatus: subscriptionId ? "active" : "none",
           paymentStatus: "completed",
@@ -125,6 +126,74 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         .where(eq(courseEnrollments.id, enrollment.id));
 
       console.log(`[Stripe Webhook] Updated enrollment ${enrollment.id} with payment details`);
+      
+      // Send enrollment confirmation email
+      try {
+        // Get course/bundle details
+        let itemName = 'Course';
+        let itemDescription = '';
+        
+        if (enrollment.courseId) {
+          const [course] = await db.select().from(courses).where(eq(courses.id, enrollment.courseId));
+          if (course) {
+            itemName = course.title;
+            itemDescription = course.description || '';
+          }
+        } else if (enrollment.bundleId) {
+          const [bundle] = await db.select().from(courseBundles).where(eq(courseBundles.id, enrollment.bundleId));
+          if (bundle) {
+            itemName = bundle.name;
+            itemDescription = bundle.description || '';
+          }
+        }
+        
+        // TODO: Get actual user email from auth system
+        const userEmail = `user${enrollment.userId}@example.com`;
+        const userName = `User ${enrollment.userId}`;
+        
+        await sendEnrollmentConfirmationEmail({
+          userEmail,
+          userName,
+          courseName: itemName,
+          courseDescription: itemDescription,
+          enrollmentDate: new Date().toISOString(),
+          isFree: false,
+          amountPaid: session.amount_total || 0,
+        });
+        
+        console.log(`[Stripe Webhook] Sent enrollment confirmation email to ${userEmail}`);
+      } catch (emailError) {
+        console.error('[Stripe Webhook] Failed to send confirmation email:', emailError);
+        // Don't fail the webhook if email fails
+      }
+      
+      // If it's a bundle enrollment, create individual course enrollments
+      if (enrollment.bundleId && enrollment.enrollmentType === 'bundle') {
+        const [bundle] = await db
+          .select()
+          .from(courseBundles)
+          .where(eq(courseBundles.id, enrollment.bundleId));
+        
+        if (bundle && bundle.courseIds) {
+          const courseIds = Array.isArray(bundle.courseIds) ? bundle.courseIds : JSON.parse(bundle.courseIds as string);
+          
+          console.log(`[Stripe Webhook] Expanding bundle ${bundle.id} into ${courseIds.length} individual course enrollments`);
+          
+          for (const courseId of courseIds) {
+            await db.insert(courseEnrollments).values({
+              userId: enrollment.userId,
+              courseId: parseInt(courseId),
+              bundleId: enrollment.bundleId,
+              enrollmentType: 'course',
+              paymentStatus: 'completed',
+              amountPaid: 0,
+              couponId: enrollment.couponId,
+            });
+          }
+          
+          console.log(`[Stripe Webhook] Successfully created ${courseIds.length} individual course enrollments for bundle ${bundle.id}`);
+        }
+      }
     } else {
       console.error(`[Stripe Webhook] No enrollment found for session ${session.id}`);
     }

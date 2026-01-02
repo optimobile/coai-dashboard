@@ -7330,3 +7330,9 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Fix Dashboard UI to show Complete Bundle (£1,999) with all 7 modules
 - [x] Fix NaN price issue in checkout flow
 - [x] Verify Stripe payment redirects to dashboard with purchased courses visible
+
+## Phase 12 - Payment Testing & Bundle Expansion (Jan 2, 2026)
+
+- [x] Test payment flow using Stripe test mode with promo code "FOUNDING10K"
+- [x] Implement bundle course expansion - automatically create individual enrollments for each course in a bundle
+- [x] Implement email notifications for enrollment confirmations and course completion certificates
