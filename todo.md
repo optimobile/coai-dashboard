@@ -7324,3 +7324,9 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Test responsive layouts at various breakpoints
 - [x] Test form inputs and keyboard behavior
 - [x] Document mobile testing results
+
+- [x] Fix Dashboard UI to show 7 individual modules (£499 each) in Paid Courses section
+- [x] Fix Dashboard UI to show Foundation Bundle (£999) with 3 modules
+- [x] Fix Dashboard UI to show Complete Bundle (£1,999) with all 7 modules
+- [x] Fix NaN price issue in checkout flow
+- [x] Verify Stripe payment redirects to dashboard with purchased courses visible

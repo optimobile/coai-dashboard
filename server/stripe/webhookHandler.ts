@@ -99,13 +99,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const customerId = session.customer as string;
   const subscriptionId = session.subscription as string;
   const courseId = session.metadata?.courseId;
+  const bundleId = session.metadata?.bundleId;
   const paymentType = session.metadata?.paymentType;
 
   // Check if this is a course enrollment payment
-  if (courseId && paymentType) {
-    console.log(`[Stripe Webhook] Course enrollment checkout completed for user ${userId}, course: ${courseId}, paymentType: ${paymentType}`);
+  if ((courseId || bundleId) && paymentType) {
+    console.log(`[Stripe Webhook] Course enrollment checkout completed for user ${userId}, course: ${courseId}, bundle: ${bundleId}, paymentType: ${paymentType}`);
 
-    // Find the enrollment record
+    // Find the enrollment record by session ID
     const [enrollment] = await db
       .select()
       .from(courseEnrollments)
@@ -119,11 +120,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           paidAmount: session.amount_total || 0,
           stripeSubscriptionId: subscriptionId || null,
           subscriptionStatus: subscriptionId ? "active" : "none",
-          status: "in_progress",
+          paymentStatus: "completed",
         })
         .where(eq(courseEnrollments.id, enrollment.id));
 
       console.log(`[Stripe Webhook] Updated enrollment ${enrollment.id} with payment details`);
+    } else {
+      console.error(`[Stripe Webhook] No enrollment found for session ${session.id}`);
     }
     return;
   }

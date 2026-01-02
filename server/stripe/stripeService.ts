@@ -165,3 +165,55 @@ export function getTierFromPriceId(priceId: string): SubscriptionTier {
   if (priceId.includes("pro")) return "pro";
   return "free";
 }
+
+/**
+ * Create a checkout session for course/bundle purchase
+ */
+export async function createCourseCheckoutSession(params: {
+  userId: number;
+  email: string;
+  name?: string;
+  courseId?: number;
+  bundleId?: number;
+  stripePriceId: string;
+  amount: number; // in cents
+  successUrl: string;
+  cancelUrl: string;
+  paymentType: 'one_time' | '3_month' | '6_month' | '12_month';
+}): Promise<{ url: string; sessionId: string }> {
+  const { userId, email, name, courseId, bundleId, stripePriceId, amount, successUrl, cancelUrl, paymentType } = params;
+
+  // Get or create customer
+  const customerId = await getOrCreateCustomer(userId, email, name);
+
+  // Create checkout session
+  const session = await stripe.checkout.sessions.create({
+    customer: customerId,
+    client_reference_id: userId.toString(),
+    mode: paymentType === 'one_time' ? 'payment' : 'subscription',
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price: stripePriceId,
+        quantity: 1,
+      },
+    ],
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+    allow_promotion_codes: true,
+    billing_address_collection: 'required',
+    metadata: {
+      user_id: userId.toString(),
+      customer_email: email,
+      customer_name: name || '',
+      courseId: courseId?.toString() || '',
+      bundleId: bundleId?.toString() || '',
+      paymentType,
+    },
+  });
+
+  return {
+    url: session.url!,
+    sessionId: session.id,
+  };
+}

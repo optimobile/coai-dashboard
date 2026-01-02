@@ -103,7 +103,14 @@ export default function MyCourses() {
           </Card>
         ) : (
           <div className="grid gap-8">
-            {enrollments.map((enrollment: any) => (
+            {enrollments.map((enrollment: any) => {
+              // Skip enrollments with missing course data
+              if (!enrollment.course) {
+                console.warn(`Enrollment ${enrollment.id} has no course data`);
+                return null;
+              }
+              
+              return (
               <Card key={enrollment.id} className="p-8 hover:shadow-lg transition-shadow">
                 <div className="flex flex-col lg:flex-row gap-8">
                   {/* Course Info */}
@@ -208,7 +215,8 @@ export default function MyCourses() {
                   </div>
                 </div>
               </Card>
-            ))}
+              );
+            })}
           </div>
         )}
 

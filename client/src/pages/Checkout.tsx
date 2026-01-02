@@ -70,7 +70,7 @@ export default function Checkout() {
         setAppliedCoupon(data.coupon);
         
         // Calculate discount amount
-        const originalPrice = (itemType === 'bundle' ? item.price : item.price) / 100;
+        const originalPrice = (itemType === 'bundle' ? item.bundlePrice : item.price) / 100;
         let discountAmount = 0;
         
         if (data.coupon.discountType === 'percentage') {
@@ -106,7 +106,7 @@ export default function Checkout() {
   const calculateFinalPrice = () => {
     if (!item) return 0;
     
-    const originalPrice = itemType === 'bundle' ? item.price : item.price;
+    const originalPrice = itemType === 'bundle' ? item.bundlePrice : item.price;
     
     if (!appliedCoupon) return originalPrice / 100; // Convert from pence to pounds
     
@@ -154,9 +154,12 @@ export default function Checkout() {
         return;
       }
       
-      // Otherwise, redirect to Stripe checkout
-      // TODO: Integrate Stripe Elements for payment
-      toast.info('Stripe payment UI will be integrated here');
+      // Redirect to Stripe checkout
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        toast.error('Failed to create checkout session');
+      }
       
     } catch (error) {
       console.error('Error processing checkout:', error);
@@ -187,7 +190,7 @@ export default function Checkout() {
     );
   }
   
-  const originalPrice = (itemType === 'bundle' ? item.price : item.price) / 100;
+  const originalPrice = (itemType === 'bundle' ? item.bundlePrice : item.price) / 100;
   const finalPrice = calculateFinalPrice();
   const savings = originalPrice - finalPrice;
   

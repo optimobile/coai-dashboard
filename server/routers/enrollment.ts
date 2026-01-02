@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { getDb } from '../db';
 import { courseEnrollments, courses, courseBundles, coupons, couponUsage } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
+import { createCourseCheckoutSession } from '../stripe/stripeService';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -86,20 +87,25 @@ router.post('/enrollment/create', async (req, res) => {
       });
     }
     
-    // Create Stripe payment intent
+    // Create Stripe checkout session
     if (!stripePriceId) {
       return res.status(400).json({ error: 'Stripe price not configured for this item' });
     }
     
-    const paymentIntent = await stripe.paymentIntents.create({
+    // Get user email (mock for now - should come from auth)
+    const userEmail = `user${userId}@example.com`;
+    
+    const frontendUrl = process.env.VITE_FRONTEND_URL || 'http://localhost:3000';
+    const { url, sessionId } = await createCourseCheckoutSession({
+      userId,
+      email: userEmail,
+      courseId: type === 'course' ? itemId : undefined,
+      bundleId: type === 'bundle' ? itemId : undefined,
+      stripePriceId,
       amount: finalAmount,
-      currency: 'gbp',
-      metadata: {
-        userId: userId.toString(),
-        type,
-        itemId: itemId.toString(),
-        couponId: couponId?.toString() || '',
-      },
+      successUrl: `${frontendUrl}/my-courses?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${frontendUrl}/checkout?type=${type}&id=${itemId}`,
+      paymentType: 'one_time',
     });
     
     // Create pending enrollment
@@ -109,7 +115,7 @@ router.post('/enrollment/create', async (req, res) => {
       bundleId: type === 'bundle' ? itemId : null,
       enrollmentType: type,
       paymentStatus: 'pending',
-      stripePaymentIntentId: paymentIntent.id,
+      stripePaymentIntentId: sessionId,
       stripePriceId,
       amountPaid: 0,
       couponId: couponId || null,
@@ -119,7 +125,8 @@ router.post('/enrollment/create', async (req, res) => {
       success: true,
       enrollmentId: enrollment.insertId,
       paymentRequired: true,
-      clientSecret: paymentIntent.client_secret,
+      checkoutUrl: url,
+      sessionId,
       amount: finalAmount,
     });
     
