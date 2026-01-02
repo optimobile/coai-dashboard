@@ -596,8 +596,8 @@ export default function NewHome() {
               Join the Founding Members
             </h2>
             <p className="text-xl text-gray-900 dark:text-white mb-8">
-              Get 50% off your first year + priority job placement. 
-              Limited to first 1,000 signups.
+              First 10,000 signups get full training FREE (£1,999 value).
+              Use code <strong>FOUNDING10K</strong> at checkout.
             </p>
 
             <form onSubmit={handleLOISubmit} className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">

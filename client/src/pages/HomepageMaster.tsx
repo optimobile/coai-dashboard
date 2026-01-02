@@ -55,7 +55,7 @@ export default function HomepageMaster() {
           >
             {/* Free Course Giveaway Announcement */}
             <p className="text-sm sm:text-base md:text-lg font-bold text-emerald-700 mb-3">
-              🎁 First 1,000 signups get 3 foundation courses FREE (£999 value)
+              🎁 First 10,000 signups get full training FREE (£1,999 value). Use code <strong>FOUNDING10K</strong> at checkout.
             </p>
             
             <p className="text-xs sm:text-sm md:text-base font-semibold text-gray-900 mb-2 sm:mb-3">
