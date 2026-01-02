@@ -5,6 +5,9 @@ import { router, publicProcedure } from "../_core/trpc";
 import * as db from "../db";
 import { TRPCError } from "@trpc/server";
 import { Resend } from "resend";
+import { sdk } from "../_core/sdk";
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { getSessionCookieOptions } from "../_core/cookies";
 
 // Initialize Resend for email sending
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -137,9 +140,15 @@ export const emailAuthRouter = router({
       // Update last signed in
       await db.updateUserLastSignedIn(user.id);
 
-      // Set session cookie (using existing session mechanism)
-      // Note: This needs to be integrated with the existing session management
-      // For now, return user info and let the frontend handle session
+      // Create session token using the same mechanism as OAuth
+      const sessionToken = await sdk.createSessionToken(user.openId, {
+        name: user.name || user.email || "",
+        expiresInMs: ONE_YEAR_MS,
+      });
+
+      // Set session cookie
+      const cookieOptions = getSessionCookieOptions(ctx.req);
+      ctx.res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
       return {
         success: true,

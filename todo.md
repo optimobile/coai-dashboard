@@ -7262,3 +7262,10 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Test complete checkout flow with FOUNDING10K coupon (manual verification)
 - [x] Add coupon validation feedback with success message showing discount amount
 - [x] Create dedicated /founding-members landing page with FAQs and enrollment instructions
+
+
+## CRITICAL BLOCKER - Authentication Redirect Issue
+
+- [x] Fix critical authentication blocker - users redirected to Manus sign-in screen after login
+- [x] Test with multiple accounts on different devices
+- [x] Verify no critical blockers in authentication flow
