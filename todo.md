@@ -7354,3 +7354,5 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Update About page with correct company details (legal info in Footer covers all pages)
 - [x] Verify CSOAI.ORG domain configuration (user to configure via Settings → Domains in Management UI)
 - [x] Create Dragon's Den launch readiness report for January 3rd, 2026
+
+- [x] Fix Stripe payment integration for course enrollment
