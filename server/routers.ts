@@ -1427,6 +1427,133 @@ This analyst can now review AI safety cases in the Workbench. Your certified ana
         },
       };
     }),
+
+  // Get exam analytics (admin only)
+  getExamAnalytics: protectedProcedure
+    .input(z.object({ dateRange: z.enum(["7d", "30d", "90d", "all"]) }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      // Calculate date filter
+      let dateFilter = null;
+      if (input.dateRange !== "all") {
+        const days = parseInt(input.dateRange);
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        dateFilter = cutoffDate.toISOString();
+      }
+
+      // Get all completed attempts
+      const attempts = await db
+        .select()
+        .from(userTestAttempts)
+        .where(
+          and(
+            sql`${userTestAttempts.completedAt} IS NOT NULL`,
+            dateFilter ? sql`${userTestAttempts.completedAt} >= ${dateFilter}` : undefined
+          )
+        );
+
+      if (attempts.length === 0) {
+        return {
+          totalAttempts: 0,
+          passRate: 0,
+          averageScore: 0,
+          averageCompletionTime: 0,
+          mostMissedQuestions: [],
+          scoreDistribution: [],
+        };
+      }
+
+      // Calculate basic stats
+      const totalAttempts = attempts.length;
+      const passedAttempts = attempts.filter((a) => a.passed).length;
+      const passRate = (passedAttempts / totalAttempts) * 100;
+      const averageScore = attempts.reduce((sum, a) => sum + (a.percentScore || 0), 0) / totalAttempts;
+
+      // Calculate average completion time
+      const completionTimes = attempts
+        .filter((a) => a.startedAt && a.completedAt)
+        .map((a) => {
+          const start = new Date(a.startedAt!).getTime();
+          const end = new Date(a.completedAt!).getTime();
+          return (end - start) / 1000 / 60; // minutes
+        });
+      const averageCompletionTime = completionTimes.length > 0
+        ? completionTimes.reduce((sum, t) => sum + t, 0) / completionTimes.length
+        : 0;
+
+      // Score distribution
+      const scoreRanges = [
+        { range: "0-20%", min: 0, max: 20 },
+        { range: "21-40%", min: 21, max: 40 },
+        { range: "41-60%", min: 41, max: 60 },
+        { range: "61-80%", min: 61, max: 80 },
+        { range: "81-100%", min: 81, max: 100 },
+      ];
+
+      const scoreDistribution = scoreRanges.map((bucket) => {
+        const count = attempts.filter(
+          (a) => a.percentScore! >= bucket.min && a.percentScore! <= bucket.max
+        ).length;
+        return {
+          range: bucket.range,
+          count,
+          percentage: (count / totalAttempts) * 100,
+        };
+      });
+
+      // Most missed questions
+      // Get all questions and their answer stats
+      const allQuestions = await db.select().from(testQuestions);
+      
+      const questionStats = allQuestions.map((q) => {
+        let totalAttempts = 0;
+        let incorrectCount = 0;
+
+        attempts.forEach((attempt) => {
+          if (attempt.answers) {
+            const answers = typeof attempt.answers === 'string' 
+              ? JSON.parse(attempt.answers) 
+              : attempt.answers;
+            
+            if (answers[q.id.toString()]) {
+              totalAttempts++;
+              if (answers[q.id.toString()] !== q.correctAnswer) {
+                incorrectCount++;
+              }
+            }
+          }
+        });
+
+        const missRate = totalAttempts > 0 ? (incorrectCount / totalAttempts) * 100 : 0;
+
+        return {
+          id: q.id,
+          questionText: q.questionText,
+          difficulty: q.difficulty,
+          totalAttempts,
+          incorrectCount,
+          missRate,
+        };
+      });
+
+      // Sort by miss rate and take top 10
+      const mostMissedQuestions = questionStats
+        .filter((q) => q.totalAttempts >= 3) // Only include questions with at least 3 attempts
+        .sort((a, b) => b.missRate - a.missRate)
+        .slice(0, 10);
+
+      return {
+        totalAttempts,
+        passRate,
+        averageScore,
+        averageCompletionTime,
+        mostMissedQuestions,
+        scoreDistribution,
+      };
+    }),
 });
 
 // ============================================

@@ -6997,3 +6997,30 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Fix broken links in sidebar and navigation
 - [x] Test complete exam flow end-to-end (start → answer → submit → certificate)
 - [x] Verify all critical user journeys work without errors
+
+
+## NEW FEATURES - EXAM SYSTEM ENHANCEMENTS
+
+### 1. Expand Question Bank (Target: 200+ questions)
+- [x] Add 30+ EU AI Act questions (easy, medium, hard)
+- [x] Add 30+ NIST AI RMF questions (easy, medium, hard)
+- [x] Add 30+ TC260 questions (easy, medium, hard)
+- [x] Add 30+ Ethics & Bias questions (easy, medium, hard)
+- [x] Add 30+ Incident Analysis questions (easy, medium, hard)
+- [x] Update seed script to insert all new questions
+- [x] Verify question format and correctness
+
+### 2. Practice Mode
+- [x] Create practice mode toggle in exam interface
+- [x] Implement instant feedback after each answer
+- [x] Show correct answer and explanation immediately
+- [x] Allow unlimited retakes without saving to database
+- [x] Add "Switch to Real Exam" option
+- [x] Update UI to differentiate practice vs real exa### 3. Exam Analytics Dashboard
+- [x] Create admin analytics page (/admin/exam-analytics)
+- [x] Display overall pass rate percentage
+- [x] Show average score across all attempts
+- [x] List most-missed questions with miss rates
+- [x] Display average completion time
+- [x] Add score distribution visualization
+- [x] Implement date range filters (7d, 30d, 90d, all)t data export functionality

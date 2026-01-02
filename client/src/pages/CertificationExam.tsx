@@ -65,6 +65,9 @@ interface ExamState {
   flaggedQuestions: Set<number>;
   startTime: Date | null;
   timeRemaining: number; // in seconds
+  isPracticeMode: boolean;
+  showFeedback: boolean;
+  currentFeedback: { correct: boolean; explanation: string } | null;
 }
 
 export default function CertificationExam() {
@@ -83,6 +86,9 @@ export default function CertificationExam() {
     flaggedQuestions: new Set(),
     startTime: null,
     timeRemaining: 90 * 60, // 90 minutes default
+    isPracticeMode: false,
+    showFeedback: false,
+    currentFeedback: null,
   });
 
   // Fetch test data (using test ID 30001 - WATCHDOG_BASIC)
@@ -152,11 +158,11 @@ export default function CertificationExam() {
   const progressPercent = questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
 
   // Start the exam
-  const handleStartExam = async () => {
-    console.log("Starting exam...", { testData, questions: questions.length, user });
+  const handleStartExam = async (practiceMode = false) => {
+    console.log("Starting exam...", { testData, questions: questions.length, user, practiceMode });
     
-    // Check if user is logged in
-    if (!user) {
+    // Check if user is logged in (not required for practice mode)
+    if (!practiceMode && !user) {
       alert("Please log in to take the certification exam.");
       navigate("/login?redirect=/certification/exam");
       return;
@@ -167,6 +173,21 @@ export default function CertificationExam() {
       alert("Unable to start exam: No questions loaded. Please refresh the page and try again.");
       return;
     }
+    
+    // Practice mode doesn't require database interaction
+    if (practiceMode) {
+      setExamState((prev) => ({
+        ...prev,
+        status: "in_progress",
+        attemptId: null, // No attempt ID in practice mode
+        startTime: new Date(),
+        timeRemaining: (testData?.test?.timeLimitMinutes || 60) * 60,
+        isPracticeMode: true,
+      }));
+      return;
+    }
+    
+    // Real exam mode
     try {
       const result = await startTestMutation.mutateAsync({ testId: 30001 });
       console.log("Exam started:", result);
@@ -176,6 +197,7 @@ export default function CertificationExam() {
         attemptId: result.attemptId,
         startTime: new Date(),
         timeRemaining: (testData?.test?.timeLimitMinutes || 60) * 60,
+        isPracticeMode: false,
       }));
     } catch (error: any) {
       console.error("Failed to start exam:", error);
@@ -190,13 +212,32 @@ export default function CertificationExam() {
 
   // Select answer
   const handleSelectAnswer = (questionId: number, answerId: string) => {
-    setExamState((prev) => ({
-      ...prev,
-      answers: {
-        ...prev.answers,
-        [questionId.toString()]: answerId,
-      },
-    }));
+    const question = questions.find(q => q.id === questionId);
+    
+    setExamState((prev) => {
+      const newState = {
+        ...prev,
+        answers: {
+          ...prev.answers,
+          [questionId.toString()]: answerId,
+        },
+      };
+      
+      // In practice mode, show instant feedback
+      if (prev.isPracticeMode && question) {
+        const correctAnswer = (testData?.questions.find((q: any) => q.id === questionId) as any)?.correctAnswer;
+        const explanation = (testData?.questions.find((q: any) => q.id === questionId) as any)?.explanation || "No explanation available.";
+        const isCorrect = answerId === correctAnswer;
+        
+        newState.showFeedback = true;
+        newState.currentFeedback = {
+          correct: isCorrect,
+          explanation,
+        };
+      }
+      
+      return newState;
+    });
   };
 
   // Toggle flag
@@ -217,6 +258,8 @@ export default function CertificationExam() {
     setExamState((prev) => ({
       ...prev,
       currentQuestionIndex: Math.max(0, prev.currentQuestionIndex - 1),
+      showFeedback: false,
+      currentFeedback: null,
     }));
   };
 
@@ -224,6 +267,8 @@ export default function CertificationExam() {
     setExamState((prev) => ({
       ...prev,
       currentQuestionIndex: Math.min(questions.length - 1, prev.currentQuestionIndex + 1),
+      showFeedback: false,
+      currentFeedback: null,
     }));
   };
 
@@ -231,6 +276,8 @@ export default function CertificationExam() {
     setExamState((prev) => ({
       ...prev,
       currentQuestionIndex: index,
+      showFeedback: false,
+      currentFeedback: null,
     }));
   };
 
@@ -400,26 +447,40 @@ export default function CertificationExam() {
                 </div>
               </div>
 
-              {/* Start Button */}
-              <div className="pt-4 flex justify-center">
-                <Button
-                  size="lg"
-                  onClick={handleStartExam}
-                  disabled={startTestMutation.isPending}
-                  className="px-8"
-                >
-                  {startTestMutation.isPending ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Starting...
-                    </>
-                  ) : (
-                    <>
-                      <Timer className="h-5 w-5 mr-2" />
-                      Start Exam
-                    </>
-                  )}
-                </Button>
+              {/* Start Buttons */}
+              <div className="pt-4 space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button
+                    size="lg"
+                    onClick={() => handleStartExam(false)}
+                    disabled={startTestMutation.isPending}
+                    className="px-8"
+                  >
+                    {startTestMutation.isPending ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Starting...
+                      </>
+                    ) : (
+                      <>
+                        <Award className="h-5 w-5 mr-2" />
+                        Start Real Exam
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => handleStartExam(true)}
+                    className="px-8"
+                  >
+                    <BookOpen className="h-5 w-5 mr-2" />
+                    Practice Mode
+                  </Button>
+                </div>
+                <p className="text-sm text-center text-muted-foreground">
+                  Practice Mode: Get instant feedback on each answer • No time limit • Unlimited retakes
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -448,16 +509,23 @@ export default function CertificationExam() {
         {/* Header with timer and progress */}
         <div className="border-b bg-card px-6 py-3">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
-            {/* Timer */}
-            <div className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-lg",
-              examState.timeRemaining <= 300 
-                ? "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300" 
-                : "bg-muted"
-            )}>
-              <Clock className="h-5 w-5" />
-              <span className="font-bold">{formatTime(examState.timeRemaining)}</span>
-            </div>
+            {/* Timer / Practice Mode Badge */}
+            {examState.isPracticeMode ? (
+              <Badge variant="outline" className="px-4 py-2 text-base bg-blue-50 dark:bg-blue-950 border-blue-300 dark:border-blue-700">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Practice Mode
+              </Badge>
+            ) : (
+              <div className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-lg",
+                examState.timeRemaining <= 300 
+                  ? "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300" 
+                  : "bg-muted"
+              )}>
+                <Clock className="h-5 w-5" />
+                <span className="font-bold">{formatTime(examState.timeRemaining)}</span>
+              </div>
+            )}
 
             {/* Progress */}
             <div className="flex items-center gap-4">
@@ -477,13 +545,28 @@ export default function CertificationExam() {
                 <X className="h-4 w-4 mr-1" />
                 Exit
               </Button>
-              <Button
-                size="sm"
-                onClick={() => setShowSubmitDialog(true)}
-              >
-                <Send className="h-4 w-4 mr-1" />
-                Submit Exam
-              </Button>
+              {examState.isPracticeMode ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    if (confirm("Exit practice mode and return to instructions?")) {
+                      setExamState(prev => ({ ...prev, status: "instructions", answers: {}, currentQuestionIndex: 0, isPracticeMode: false, showFeedback: false, currentFeedback: null }));
+                    }
+                  }}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-1" />
+                  Exit Practice
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={() => setShowSubmitDialog(true)}
+                >
+                  <Send className="h-4 w-4 mr-1" />
+                  Submit Exam
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -572,6 +655,45 @@ export default function CertificationExam() {
                         })}
                       </CardContent>
                     </Card>
+
+                    {/* Practice Mode Feedback */}
+                    {examState.isPracticeMode && examState.showFeedback && examState.currentFeedback && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-4"
+                      >
+                        <Card className={cn(
+                          "border-2",
+                          examState.currentFeedback.correct 
+                            ? "border-green-500 bg-green-50 dark:bg-green-950/20" 
+                            : "border-red-500 bg-red-50 dark:bg-red-950/20"
+                        )}>
+                          <CardHeader className="pb-3">
+                            <div className="flex items-center gap-2">
+                              {examState.currentFeedback.correct ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                              ) : (
+                                <X className="h-5 w-5 text-red-600 dark:text-red-400" />
+                              )}
+                              <CardTitle className={cn(
+                                "text-lg",
+                                examState.currentFeedback.correct 
+                                  ? "text-green-700 dark:text-green-300" 
+                                  : "text-red-700 dark:text-red-300"
+                              )}>
+                                {examState.currentFeedback.correct ? "Correct!" : "Incorrect"}
+                              </CardTitle>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm leading-relaxed">
+                              {examState.currentFeedback.explanation}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    )}
 
                     {/* Navigation buttons */}
                     <div className="flex justify-between mt-6">

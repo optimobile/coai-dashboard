@@ -48,6 +48,7 @@ import CertificationV2 from "./pages/Certification-v2";
 import CertificationExam from "./pages/CertificationExam";
 import CertificationResults from "./pages/CertificationResults";
 import MyCertificates from "./pages/MyCertificates";
+import ExamAnalytics from "./pages/ExamAnalytics";
 import TrainingCourses from "./pages/TrainingCourses";
 import TrainingCourseDetail from "./pages/TrainingCourseDetail";
 import LessonViewer from "./pages/LessonViewer";
@@ -268,6 +269,7 @@ function App() {
                   <Route path="/certification/results" component={CertificationResults} />
                   <Route path="/certificates" component={MyCertificates} />
                   <Route path="/certification/review" component={ExamReview} />
+                  <Route path="/admin/exam-analytics" component={ExamAnalytics} />
                   <Route path="/workbench" component={Workbench} />
                   <Route path="/jobs" component={Jobs} />
                   <Route path="/my-applications" component={MyApplications} />
