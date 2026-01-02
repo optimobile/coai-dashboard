@@ -66,6 +66,7 @@ interface ExamState {
   startTime: Date | null;
   timeRemaining: number; // in seconds
   isPracticeMode: boolean;
+  isTimedPractice: boolean; // New: timed practice mode
   showFeedback: boolean;
   currentFeedback: { correct: boolean; explanation: string } | null;
 }
@@ -87,6 +88,7 @@ export default function CertificationExam() {
     startTime: null,
     timeRemaining: 90 * 60, // 90 minutes default
     isPracticeMode: false,
+    isTimedPractice: false,
     showFeedback: false,
     currentFeedback: null,
   });
@@ -116,6 +118,8 @@ export default function CertificationExam() {
   // Timer effect
   useEffect(() => {
     if (examState.status !== "in_progress") return;
+    // Skip timer for untimed practice mode
+    if (examState.isPracticeMode && !examState.isTimedPractice) return;
 
     const timer = setInterval(() => {
       setExamState((prev) => {
@@ -158,7 +162,7 @@ export default function CertificationExam() {
   const progressPercent = questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
 
   // Start the exam
-  const handleStartExam = async (practiceMode = false) => {
+  const handleStartExam = async (practiceMode = false, timedPractice = false) => {
     console.log("Starting exam...", { testData, questions: questions.length, user, practiceMode });
     
     // Check if user is logged in (not required for practice mode)
@@ -183,6 +187,7 @@ export default function CertificationExam() {
         startTime: new Date(),
         timeRemaining: (testData?.test?.timeLimitMinutes || 60) * 60,
         isPracticeMode: true,
+        isTimedPractice: timedPractice,
       }));
       return;
     }
@@ -283,6 +288,35 @@ export default function CertificationExam() {
 
   // Submit exam
   const handleSubmit = async () => {
+    // Handle practice mode submission (calculate score locally)
+    if (examState.isPracticeMode) {
+      setExamState((prev) => ({ ...prev, status: "submitting" }));
+      setShowSubmitDialog(false);
+
+      // Calculate score locally for practice mode
+      let totalPoints = 0;
+      let earnedPoints = 0;
+
+      for (const question of questions) {
+        totalPoints += question.points;
+        const userAnswer = examState.answers[question.id.toString()];
+        const correctAnswer = (testData?.questions.find((q: any) => q.id === question.id) as any)?.correctAnswer;
+        if (userAnswer === correctAnswer) {
+          earnedPoints += question.points;
+        }
+      }
+
+      const percentScore = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
+      const passed = percentScore >= (testData?.test?.passingScore || 70);
+
+      // Navigate to results page with practice mode flag
+      setTimeout(() => {
+        navigate(`/certification/results?passed=${passed}&score=${percentScore}&practice=true`);
+      }, 1000);
+      return;
+    }
+
+    // Real exam submission
     if (!examState.attemptId) return;
 
     setExamState((prev) => ({ ...prev, status: "submitting" }));
@@ -471,16 +505,30 @@ export default function CertificationExam() {
                   <Button
                     size="lg"
                     variant="outline"
-                    onClick={() => handleStartExam(true)}
+                    onClick={() => handleStartExam(true, false)}
                     className="px-8"
                   >
                     <BookOpen className="h-5 w-5 mr-2" />
                     Practice Mode
                   </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => handleStartExam(true, true)}
+                    className="px-8 border-blue-300 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950"
+                  >
+                    <Timer className="h-5 w-5 mr-2" />
+                    Timed Practice
+                  </Button>
                 </div>
-                <p className="text-sm text-center text-muted-foreground">
-                  Practice Mode: Get instant feedback on each answer • No time limit • Unlimited retakes
-                </p>
+                <div className="space-y-2">
+                  <p className="text-sm text-center text-muted-foreground">
+                    <strong>Practice Mode:</strong> Get instant feedback on each answer • No time limit • Unlimited retakes
+                  </p>
+                  <p className="text-sm text-center text-muted-foreground">
+                    <strong>Timed Practice:</strong> Simulate real exam conditions with countdown timer • Instant feedback after submission
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -510,11 +558,27 @@ export default function CertificationExam() {
         <div className="border-b bg-card px-6 py-3">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             {/* Timer / Practice Mode Badge */}
-            {examState.isPracticeMode ? (
+            {examState.isPracticeMode && !examState.isTimedPractice ? (
               <Badge variant="outline" className="px-4 py-2 text-base bg-blue-50 dark:bg-blue-950 border-blue-300 dark:border-blue-700">
                 <BookOpen className="h-4 w-4 mr-2" />
-                Practice Mode
+                Practice Mode (Untimed)
               </Badge>
+            ) : examState.isPracticeMode && examState.isTimedPractice ? (
+              <div className="flex items-center gap-3">
+                <Badge variant="outline" className="px-3 py-1.5 text-sm bg-blue-50 dark:bg-blue-950 border-blue-300 dark:border-blue-700">
+                  <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+                  Timed Practice
+                </Badge>
+                <div className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-lg",
+                  examState.timeRemaining <= 300 
+                    ? "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300" 
+                    : "bg-muted"
+                )}>
+                  <Clock className="h-5 w-5" />
+                  <span className="font-bold">{formatTime(examState.timeRemaining)}</span>
+                </div>
+              </div>
             ) : (
               <div className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-lg",
@@ -546,18 +610,29 @@ export default function CertificationExam() {
                 Exit
               </Button>
               {examState.isPracticeMode ? (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    if (confirm("Exit practice mode and return to instructions?")) {
-                      setExamState(prev => ({ ...prev, status: "instructions", answers: {}, currentQuestionIndex: 0, isPracticeMode: false, showFeedback: false, currentFeedback: null }));
-                    }
-                  }}
-                >
-                  <ArrowLeft className="h-4 w-4 mr-1" />
-                  Exit Practice
-                </Button>
+                <div className="flex items-center gap-2">
+                  {examState.isTimedPractice && (
+                    <Button
+                      size="sm"
+                      onClick={() => setShowSubmitDialog(true)}
+                    >
+                      <Send className="h-4 w-4 mr-1" />
+                      Submit & Review
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      if (confirm("Exit practice mode and return to instructions?")) {
+                        setExamState(prev => ({ ...prev, status: "instructions", answers: {}, currentQuestionIndex: 0, isPracticeMode: false, isTimedPractice: false, showFeedback: false, currentFeedback: null }));
+                      }
+                    }}
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-1" />
+                    Exit Practice
+                  </Button>
+                </div>
               ) : (
                 <Button
                   size="sm"

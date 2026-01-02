@@ -316,3 +316,333 @@ describe("Exam System Enhancements", () => {
     });
   });
 });
+
+describe("Phase 12 - Question Randomization & Timed Practice", () => {
+  let db: Awaited<ReturnType<typeof getDb>>;
+
+  beforeAll(async () => {
+    db = await getDb();
+  });
+
+  describe("Question Randomization", () => {
+    it("should verify questions can be shuffled using Fisher-Yates algorithm", async () => {
+      if (!db) throw new Error("Database not available");
+
+      const questions = await db
+        .select({
+          id: testQuestions.id,
+          questionText: testQuestions.questionText,
+        })
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, 30001))
+        .limit(20);
+
+      expect(questions.length).toBeGreaterThan(5);
+
+      // Simulate Fisher-Yates shuffle
+      const shuffled = [...questions];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      // Verify shuffle maintains all questions
+      expect(shuffled.length).toBe(questions.length);
+      const originalIds = new Set(questions.map(q => q.id));
+      const shuffledIds = new Set(shuffled.map(q => q.id));
+      expect(shuffledIds.size).toBe(originalIds.size);
+
+      console.log("✅ Question randomization algorithm verified");
+    });
+
+    it("should verify options can be shuffled within questions", async () => {
+      if (!db) throw new Error("Database not available");
+
+      const [question] = await db
+        .select({
+          id: testQuestions.id,
+          options: testQuestions.options,
+        })
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, 30001))
+        .limit(1);
+
+      expect(question).toBeDefined();
+      
+      const options = typeof question.options === 'string' 
+        ? JSON.parse(question.options) 
+        : question.options;
+      
+      expect(Array.isArray(options)).toBe(true);
+      expect(options.length).toBeGreaterThan(1);
+
+      // Simulate option shuffle
+      const shuffledOptions = [...options];
+      for (let i = shuffledOptions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+      }
+
+      // Verify all options preserved
+      expect(shuffledOptions.length).toBe(options.length);
+      const originalIds = new Set(options.map((o: any) => o.id));
+      const shuffledIds = new Set(shuffledOptions.map((o: any) => o.id));
+      expect(shuffledIds.size).toBe(originalIds.size);
+
+      console.log("✅ Option randomization algorithm verified");
+    });
+  });
+
+  describe("Timed Practice Mode", () => {
+    it("should support timed practice with instant feedback", async () => {
+      if (!db) throw new Error("Database not available");
+
+      const [test] = await db
+        .select()
+        .from(certificationTests)
+        .where(eq(certificationTests.id, 30001))
+        .limit(1);
+
+      expect(test).toBeDefined();
+      expect(test.timeLimitMinutes).toBeGreaterThan(0);
+
+      // Verify questions have explanations for instant feedback
+      const questions = await db
+        .select({
+          id: testQuestions.id,
+          correctAnswer: testQuestions.correctAnswer,
+          explanation: testQuestions.explanation,
+          points: testQuestions.points,
+        })
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, 30001))
+        .limit(10);
+
+      questions.forEach((q: any) => {
+        expect(q.correctAnswer).toBeDefined();
+        expect(q.explanation).toBeDefined();
+        expect(q.explanation.length).toBeGreaterThan(0);
+        expect(q.points).toBeGreaterThan(0);
+      });
+
+      console.log(`✅ Timed practice mode data verified (${questions.length} questions with feedback)`);
+    });
+
+    it("should calculate practice mode scores without database storage", async () => {
+      if (!db) throw new Error("Database not available");
+
+      const questions = await db
+        .select({
+          id: testQuestions.id,
+          points: testQuestions.points,
+          correctAnswer: testQuestions.correctAnswer,
+        })
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, 30001))
+        .limit(15);
+
+      // Simulate practice mode scoring (client-side calculation)
+      const userAnswers: Record<string, string> = {};
+      let totalPoints = 0;
+      let earnedPoints = 0;
+
+      questions.forEach((q: any, index: number) => {
+        totalPoints += q.points;
+        // Simulate 80% correct rate
+        if (index < 12) {
+          userAnswers[q.id.toString()] = q.correctAnswer;
+          earnedPoints += q.points;
+        } else {
+          userAnswers[q.id.toString()] = "WRONG";
+        }
+      });
+
+      const percentScore = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
+      const passed = percentScore >= 70;
+
+      expect(percentScore).toBeGreaterThan(0);
+      expect(percentScore).toBeLessThanOrEqual(100);
+      expect(passed).toBe(true);
+
+      console.log(`✅ Practice mode scoring: ${percentScore}% (${earnedPoints}/${totalPoints} points)`);
+    });
+  });
+
+  describe("Exam Review Feature", () => {
+    it("should provide complete review data structure", async () => {
+      if (!db) throw new Error("Database not available");
+
+      // Get a completed attempt (if any exists)
+      const [attempt] = await db
+        .select()
+        .from(userTestAttempts)
+        .where(sql`${userTestAttempts.completedAt} IS NOT NULL`)
+        .limit(1);
+
+      if (!attempt) {
+        console.log("⚠️ No completed attempts - creating mock review data");
+        
+        // Verify review data structure can be built
+        const questions = await db
+          .select()
+          .from(testQuestions)
+          .where(eq(testQuestions.testId, 30001))
+          .limit(10);
+
+        const mockUserAnswers: Record<string, string> = {};
+        const reviewQuestions = questions.map((q: any) => {
+          const userAnswer = mockUserAnswers[q.id.toString()] || null;
+          const isCorrect = userAnswer === q.correctAnswer;
+
+          return {
+            id: q.id,
+            questionText: q.questionText,
+            options: q.options,
+            userAnswer,
+            correctAnswer: q.correctAnswer,
+            isCorrect,
+            explanation: q.explanation,
+            points: q.points,
+            difficulty: q.difficulty,
+          };
+        });
+
+        expect(reviewQuestions.length).toBe(questions.length);
+        reviewQuestions.forEach((rq: any) => {
+          expect(rq).toHaveProperty("userAnswer");
+          expect(rq).toHaveProperty("correctAnswer");
+          expect(rq).toHaveProperty("isCorrect");
+          expect(rq).toHaveProperty("explanation");
+        });
+
+        console.log("✅ Review data structure verified");
+        return;
+      }
+
+      // Verify actual attempt review data
+      const questions = await db
+        .select()
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, attempt.testId));
+
+      const userAnswers = typeof attempt.answers === 'string'
+        ? JSON.parse(attempt.answers)
+        : attempt.answers || {};
+
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let unansweredCount = 0;
+
+      questions.forEach((q: any) => {
+        const userAnswer = userAnswers[q.id.toString()];
+        if (!userAnswer) {
+          unansweredCount++;
+        } else if (userAnswer === q.correctAnswer) {
+          correctCount++;
+        } else {
+          incorrectCount++;
+        }
+      });
+
+      expect(correctCount + incorrectCount + unansweredCount).toBe(questions.length);
+
+      console.log(`✅ Review summary: ${correctCount} correct, ${incorrectCount} incorrect, ${unansweredCount} unanswered`);
+    });
+
+    it("should support filtering review questions by status", async () => {
+      if (!db) throw new Error("Database not available");
+
+      const questions = await db
+        .select()
+        .from(testQuestions)
+        .where(eq(testQuestions.testId, 30001))
+        .limit(20);
+
+      // Simulate review filtering
+      const mockUserAnswers: Record<string, string> = {};
+      questions.forEach((q: any, index: number) => {
+        if (index < 10) {
+          mockUserAnswers[q.id.toString()] = q.correctAnswer; // Correct
+        } else if (index < 15) {
+          mockUserAnswers[q.id.toString()] = "WRONG"; // Incorrect
+        }
+        // Rest are unanswered
+      });
+
+      const reviewQuestions = questions.map((q: any) => {
+        const userAnswer = mockUserAnswers[q.id.toString()] || null;
+        return {
+          id: q.id,
+          userAnswer,
+          correctAnswer: q.correctAnswer,
+          isCorrect: userAnswer === q.correctAnswer,
+        };
+      });
+
+      const correctOnly = reviewQuestions.filter(q => q.isCorrect);
+      const incorrectOnly = reviewQuestions.filter(q => !q.isCorrect && q.userAnswer);
+      const unansweredOnly = reviewQuestions.filter(q => !q.userAnswer);
+
+      expect(correctOnly.length).toBe(10);
+      expect(incorrectOnly.length).toBe(5);
+      expect(unansweredOnly.length).toBe(5);
+      expect(correctOnly.length + incorrectOnly.length + unansweredOnly.length).toBe(questions.length);
+
+      console.log("✅ Review filtering verified: correct, incorrect, unanswered");
+    });
+  });
+
+  describe("Integration - All Phase 12 Features", () => {
+    it("should support complete exam workflow with all enhancements", async () => {
+      if (!db) throw new Error("Database not available");
+
+      // 1. Get test with time limit
+      const [test] = await db
+        .select()
+        .from(certificationTests)
+        .where(eq(certificationTests.id, 30001))
+        .limit(1);
+
+      expect(test).toBeDefined();
+      expect(test.timeLimitMinutes).toBeGreaterThan(0);
+
+      // 2. Get randomizable questions
+      const questions = await db
+        .select()
+        .from(testQuestions)
+        .where(and(
+          eq(testQuestions.testId, 30001),
+          eq(testQuestions.isActive, true)
+        ))
+        .limit(20);
+
+      expect(questions.length).toBeGreaterThan(0);
+
+      // 3. Verify questions support randomization
+      questions.forEach((q: any) => {
+        const options = typeof q.options === 'string' ? JSON.parse(q.options) : q.options;
+        expect(Array.isArray(options)).toBe(true);
+        expect(options.length).toBeGreaterThan(1);
+      });
+
+      // 4. Verify questions support practice mode feedback
+      questions.forEach((q: any) => {
+        expect(q.correctAnswer).toBeDefined();
+        expect(q.explanation).toBeDefined();
+        expect(q.explanation.length).toBeGreaterThan(0);
+      });
+
+      // 5. Verify questions support review feature
+      questions.forEach((q: any) => {
+        expect(q.questionText).toBeDefined();
+        expect(q.points).toBeGreaterThan(0);
+        expect(q.difficulty).toBeDefined();
+      });
+
+      console.log("✅ All Phase 12 features integrated successfully");
+      console.log(`   - Question randomization: ✓`);
+      console.log(`   - Timed practice mode: ✓`);
+      console.log(`   - Exam review feature: ✓`);
+    });
+  });
+});

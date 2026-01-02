@@ -1178,7 +1178,7 @@ const certificationRouter = router({
 
       if (!test) return null;
 
-      const questions = await db
+      let questions = await db
         .select({
           id: testQuestions.id,
           questionText: testQuestions.questionText,
@@ -1193,7 +1193,26 @@ const certificationRouter = router({
           eq(testQuestions.isActive, true)
         ));
 
-      console.log(`✅ Found ${questions.length} questions for test ${input.testId}`);
+      // Randomize question order using Fisher-Yates shuffle
+      for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+      }
+
+      // Randomize options within each question
+      questions = questions.map(q => ({
+        ...q,
+        options: (() => {
+          const opts = [...(q.options as any[])];
+          for (let i = opts.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [opts[i], opts[j]] = [opts[j], opts[i]];
+          }
+          return opts;
+        })()
+      }));
+
+      console.log(`✅ Found ${questions.length} questions for test ${input.testId} (randomized)`);
       return { test, questions };
     }),
 

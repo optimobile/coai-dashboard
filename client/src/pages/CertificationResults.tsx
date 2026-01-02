@@ -38,6 +38,7 @@ export default function CertificationResults() {
   const score = parseInt(params.get("score") || "0");
   const certificateNumber = params.get("certificate") || "";
   const attemptId = params.get("attemptId") || "";
+  const isPracticeMode = params.get("practice") === "true";
 
   // Trigger confetti on pass
   useEffect(() => {
@@ -93,6 +94,13 @@ export default function CertificationResults() {
           )}>
             <CardContent className="pt-8 pb-8">
               <div className="text-center">
+                {/* Practice Mode Badge */}
+                {isPracticeMode && (
+                  <Badge variant="outline" className="mb-4 px-4 py-1.5 text-sm bg-blue-50 dark:bg-blue-950 border-blue-300 dark:border-blue-700">
+                    <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+                    Practice Mode Result
+                  </Badge>
+                )}
                 {/* Icon */}
                 <motion.div
                   initial={{ scale: 0 }}
@@ -129,9 +137,15 @@ export default function CertificationResults() {
                   transition={{ delay: 0.4 }}
                   className="text-lg text-muted-foreground mb-6"
                 >
-                  {passed
-                    ? "You've passed the Watchdog Analyst Certification Exam!"
-                    : "You didn't pass this time, but you can try again."}
+                  {isPracticeMode ? (
+                    passed
+                      ? "Great job! You're ready for the real exam."
+                      : "Keep practicing! Review the explanations and try again."
+                  ) : (
+                    passed
+                      ? "You've passed the Watchdog Analyst Certification Exam!"
+                      : "You didn't pass this time, but you can try again."
+                  )}
                 </motion.p>
 
                 {/* Score */}
