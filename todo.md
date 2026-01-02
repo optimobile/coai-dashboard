@@ -7030,3 +7030,44 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Question Randomization - Implement random question selection and shuffling to create unique exam variants for each attempt
 - [x] Exam Review Feature - Create detailed post-exam review page with all answers, correct answers, and explanations
 - [x] Timed Practice Mode - Add optional timed practice mode that simulates real exam conditions with feedback
+
+
+## Phase: Stripe Payment Integration for Courses (Jan 2, 2026)
+
+### Stripe MCP Setup & Product Configuration
+- [x] List available Stripe MCP tools to understand capabilities
+- [x] Create Stripe products for all 3 courses via MCP
+  - [x] EU AI Act Fundamentals (£499 / $499)
+  - [x] NIST AI RMF Fundamentals (£499 / $499)
+  - [x] ISO 42001 Fundamentals (£499 / $499)
+- [x] Create prices for each course (one-time, 3-month, 6-month, 12-month subscriptions)
+- [x] Update database with Stripe product IDs and price IDs
+- [x] Verify all Stripe products are configured correctly
+
+### Frontend Payment Flow Implementation
+- [x] Update course enrollment flow to use Stripe Checkout
+- [x] Add payment plan selector to course enrollment modal
+- [x] Implement Stripe Checkout redirect for course purchases
+- [x] Create payment success page with enrollment confirmation
+- [x] Create payment cancel page with retry option
+- [x] Add loading states during Stripe redirect
+- [ ] Test complete payment flow for all courses
+
+### Backend Payment Processing
+- [x] Verify Stripe webhook handler processes course purchases
+- [x] Update course enrollment status after successful payment
+- [x] Handle subscription creation for payment plans
+- [ ] Test webhook events (checkout.session.completed, subscription.created)
+- [ ] Verify course access is granted after payment
+- [ ] Test subscription cancellation flow
+
+### Testing & Validation
+- [ ] Test one-time payment for each course
+- [ ] Test 3-month payment plan
+- [ ] Test 6-month payment plan
+- [ ] Test 12-month payment plan
+- [ ] Verify course access after payment
+- [ ] Test payment failure scenarios
+- [ ] Verify webhook processing
+- [ ] Run all backend tests and ensure passing
+- [ ] Save checkpoint with Stripe integration complete
