@@ -49,7 +49,7 @@ export function Header() {
       submenu: [
         { name: 'How It Works', href: '/how-it-works/training', description: 'Training pipeline' },
         { name: 'All Courses', href: '/courses', description: 'Browse all training courses' },
-        { name: 'Paid Courses', href: '/courses?filter=paid', description: 'Professional certification (£499-£1,999)' },
+        { name: 'Paid Courses', href: '/paid-courses', description: 'Professional certification (£499-£1,999)' },
         { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses' },
       ]
     },

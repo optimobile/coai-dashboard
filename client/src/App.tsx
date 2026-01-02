@@ -50,6 +50,8 @@ import CertificationResults from "./pages/CertificationResults";
 import MyCertificates from "./pages/MyCertificates";
 import ExamAnalytics from "./pages/ExamAnalytics";
 import TrainingCourses from "./pages/TrainingCourses";
+import PaidCourses from "./pages/PaidCourses";
+import Checkout from "./pages/Checkout";
 import TrainingCourseDetail from "./pages/TrainingCourseDetail";
 import LessonViewer from "./pages/LessonViewer";
 import MyTrainingCourses from "./pages/MyTrainingCourses";
@@ -258,6 +260,8 @@ function App() {
                   <Route path="/dashboard/compliance" component={Compliance} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/training-courses" component={TrainingCourses} />
+                  <Route path="/paid-courses" component={PaidCourses} />
+                  <Route path="/checkout" component={Checkout} />
                   <Route path="/training-courses/:id" component={TrainingCourseDetail} />
                   <Route path="/training-courses/:id/learn" component={LessonViewer} />
                   <Route path="/my-training-courses" component={MyTrainingCourses} />

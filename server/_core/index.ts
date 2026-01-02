@@ -10,6 +10,9 @@ import { serveStatic, setupVite } from "./vite";
 import { handleStripeWebhook } from "../stripe/webhookHandler";
 import { generatePDCATemplate } from "../utils/pdcaTemplateGenerator";
 import watchdogApiRouter from "../routes/watchdog-api";
+import coursesRouter from "../routers/courses";
+import couponsRouter from "../routers/coupons";
+import enrollmentRouter from "../routers/enrollment";
 import { startHealthMonitoring } from "../services/healthMonitoring";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -63,6 +66,15 @@ async function startServer() {
   
   // Public Watchdog API
   app.use("/api/watchdog", watchdogApiRouter);
+  
+  // Courses API
+  app.use("/api", coursesRouter);
+  
+  // Coupons API
+  app.use("/api", couponsRouter);
+  
+  // Enrollment API
+  app.use("/api", enrollmentRouter);
   
   // PDF template download endpoint
   app.get("/api/download-template/:templateId", (req, res) => {

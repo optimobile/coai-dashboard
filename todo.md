@@ -7118,3 +7118,139 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Test navigation from Course detail to Course player
 - [x] Verify course content loads correctly
 - [x] Ensure smooth user experience throughout enrollment flow
+
+## Production Readiness - Final Launch Preparation
+
+### P0 - CRITICAL (Must fix before launch)
+
+#### CEASAI Training & Certification Flow
+- [ ] Simplify course structure to 7 regional modules:
+  - [ ] EU AI Act Fundamentals
+  - [ ] NIST AI RMF Fundamentals
+  - [ ] UK AI Safety Institute
+  - [ ] Canada AIDA Compliance
+  - [ ] Australia AI Ethics
+  - [ ] ISO 42001 International Standard
+  - [ ] China TC260 Framework
+- [ ] Create bundle system:
+  - [ ] 3-module bundle for £999
+  - [ ] 7-module complete bundle for £1,999
+- [ ] Build "Paid Courses" page in header nav
+- [ ] Implement coupon code system for first 10,000 signups
+- [ ] Perfect enrollment flow: Paid Courses → Enroll Now → Payment → My Courses
+- [ ] Ensure My Courses shows enrolled courses with Start/Retake Exam buttons
+
+#### Public Watchdog Transparency
+- [ ] Add public incident reporting form
+- [ ] Create public incident database page with search/filter
+- [ ] Add incident trends dashboard
+- [ ] Make "Report an Incident" button prominent
+
+#### Enterprise Integration
+- [ ] Create enterprise integration documentation
+- [ ] Add API keys management page
+- [ ] Build enterprise dashboard for viewing their AI systems
+- [ ] Document webhook integration
+
+### P1 - HIGH (Should fix before launch)
+
+#### Government White-Label Reports
+- [ ] Build government portal with white-label report generation
+- [ ] Create customizable report templates
+- [ ] Add government-specific compliance frameworks
+- [ ] Implement data export for government use
+
+#### 33-Agent Council Transparency
+- [ ] Add council decision history dashboard
+- [ ] Show how council learns from watchdog incidents
+- [ ] Display council accuracy metrics over time
+
+#### Enterprise Onboarding
+- [ ] Create enterprise onboarding flow
+- [ ] Add enterprise signup page
+- [ ] Build enterprise settings page
+
+### P2 - NICE TO HAVE (Post-launch)
+
+- [ ] Webhook system for real-time monitoring
+- [ ] Advanced analytics for council learning
+- [ ] Multi-language support
+- [ ] Mobile app
+
+### Ecosystem Symbiosis Verification
+
+- [ ] Test complete flow: Public reports incident → Watchdog → Council → PDCA → Enterprise
+- [ ] Verify CEASAI training → Certification → Analyst work → Earnings flow
+- [ ] Confirm all 5 features integrate seamlessly
+- [ ] Validate data flows between all components
+
+### Current Status
+
+**Symbiosis Score: 60%**
+**Production Ready: NO**
+**Estimated work: 8-12 hours**
+
+**After P0 fixes: PRODUCTION READY ✅**
+
+
+## Production Readiness - Final 8 Features (Jan 2, 2026)
+
+### ✅ COMPLETED (4/8)
+- [x] Feature 1: Coupon Code System - FOUNDING10K with 10,000 uses, 100% discount
+- [x] Feature 2: Checkout/Payment Page - Full UI with coupon integration and price calculation
+- [x] Feature 3: Stripe Integration - Products/prices created, payment intents, enrollment API
+- [x] Feature 4: My Courses Integration - MyCoursesNew page fetches from enrollment API
+
+### ⏳ REMAINING (4/8)
+- [ ] Feature 5: Course Content - Create 28-42 lessons for 7 modules (4-6 lessons each)
+- [ ] Feature 6: Public Incident Database - Searchable watchdog reports for transparency
+- [ ] Feature 7: Enterprise API Documentation - Comprehensive integration guides
+- [ ] Feature 8: Government White-Label - Report generation for countries without AI regulation
+
+### 🎯 Critical Enrollment Flow Status
+**COMPLETE END-TO-END:**
+1. User visits /paid-courses → Sees 7 modules + 2 bundles
+2. Clicks "Enroll Now" → Redirects to /checkout with item details
+3. Enters "FOUNDING10K" coupon → Gets 100% discount
+4. Clicks "Enroll Now - FREE" → Creates enrollment record
+5. Redirects to /my-courses → Sees enrolled course
+6. Clicks "Start Course" → (Content needed - Feature 5)
+
+### 📊 Database Tables Created
+- `coupons` - Coupon codes with usage limits
+- `coupon_usage` - Track coupon redemptions
+- `course_enrollments` - User course enrollments
+- Stripe price IDs stored in `courses` and `course_bundles` tables
+
+### 🔧 API Endpoints Created
+- `POST /api/coupons/validate` - Validate coupon code
+- `POST /api/coupons/apply` - Apply coupon to order
+- `POST /api/enrollment/create` - Create enrollment (free or paid)
+- `GET /api/enrollment/my-courses/:userId` - Get user's enrollments
+- `GET /api/courses` - List all courses
+- `GET /api/course-bundles` - List all bundles
+
+### 📝 Next Steps for Remaining Features
+**Feature 5 (Course Content):**
+- Create lessons table in database
+- Seed 4-6 lessons per module (28-42 total)
+- Build lesson viewer component
+- Add quiz/assessment system
+
+**Feature 6 (Public Incident Database):**
+- Create public watchdog reports page
+- Add search and filter functionality
+- Show incident statistics dashboard
+- Enable report sharing/embedding
+
+**Feature 7 (Enterprise API Docs):**
+- Document all API endpoints
+- Create integration guides
+- Add code examples (Python, JS, cURL)
+- Build interactive API explorer
+
+**Feature 8 (Government White-Label):**
+- Create government portal
+- Build white-label report generator
+- Add country-specific customization
+- Enable PDF export with branding
