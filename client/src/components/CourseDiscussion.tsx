@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from './RichTextEditor';
+import { ForumModerationTools } from './ForumModerationTools';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { 
@@ -35,6 +37,7 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'unanswered'>('recent');
   const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState('');
+  const [useRichText] = useState(true);
 
   const utils = trpc.useUtils();
 
@@ -178,12 +181,20 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
               value={newThreadTitle}
               onChange={(e) => setNewThreadTitle(e.target.value)}
             />
-            <Textarea
-              placeholder="What would you like to discuss?"
-              value={newThreadContent}
-              onChange={(e) => setNewThreadContent(e.target.value)}
-              rows={4}
-            />
+            {useRichText ? (
+              <RichTextEditor
+                content={newThreadContent}
+                onChange={setNewThreadContent}
+                placeholder="What would you like to discuss?"
+              />
+            ) : (
+              <Textarea
+                placeholder="What would you like to discuss?"
+                value={newThreadContent}
+                onChange={(e) => setNewThreadContent(e.target.value)}
+                rows={4}
+              />
+            )}
             <div className="flex gap-2">
               <Button onClick={handleCreateThread} disabled={createThreadMutation.isPending}>
                 Create Thread
@@ -211,9 +222,9 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
                       {thread.isLocked && <Lock className="h-4 w-4 text-muted-foreground" />}
                       <h4 className="font-medium">{thread.title}</h4>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {thread.content}
-                    </p>
+                    <div className="text-sm text-muted-foreground line-clamp-2">
+                      <div dangerouslySetInnerHTML={{ __html: thread.content }} />
+                    </div>
                     <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Eye className="h-3 w-3" />
@@ -252,6 +263,17 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
 
       {threadDetails && (
         <>
+          {/* Moderation tools */}
+          <ForumModerationTools
+            threadId={threadDetails.id}
+            isPinned={threadDetails.isPinned}
+            isLocked={threadDetails.isLocked}
+            onUpdate={() => {
+              utils.forums.getThread.invalidate();
+              utils.forums.getCourseThreads.invalidate();
+            }}
+          />
+
           {/* Thread header */}
           <Card className="p-6">
             <div className="flex items-start justify-between mb-4">
@@ -274,7 +296,7 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
               </div>
             </div>
             <div className="prose prose-sm max-w-none">
-              <ReactMarkdown>{threadDetails.content}</ReactMarkdown>
+              <div dangerouslySetInnerHTML={{ __html: threadDetails.content }} />
             </div>
           </Card>
 
@@ -288,7 +310,19 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
 
             {threadDetails.posts && threadDetails.posts.length > 0 ? (
               threadDetails.posts.map((post) => (
-                <Card key={post.id} className="p-4">
+                <div key={post.id} className="space-y-2">
+                  <ForumModerationTools
+                    threadId={threadDetails.id}
+                    postId={post.id}
+                    isPinned={threadDetails.isPinned}
+                    isLocked={threadDetails.isLocked}
+                    isInstructorPost={post.isInstructorPost}
+                    onUpdate={() => {
+                      utils.forums.getThread.invalidate();
+                      utils.forums.getCourseThreads.invalidate();
+                    }}
+                  />
+                  <Card className="p-4">
                   <div className="flex items-start gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
@@ -312,7 +346,7 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
                         )}
                       </div>
                       <div className="prose prose-sm max-w-none mb-3">
-                        <ReactMarkdown>{post.content}</ReactMarkdown>
+                        <div dangerouslySetInnerHTML={{ __html: post.content }} />
                       </div>
                       <div className="flex items-center gap-3">
                         <Button
@@ -337,7 +371,8 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
                       </div>
                     </div>
                   </div>
-                </Card>
+                  </Card>
+                </div>
               ))
             ) : (
               <Card className="p-6 text-center text-muted-foreground">
@@ -350,13 +385,22 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
           {!threadDetails.isLocked && (
             <Card className="p-4">
               <h4 className="font-medium mb-3">Post a reply</h4>
-              <Textarea
-                placeholder="Share your thoughts..."
-                value={replyContent}
-                onChange={(e) => setReplyContent(e.target.value)}
-                rows={4}
-                className="mb-3"
-              />
+              {useRichText ? (
+                <RichTextEditor
+                  content={replyContent}
+                  onChange={setReplyContent}
+                  placeholder="Share your thoughts..."
+                  className="mb-3"
+                />
+              ) : (
+                <Textarea
+                  placeholder="Share your thoughts..."
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  rows={4}
+                  className="mb-3"
+                />
+              )}
               <Button
                 onClick={() => handleReply()}
                 disabled={createPostMutation.isPending || !replyContent.trim()}

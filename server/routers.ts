@@ -66,6 +66,7 @@ import { adminIncidentsRouter } from "./routers/adminIncidents";
 import { notificationSubscriptionsRouter } from "./routers/notificationSubscriptions";
 import { lessonProgressRouter } from "./routers/lessonProgress";
 import { forumsRouter } from "./routers/forums";
+import { forumModerationRouter } from "./routers/forumModeration";
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -2845,6 +2846,7 @@ export const appRouter = router({
   notificationSubscriptions: notificationSubscriptionsRouter,
   lessonProgress: lessonProgressRouter,
   forums: forumsRouter,
+  forumModeration: forumModerationRouter,
 });
 
 export type AppRouter = typeof appRouter;

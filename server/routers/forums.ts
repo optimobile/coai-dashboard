@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../_core/trpc";
+import { router, protectedProcedure } from '../_core/trpc';
+import { sendNewReplyEmail, sendSolutionMarkedEmail } from '../services/forumEmailService';
 import { getDb } from "../db";
 import { 
   forumThreads,
@@ -245,6 +246,15 @@ export const forumsRouter = router({
           isRead: false,
           createdAt: now,
         });
+
+        // Send email notification
+        sendNewReplyEmail({
+          recipientId: thread[0].userId,
+          threadId: input.threadId,
+          postId: Number(result.insertId),
+          type: 'new_reply',
+          actorName: ctx.user.name || 'A user',
+        }).catch(err => console.error('[Forums] Failed to send email:', err));
       }
 
       // Create notification for parent post author (if replying)
@@ -447,6 +457,15 @@ export const forumsRouter = router({
           isRead: false,
           createdAt: now,
         });
+
+        // Send email notification
+        sendSolutionMarkedEmail({
+          recipientId: post[0].userId,
+          threadId: post[0].threadId,
+          postId: input.postId,
+          type: 'solution_marked',
+          actorName: ctx.user.name || 'A user',
+        }).catch(err => console.error('[Forums] Failed to send email:', err));
       }
 
       return { success: true };
