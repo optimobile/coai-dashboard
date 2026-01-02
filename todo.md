@@ -7356,3 +7356,17 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Create Dragon's Den launch readiness report for January 3rd, 2026
 
 - [x] Fix Stripe payment integration for course enrollment
+
+
+## Courses & Enterprise Pricing Improvements
+
+- [x] Add monthly payment plans to course bundles on /courses page
+- [x] Apply consistent CSOAI branding colors (green/teal) to courses page
+- [x] Research and implement competitive enterprise pricing
+- [x] Redesign enterprise pricing with 4 tiers including POA tier
+- [x] Increase enterprise pricing to be more profitable
+- [x] Add "Global Enterprise (POA)" tier for large companies (OpenAI, government contracts)
+- [x] Fix broken FAQ section on enterprise pricing page
+- [x] Ensure all branding colors match company theme throughout
+- [ ] Test Stripe webhook handling for enrollment status updates
+- [ ] Verify subscription state changes when payments succeed or are cancelled

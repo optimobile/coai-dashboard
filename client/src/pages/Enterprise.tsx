@@ -1,6 +1,7 @@
 /**
  * Enterprise Landing Page
  * B2B value proposition with ROI calculator, case studies, and clear pricing
+ * Updated: 2026-01-02 - New 4-tier pricing with POA tier
  */
 
 import { useState, useEffect } from 'react';
@@ -45,7 +46,14 @@ export default function Enterprise() {
   // ROI Calculations
   const costPerSystem = avgRiskLevel === 'high' ? 15000 : avgRiskLevel === 'medium' ? 8000 : 3000;
   const manualCost = numSystems * costPerSystem;
-  const csoaiCost = numSystems * 2000; // Flat rate per system
+  // Use tiered pricing based on number of systems
+  const getCsoaiCostPerSystem = (systems: number) => {
+    if (systems <= 10) return 3500;
+    if (systems <= 50) return 2800;
+    if (systems <= 500) return 2200;
+    return 2000; // Custom pricing for 500+
+  };
+  const csoaiCost = numSystems * getCsoaiCostPerSystem(numSystems);
   const staffCost = currentStaff * 120000; // Average compliance staff salary
   const csoaiStaffNeeded = Math.ceil(numSystems / 20); // 1 staff per 20 systems
   const csoaiStaffCost = csoaiStaffNeeded * 120000;
@@ -104,8 +112,8 @@ export default function Enterprise() {
                 AI Compliance That Saves You Millions
               </h1>
               <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                Stop spending $15,000 per AI system on manual compliance reviews. CSOAI automates 80% of the work 
-                with our 33-Agent Council, reducing costs to $2,000 per system while maintaining higher accuracy.
+                Stop spending $15,000 per AI system on manual compliance reviews. CSOAI automates 80% of the 
+                work with our 33-Agent Council, reducing costs to $2,200-$3,500 per system while maintaining higher accuracy.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/enterprise-onboarding">
@@ -124,17 +132,17 @@ export default function Enterprise() {
             <Card className="p-8 bg-white/10 backdrop-blur-sm border-white/20">
               <h3 className="text-2xl font-bold mb-6 text-white">Quick ROI Snapshot</h3>
               <div className="space-y-4">
-                <div className="flex justify-between items-center pb-4 border-b border-white/20">
+                <div className="flex justify-between items-center p-4 bg-white/10 rounded-lg">
                   <span className="text-gray-300">Manual Compliance</span>
                   <span className="text-2xl font-bold text-red-400">$15K/system</span>
                 </div>
-                <div className="flex justify-between items-center pb-4 border-b border-white/20">
+                <div className="flex justify-between items-center p-4 bg-white/10 rounded-lg">
                   <span className="text-gray-300">With CSOAI</span>
-                  <span className="text-2xl font-bold text-emerald-400">$2K/system</span>
+                  <span className="text-2xl font-bold text-emerald-400">$2.2K-$3.5K/system</span>
                 </div>
-                <div className="flex justify-between items-center pt-2">
-                  <span className="text-white font-semibold">Your Savings</span>
-                  <span className="text-3xl font-bold text-emerald-300">87%</span>
+                <div className="flex justify-between items-center p-4 bg-emerald-500/20 rounded-lg border border-emerald-500/30">
+                  <span className="font-semibold">Your Savings</span>
+                  <span className="text-3xl font-bold text-emerald-300">Up to 85%</span>
                 </div>
               </div>
             </Card>
@@ -486,7 +494,7 @@ export default function Enterprise() {
       </div>
 
       {/* Pricing Section */}
-      <div className="container py-20 max-w-6xl">
+      <div className="container py-20 max-w-7xl">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Simple Pricing</Badge>
           <h2 className="text-4xl font-bold mb-4">Transparent, Predictable Pricing</h2>
@@ -495,10 +503,11 @@ export default function Enterprise() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          <Card className="p-8 border-2 border-gray-200">
-            <h3 className="text-2xl font-bold mb-2">Starter</h3>
-            <div className="text-4xl font-bold mb-4">$2,000<span className="text-lg text-gray-500">/system/year</span></div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Starter Tier */}
+          <Card className="p-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50">
+            <h3 className="text-2xl font-bold mb-2 text-emerald-900">Starter</h3>
+            <div className="text-4xl font-bold mb-4 text-emerald-600">$3,500<span className="text-lg text-gray-500">/system/year</span></div>
             <p className="text-gray-600 mb-6">Perfect for startups and small teams</p>
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-2">
@@ -517,18 +526,23 @@ export default function Enterprise() {
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
                 <span>Email support</span>
               </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <span>EU AI Act & NIST RMF</span>
+              </li>
             </ul>
             <Link href="/enterprise-onboarding">
-              <Button className="w-full" variant="outline">Get Started</Button>
+              <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">Get Started</Button>
             </Link>
           </Card>
 
-          <Card className="p-8 border-4 border-emerald-500 relative">
+          {/* Professional Tier */}
+          <Card className="p-6 border-4 border-emerald-500 bg-gradient-to-br from-emerald-100 to-green-100 relative">
             <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white">
               Most Popular
             </Badge>
-            <h3 className="text-2xl font-bold mb-2">Professional</h3>
-            <div className="text-4xl font-bold mb-4">$1,500<span className="text-lg text-gray-500">/system/year</span></div>
+            <h3 className="text-2xl font-bold mb-2 text-emerald-900">Professional</h3>
+            <div className="text-4xl font-bold mb-4 text-emerald-600">$2,800<span className="text-lg text-gray-500">/system/year</span></div>
             <p className="text-gray-600 mb-6">For growing companies</p>
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-2">
@@ -545,11 +559,11 @@ export default function Enterprise() {
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>API access</span>
+                <span>Full API access</span>
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Priority support</span>
+                <span>Priority support (24/7)</span>
               </li>
             </ul>
             <Link href="/enterprise-onboarding">
@@ -557,14 +571,15 @@ export default function Enterprise() {
             </Link>
           </Card>
 
-          <Card className="p-8 border-2 border-gray-200">
-            <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
-            <div className="text-4xl font-bold mb-4">Custom</div>
+          {/* Enterprise Tier */}
+          <Card className="p-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50">
+            <h3 className="text-2xl font-bold mb-2 text-emerald-900">Enterprise</h3>
+            <div className="text-4xl font-bold mb-4 text-emerald-600">$2,200<span className="text-lg text-gray-500">/system/year</span></div>
             <p className="text-gray-600 mb-6">For large organizations</p>
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Unlimited AI systems</span>
+                <span>Up to 500 AI systems</span>
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
@@ -580,13 +595,79 @@ export default function Enterprise() {
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Custom SLAs</span>
+                <span>Custom SLAs & integrations</span>
               </li>
             </ul>
             <Link href="/enterprise-onboarding">
-              <Button className="w-full" variant="outline">Contact Sales</Button>
+              <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">Contact Sales</Button>
             </Link>
           </Card>
+
+          {/* Global Enterprise (POA) Tier */}
+          <Card className="p-6 border-4 border-amber-400 bg-gradient-to-br from-amber-50 to-yellow-50 relative">
+            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white">
+              Global Scale
+            </Badge>
+            <h3 className="text-2xl font-bold mb-2 text-amber-900">Global Enterprise</h3>
+            <div className="text-4xl font-bold mb-4 text-amber-600">POA</div>
+            <p className="text-gray-600 mb-6">For major AI companies & governments</p>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <span>500+ AI systems</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <span>Everything in Enterprise</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <span>Government contracts</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <span>White-label solutions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <span>Executive advisory board access</span>
+              </li>
+            </ul>
+            <Link href="/enterprise-onboarding">
+              <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white">Request Proposal</Button>
+            </Link>
+          </Card>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="mt-20">
+          <h3 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h3>
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <Card className="p-6 border-2 border-emerald-100">
+              <h4 className="font-bold text-lg mb-3 text-emerald-900">What's included in the price?</h4>
+              <p className="text-gray-600">All plans include 33-Agent Council assessments, compliance reports, framework coverage (EU AI Act, NIST RMF, ISO 42001), and access to our dashboard. Higher tiers add API access, faster support, and dedicated resources.</p>
+            </Card>
+            <Card className="p-6 border-2 border-emerald-100">
+              <h4 className="font-bold text-lg mb-3 text-emerald-900">Can I switch plans later?</h4>
+              <p className="text-gray-600">Yes! You can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle, and we'll prorate any differences.</p>
+            </Card>
+            <Card className="p-6 border-2 border-emerald-100">
+              <h4 className="font-bold text-lg mb-3 text-emerald-900">What does POA mean?</h4>
+              <p className="text-gray-600">POA (Price on Application) means custom pricing tailored to your organization's specific needs. This tier is designed for large-scale deployments (500+ systems), government contracts, and major AI companies requiring bespoke solutions.</p>
+            </Card>
+            <Card className="p-6 border-2 border-emerald-100">
+              <h4 className="font-bold text-lg mb-3 text-emerald-900">Do you offer volume discounts?</h4>
+              <p className="text-gray-600">Yes! Our per-system pricing decreases as you move up tiers. For organizations with 500+ systems, we offer custom volume pricing through our Global Enterprise plan.</p>
+            </Card>
+            <Card className="p-6 border-2 border-emerald-100">
+              <h4 className="font-bold text-lg mb-3 text-emerald-900">Is there a free trial?</h4>
+              <p className="text-gray-600">Yes! We offer a 14-day free trial for all plans. No credit card required. You'll get full access to assess up to 3 AI systems during the trial period.</p>
+            </Card>
+            <Card className="p-6 border-2 border-emerald-100">
+              <h4 className="font-bold text-lg mb-3 text-emerald-900">What payment methods do you accept?</h4>
+              <p className="text-gray-600">We accept all major credit cards, ACH transfers, and wire transfers for annual contracts. Enterprise and Global Enterprise plans can also arrange custom payment terms.</p>
+            </Card>
+          </div>
         </div>
       </div>
 
@@ -594,7 +675,7 @@ export default function Enterprise() {
       <div className="bg-gradient-to-br from-slate-900 to-emerald-900 text-white py-20">
         <div className="container max-w-4xl text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Cut Compliance Costs by 87%?
+            Ready to Cut Compliance Costs by Up to 85%?
           </h2>
           <p className="text-xl text-gray-300 mb-8 leading-relaxed">
             Join hundreds of enterprises using CSOAI to accelerate AI deployment while maintaining 

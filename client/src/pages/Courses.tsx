@@ -423,14 +423,56 @@ function CourseCard({ course }: { course: any }) {
 }
 
 function BundleCard({ bundle }: { bundle: any }) {
+  const [selectedPlan, setSelectedPlan] = useState<"oneTime" | "threeMonth" | "sixMonth" | "twelveMonth">("oneTime");
+  const enrollMutation = trpc.courses.enrollInBundle.useMutation();
+
+  const handleEnroll = async () => {
+    try {
+      console.log('[Frontend] handleEnroll (bundle) started', { bundleId: bundle.id, selectedPlan });
+      
+      const paymentTypeMap = {
+        oneTime: "one_time",
+        threeMonth: "3_month",
+        sixMonth: "6_month",
+        twelveMonth: "12_month",
+      };
+
+      console.log('[Frontend] Calling enrollInBundle mutation...');
+      const result = await enrollMutation.mutateAsync({
+        bundleId: bundle.id,
+        paymentType: paymentTypeMap[selectedPlan] as any,
+      });
+
+      console.log('[Frontend] Bundle enrollment result:', result);
+
+      // Redirect to Stripe checkout
+      if (result.checkoutUrl) {
+        console.log('[Frontend] Redirecting to Stripe:', result.checkoutUrl);
+        window.location.href = result.checkoutUrl;
+      } else {
+        console.warn('[Frontend] No checkoutUrl in result');
+      }
+    } catch (error: any) {
+      console.error('[Frontend] Bundle enrollment error:', error);
+      toast.error(error.message || "Failed to enroll in bundle");
+    }
+  };
+
   const formatPrice = (cents: number | null | undefined) => {
     if (!cents) return "N/A";
     return `£${(cents / 100).toFixed(2)}`;
   };
 
+  // Calculate monthly payment - the total should equal the one-time price
+  const calculateMonthlyPayment = (oneTimeCents: number, months: number) => {
+    return `£${((oneTimeCents / months) / 100).toFixed(2)}/mo`;
+  };
+  
+  const oneTimePrice = bundle.pricing?.oneTime || 0;
+
   return (
-    <Card className="p-6 border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 hover:shadow-xl transition-shadow">
-      <Badge className="mb-4 bg-purple-600">Bundle Deal - Save {formatPrice(bundle.savings)}</Badge>
+    <Card className="p-6 border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-green-950 hover:shadow-xl transition-shadow">
+      <Badge className="mb-4 bg-emerald-600 text-white">Bundle Deal - Save {formatPrice(bundle.savings)}</Badge>
       <h3 className="text-2xl font-bold mb-2">{bundle.name}</h3>
       <p className="text-muted-foreground mb-4">{bundle.description}</p>
 
@@ -439,19 +481,121 @@ function BundleCard({ bundle }: { bundle: any }) {
           <span className="text-muted-foreground">Regular Price:</span>
           <span className="text-muted-foreground line-through">{formatPrice(bundle.regularPrice)}</span>
         </div>
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center">
           <span className="font-semibold">Bundle Price:</span>
-          <span className="text-2xl font-bold text-purple-600">{formatPrice(bundle.pricing.oneTime)}</span>
+          <span className="text-2xl font-bold text-emerald-600">{formatPrice(bundle.pricing.oneTime)}</span>
         </div>
-        {bundle.pricing.threeMonth && (
-          <div className="text-sm text-muted-foreground mt-2">
-            Or {formatPrice(bundle.pricing.threeMonth)} over 3 months
-          </div>
-        )}
       </div>
 
-      <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-        Get Bundle
+      {/* Payment Plan Selector */}
+      <div className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-green-950 rounded-lg p-4 mb-4">
+        <label className="text-sm font-semibold mb-3 block">Choose Payment Plan</label>
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSelectedPlan("oneTime");
+            }}
+            className={`p-3 rounded-lg border-2 transition-all ${
+              selectedPlan === "oneTime"
+                ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
+            }`}
+          >
+            <div className="text-xs text-muted-foreground mb-1">One-Time</div>
+            <div className="font-bold text-lg">{formatPrice(bundle.pricing.oneTime)}</div>
+            <div className="text-xs text-emerald-600 font-medium">Best Value</div>
+          </button>
+
+          {oneTimePrice > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedPlan("threeMonth");
+              }}
+              className={`p-3 rounded-lg border-2 transition-all ${
+                selectedPlan === "threeMonth"
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
+              }`}
+            >
+              <div className="text-xs text-muted-foreground mb-1">3 Months</div>
+              <div className="font-bold text-lg">
+                {calculateMonthlyPayment(oneTimePrice, 3)}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {formatPrice(oneTimePrice)} total
+              </div>
+            </button>
+          )}
+
+          {oneTimePrice > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedPlan("sixMonth");
+              }}
+              className={`p-3 rounded-lg border-2 transition-all ${
+                selectedPlan === "sixMonth"
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
+              }`}
+            >
+              <div className="text-xs text-muted-foreground mb-1">6 Months</div>
+              <div className="font-bold text-lg">
+                {calculateMonthlyPayment(oneTimePrice, 6)}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {formatPrice(oneTimePrice)} total
+              </div>
+            </button>
+          )}
+
+          {oneTimePrice > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedPlan("twelveMonth");
+              }}
+              className={`p-3 rounded-lg border-2 transition-all ${
+                selectedPlan === "twelveMonth"
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
+              }`}
+            >
+              <div className="text-xs text-muted-foreground mb-1">12 Months</div>
+              <div className="font-bold text-lg">
+                {calculateMonthlyPayment(oneTimePrice, 12)}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {formatPrice(oneTimePrice)} total
+              </div>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <Button 
+        onClick={handleEnroll}
+        disabled={enrollMutation.isPending}
+        className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white"
+      >
+        {enrollMutation.isPending ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Processing...
+          </>
+        ) : (
+          "Enroll Now"
+        )}
       </Button>
     </Card>
   );
