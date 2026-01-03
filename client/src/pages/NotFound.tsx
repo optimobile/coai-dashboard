@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
-import { useLocation } from "wouter";
+import { AlertCircle, Home, BookOpen, Shield, FileText, ArrowLeft, Search } from "lucide-react";
+import { useLocation, Link } from "wouter";
 
 export default function NotFound() {
   const [, setLocation] = useLocation();
@@ -9,6 +9,12 @@ export default function NotFound() {
   const handleGoHome = () => {
     setLocation("/");
   };
+
+  const quickLinks = [
+    { icon: BookOpen, label: 'Training Courses', href: '/courses', description: 'Browse training courses' },
+    { icon: Shield, label: 'Certification', href: '/certification', description: 'View certification options' },
+    { icon: FileText, label: 'Compliance', href: '/compliance', description: 'Check compliance status' },
+  ];
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
@@ -35,7 +41,7 @@ export default function NotFound() {
 
           <div
             id="not-found-button-group"
-            className="flex flex-col sm:flex-row gap-3 justify-center"
+            className="flex flex-col sm:flex-row gap-3 justify-center mb-8"
           >
             <Button
               onClick={handleGoHome}
@@ -44,6 +50,44 @@ export default function NotFound() {
               <Home className="w-4 h-4 mr-2" />
               Go Home
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => window.history.back()}
+              className="px-6 py-2.5"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Go Back
+            </Button>
+          </div>
+
+          {/* Quick Links */}
+          <div className="border-t pt-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center justify-center gap-2">
+              <Search className="h-4 w-4 text-emerald-600" />
+              Popular Destinations
+            </h3>
+            <div className="grid grid-cols-1 gap-3">
+              {quickLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <Link key={link.href} href={link.href}>
+                    <a className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 transition-all group text-left">
+                      <div className="flex-shrink-0 p-2 rounded-lg bg-emerald-50 group-hover:bg-emerald-100 transition-colors">
+                        <Icon className="h-4 w-4 text-emerald-600" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-slate-900 group-hover:text-emerald-600 transition-colors text-sm">
+                          {link.label}
+                        </div>
+                        <div className="text-xs text-slate-600 mt-0.5">
+                          {link.description}
+                        </div>
+                      </div>
+                    </a>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>

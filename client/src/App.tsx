@@ -8,6 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import { SkipNavigation } from "./components/SkipNavigation";
 
 // Add Plausible analytics script
 declare global {
@@ -194,9 +195,10 @@ function App() {
           <AlertToastProvider>
             <TooltipProvider>
             <div className="flex flex-col min-h-screen">
+              <SkipNavigation />
               <ScrollToTop />
               <Header />
-              <main className="flex-1">
+              <main id="main-content" className="flex-1">
                 <Switch>
                   {/* Main routes */}
                   <Route path="/" component={HomepageMaster} />
@@ -288,6 +290,9 @@ function App() {
                   <Route path="/admin/exam-analytics" component={ExamAnalytics} />
                   <Route path="/workbench" component={Workbench} />
                   <Route path="/jobs" component={Jobs} />
+                  <Route path="/careers">
+                    <Redirect to="/jobs" />
+                  </Route>
                   <Route path="/my-applications" component={MyApplications} />
                   <Route path="/public" component={PublicHome} />
                   <Route path="/admin" component={Admin} />
