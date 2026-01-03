@@ -46,9 +46,32 @@ export const workflowStepExecutions = mysqlTable("workflow_step_executions", {
   createdAt: timestamp({ mode: 'string' }).defaultNow().notNull(),
 });
 
+// Email execution logs (detailed tracking of sent emails)
+export const emailExecutionLogs = mysqlTable("email_execution_logs", {
+  id: int().autoincrement().primaryKey().notNull(),
+  executionId: int().notNull(), // Reference to workflow_executions
+  stepExecutionId: int(), // Reference to workflow_step_executions (optional)
+  workflowId: int().notNull(),
+  recipientUserId: int(), // User who received the email
+  recipientEmail: varchar({ length: 320 }).notNull(),
+  recipientName: varchar({ length: 255 }),
+  emailSubject: varchar({ length: 500 }).notNull(),
+  emailTemplate: varchar({ length: 100 }), // Template key used
+  status: mysqlEnum(['queued', 'sent', 'delivered', 'bounced', 'failed', 'opened', 'clicked']).default('queued').notNull(),
+  sentAt: timestamp({ mode: 'string' }),
+  deliveredAt: timestamp({ mode: 'string' }),
+  openedAt: timestamp({ mode: 'string' }),
+  clickedAt: timestamp({ mode: 'string' }),
+  errorMessage: text(),
+  metadata: json(), // Additional tracking data
+  createdAt: timestamp({ mode: 'string' }).defaultNow().notNull(),
+});
+
 export type InsertEmailWorkflow = typeof emailWorkflows.$inferInsert;
 export type SelectEmailWorkflow = typeof emailWorkflows.$inferSelect;
 export type InsertWorkflowExecution = typeof workflowExecutions.$inferInsert;
 export type SelectWorkflowExecution = typeof workflowExecutions.$inferSelect;
 export type InsertWorkflowStepExecution = typeof workflowStepExecutions.$inferInsert;
 export type SelectWorkflowStepExecution = typeof workflowStepExecutions.$inferSelect;
+export type InsertEmailExecutionLog = typeof emailExecutionLogs.$inferInsert;
+export type SelectEmailExecutionLog = typeof emailExecutionLogs.$inferSelect;

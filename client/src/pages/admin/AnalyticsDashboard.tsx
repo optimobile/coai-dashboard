@@ -11,6 +11,9 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { trpc } from '@/lib/trpc';
+import { useEffect } from 'react';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   LineChart,
   Line,
@@ -47,13 +50,34 @@ const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 export default function AnalyticsDashboard() {
   const [timeRange, setTimeRange] = useState('30');
   const [selectedCohort, setSelectedCohort] = useState<string>('all');
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   const { data: cohorts } = trpc.cohorts.getCohorts.useQuery();
-  const { data: students } = trpc.students.getStudents.useQuery();
-  const { data: analyticsData } = trpc.studentAnalytics.getOverview.useQuery({
+  const { data: students, refetch: refetchStudents } = trpc.students.getStudents.useQuery();
+  const { data: analyticsData, refetch: refetchAnalytics } = trpc.studentAnalytics.getOverview.useQuery({
     timeRange: parseInt(timeRange),
     cohortId: selectedCohort === 'all' ? undefined : parseInt(selectedCohort),
   });
+
+  // Auto-refresh polling
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      refetchStudents();
+      refetchAnalytics();
+      setLastUpdated(new Date());
+    }, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, refetchStudents, refetchAnalytics]);
+
+  const handleManualRefresh = () => {
+    refetchStudents();
+    refetchAnalytics();
+    setLastUpdated(new Date());
+  };
 
   // Mock data for demonstration (replace with real API data)
   const enrollmentTrend = [
@@ -108,10 +132,30 @@ export default function AnalyticsDashboard() {
               Comprehensive insights into student performance, engagement, and email campaigns
             </p>
           </div>
-          <Button onClick={handleExportReport}>
-            <Download className="w-4 h-4 mr-2" />
-            Export Report
-          </Button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Activity className="w-4 h-4" />
+              Last updated: {lastUpdated.toLocaleTimeString()}
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                id="auto-refresh"
+                checked={autoRefresh}
+                onCheckedChange={setAutoRefresh}
+              />
+              <Label htmlFor="auto-refresh" className="text-sm cursor-pointer">
+                Auto-refresh (30s)
+              </Label>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleManualRefresh}>
+              <Activity className="w-4 h-4 mr-2" />
+              Refresh Now
+            </Button>
+            <Button onClick={handleExportReport}>
+              <Download className="w-4 h-4 mr-2" />
+              Export Report
+            </Button>
+          </div>
         </div>
       </div>
 

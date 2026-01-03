@@ -7874,3 +7874,34 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add export analytics reports functionality
 - [ ] Implement real-time data updates
 - [x] Add comparison views (cohort vs cohort, period vs period)
+
+
+## Phase 15 - Workflow Execution & Analytics Enhancements
+
+### Workflow Execution History Logs
+- [x] Create execution_logs table in database schema
+- [ ] Add execution log recording to workflow engine
+- [x] Create execution logs viewer page
+- [x] Display which emails were sent, when, and to whom
+- [x] Add filtering by workflow, date range, and status
+- [x] Show execution details and error logs
+- [x] Add export functionality for execution logs
+
+### Real-time Analytics Updates
+- [x] Implement polling mechanism for analytics data
+- [x] Add auto-refresh toggle to analytics dashboard
+- [x] Create real-time data update indicators
+- [x] Optimize API endpoints for frequent polling
+- [ ] Add WebSocket support (optional future enhancement)
+- [x] Show last updated timestamp
+- [x] Add manual refresh button
+
+### Workflow Templates Library
+- [x] Create workflow_templates table in database
+- [x] Design template structure (metadata, steps, triggers)
+- [x] Create pre-built templates (welcome series, course reminders, re-engagement)
+- [x] Build templates library UI page
+- [x] Add template preview functionality
+- [x] Implement template cloning/customization
+- [x] Add template categories and search
+- [ ] Create template import/export functionality

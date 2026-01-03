@@ -192,6 +192,8 @@ import StudentsManagement from "./pages/admin/StudentsManagement";
 import CohortsManagement from "./pages/admin/CohortsManagement";
 import EmailTemplateEditor from "./pages/admin/EmailTemplateEditor";
 import WorkflowBuilder from "./pages/admin/WorkflowBuilder";
+import WorkflowExecutionLogs from "./pages/WorkflowExecutionLogs";
+import WorkflowTemplates from "./pages/WorkflowTemplates";
 import StudentImportExport from "./pages/admin/StudentImportExport";
 import AnalyticsDashboardPage from "./pages/admin/AnalyticsDashboard";
 
@@ -331,6 +333,8 @@ function App() {
                   <Route path="/admin/cohorts" component={CohortsManagement} />
                   <Route path="/admin/email-templates" component={EmailTemplateEditor} />
                   <Route path="/admin/workflow-builder" component={WorkflowBuilder} />
+                  <Route path="/admin/workflow-logs" component={WorkflowExecutionLogs} />
+                  <Route path="/admin/workflow-templates" component={WorkflowTemplates} />
                   <Route path="/admin/import-export" component={StudentImportExport} />
                   <Route path="/admin/analytics-dashboard" component={AnalyticsDashboardPage} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />

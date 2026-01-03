@@ -83,6 +83,7 @@ import { cohortsRouter } from './routers/cohorts';
 import { studentsRouter } from './routers/students';
 import { emailTemplatesRouter } from './routers/emailTemplates';
 import { workflowBuilderRouter } from './routers/workflowBuilder';
+import { workflowTemplatesRouter } from './routers/workflowTemplates';
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -3045,6 +3046,7 @@ export const appRouter = router({
   students: studentsRouter,
   emailTemplates: emailTemplatesRouter,
   workflowBuilder: workflowBuilderRouter,
+  workflowTemplates: workflowTemplatesRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -6,7 +6,8 @@
 import { protectedProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
-import { emailWorkflows, workflowExecutions, workflowStepExecutions } from "../../drizzle/schema";
+import { emailWorkflows, workflowExecutions, workflowStepExecutions, emailExecutionLogs } from "../../drizzle/schema-workflows";
+import { users } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 
 export const workflowBuilderRouter = router({
@@ -252,5 +253,89 @@ export const workflowBuilderRouter = router({
 
       const executionId = typeof result.insertId === 'bigint' ? Number(result.insertId) : Number(result.insertId);
       return { executionId, success: true };
+    }),
+
+  // Get email execution logs for a workflow
+  getEmailLogs: protectedProcedure
+    .input(
+      z.object({
+        workflowId: z.number().optional(),
+        executionId: z.number().optional(),
+        status: z.enum(['queued', 'sent', 'delivered', 'bounced', 'failed', 'opened', 'clicked']).optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        limit: z.number().default(100),
+      })
+    )
+    .query(async ({ input, ctx }) => {      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      let query = db
+        .select({
+          id: emailExecutionLogs.id,
+          executionId: emailExecutionLogs.executionId,
+          stepExecutionId: emailExecutionLogs.stepExecutionId,
+          workflowId: emailExecutionLogs.workflowId,
+          recipientUserId: emailExecutionLogs.recipientUserId,
+          recipientEmail: emailExecutionLogs.recipientEmail,
+          recipientName: emailExecutionLogs.recipientName,
+          emailSubject: emailExecutionLogs.emailSubject,
+          emailTemplate: emailExecutionLogs.emailTemplate,
+          status: emailExecutionLogs.status,
+          sentAt: emailExecutionLogs.sentAt,
+          deliveredAt: emailExecutionLogs.deliveredAt,
+          openedAt: emailExecutionLogs.openedAt,
+          clickedAt: emailExecutionLogs.clickedAt,
+          errorMessage: emailExecutionLogs.errorMessage,
+          metadata: emailExecutionLogs.metadata,
+          createdAt: emailExecutionLogs.createdAt,
+          workflowName: emailWorkflows.name,
+        })
+        .from(emailExecutionLogs)
+        .leftJoin(emailWorkflows, eq(emailExecutionLogs.workflowId, emailWorkflows.id))
+        .where(eq(emailWorkflows.userId, ctx.user.id))
+        .orderBy(desc(emailExecutionLogs.createdAt))
+        .limit(input.limit);
+
+      const logs = await query;
+      return logs;
+    }),
+
+  // Get email log statistics
+  getEmailLogStats: protectedProcedure
+    .input(
+      z.object({
+        workflowId: z.number().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get all logs for user's workflows
+      const logs = await db
+        .select({
+          status: emailExecutionLogs.status,
+          count: emailExecutionLogs.id,
+        })
+        .from(emailExecutionLogs)
+        .leftJoin(emailWorkflows, eq(emailExecutionLogs.workflowId, emailWorkflows.id))
+        .where(eq(emailWorkflows.userId, ctx.user.id));
+
+      // Count by status
+      const stats = {
+        total: logs.length,
+        queued: logs.filter(l => l.status === 'queued').length,
+        sent: logs.filter(l => l.status === 'sent').length,
+        delivered: logs.filter(l => l.status === 'delivered').length,
+        bounced: logs.filter(l => l.status === 'bounced').length,
+        failed: logs.filter(l => l.status === 'failed').length,
+        opened: logs.filter(l => l.status === 'opened').length,
+        clicked: logs.filter(l => l.status === 'clicked').length,
+      };
+
+      return stats;
     }),
 });
