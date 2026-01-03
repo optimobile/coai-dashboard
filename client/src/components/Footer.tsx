@@ -79,15 +79,13 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link href="/">
-              <a className="flex items-center space-x-3 mb-4 hover:opacity-80 transition-opacity">
-                <img
-                  src="/csoai-icon.svg.png"
-                  alt="CSOAI"
-                  className="h-10 w-10"
-                />
-                <span className="text-2xl font-bold">CSOAI</span>
-              </a>
+            <Link href="/" className="flex items-center space-x-3 mb-4 hover:opacity-80 transition-opacity">
+              <img
+                src="/csoai-icon.svg.png"
+                alt="CSOAI"
+                className="h-10 w-10"
+              />
+              <span className="text-2xl font-bold">CSOAI</span>
             </Link>
             <p className="text-gray-600 text-sm mb-4">
               Building the future of AI safety through independent training, certification, and transparent oversight.
@@ -117,10 +115,8 @@ export function Footer() {
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <Link href={link.href}>
-                      <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
-                        {link.name}
-                      </a>
+                    <Link href={link.href} className="text-gray-600 hover:text-green-600 text-sm transition-colors">
+                      {link.name}
                     </Link>
                   </li>
                 ))}
@@ -157,25 +153,17 @@ export function Footer() {
             © {currentYear} CSOAI. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
-            <Link href="/privacy">
-              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
-                Privacy Policy
-              </a>
+            <Link href="/privacy" className="text-gray-600 hover:text-green-600 text-sm transition-colors">
+              Privacy Policy
             </Link>
-            <Link href="/terms">
-              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
-                Terms of Service
-              </a>
+            <Link href="/terms" className="text-gray-600 hover:text-green-600 text-sm transition-colors">
+              Terms of Service
             </Link>
-            <Link href="/cookies">
-              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
-                Cookie Policy
-              </a>
+            <Link href="/cookies" className="text-gray-600 hover:text-green-600 text-sm transition-colors">
+              Cookie Policy
             </Link>
-            <Link href="/accessibility">
-              <a className="text-gray-600 hover:text-green-600 text-sm transition-colors">
-                Accessibility
-              </a>
+            <Link href="/accessibility" className="text-gray-600 hover:text-green-600 text-sm transition-colors">
+              Accessibility
             </Link>
           </div>
         </div>

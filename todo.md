@@ -48,6 +48,7 @@
 
 ## Bug Fixes Needed
 
+- [x] Fix broken footer links (nested anchor tags issue)
 - [x] None currently identified
 
 ## Notes
