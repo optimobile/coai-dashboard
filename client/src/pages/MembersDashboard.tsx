@@ -4,7 +4,7 @@
  * All features accessible from one place with tab-based navigation
  */
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'wouter';
 import {
@@ -38,6 +38,18 @@ import RegulatoryAuthority from './RegulatoryAuthority';
 import Reports from './Reports';
 import AISystems from './AISystems';
 import Compliance from './Compliance';
+
+// Loading fallback component for tab content
+function TabLoadingFallback() {
+  return (
+    <div className="flex items-center justify-center py-12">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <p className="text-sm text-muted-foreground">Loading content...</p>
+      </div>
+    </div>
+  );
+}
 
 const tabs = [
   {
@@ -73,9 +85,35 @@ const tabs = [
 ];
 
 export default function MembersDashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [location, setLocation] = useLocation();
+  
+  // Get initial tab from URL parameter
+  const getInitialTab = () => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    const validTabs = tabs.map(t => t.id);
+    return tabParam && validTabs.includes(tabParam) ? tabParam : 'overview';
+  };
+  
+  const [activeTab, setActiveTab] = useState(getInitialTab());
   const [watchdogSubTab, setWatchdogSubTab] = useState('incidents');
-  const [, setLocation] = useLocation();
+  const [isTabLoading, setIsTabLoading] = useState(false);
+  
+  // Update URL when tab changes
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('tab', activeTab);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, '', newUrl);
+  }, [activeTab]);
+  
+  // Handle tab change with loading state
+  const handleTabChange = (tabId: string) => {
+    setIsTabLoading(true);
+    setActiveTab(tabId);
+    // Simulate loading delay for smooth transition
+    setTimeout(() => setIsTabLoading(false), 150);
+  };
 
   // Onboarding tour steps
   const tourSteps = [
@@ -166,7 +204,7 @@ export default function MembersDashboard() {
                   return (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
+                      onClick={() => handleTabChange(tab.id)}
                       role="tab"
                       aria-selected={isActive}
                       className={`flex items-center gap-2 rounded-none border-b-2 transition-all px-4 py-3 text-sm font-medium ${
@@ -184,24 +222,46 @@ export default function MembersDashboard() {
             </div>
           </div>
 
-          {/* Overview Tab */}
-          {activeTab === 'overview' && (
-            <div className="overflow-y-auto flex-1">
+          {/* Tab Content with Loading State */}
+          <div className="overflow-y-auto flex-1 relative">
+            {isTabLoading && (
+              <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                  <p className="text-sm text-muted-foreground">Loading...</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Overview Tab */}
+            {activeTab === 'overview' && (
               <div className="p-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Dashboard />
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <Dashboard />
+                  </Suspense>
                 </motion.div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Watchdog Tab - Enhanced with sub-tabs */}
           {activeTab === 'watchdog' && (
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 relative">
+              {isTabLoading && (
+                <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                    <p className="text-sm text-muted-foreground">Loading...</p>
+                  </div>
+                </div>
+              )}
+
+
               <div className="p-8 space-y-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -278,14 +338,24 @@ export default function MembersDashboard() {
 
           {/* Training Tab */}
           {activeTab === 'training' && (
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 relative">
+              {isTabLoading && (
+                <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                    <p className="text-sm text-muted-foreground">Loading...</p>
+                  </div>
+                </div>
+              )}
               <div className="p-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Training />
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <Training />
+                  </Suspense>
                 </motion.div>
               </div>
             </div>
@@ -293,14 +363,24 @@ export default function MembersDashboard() {
 
           {/* Certification Tab */}
           {activeTab === 'certification' && (
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 relative">
+              {isTabLoading && (
+                <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                    <p className="text-sm text-muted-foreground">Loading...</p>
+                  </div>
+                </div>
+              )}
               <div className="p-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Certification />
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <Certification />
+                  </Suspense>
                 </motion.div>
               </div>
             </div>
@@ -308,14 +388,24 @@ export default function MembersDashboard() {
 
           {/* Regulatory Tab */}
           {activeTab === 'regulatory' && (
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 relative">
+              {isTabLoading && (
+                <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                    <p className="text-sm text-muted-foreground">Loading...</p>
+                  </div>
+                </div>
+              )}
               <div className="p-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <RegulatoryAuthority />
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <RegulatoryAuthority />
+                  </Suspense>
                 </motion.div>
               </div>
             </div>
