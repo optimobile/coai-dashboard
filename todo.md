@@ -7549,3 +7549,19 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - Data integrity for file generation
 - Enterprise-grade security controls
 - Database performance optimization
+
+
+---
+### Component Integration Tasks (Jan 2026)
+- [x] Integrate PaymentConfirmation dialog into Billing page checkout flow
+- [x] Integrate ExamSecurityMonitor into CertificationExam page
+- [x] Add ModuleProgressIndicator to training course pages
+- [x] Add /verify-certificate route to App.tsx
+- [x] Test certificate verification flow with real certificate numbers
+- [x] Update module structure from 5 to 7 regional modules (EU AI Act, NIST AI RMF, UK AI Safety Institute, Canada AIDA, Australia AI Ethics, ISO 42001, China TC260)
+- [x] Keep 5 core modules for free Watchdog Analyst certification
+- [x] Create 7 separate regional module courses in database (paid, £499 each)
+- [x] Create 7 separate certification types for each regional module
+- [x] Update certificate generation to support 7 different regional certificates
+- [x] Seed database with 7 regional module course content
+- [x] Ensure 7 regional modules are prominently featured across website, backend, dashboard, and UI

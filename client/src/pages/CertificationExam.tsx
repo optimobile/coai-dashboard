@@ -47,6 +47,7 @@ import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import { ExamSecurityMonitor } from "@/components/ExamSecurityMonitor";
 
 interface Question {
   id: number;
@@ -77,6 +78,7 @@ export default function CertificationExam() {
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [showTimeWarning, setShowTimeWarning] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
+  const [securityViolations, setSecurityViolations] = useState<string[]>([]);
 
   // Exam state
   const [examState, setExamState] = useState<ExamState>({
@@ -931,6 +933,15 @@ export default function CertificationExam() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Exam Security Monitor */}
+      <ExamSecurityMonitor 
+        isActive={examState.status === "in_progress" && !examState.isPracticeMode}
+        onSecurityViolation={(type) => {
+          setSecurityViolations(prev => [...prev, type]);
+          console.log("Security violation detected:", type);
+        }}
+      />
     </DashboardLayout>
   );
 }

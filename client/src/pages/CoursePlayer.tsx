@@ -23,6 +23,7 @@ import { getModuleQuiz } from '@/data/quizzes';
 import type { QuizResult } from '@/types/quiz';
 import { CourseDiscussion } from '@/components/CourseDiscussion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ModuleProgressIndicator } from '@/components/ModuleProgressIndicator';
 
 interface CourseModule {
   title: string;
@@ -236,7 +237,19 @@ export default function CoursePlayer() {
           {/* Module Navigation Sidebar */}
           <div className="lg:col-span-1">
             <Card className="p-4 sticky top-4">
-              <h3 className="font-semibold mb-4">Course Modules</h3>
+              {/* Module Progress Indicator */}
+              <ModuleProgressIndicator
+                modules={course.modules?.map((module: any, index: number) => ({
+                  id: index,
+                  title: module.title,
+                  completed: completedModules.has(index),
+                  estimatedMinutes: module.durationMinutes || 30
+                })) || []}
+                currentModuleId={currentModuleIndex}
+                className="mb-6"
+              />
+              <Separator className="my-4" />
+              <h3 className="font-semibold mb-4">Quick Navigation</h3>
               <div className="space-y-2">
                 {course.modules?.map((module: any, index: number) => (
                   <button

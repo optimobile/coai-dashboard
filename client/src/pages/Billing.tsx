@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
 import { toast } from "sonner";
+import { PaymentConfirmation } from "@/components/PaymentConfirmation";
 
 const TIER_ICONS = {
   free: Zap,
@@ -62,6 +63,8 @@ function getFeatureIcon(feature: string) {
 export default function Billing() {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("monthly");
   const [, setLocation] = useLocation();
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<{ key: "pro" | "enterprise"; name: string; price: number; features: string[] } | null>(null);
   
   // Check for success/cancel URL params
   useEffect(() => {
@@ -107,8 +110,16 @@ export default function Billing() {
     },
   });
 
-  const handleSubscribe = (tier: "pro" | "enterprise") => {
-    checkoutMutation.mutate({ tier, billingPeriod });
+  const handleSubscribe = (tier: "pro" | "enterprise", tierData: { name: string; price: number; features: string[] }) => {
+    setSelectedTier({ key: tier, name: tierData.name, price: tierData.price, features: tierData.features });
+    setConfirmationOpen(true);
+  };
+
+  const handleConfirmPayment = () => {
+    if (selectedTier) {
+      checkoutMutation.mutate({ tier: selectedTier.key, billingPeriod });
+      setConfirmationOpen(false);
+    }
   };
 
   const handleManageSubscription = () => {
@@ -287,7 +298,7 @@ export default function Billing() {
                           isPro && "bg-green-600 hover:bg-green-600/90",
                           isEnterprise && "bg-gray-600 hover:bg-gray-700"
                         )}
-                        onClick={() => handleSubscribe(tierKey as "pro" | "enterprise")}
+                        onClick={() => handleSubscribe(tierKey as "pro" | "enterprise", { name: tier.name, price: totalPrice, features: tier.features })}
                         disabled={checkoutMutation.isPending}
                       >
                         {checkoutMutation.isPending ? (
@@ -354,6 +365,20 @@ export default function Billing() {
           </div>
         </div>
       </div>
+
+      {/* Payment Confirmation Dialog */}
+      {selectedTier && (
+        <PaymentConfirmation
+          isOpen={confirmationOpen}
+          onClose={() => setConfirmationOpen(false)}
+          onConfirm={handleConfirmPayment}
+          planName={selectedTier.name}
+          planPrice={selectedTier.price}
+          billingPeriod={billingPeriod}
+          features={selectedTier.features}
+          isLoading={checkoutMutation.isPending}
+        />
+      )}
     </DashboardLayout>
   );
 }
