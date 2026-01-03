@@ -15,6 +15,10 @@ export const emailWorkflows = mysqlTable("email_workflows", {
   triggerConfig: json(), // Configuration for the trigger (e.g., cohort ID, date/time, conditions)
   workflowData: json().notNull(), // Complete workflow graph (nodes, edges, positions)
   isActive: boolean().default(false).notNull(),
+  schedule: json().$type<{
+    cronExpression: string;
+    timezone: string;
+  }>(), // Optional scheduling configuration
   createdAt: timestamp({ mode: 'string' }).defaultNow().notNull(),
   updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 });

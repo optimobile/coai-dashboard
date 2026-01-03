@@ -194,6 +194,7 @@ import EmailTemplateEditor from "./pages/admin/EmailTemplateEditor";
 import WorkflowBuilder from "./pages/admin/WorkflowBuilder";
 import WorkflowExecutionLogs from "./pages/WorkflowExecutionLogs";
 import WorkflowTemplates from "./pages/WorkflowTemplates";
+import WorkflowAnalytics from "./pages/WorkflowAnalytics";
 import StudentImportExport from "./pages/admin/StudentImportExport";
 import AnalyticsDashboardPage from "./pages/admin/AnalyticsDashboard";
 
@@ -283,20 +284,20 @@ function App() {
                   <Route path="/watchdog-hub" component={PublicWatchdogHub} />
                   <Route path="/training" component={TrainingV2} />
                   <Route path="/courses" component={Courses} />
-                  <Route path="/courses/:id" component={CourseDetail} />
                   <Route path="/my-courses" component={MyCourses} />
-                  <Route path="/dashboard/progress" component={StudentProgress} />
-                  <Route path="/dashboard/compliance" component={Compliance} />
-                  <Route path="/dashboard/training" component={TrainingV2} />
-                  <Route path="/courses/:id/learn" component={CoursePlayer} />
-                  <Route path="/training-courses" component={TrainingCourses} />
                   <Route path="/paid-courses" component={PaidCourses} />
+                  {/* Redirect old training routes to new unified route */}
+                  <Route path="/dashboard/training"><Redirect to="/training" /></Route>
+                  <Route path="/training-catalog"><Redirect to="/courses" /></Route>
+                  <Route path="/training-courses"><Redirect to="/courses" /></Route>
+                  <Route path="/training-courses/:id"><Redirect to="/courses/:id" /></Route>
+                  <Route path="/training-courses/:id/learn"><Redirect to="/courses/:id/learn" /></Route>
+                  <Route path="/my-training-courses"><Redirect to="/my-courses" /></Route>
+                  <Route path="/courses/:id" component={CourseDetail} />
+                  <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/paid-courses-dashboard" component={PaidCoursesDashboard} />
                   <Route path="/founding-members" component={FoundingMembers} />
                   <Route path="/checkout" component={Checkout} />
-                  <Route path="/training-courses/:id" component={TrainingCourseDetail} />
-                  <Route path="/training-courses/:id/learn" component={LessonViewer} />
-                  <Route path="/my-training-courses" component={MyTrainingCourses} />
                   <Route path="/forum-analytics" component={ForumAnalytics} />
                   <Route path="/verify-certificate/:id" component={VerifyCertificate} />
                   <Route path="/verify/:certificateNumber" component={VerifyCertificate} />
@@ -334,6 +335,7 @@ function App() {
                   <Route path="/admin/email-templates" component={EmailTemplateEditor} />
                   <Route path="/admin/workflow-builder" component={WorkflowBuilder} />
                   <Route path="/admin/workflow-logs" component={WorkflowExecutionLogs} />
+                  <Route path="/admin/workflow-analytics" component={WorkflowAnalytics} />
                   <Route path="/admin/workflow-templates" component={WorkflowTemplates} />
                   <Route path="/admin/import-export" component={StudentImportExport} />
                   <Route path="/admin/analytics-dashboard" component={AnalyticsDashboardPage} />

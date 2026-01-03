@@ -52,11 +52,8 @@ export function Header() {
         { name: 'How It Works', href: '/how-it-works/training', description: 'Training pipeline' },
         { name: 'All Courses', href: '/courses', description: 'Browse all training courses' },
         { name: 'My Courses', href: '/my-courses', description: 'Your enrolled courses' },
+        { name: 'Paid Courses', href: '/paid-courses', description: 'Premium training programs' },
       ]
-    },
-    { 
-      name: 'Paid Courses', 
-      href: '/paid-courses'
     },
     { 
       name: 'Certification', 
@@ -233,27 +230,35 @@ export function Header() {
                 onMouseLeave={() => setActiveDropdown(null)}
                 onKeyDown={(e) => handleKeyDown(e, item.name, item.submenu?.length || 0)}
               >
-                <a
-                  href={item.href}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 whitespace-nowrap ${
-                    isActive(item.href)
-                      ? 'text-emerald-600 bg-emerald-50'
-                      : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
-                  }`}
-                  aria-expanded={activeDropdown === item.name}
-                  aria-haspopup="true"
-                  onClick={(e) => {
-                    if (activeDropdown === item.name) {
+                {item.submenu ? (
+                  <button
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 whitespace-nowrap ${
+                      isActive(item.href)
+                        ? 'text-emerald-600 bg-emerald-50'
+                        : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                    }`}
+                    aria-expanded={activeDropdown === item.name}
+                    aria-haspopup="true"
+                    onClick={(e) => {
                       e.preventDefault();
-                      setActiveDropdown(null);
-                    } else {
-                      setActiveDropdown(item.name);
-                    }
-                  }}
-                >
-                  {item.name}
-                  <ChevronDown className="h-3 w-3" />
-                </a>
+                      setActiveDropdown(activeDropdown === item.name ? null : item.name);
+                    }}
+                  >
+                    {item.name}
+                    <ChevronDown className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <a
+                    href={item.href}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 whitespace-nowrap ${
+                      isActive(item.href)
+                        ? 'text-emerald-600 bg-emerald-50'
+                        : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {item.name}
+                  </a>
+                )}
                 
                 {/* Mega Menu Dropdown */}
                 {activeDropdown === item.name && item.submenu && (

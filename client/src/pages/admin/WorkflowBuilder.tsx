@@ -55,6 +55,7 @@ import {
   Calendar,
   CheckCircle2,
 } from 'lucide-react';
+import { SchedulingDialog } from '@/components/SchedulingDialog';
 
 // Custom node types for workflow builder
 const nodeTypes = {
@@ -147,12 +148,15 @@ export default function WorkflowBuilder() {
   const [triggerType, setTriggerType] = useState<string>('manual');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [isSchedulingDialogOpen, setIsSchedulingDialogOpen] = useState(false);
+  const [schedulingWorkflowId, setSchedulingWorkflowId] = useState<number | null>(null);
 
   const { data: workflows, refetch: refetchWorkflows } = trpc.workflowBuilder.getWorkflows.useQuery();
   const createWorkflow = trpc.workflowBuilder.createWorkflow.useMutation();
   const updateWorkflow = trpc.workflowBuilder.updateWorkflow.useMutation();
   const deleteWorkflow = trpc.workflowBuilder.deleteWorkflow.useMutation();
   const toggleWorkflow = trpc.workflowBuilder.toggleWorkflow.useMutation();
+  const updateSchedule = trpc.workflowBuilder.updateWorkflowSchedule.useMutation();
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -243,6 +247,25 @@ export default function WorkflowBuilder() {
       refetchWorkflows();
     } catch (error) {
       toast.error('Failed to delete workflow');
+    }
+  };
+
+  const handleSaveSchedule = async (schedule: { enabled: boolean; cronExpression: string; timezone: string }) => {
+    if (!schedulingWorkflowId) return;
+    
+    try {
+      await updateSchedule.mutateAsync({
+        id: schedulingWorkflowId,
+        schedule: schedule.enabled ? {
+          cronExpression: schedule.cronExpression,
+          timezone: schedule.timezone,
+        } : null,
+      });
+      toast.success('Schedule updated successfully');
+      refetchWorkflows();
+    } catch (error) {
+      toast.error('Failed to update schedule');
+      throw error;
     }
   };
 
@@ -370,6 +393,19 @@ export default function WorkflowBuilder() {
                         className="h-8 w-8 p-0"
                         onClick={(e) => {
                           e.stopPropagation();
+                          setSchedulingWorkflowId(workflow.id);
+                          setIsSchedulingDialogOpen(true);
+                        }}
+                        title="Schedule workflow"
+                      >
+                        <Calendar className="w-4 h-4 text-blue-600" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 w-8 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
                           handleToggleWorkflow(workflow.id, workflow.isActive);
                         }}
                       >
@@ -484,6 +520,20 @@ export default function WorkflowBuilder() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Scheduling Dialog */}
+      <SchedulingDialog
+        open={isSchedulingDialogOpen}
+        onOpenChange={setIsSchedulingDialogOpen}
+        workflowId={schedulingWorkflowId}
+        workflowName={workflows?.find(w => w.id === schedulingWorkflowId)?.name || ''}
+        currentSchedule={{
+          enabled: !!workflows?.find(w => w.id === schedulingWorkflowId)?.schedule,
+          cronExpression: (workflows?.find(w => w.id === schedulingWorkflowId)?.schedule as any)?.cronExpression,
+          timezone: (workflows?.find(w => w.id === schedulingWorkflowId)?.schedule as any)?.timezone || 'UTC',
+        }}
+        onSave={handleSaveSchedule}
+      />
     </div>
   );
 }
