@@ -81,6 +81,8 @@ const navSections = [
       { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
       { path: "/reports", label: "Reports", icon: FileText },
       { path: "/api-keys", label: "API Keys", icon: Key },
+      { path: "/instructor/dashboard", label: "Instructor Dashboard", icon: Users },
+      { path: "/ab-testing", label: "A/B Testing", icon: LayoutGrid },
     ],
   },
   {

@@ -7738,3 +7738,9 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add experiment comparison charts (conversion rates, success rates)
 - [x] Implement experiment activation/deactivation controls
 - [ ] Test A/B testing framework end-to-end
+
+## New Feature Requests
+
+- [x] Add navigation links - Update the main navigation menu or sidebar to include links to the new Instructor Dashboard and A/B Testing pages for easier access
+- [x] Create automated email templates - Build email templates for the notification preferences system that integrate with the existing notification infrastructure
+- [x] Implement bulk student import - Add a CSV upload feature to the Instructor Dashboard for quickly adding multiple students to cohorts at once

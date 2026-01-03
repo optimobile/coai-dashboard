@@ -41,6 +41,8 @@ export function Header() {
         { name: 'Executive', href: '/dashboard/executive', description: 'Real-time metrics' },
         { name: 'Roadmap', href: '/dashboard/roadmap', description: 'Remediation timeline' },
         { name: 'Alerts', href: '/dashboard/alerts', description: 'Alert management' },
+        { name: 'Instructor Dashboard', href: '/instructor/dashboard', description: 'Manage cohorts and students' },
+        { name: 'A/B Testing', href: '/ab-testing', description: 'Experiment management' },
       ]
     },
     { 

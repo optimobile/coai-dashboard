@@ -7,7 +7,7 @@ import { eq, and, sql, desc, inArray } from "drizzle-orm";
 export const instructorDashboardRouter = router({
   // Get all cohorts for an instructor
   getCohorts: protectedProcedure.query(async ({ ctx }) => {
-    const db = getDb();
+    const db = await getDb();
     const instructorId = ctx.user.id;
 
     const cohorts = await db
@@ -32,7 +32,7 @@ export const instructorDashboardRouter = router({
   getCohortStudents: protectedProcedure
     .input(z.object({ cohortId: z.number() }))
     .query(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
 
       // First verify the cohort belongs to this instructor
       const cohort = await db
@@ -129,7 +129,7 @@ export const instructorDashboardRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
       const instructorId = ctx.user.id;
 
       const result = await db.insert(instructorCohorts).values({
@@ -153,7 +153,7 @@ export const instructorDashboardRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
 
       // Verify cohort belongs to instructor
       const cohort = await db
@@ -189,6 +189,95 @@ export const instructorDashboardRouter = router({
       return { success: true };
     }),
 
+  // Bulk import students from CSV data
+  bulkImportStudents: protectedProcedure
+    .input(
+      z.object({
+        cohortId: z.number(),
+        students: z.array(
+          z.object({
+            email: z.string().email(),
+            name: z.string().min(1),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+
+      // Verify cohort belongs to instructor
+      const cohort = await db
+        .select()
+        .from(instructorCohorts)
+        .where(
+          and(
+            eq(instructorCohorts.id, input.cohortId),
+            eq(instructorCohorts.instructorId, ctx.user.id)
+          )
+        )
+        .limit(1);
+
+      if (cohort.length === 0) {
+        throw new Error("Cohort not found or access denied");
+      }
+
+      const results = {
+        success: 0,
+        created: 0,
+        existing: 0,
+        errors: [] as { email: string; error: string }[],
+      };
+
+      // Process each student
+      for (const student of input.students) {
+        try {
+          // Check if user exists by email
+          const existingUser = await db
+            .select()
+            .from(users)
+            .where(eq(users.email, student.email.toLowerCase()))
+            .limit(1);
+
+          let userId: number;
+
+          if (existingUser.length > 0) {
+            // User exists
+            userId = existingUser[0].id;
+            results.existing++;
+          } else {
+            // Create new user
+            const newUser = await db.insert(users).values({
+              email: student.email.toLowerCase(),
+              name: student.name,
+              openId: `csv_import_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              role: 'user',
+            });
+            userId = Number(newUser[0].insertId);
+            results.created++;
+          }
+
+          // Add to cohort (ignore if already in cohort)
+          try {
+            await db.insert(cohortStudents).values({
+              cohortId: input.cohortId,
+              studentId: userId,
+            });
+            results.success++;
+          } catch (error) {
+            // Student already in cohort, still count as success
+            results.success++;
+          }
+        } catch (error) {
+          results.errors.push({
+            email: student.email,
+            error: error instanceof Error ? error.message : 'Unknown error',
+          });
+        }
+      }
+
+      return results;
+    }),
+
   // Send message to at-risk student
   sendInterventionMessage: protectedProcedure
     .input(
@@ -199,7 +288,7 @@ export const instructorDashboardRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
 
       // Verify instructor has access to this student via cohort
       const cohort = await db
@@ -243,7 +332,7 @@ export const instructorDashboardRouter = router({
   getCohortMetrics: protectedProcedure
     .input(z.object({ cohortId: z.number() }))
     .query(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
 
       // Verify cohort belongs to instructor
       const cohort = await db

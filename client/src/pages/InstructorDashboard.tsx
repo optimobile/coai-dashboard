@@ -11,7 +11,9 @@ import {
   Search,
   MessageSquare,
   Plus,
-  ChevronRight
+  ChevronRight,
+  Upload,
+  FileSpreadsheet
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,6 +35,9 @@ export default function InstructorDashboard() {
   const [showMessageDialog, setShowMessageDialog] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [message, setMessage] = useState("");
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [importPreview, setImportPreview] = useState<{ email: string; name: string }[]>([]);
 
   const { data: students } = trpc.instructorDashboard.getCohortStudents.useQuery(
     { cohortId: selectedCohortId! },
@@ -45,6 +50,7 @@ export default function InstructorDashboard() {
   );
 
   const sendMessageMutation = trpc.instructorDashboard.sendInterventionMessage.useMutation();
+  const bulkImportMutation = trpc.instructorDashboard.bulkImportStudents.useMutation();
 
   const handleSendMessage = async () => {
     if (!selectedStudent || !selectedCohortId) return;
@@ -61,6 +67,57 @@ export default function InstructorDashboard() {
       setSelectedStudent(null);
     } catch (error) {
       toast.error("Failed to send message");
+      console.error(error);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setCsvFile(file);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      const lines = text.split('\n').filter(line => line.trim());
+      
+      // Skip header row
+      const dataLines = lines.slice(1);
+      const students = dataLines.map(line => {
+        const [email, name] = line.split(',').map(s => s.trim());
+        return { email, name };
+      }).filter(s => s.email && s.name);
+      
+      setImportPreview(students);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleBulkImport = async () => {
+    if (!selectedCohortId || importPreview.length === 0) return;
+
+    try {
+      const result = await bulkImportMutation.mutateAsync({
+        cohortId: selectedCohortId,
+        students: importPreview,
+      });
+      
+      toast.success(
+        `Import complete: ${result.success} students added (${result.created} new, ${result.existing} existing)${
+          result.errors.length > 0 ? `, ${result.errors.length} errors` : ''
+        }`
+      );
+      
+      if (result.errors.length > 0) {
+        console.error('Import errors:', result.errors);
+      }
+      
+      setShowImportDialog(false);
+      setCsvFile(null);
+      setImportPreview([]);
+      refetch();
+    } catch (error) {
+      toast.error("Failed to import students");
       console.error(error);
     }
   };
@@ -205,6 +262,14 @@ export default function InstructorDashboard() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-semibold">Students</h2>
               <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowImportDialog(true)}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Import CSV
+                </Button>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -356,6 +421,90 @@ export default function InstructorDashboard() {
               disabled={!message.trim() || sendMessageMutation.isPending}
             >
               {sendMessageMutation.isPending ? "Sending..." : "Send Message"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* CSV Import Dialog */}
+      <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Bulk Import Students from CSV</DialogTitle>
+            <DialogDescription>
+              Upload a CSV file with student email and name columns. Format: email,name
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="csv-file">CSV File</Label>
+              <div className="mt-2">
+                <Input
+                  id="csv-file"
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileUpload}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Expected format: First row should be headers (email,name), followed by data rows
+              </p>
+            </div>
+
+            {importPreview.length > 0 && (
+              <div>
+                <Label>Preview ({importPreview.length} students)</Label>
+                <div className="mt-2 border rounded-lg max-h-64 overflow-y-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted sticky top-0">
+                      <tr>
+                        <th className="text-left p-2">Email</th>
+                        <th className="text-left p-2">Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {importPreview.map((student, idx) => (
+                        <tr key={idx} className="border-t">
+                          <td className="p-2">{student.email}</td>
+                          <td className="p-2">{student.name}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-900">
+              <div className="flex items-start gap-2">
+                <FileSpreadsheet className="w-5 h-5 text-blue-600 mt-0.5" />
+                <div className="text-sm">
+                  <p className="font-medium text-blue-900 dark:text-blue-100 mb-1">CSV Format Example:</p>
+                  <pre className="text-xs bg-white dark:bg-gray-900 p-2 rounded border">
+                    {`email,name
+john@example.com,John Doe
+jane@example.com,Jane Smith`}
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowImportDialog(false);
+                setCsvFile(null);
+                setImportPreview([]);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleBulkImport}
+              disabled={importPreview.length === 0 || bulkImportMutation.isPending}
+            >
+              {bulkImportMutation.isPending ? "Importing..." : `Import ${importPreview.length} Students`}
             </Button>
           </DialogFooter>
         </DialogContent>
