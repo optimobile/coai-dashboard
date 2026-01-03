@@ -7453,3 +7453,7 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Document any UX issues found during testing
 - [ ] Fix any identified issues
 - [ ] Verify query performance monitoring is working
+
+## Bug Fixes
+
+- [x] Fix 404 error on /dashboard/training route

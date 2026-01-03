@@ -261,6 +261,7 @@ function App() {
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/dashboard/progress" component={StudentProgress} />
                   <Route path="/dashboard/compliance" component={Compliance} />
+                  <Route path="/dashboard/training" component={TrainingV2} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/training-courses" component={TrainingCourses} />
                   <Route path="/paid-courses" component={PaidCourses} />
