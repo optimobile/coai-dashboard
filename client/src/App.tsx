@@ -64,9 +64,11 @@ import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
 import AdminCMS from "./pages/admin/AdminCMS";
 import CourseManagement from "./pages/admin/CourseManagement";
+import CertificateDesigner from "./pages/admin/CertificateDesigner";
 import AdminIncidents from "./pages/AdminIncidents";
 import AdminAnalytics from "./pages/AdminAnalytics";
 import ForumAnalytics from "./pages/ForumAnalytics";
+import StudentAnalytics from "./pages/StudentAnalytics";
 import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
@@ -303,8 +305,10 @@ function App() {
                   <Route path="/admin" component={Admin} />
                   <Route path="/admin/cms" component={AdminCMS} />
                   <Route path="/admin/cms/courses/:id" component={CourseManagement} />
+                  <Route path="/admin/certificate-designer" component={CertificateDesigner} />
                   <Route path="/admin/incidents" component={AdminIncidents} />
                   <Route path="/admin/analytics" component={AdminAnalytics} />
+                  <Route path="/admin/student-analytics" component={StudentAnalytics} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />
                   <Route path="/admin/promo-codes" component={PromoCodeManagement} />
                   <Route path="/admin/enrollment-test" component={EnrollmentTest} />
