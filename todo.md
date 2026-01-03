@@ -7565,3 +7565,43 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Update certificate generation to support 7 different regional certificates
 - [x] Seed database with 7 regional module course content
 - [x] Ensure 7 regional modules are prominently featured across website, backend, dashboard, and UI
+
+---
+
+## Phase 15 - Regional Module Content Enhancement & Analytics (Jan 2026)
+
+### Regional Course Content System
+- [x] Design database schema for detailed course lessons and assessments
+- [ ] Create lessons table with content, video URLs, and interactive elements
+- [x] Create module_assessments table for quizzes and knowledge checks
+- [ ] Build lesson management UI for admin to add/edit content
+- [ ] Create lesson viewer component with video player and markdown support
+- [ ] Implement assessment system within each lesson
+- [ ] Add lesson completion tracking per user
+- [ ] Build course progress dashboard showing lesson-by-lesson completion
+- [ ] Seed comprehensive content for all 7 regional frameworks
+- [ ] Add interactive exercises and case studies to lessons
+
+### Framework-Specific Certificate Customization
+- [x] Design certificate templates for each of 7 regional frameworks
+- [x] Add framework logos and branding to certificates
+- [x] Include framework-specific compliance statements on certificates
+- [x] Add regional regulatory body references to certificates
+- [ ] Create certificate preview system for each framework
+- [ ] Update certificate generation to use framework-specific templates
+- [ ] Add certificate watermarks and security features per framework
+- [ ] Test certificate generation for all 7 frameworks
+
+### Regional Module Analytics Dashboard
+- [x] Create analytics database schema for tracking metrics
+- [x] Build enrollment tracking system per regional framework
+- [x] Implement completion rate calculations per framework
+- [x] Create certificate issuance tracking and reporting
+- [x] Build analytics dashboard page with framework comparison
+- [x] Add visual charts for enrollment trends over time
+- [x] Create completion funnel visualization per framework
+- [ ] Add revenue analytics per regional module
+- [ ] Implement cohort analysis for regional courses
+- [ ] Add export functionality for analytics data
+- [ ] Create admin-only analytics access controls
+- [ ] Build real-time metrics widgets for dashboard

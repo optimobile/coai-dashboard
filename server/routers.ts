@@ -68,7 +68,8 @@ import { lessonProgressRouter } from "./routers/lessonProgress";
 import { forumsRouter } from "./routers/forums";
 import { forumModerationRouter } from "./routers/forumModeration";
 import { promoCodeManagementRouter } from "./routers/promoCodeManagement";
-import { performanceMonitorRouter } from "./routers/performanceMonitor";
+import { performanceMonitorRouter } from './routers/performanceMonitor';
+import { regionalAnalyticsRouter } from './routers/regionalAnalytics';
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -3002,6 +3003,7 @@ export const appRouter = router({
   forumModeration: forumModerationRouter,
   promoCodeManagement: promoCodeManagementRouter,
   performanceMonitor: performanceMonitorRouter,
+  regionalAnalytics: regionalAnalyticsRouter,
 });
 
 export type AppRouter = typeof appRouter;

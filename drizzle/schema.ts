@@ -13,6 +13,9 @@ export * from './schema-coupons';
 // Import enrollments tables
 export * from './schema-enrollments';
 
+// Import regional analytics tables
+export * from './schema-regional-analytics';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),

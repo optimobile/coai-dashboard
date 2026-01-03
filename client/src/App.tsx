@@ -129,6 +129,7 @@ import Enterprise from "./pages/Enterprise";
 import RegulatoryAuthority from "./pages/RegulatoryAuthority";
 import GovernmentPortal from "./pages/GovernmentPortal";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
+import RegionalAnalytics from "./pages/RegionalAnalytics";
 import EmailPreferences from "./pages/EmailPreferences";
 import EnterpriseIntegration from "./pages/EnterpriseIntegration";
 import ISO17065 from "./pages/ISO17065";
@@ -254,6 +255,7 @@ function App() {
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/settings/payouts" component={PayoutHistory} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
+                  <Route path="/regional-analytics" component={RegionalAnalytics} />
                   <Route path="/email-preferences" component={EmailPreferences} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
       <Route path="/watchdog/report" component={PublicWatchdogHub} />
