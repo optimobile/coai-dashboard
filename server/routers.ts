@@ -76,6 +76,9 @@ import { regionalAnalyticsRouter } from './routers/regionalAnalytics';
 import { studentAnalyticsRouter } from './routers/studentAnalytics';
 import { cohortAnalysisRouter } from './routers/cohortAnalysis';
 import { predictiveAnalyticsRouter } from './routers/predictiveAnalytics';
+import { emailSchedulingRouter } from './routers/emailScheduling';
+import { csvExportRouter } from './routers/csvExport';
+import { bulkActionsRouter } from './routers/bulkActions';
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -3031,6 +3034,9 @@ export const appRouter = router({
   studentAnalytics: studentAnalyticsRouter,
   cohortAnalysis: cohortAnalysisRouter,
   predictiveAnalytics: predictiveAnalyticsRouter,
+  emailScheduling: emailSchedulingRouter,
+  csvExport: csvExportRouter,
+  bulkActions: bulkActionsRouter,
 });
 
 export type AppRouter = typeof appRouter;

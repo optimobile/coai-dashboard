@@ -28,6 +28,9 @@ export * from './schema-instructor';
 // Import A/B testing tables
 export * from './schema-ab-testing';
 
+// Import email scheduling tables
+export * from './schema-email-scheduling';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),
