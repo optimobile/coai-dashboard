@@ -40,6 +40,18 @@ export * from './schema-email-templates';
 // Import workflow tables
 export * from './schema-workflows';
 
+// Import workflow templates tables
+export * from './schema-workflow-templates';
+
+// Import email events tables
+export * from './schema-email-events';
+
+// Import workflow analytics tables
+export * from './schema-workflow-analytics';
+
+// Import workflow scheduling tables
+export * from './schema-workflow-scheduling';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),

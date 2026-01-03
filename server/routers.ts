@@ -84,6 +84,9 @@ import { studentsRouter } from './routers/students';
 import { emailTemplatesRouter } from './routers/emailTemplates';
 import { workflowBuilderRouter } from './routers/workflowBuilder';
 import { workflowTemplatesRouter } from './routers/workflowTemplates';
+import { resendWebhookRouter } from './routers/resendWebhook';
+import { workflowAnalyticsRouter } from './routers/workflowAnalytics';
+import { workflowSchedulingRouter } from './routers/workflowScheduling';
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -3047,6 +3050,9 @@ export const appRouter = router({
   emailTemplates: emailTemplatesRouter,
   workflowBuilder: workflowBuilderRouter,
   workflowTemplates: workflowTemplatesRouter,
+  resendWebhook: resendWebhookRouter,
+  workflowAnalytics: workflowAnalyticsRouter,
+  workflowScheduling: workflowSchedulingRouter,
 });
 
 export type AppRouter = typeof appRouter;

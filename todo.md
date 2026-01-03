@@ -7905,3 +7905,32 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Implement template cloning/customization
 - [x] Add template categories and search
 - [ ] Create template import/export functionality
+
+## Phase 15 - Advanced Workflow Features (Jan 2026)
+
+### Email Delivery Webhooks
+- [x] Add email_events table to database schema (event_type, email_id, timestamp, metadata)
+- [x] Create Resend webhook endpoint to receive delivery events
+- [x] Update execution logs with email status (delivered, opened, clicked, bounced)
+- [ ] Add email status indicators to workflow execution UI
+- [ ] Write tests for webhook endpoint
+
+### Workflow Analytics Dashboard
+- [x] Create analytics database tables (workflow_metrics, email_engagement)
+- [x] Build analytics aggregation queries (conversion rates, engagement metrics)
+- [ ] Create WorkflowAnalytics page component
+- [x] Add workflow performance charts (success rate, execution time)
+- [x] Add email engagement metrics (open rate, click rate)
+- [x] Add A/B testing results comparison
+- [x] Add date range filters and export functionality
+- [ ] Write tests for analytics endpoints
+
+### Workflow Scheduling
+- [x] Add workflow_schedules table to database schema
+- [x] Create scheduling engine with cron support
+- [x] Add complex condition evaluation (e.g., "students who haven't logged in for 7 days")
+- [ ] Build scheduling UI in workflow builder
+- [x] Add recurring schedule options (daily, weekly, monthly, custom cron)
+- [x] Add condition builder for conditional triggers
+- [ ] Create schedule management page
+- [ ] Write tests for scheduling system
