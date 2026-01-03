@@ -37,6 +37,9 @@ export * from './schema-cohorts';
 // Import email templates tables
 export * from './schema-email-templates';
 
+// Import workflow tables
+export * from './schema-workflows';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),

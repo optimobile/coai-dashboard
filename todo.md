@@ -7836,3 +7836,41 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Test email template editor with various merge tags
 - [x] Verify responsive design on all new pages
 - [x] Create checkpoint after completion
+
+
+## Phase 12 - Email Automation, Import/Export & Analytics (Jan 2026)
+
+### Email Automation Workflows
+- [x] Create workflow builder page with visual interface
+- [x] Implement drag-and-drop workflow canvas
+- [x] Add trigger components (student joins cohort, date-based, manual)
+- [x] Add action components (send email, wait delay, conditional logic)
+- [x] Create workflow configuration panel
+- [x] Implement workflow save/load functionality
+- [x] Add workflow activation/deactivation toggle
+- [x] Create workflow list view with status indicators
+- [ ] Add workflow execution history/logs
+
+### Student Import/Export
+- [x] Create import/export page UI
+- [x] Implement CSV file upload with drag-and-drop
+- [x] Add Excel file support (.xlsx)
+- [x] Build data validation logic (email format, required fields)
+- [x] Create preview table for imported data
+- [x] Implement error handling and validation feedback
+- [x] Add bulk student creation functionality
+- [x] Create export functionality (CSV/Excel)
+- [ ] Add import history tracking
+- [x] Implement progress indicators for large imports
+
+### Analytics Dashboard
+- [x] Create analytics page layout
+- [x] Implement cohort performance metrics cards
+- [x] Add email campaign effectiveness charts
+- [x] Create student engagement trends visualization
+- [x] Add date range selector for analytics
+- [x] Implement data aggregation logic
+- [x] Create interactive charts with Recharts
+- [x] Add export analytics reports functionality
+- [ ] Implement real-time data updates
+- [x] Add comparison views (cohort vs cohort, period vs period)
