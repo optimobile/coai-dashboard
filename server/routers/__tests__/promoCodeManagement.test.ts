@@ -65,7 +65,28 @@ describe('Promo Code Management Router', () => {
   describe('getAllPromoCodes', () => {
     it('should allow admin to view all promo codes', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -84,7 +105,28 @@ describe('Promo Code Management Router', () => {
 
     it('should deny non-admin users', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testUserId, email: 'user_promo@test.com', name: 'Test User', role: 'user' },
+        user: { 
+          id: testUserId, 
+          email: 'user_promo@test.com', 
+          name: 'Test User', 
+          role: 'user' as const,
+          openId: 'test_user_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -96,7 +138,28 @@ describe('Promo Code Management Router', () => {
   describe('createPromoCode', () => {
     it('should allow admin to create new promo code', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -127,7 +190,28 @@ describe('Promo Code Management Router', () => {
 
     it('should prevent duplicate promo codes', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -143,7 +227,28 @@ describe('Promo Code Management Router', () => {
 
     it('should deny non-admin users', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testUserId, email: 'user_promo@test.com', name: 'Test User', role: 'user' },
+        user: { 
+          id: testUserId, 
+          email: 'user_promo@test.com', 
+          name: 'Test User', 
+          role: 'user' as const,
+          openId: 'test_user_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -161,7 +266,28 @@ describe('Promo Code Management Router', () => {
   describe('updatePromoCode', () => {
     it('should allow admin to update promo code', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -204,7 +330,28 @@ describe('Promo Code Management Router', () => {
       const tempCouponId = tempCoupon.id;
 
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -227,7 +374,28 @@ describe('Promo Code Management Router', () => {
   describe('getUsageSummary', () => {
     it('should return usage summary for admin', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -245,7 +413,28 @@ describe('Promo Code Management Router', () => {
   describe('getPromoCodeAnalytics', () => {
     it('should return detailed analytics for a promo code', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });
@@ -264,7 +453,28 @@ describe('Promo Code Management Router', () => {
 
     it('should throw error for non-existent promo code', async () => {
       const caller = appRouter.createCaller({
-        user: { id: testAdminId, email: 'admin_promo@test.com', name: 'Test Admin', role: 'admin' },
+        user: { 
+          id: testAdminId, 
+          email: 'admin_promo@test.com', 
+          name: 'Test Admin', 
+          role: 'admin' as const,
+          openId: 'test_admin_promo',
+          brand: 'councilof.ai',
+          password: null,
+          loginMethod: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          lastSignedIn: new Date().toISOString(),
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionTier: 'free' as const,
+          subscriptionStatus: 'none' as const,
+          foundingMember: 0,
+          referralCode: null,
+          payoutFrequency: 'monthly' as const,
+          lastPayoutDate: null,
+          stripeConnectAccountId: null,
+        },
         req: {} as any,
         res: {} as any,
       });

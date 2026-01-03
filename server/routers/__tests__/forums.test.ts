@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { appRouter } from '../../routers';
 import { getDb } from '../../db';
 import { users, courses, forumThreads, forumPosts } from '../../../drizzle/schema';
 import { eq } from 'drizzle-orm';
+import { createMockContext } from './testHelpers';
 
 describe('Forums Router', () => {
   let testUserId: number;
@@ -23,7 +24,7 @@ describe('Forums Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testUserId = Number(userResult.insertId);
+    testUserId = Number((userResult as any).insertId);
 
     // Create test course
     const courseResult = await db.insert(courses).values({
@@ -38,15 +39,16 @@ describe('Forums Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testCourseId = Number(courseResult.insertId);
+    testCourseId = Number((courseResult as any).insertId);
   });
 
   it('should create a new thread', async () => {
-    const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
-      req: {} as any,
-      res: {} as any,
-    });
+    const caller = appRouter.createCaller(createMockContext({
+      id: testUserId,
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'user',
+    }));
 
     const result = await caller.forums.createThread({
       courseId: testCourseId,
@@ -60,11 +62,12 @@ describe('Forums Router', () => {
   });
 
   it('should get course threads', async () => {
-    const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
-      req: {} as any,
-      res: {} as any,
-    });
+    const caller = appRouter.createCaller(createMockContext({
+      id: testUserId,
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'user',
+    }));
 
     const result = await caller.forums.getCourseThreads({
       courseId: testCourseId,
@@ -78,11 +81,12 @@ describe('Forums Router', () => {
   });
 
   it('should get thread details', async () => {
-    const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
-      req: {} as any,
-      res: {} as any,
-    });
+    const caller = appRouter.createCaller(createMockContext({
+      id: testUserId,
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'user',
+    }));
 
     const result = await caller.forums.getThread({ threadId: testThreadId });
 
@@ -93,11 +97,12 @@ describe('Forums Router', () => {
   });
 
   it('should create a post in thread', async () => {
-    const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
-      req: {} as any,
-      res: {} as any,
-    });
+    const caller = appRouter.createCaller(createMockContext({
+      id: testUserId,
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'user',
+    }));
 
     const result = await caller.forums.createPost({
       threadId: testThreadId,
@@ -120,11 +125,12 @@ describe('Forums Router', () => {
   });
 
   it('should toggle post like', async () => {
-    const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
-      req: {} as any,
-      res: {} as any,
-    });
+    const caller = appRouter.createCaller(createMockContext({
+      id: testUserId,
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'user',
+    }));
 
     // Get a post to like
     const db = await getDb();
@@ -150,11 +156,12 @@ describe('Forums Router', () => {
   });
 
   it('should filter threads by sort option', async () => {
-    const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
-      req: {} as any,
-      res: {} as any,
-    });
+    const caller = appRouter.createCaller(createMockContext({
+      id: testUserId,
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'user',
+    }));
 
     // Test different sort options
     const recentThreads = await caller.forums.getCourseThreads({

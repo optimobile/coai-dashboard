@@ -24,7 +24,7 @@ describe('Lesson Progress Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testUserId = Number(userResult.insertId);
+    testUserId = Number((userResult as any).insertId);
 
     // Create test course
     const courseResult = await db.insert(courses).values({
@@ -39,7 +39,7 @@ describe('Lesson Progress Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testCourseId = Number(courseResult.insertId);
+    testCourseId = Number((courseResult as any).insertId);
 
     // Create enrollment
     const enrollmentResult = await db.insert(courseEnrollments).values({
@@ -53,7 +53,7 @@ describe('Lesson Progress Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testEnrollmentId = Number(enrollmentResult.insertId);
+    testEnrollmentId = Number((enrollmentResult as any).insertId);
 
     // Create test lesson
     const lessonResult = await db.insert(courseLessons).values({
@@ -69,12 +69,33 @@ describe('Lesson Progress Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testLessonId = Number(lessonResult.insertId);
+    testLessonId = Number((lessonResult as any).insertId);
   });
 
   it('should get lesson progress for a course', async () => {
     const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
+      user: { 
+        id: testUserId, 
+        email: 'test@example.com', 
+        name: 'Test User', 
+        role: 'user' as const,
+        openId: 'test_user_lesson',
+        brand: 'councilof.ai',
+        password: null,
+        loginMethod: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastSignedIn: new Date().toISOString(),
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionTier: 'free' as const,
+        subscriptionStatus: 'none' as const,
+        foundingMember: 0,
+        referralCode: null,
+        payoutFrequency: 'monthly' as const,
+        lastPayoutDate: null,
+        stripeConnectAccountId: null,
+      },
       req: {} as any,
       res: {} as any,
     });
@@ -90,7 +111,28 @@ describe('Lesson Progress Router', () => {
 
   it('should update lesson progress', async () => {
     const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
+      user: { 
+        id: testUserId, 
+        email: 'test@example.com', 
+        name: 'Test User', 
+        role: 'user' as const,
+        openId: 'test_user_lesson',
+        brand: 'councilof.ai',
+        password: null,
+        loginMethod: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastSignedIn: new Date().toISOString(),
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionTier: 'free' as const,
+        subscriptionStatus: 'none' as const,
+        foundingMember: 0,
+        referralCode: null,
+        payoutFrequency: 'monthly' as const,
+        lastPayoutDate: null,
+        stripeConnectAccountId: null,
+      },
       req: {} as any,
       res: {} as any,
     });
@@ -127,7 +169,28 @@ describe('Lesson Progress Router', () => {
 
   it('should mark lesson as completed', async () => {
     const caller = appRouter.createCaller({
-      user: { id: testUserId, email: 'test@example.com', name: 'Test User', role: 'user' },
+      user: { 
+        id: testUserId, 
+        email: 'test@example.com', 
+        name: 'Test User', 
+        role: 'user' as const,
+        openId: 'test_user_lesson',
+        brand: 'councilof.ai',
+        password: null,
+        loginMethod: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastSignedIn: new Date().toISOString(),
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionTier: 'free' as const,
+        subscriptionStatus: 'none' as const,
+        foundingMember: 0,
+        referralCode: null,
+        payoutFrequency: 'monthly' as const,
+        lastPayoutDate: null,
+        stripeConnectAccountId: null,
+      },
       req: {} as any,
       res: {} as any,
     });
