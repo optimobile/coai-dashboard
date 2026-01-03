@@ -62,6 +62,8 @@ import ExamDebug from "./pages/ExamDebug";
 import Workbench from "./pages/Workbench";
 import PublicHome from "./pages/PublicHome";
 import Admin from "./pages/Admin";
+import AdminCMS from "./pages/admin/AdminCMS";
+import CourseManagement from "./pages/admin/CourseManagement";
 import AdminIncidents from "./pages/AdminIncidents";
 import AdminAnalytics from "./pages/AdminAnalytics";
 import ForumAnalytics from "./pages/ForumAnalytics";
@@ -299,6 +301,8 @@ function App() {
                   <Route path="/my-applications" component={MyApplications} />
                   <Route path="/public" component={PublicHome} />
                   <Route path="/admin" component={Admin} />
+                  <Route path="/admin/cms" component={AdminCMS} />
+                  <Route path="/admin/cms/courses/:id" component={CourseManagement} />
                   <Route path="/admin/incidents" component={AdminIncidents} />
                   <Route path="/admin/analytics" component={AdminAnalytics} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />

@@ -8,9 +8,12 @@ import {
   userQuizAttempts,
   userQuizScores,
   courseEnrollments,
-  courses
+  courses,
+  users
 } from "../../drizzle/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
+
+import { sendCompletionCertificateEmail } from '../services/courseEmailService.js';
 
 // Helper function to update course enrollment progress
 async function updateCourseProgress(db: any, userId: number, courseId: number) {
@@ -36,6 +39,22 @@ async function updateCourseProgress(db: any, userId: number, courseId: number) {
   const completedCount = completedLessons.length;
   const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
+  // Check if this is a new completion
+  const [currentEnrollment] = await db
+    .select()
+    .from(courseEnrollments)
+    .where(
+      and(
+        eq(courseEnrollments.userId, userId),
+        eq(courseEnrollments.courseId, courseId)
+      )
+    )
+    .limit(1);
+
+  const wasCompleted = currentEnrollment?.status === 'completed';
+  const isNowCompleted = progress === 100;
+  const justCompleted = isNowCompleted && !wasCompleted;
+
   // Update enrollment
   const status = progress === 100 ? 'completed' : progress > 0 ? 'in_progress' : 'enrolled';
   const now = new Date().toISOString();
@@ -54,6 +73,28 @@ async function updateCourseProgress(db: any, userId: number, courseId: number) {
         eq(courseEnrollments.courseId, courseId)
       )
     );
+
+  // Send completion email if just completed
+  if (justCompleted) {
+    try {
+      const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+      const [course] = await db.select().from(courses).where(eq(courses.id, courseId)).limit(1);
+      
+      if (user && course) {
+        await sendCompletionCertificateEmail({
+          userEmail: user.email,
+          userName: user.name || `User ${userId}`,
+          courseName: course.title,
+          completionDate: now,
+          certificateUrl: `${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/certificates`,
+        });
+        console.log(`[Completion] Sent completion email to ${user.email}`);
+      }
+    } catch (emailError) {
+      console.error('[Completion] Failed to send completion email:', emailError);
+      // Don't fail the progress update if email fails
+    }
+  }
 }
 
 export const lessonProgressRouter = router({

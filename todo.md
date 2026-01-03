@@ -7605,3 +7605,38 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Add export functionality for analytics data
 - [ ] Create admin-only analytics access controls
 - [ ] Build real-time metrics widgets for dashboard
+
+
+## Phase 4 - Course Content Expansion & Admin CMS
+
+### Real Course Content Population
+- [x] Populate detailed lesson content for EU AI Act framework
+- [x] Populate detailed lesson content for NIST AI RMF framework
+- [x] Populate detailed lesson content for TC260 framework
+- [x] Populate detailed lesson content for ISO 42001 framework
+- [x] Populate detailed lesson content for UK AI Assurance framework
+- [x] Populate detailed lesson content for Singapore FEAT framework
+- [x] Populate detailed lesson content for Japan Social Principles framework
+- [x] Add video content/links for each lesson
+- [x] Create interactive assessments for each module
+- [x] Add quizzes and knowledge checks throughout courses
+
+### Admin Content Management System
+- [x] Build admin CMS interface for course management
+- [x] Create lesson editor with rich text support
+- [ ] Add video upload/link management
+- [ ] Build assessment creator (multiple choice, true/false, essay)
+- [ ] Create certificate template editor
+- [ ] Add module reordering functionality
+- [ ] Build content preview system
+- [ ] Add bulk content import/export tools
+
+### Email Notification System
+- [x] Set up Resend email integration
+- [x] Create enrollment confirmation email template
+- [x] Create course completion email template
+- [x] Create certificate issuance email template
+- [x] Add email notification settings for users
+- [x] Build email queue system for reliable delivery
+- [x] Add email activity tracking
+- [ ] Create email notification admin dashboard

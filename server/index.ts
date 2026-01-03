@@ -6,6 +6,7 @@ import governmentRouter from "./api/government.js";
 import enterpriseRouter from "./api/enterprise.js";
 import watchdogIncidentsRouter from "./api/watchdog-incidents.js";
 import badgesRouter from "./api/badges.js";
+import adminCmsRouter from "./routers/adminCms.js";
 import { initializeWebSocketServer } from "./websocket/server.js";
 import { registerOAuthRoutes } from "./_core/oauth.js";
 import { initializeDigestScheduler } from "./services/digestScheduler.js";
@@ -38,6 +39,7 @@ async function startServer() {
   app.use("/api/v1", enterpriseRouter);
   app.use("/api/watchdog", watchdogIncidentsRouter);
   app.use("/api/badges", badgesRouter);
+  app.use("/api", adminCmsRouter);
   
   // tRPC routes (if available)
   try {
