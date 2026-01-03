@@ -26,6 +26,11 @@ import { Button } from '@/components/ui/button';
 import DashboardLayout from '@/components/DashboardLayout';
 import WatchdogIncidentsPanel from '@/components/WatchdogIncidentsPanel';
 import { OnboardingTour } from '@/components/OnboardingTour';
+import { TabBreadcrumbs, type BreadcrumbItem } from '@/components/TabBreadcrumbs';
+import { RecentlyViewedWidget } from '@/components/RecentlyViewedWidget';
+import { useTabNavigationShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
+import { KeyboardShortcutsIndicator } from '@/components/KeyboardShortcutsIndicator';
 
 // Import feature components
 import Dashboard from './Dashboard';
@@ -99,14 +104,6 @@ export default function MembersDashboard() {
   const [watchdogSubTab, setWatchdogSubTab] = useState('incidents');
   const [isTabLoading, setIsTabLoading] = useState(false);
   
-  // Update URL when tab changes
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('tab', activeTab);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState({}, '', newUrl);
-  }, [activeTab]);
-  
   // Handle tab change with loading state
   const handleTabChange = (tabId: string) => {
     setIsTabLoading(true);
@@ -114,6 +111,23 @@ export default function MembersDashboard() {
     // Simulate loading delay for smooth transition
     setTimeout(() => setIsTabLoading(false), 150);
   };
+  
+  // Get current tab label
+  const currentTabLabel = tabs.find(t => t.id === activeTab)?.label || 'Overview';
+  
+  // Track recently viewed tabs
+  const recentlyViewed = useRecentlyViewed(activeTab, currentTabLabel);
+  
+  // Setup keyboard shortcuts for tab navigation
+  const keyboardShortcuts = useTabNavigationShortcuts(tabs, activeTab, handleTabChange);
+  
+  // Update URL when tab changes
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('tab', activeTab);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, '', newUrl);
+  }, [activeTab]);
 
   // Onboarding tour steps
   const tourSteps = [
@@ -186,10 +200,28 @@ export default function MembersDashboard() {
         {/* Header */}
         <div className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
           <div className="px-8 py-6">
-            <h1 className="text-3xl font-bold tracking-tight">Members Dashboard</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Manage your AI safety training, certification, watchdog reports, and regulatory compliance
-            </p>
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Members Dashboard</h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Manage your AI safety training, certification, watchdog reports, and regulatory compliance
+                </p>
+              </div>
+              <KeyboardShortcutsIndicator
+                shortcuts={keyboardShortcuts.map((s, i) => ({
+                  key: String(i + 1),
+                  description: s.description,
+                }))}
+              />
+            </div>
+            {/* Tab Breadcrumbs */}
+            <div className="mt-4">
+              <TabBreadcrumbs
+                items={[
+                  { label: currentTabLabel }
+                ]}
+              />
+            </div>
           </div>
         </div>
 
@@ -240,7 +272,15 @@ export default function MembersDashboard() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
+                  className="space-y-6"
                 >
+                  {/* Recently Viewed Widget */}
+                  <RecentlyViewedWidget
+                    items={recentlyViewed}
+                    onTabClick={handleTabChange}
+                    currentTab={activeTab}
+                  />
+                  
                   <Suspense fallback={<TabLoadingFallback />}>
                     <Dashboard />
                   </Suspense>

@@ -8065,3 +8065,22 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 
 - [x] Add loading states to dashboard tabs for smooth transitions
 - [x] Implement tab state persistence using URL parameters
+
+
+## Phase 18 - Navigation Enhancements (Jan 3, 2026)
+
+### Keyboard Shortcuts
+- [x] Add keyboard shortcuts for tab navigation (Ctrl+1-9 for different tabs)
+- [x] Create useKeyboardShortcuts hook for global shortcut management
+- [x] Add visual indicators for available keyboard shortcuts
+
+### Tab-Specific Breadcrumbs
+- [x] Implement tab-specific breadcrumbs in header showing current tab path
+- [x] Allow quick navigation back to previous sections via breadcrumbs
+- [x] Update breadcrumb state when switching tabs
+
+### Recently Viewed Widget
+- [x] Create recently viewed widget on Overview tab with last 3-5 visited tabs
+- [x] Add local storage persistence for recently viewed tabs
+- [x] Implement quick jump links from recently viewed widget
+- [x] Track tab visit history with timestamps
