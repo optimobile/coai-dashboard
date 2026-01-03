@@ -30,6 +30,8 @@ import Home from "./pages/Home";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import MembersDashboard from "./pages/MembersDashboard";
+import TabsTest from "./pages/TabsTest";
+import SimpleReactTabsTest from "./pages/SimpleReactTabsTest";
 import AISystems from "./pages/AISystems";
 import RiskAssessment from "./pages/RiskAssessment";
 import Compliance from "./pages/Compliance";
@@ -254,6 +256,8 @@ function App() {
                   <Route path="/old-home" component={Home} />
                   <Route path="/landing" component={Landing} />
                   <Route path="/dashboard" component={MembersDashboard} />
+                  <Route path="/tabs-test" component={TabsTest} />
+                  <Route path="/simple-react-tabs-test" component={SimpleReactTabsTest} />
                   <Route path="/dashboard/executive" component={DashboardIntegrated} />
                   <Route path="/dashboard/roadmap" component={ComplianceRoadmapPage} />
                   <Route path="/dashboard/alerts" component={AlertManagementPage} />

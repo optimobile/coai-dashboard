@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// Custom tabs implementation - Radix UI Tabs has issues with state updates
+// Using plain React state and conditional rendering instead
 import DashboardLayout from '@/components/DashboardLayout';
 import WatchdogIncidentsPanel from '@/components/WatchdogIncidentsPanel';
 import { OnboardingTour } from '@/components/OnboardingTour';
@@ -154,34 +155,38 @@ export default function MembersDashboard() {
           </div>
         </div>
 
-        {/* Tabs Navigation */}
-        <div className="border-b border-border bg-background/50">
-          <div className="px-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2 bg-transparent border-b border-border rounded-none p-0 h-auto">
+        {/* Tabs Navigation and Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="border-b border-border bg-background/50 flex-shrink-0">
+            <div className="px-6">
+              <div className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2 bg-transparent border-b border-border rounded-none p-0 h-auto" role="tablist">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
                   return (
-                    <TabsTrigger
+                    <button
                       key={tab.id}
-                      value={tab.id}
-                      className="flex items-center gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3 text-sm font-medium transition-all"
+                      onClick={() => setActiveTab(tab.id)}
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`flex items-center gap-2 rounded-none border-b-2 transition-all px-4 py-3 text-sm font-medium ${
+                        isActive
+                          ? 'border-primary bg-transparent text-foreground'
+                          : 'border-transparent text-muted-foreground hover:text-foreground'
+                      }`}
                     >
                       <Icon className="h-4 w-4" />
                       <span className="hidden sm:inline">{tab.label}</span>
-                    </TabsTrigger>
+                    </button>
                   );
                 })}
-              </TabsList>
-            </Tabs>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
-            {/* Overview Tab */}
-            <TabsContent value="overview" className="h-full">
+          {/* Overview Tab */}
+          {activeTab === 'overview' && (
+            <div className="overflow-y-auto flex-1">
               <div className="p-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -191,10 +196,12 @@ export default function MembersDashboard() {
                   <Dashboard />
                 </motion.div>
               </div>
-            </TabsContent>
+            </div>
+          )}
 
-            {/* Watchdog Tab - Enhanced with sub-tabs */}
-            <TabsContent value="watchdog" className="h-full">
+          {/* Watchdog Tab - Enhanced with sub-tabs */}
+          {activeTab === 'watchdog' && (
+            <div className="overflow-y-auto flex-1">
               <div className="p-8 space-y-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -266,10 +273,12 @@ export default function MembersDashboard() {
                   )}
                 </motion.div>
               </div>
-            </TabsContent>
+            </div>
+          )}
 
-            {/* Training Tab */}
-            <TabsContent value="training" className="h-full">
+          {/* Training Tab */}
+          {activeTab === 'training' && (
+            <div className="overflow-y-auto flex-1">
               <div className="p-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -279,10 +288,12 @@ export default function MembersDashboard() {
                   <Training />
                 </motion.div>
               </div>
-            </TabsContent>
+            </div>
+          )}
 
-            {/* Certification Tab */}
-            <TabsContent value="certification" className="h-full">
+          {/* Certification Tab */}
+          {activeTab === 'certification' && (
+            <div className="overflow-y-auto flex-1">
               <div className="p-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -292,10 +303,12 @@ export default function MembersDashboard() {
                   <Certification />
                 </motion.div>
               </div>
-            </TabsContent>
+            </div>
+          )}
 
-            {/* Regulatory Tab */}
-            <TabsContent value="regulatory" className="h-full">
+          {/* Regulatory Tab */}
+          {activeTab === 'regulatory' && (
+            <div className="overflow-y-auto flex-1">
               <div className="p-6">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -305,8 +318,8 @@ export default function MembersDashboard() {
                   <RegulatoryAuthority />
                 </motion.div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          )}
         </div>
       </div>
       
