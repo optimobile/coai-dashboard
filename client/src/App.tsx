@@ -69,6 +69,8 @@ import AdminIncidents from "./pages/AdminIncidents";
 import AdminAnalytics from "./pages/AdminAnalytics";
 import ForumAnalytics from "./pages/ForumAnalytics";
 import StudentAnalytics from "./pages/StudentAnalytics";
+import CohortAnalysis from "./pages/CohortAnalysis";
+import PredictiveAnalytics from "./pages/PredictiveAnalytics";
 import ApiDocs from "./pages/ApiDocs";
 import ApiKeys from "./pages/ApiKeys";
 import PDCACycles from "./pages/PDCACycles";
@@ -309,6 +311,8 @@ function App() {
                   <Route path="/admin/incidents" component={AdminIncidents} />
                   <Route path="/admin/analytics" component={AdminAnalytics} />
                   <Route path="/admin/student-analytics" component={StudentAnalytics} />
+                  <Route path="/admin/cohort-analysis" component={CohortAnalysis} />
+                  <Route path="/admin/predictive-analytics" component={PredictiveAnalytics} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />
                   <Route path="/admin/promo-codes" component={PromoCodeManagement} />
                   <Route path="/admin/enrollment-test" component={EnrollmentTest} />

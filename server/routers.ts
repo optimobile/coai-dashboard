@@ -71,6 +71,8 @@ import { promoCodeManagementRouter } from "./routers/promoCodeManagement";
 import { performanceMonitorRouter } from './routers/performanceMonitor';
 import { regionalAnalyticsRouter } from './routers/regionalAnalytics';
 import { studentAnalyticsRouter } from './routers/studentAnalytics';
+import { cohortAnalysisRouter } from './routers/cohortAnalysis';
+import { predictiveAnalyticsRouter } from './routers/predictiveAnalytics';
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -1316,6 +1318,21 @@ const certificationRouter = router({
           .update(users)
           .set({ role: "watchdog_analyst" })
           .where(eq(users.id, ctx.user.id));
+
+        // Generate and email certificate automatically
+        try {
+          const { generateAndEmailCertificate } = await import("./services/certificateAutomation");
+          await generateAndEmailCertificate({
+            userId: ctx.user.id,
+            testId: attempt.testId,
+            attemptId: input.attemptId,
+            certificateNumber,
+            score: earnedPoints,
+            percentScore,
+          });
+        } catch (e) {
+          console.warn("Failed to generate/email certificate:", e);
+        }
 
         // Send notification about new certified analyst
         try {
@@ -3006,6 +3023,8 @@ export const appRouter = router({
   performanceMonitor: performanceMonitorRouter,
   regionalAnalytics: regionalAnalyticsRouter,
   studentAnalytics: studentAnalyticsRouter,
+  cohortAnalysis: cohortAnalysisRouter,
+  predictiveAnalytics: predictiveAnalyticsRouter,
 });
 
 export type AppRouter = typeof appRouter;
