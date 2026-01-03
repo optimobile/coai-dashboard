@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'wouter';
-import { Book, Clock, Users, Star, Search, Filter } from 'lucide-react';
+import { Book, Clock, Users, Star, Search, Filter, CheckCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,20 +12,62 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { courses } from '@/data/courses';
 import DashboardLayout from '@/components/DashboardLayout';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TrainingCourses() {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [coursesWithProgress, setCoursesWithProgress] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch courses with enrollment and progress data
+  useEffect(() => {
+    const fetchCoursesWithProgress = async () => {
+      if (!user) {
+        setCoursesWithProgress(courses.map(c => ({ ...c, isEnrolled: false, progress: 0 })));
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/courses/with-enrollment/${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Merge API data with static course data
+          const merged = courses.map(course => {
+            const apiCourse = data.find((c: any) => c.id === course.id);
+            return {
+              ...course,
+              isEnrolled: apiCourse?.isEnrolled || false,
+              progress: apiCourse?.progress || 0,
+            };
+          });
+          setCoursesWithProgress(merged);
+        } else {
+          setCoursesWithProgress(courses.map(c => ({ ...c, isEnrolled: false, progress: 0 })));
+        }
+      } catch (error) {
+        console.error('Error fetching courses with progress:', error);
+        setCoursesWithProgress(courses.map(c => ({ ...c, isEnrolled: false, progress: 0 })));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCoursesWithProgress();
+  }, [user]);
 
   // Get unique categories and levels
-  const categories = ['all', ...Array.from(new Set(courses.map(c => c.category)))];
-  const levels = ['all', ...Array.from(new Set(courses.map(c => c.level)))];
+  const categories = ['all', ...Array.from(new Set(coursesWithProgress.map(c => c.category)))];
+  const levels = ['all', ...Array.from(new Set(coursesWithProgress.map(c => c.level)))];
 
   // Filter courses
-  const filteredCourses = courses.filter(course => {
+  const filteredCourses = coursesWithProgress.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          course.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesLevel = selectedLevel === 'all' || course.level === selectedLevel;
@@ -241,6 +283,22 @@ export default function TrainingCourses() {
                           {course.modules.length} modules • {course.modules.reduce((acc, m) => acc + m.lessons.length, 0)} lessons
                         </p>
                       </div>
+
+                      {/* Progress Indicator */}
+                      {course.isEnrolled && course.progress > 0 && (
+                        <div className="mt-4 pt-4 border-t">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium flex items-center gap-1">
+                              <CheckCircle className="h-4 w-4 text-green-500" />
+                              Progress
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {course.progress}%
+                            </span>
+                          </div>
+                          <Progress value={course.progress} className="h-2" />
+                        </div>
+                      )}
                     </div>
                   </Card>
                 </Link>

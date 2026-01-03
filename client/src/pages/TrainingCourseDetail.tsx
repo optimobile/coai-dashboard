@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRoute, Link, useLocation } from 'wouter';
-import { ArrowLeft, Play, FileText, HelpCircle, Clock, Users, Star, Award, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Play, FileText, HelpCircle, Clock, Users, Star, Award, CheckCircle, ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { getCourseById } from '@/data/courses';
 import DashboardLayout from '@/components/DashboardLayout';
 import { toast } from 'sonner';
@@ -15,6 +16,34 @@ export default function TrainingCourseDetail() {
   const course = courseId ? getCourseById(courseId) : undefined;
   
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewLessons, setPreviewLessons] = useState<any[]>([]);
+  const [loadingPreview, setLoadingPreview] = useState(false);
+
+  // Fetch preview lessons
+  const fetchPreviewLessons = async () => {
+    if (!courseId) return;
+    setLoadingPreview(true);
+    try {
+      const response = await fetch(`/api/courses/${courseId}/preview`);
+      if (response.ok) {
+        const data = await response.json();
+        setPreviewLessons(data);
+      }
+    } catch (error) {
+      console.error('Error fetching preview lessons:', error);
+      toast.error('Failed to load preview');
+    } finally {
+      setLoadingPreview(false);
+    }
+  };
+
+  const handlePreview = () => {
+    setShowPreview(true);
+    if (previewLessons.length === 0) {
+      fetchPreviewLessons();
+    }
+  };
 
   if (!course) {
     return (
@@ -186,9 +215,15 @@ export default function TrainingCourseDetail() {
 
                   {/* CTA */}
                   {progressPercent === 0 ? (
-                    <Button onClick={handleEnroll} className="w-full" size="lg">
-                      Enroll Now
-                    </Button>
+                    <>
+                      <Button onClick={handleEnroll} className="w-full mb-3" size="lg">
+                        Enroll Now
+                      </Button>
+                      <Button onClick={handlePreview} variant="outline" className="w-full" size="lg">
+                        <Eye className="h-4 w-4 mr-2" />
+                        Preview Course
+                      </Button>
+                    </>
                   ) : progressPercent === 100 ? (
                     <Button className="w-full" size="lg" variant="outline">
                       <Award className="h-4 w-4 mr-2" />
@@ -328,6 +363,67 @@ export default function TrainingCourseDetail() {
             </div>
           </div>
         </div>
+
+        {/* Preview Modal */}
+        <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Course Preview</DialogTitle>
+              <DialogDescription>
+                Get a taste of what you'll learn in this course with these preview lessons
+              </DialogDescription>
+            </DialogHeader>
+            
+            {loadingPreview ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : previewLessons.length > 0 ? (
+              <div className="space-y-4">
+                {previewLessons.map((lesson, index) => (
+                  <Card key={lesson.id} className="p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm flex-shrink-0">
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          {lesson.type === 'video' && <Play className="h-4 w-4 text-muted-foreground" />}
+                          {lesson.type === 'reading' && <FileText className="h-4 w-4 text-muted-foreground" />}
+                          {lesson.type === 'quiz' && <HelpCircle className="h-4 w-4 text-muted-foreground" />}
+                          <h3 className="font-semibold">{lesson.title}</h3>
+                          <Badge variant="secondary" className="text-xs">{lesson.type}</Badge>
+                        </div>
+                        {lesson.duration && (
+                          <p className="text-sm text-muted-foreground mb-2">
+                            Duration: {lesson.duration}
+                          </p>
+                        )}
+                        {lesson.content && (
+                          <p className="text-sm text-muted-foreground line-clamp-3">
+                            {lesson.content}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+                <div className="pt-4 border-t">
+                  <p className="text-sm text-muted-foreground mb-4 text-center">
+                    Want to see more? Enroll now to access all {totalLessons} lessons!
+                  </p>
+                  <Button onClick={() => { setShowPreview(false); handleEnroll(); }} className="w-full" size="lg">
+                    Enroll Now
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No preview available for this course</p>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

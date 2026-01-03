@@ -7377,3 +7377,15 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Move existing 6 courses to Free Training section
 - [x] Create new "Paid Courses" tab under Learning in Dashboard
 - [x] Build new Paid Courses page showing Foundation Bundle, Complete Certification Bundle, and 7 individual regional modules
+
+## Phase 13 - Enhanced Course Features (Jan 2026)
+
+- [x] Add enrollment tracking to show purchased courses/bundles in Paid Courses view
+- [x] Create course preview functionality for module content before purchase
+- [x] Implement progress indicators showing completion percentages in Free Training and My Courses sections
+
+## Phase 13 - Enhanced Course Features (Jan 2026) - COMPLETED
+
+- [x] Add enrollment tracking to show purchased courses/bundles in Paid Courses view
+- [x] Create course preview functionality for module content before purchase
+- [x] Implement progress indicators showing completion percentages in Free Training and My Courses sections

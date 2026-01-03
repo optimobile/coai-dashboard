@@ -1,4 +1,4 @@
-import { Link } from 'wouter';
+import { useState, useEffect } from 'react';
 import { Book, Clock, Award, Play, CheckCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,26 +6,55 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { courses } from '@/data/courses';
 import DashboardLayout from '@/components/DashboardLayout';
+import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'wouter';
 
 export default function MyTrainingCourses() {
-  // In a real app, this would come from API/database
-  // For now, we'll show all courses with simulated progress
-  const enrolledCourses = courses.map(course => {
-    const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
-    const completedLessons = course.modules.reduce(
-      (acc, m) => acc + m.lessons.filter(l => l.completed).length,
-      0
-    );
-    const progressPercent = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+  const { user } = useAuth();
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    return {
-      ...course,
-      totalLessons,
-      completedLessons,
-      progressPercent,
-      lastAccessed: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // Random date in last week
+  // Fetch enrolled courses with progress
+  useEffect(() => {
+    const fetchEnrolledCourses = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/courses/with-enrollment/${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Filter only enrolled courses and merge with static data
+          const enrolled = data
+            .filter((c: any) => c.isEnrolled)
+            .map((apiCourse: any) => {
+              const staticCourse = courses.find(sc => sc.id === apiCourse.id);
+              const totalLessons = staticCourse?.modules.reduce((acc, m) => acc + m.lessons.length, 0) || 0;
+              const progressPercent = apiCourse.progress || 0;
+              const completedLessons = Math.round((progressPercent / 100) * totalLessons);
+              
+              return {
+                ...staticCourse,
+                ...apiCourse,
+                totalLessons,
+                completedLessons,
+                progressPercent,
+                lastAccessed: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+              };
+            });
+          setEnrolledCourses(enrolled);
+        }
+      } catch (error) {
+        console.error('Error fetching enrolled courses:', error);
+      } finally {
+        setLoading(false);
+      }
     };
-  });
+
+    fetchEnrolledCourses();
+  }, [user]);
 
   const inProgress = enrolledCourses.filter(c => c.progressPercent > 0 && c.progressPercent < 100);
   const completed = enrolledCourses.filter(c => c.progressPercent === 100);

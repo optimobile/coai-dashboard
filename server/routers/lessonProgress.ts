@@ -12,6 +12,50 @@ import {
 } from "../../drizzle/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
 
+// Helper function to update course enrollment progress
+async function updateCourseProgress(db: any, userId: number, courseId: number) {
+  // Get all lessons for the course
+  const allLessons = await db
+    .select()
+    .from(courseLessons)
+    .where(eq(courseLessons.courseId, courseId));
+
+  // Get completed lessons
+  const completedLessons = await db
+    .select()
+    .from(userLessonProgress)
+    .where(
+      and(
+        eq(userLessonProgress.userId, userId),
+        eq(userLessonProgress.courseId, courseId),
+        eq(userLessonProgress.status, 'completed')
+      )
+    );
+
+  const totalLessons = allLessons.length;
+  const completedCount = completedLessons.length;
+  const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+
+  // Update enrollment
+  const status = progress === 100 ? 'completed' : progress > 0 ? 'in_progress' : 'enrolled';
+  const now = new Date().toISOString();
+
+  await db
+    .update(courseEnrollments)
+    .set({
+      progress,
+      status,
+      completedAt: progress === 100 ? now : null,
+      updatedAt: now,
+    })
+    .where(
+      and(
+        eq(courseEnrollments.userId, userId),
+        eq(courseEnrollments.courseId, courseId)
+      )
+    );
+}
+
 export const lessonProgressRouter = router({
   /**
    * Get lesson progress for a specific course
@@ -112,7 +156,7 @@ export const lessonProgressRouter = router({
       }
 
       // Update course enrollment progress
-      await this.updateCourseProgress(db, userId, input.courseId);
+      await updateCourseProgress(db, userId, input.courseId);
 
       return { success: true };
     }),
@@ -235,7 +279,9 @@ export const lessonProgressRouter = router({
             );
 
           // Update course progress
-          await this.updateCourseProgress(db, userId, lessonData[0].courseId);
+          if (lessonData[0]) {
+            await updateCourseProgress(db, userId, lessonData[0].courseId);
+          }
         }
       }
 
@@ -273,49 +319,5 @@ export const lessonProgressRouter = router({
       return scores;
     }),
 
-  /**
-   * Helper function to update course enrollment progress
-   */
-  async updateCourseProgress(db: any, userId: number, courseId: number) {
-    // Get all lessons for the course
-    const allLessons = await db
-      .select()
-      .from(courseLessons)
-      .where(eq(courseLessons.courseId, courseId));
 
-    // Get completed lessons
-    const completedLessons = await db
-      .select()
-      .from(userLessonProgress)
-      .where(
-        and(
-          eq(userLessonProgress.userId, userId),
-          eq(userLessonProgress.courseId, courseId),
-          eq(userLessonProgress.status, 'completed')
-        )
-      );
-
-    const totalLessons = allLessons.length;
-    const completedCount = completedLessons.length;
-    const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
-
-    // Update enrollment
-    const status = progress === 100 ? 'completed' : progress > 0 ? 'in_progress' : 'enrolled';
-    const now = new Date().toISOString();
-
-    await db
-      .update(courseEnrollments)
-      .set({
-        progress,
-        status,
-        completedAt: progress === 100 ? now : null,
-        updatedAt: now,
-      })
-      .where(
-        and(
-          eq(courseEnrollments.userId, userId),
-          eq(courseEnrollments.courseId, courseId)
-        )
-      );
-  },
 });
