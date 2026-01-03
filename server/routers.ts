@@ -48,6 +48,9 @@ import { webhooksRouter } from "./routers/webhooks";
 import { onboardingRouter } from "./routers/onboarding";
 import { complianceRouter as euComplianceRouter } from "./routers/compliance";
 import { enterpriseRouter } from "./routers/enterprise";
+import { emailPreferencesRouter } from "./routers/emailPreferences";
+import { instructorDashboardRouter } from "./routers/instructorDashboard";
+import { abTestingRouter } from "./routers/abTesting";
 import { certificationBadgesRouter } from "./routers/certificationBadges";
 import { referralRouter } from "./routers/referral.js";
 import { analyticsRouter } from "./routers/analytics";
@@ -1510,7 +1513,7 @@ This analyst can now review AI safety cases in the Workbench. Your certified ana
       const totalAttempts = attempts.length;
       const passedAttempts = attempts.filter((a) => a.passed).length;
       const passRate = (passedAttempts / totalAttempts) * 100;
-      const averageScore = attempts.reduce((sum, a) => sum + (a.percentScore || 0), 0) / totalAttempts;
+      const averageScore = attempts.reduce((sum, a) => sum + (Number(a.percentScore) || 0), 0) / totalAttempts;
 
       // Calculate average completion time
       const completionTimes = attempts
@@ -1535,7 +1538,7 @@ This analyst can now review AI safety cases in the Workbench. Your certified ana
 
       const scoreDistribution = scoreRanges.map((bucket) => {
         const count = attempts.filter(
-          (a) => a.percentScore! >= bucket.min && a.percentScore! <= bucket.max
+          (a) => Number(a.percentScore) >= bucket.min && Number(a.percentScore) <= bucket.max
         ).length;
         return {
           range: bucket.range,
@@ -3018,6 +3021,9 @@ export const appRouter = router({
   notificationSubscriptions: notificationSubscriptionsRouter,
   lessonProgress: lessonProgressRouter,
   forums: forumsRouter,
+  emailPreferences: emailPreferencesRouter,
+  instructorDashboard: instructorDashboardRouter,
+  abTesting: abTestingRouter,
   forumModeration: forumModerationRouter,
   promoCodeManagement: promoCodeManagementRouter,
   performanceMonitor: performanceMonitorRouter,

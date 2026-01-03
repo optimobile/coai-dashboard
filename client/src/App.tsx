@@ -137,6 +137,9 @@ import GovernmentPortal from "./pages/GovernmentPortal";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import RegionalAnalytics from "./pages/RegionalAnalytics";
 import EmailPreferences from "./pages/EmailPreferences";
+import StudentEmailPreferences from "./pages/StudentEmailPreferences";
+import InstructorDashboard from "./pages/InstructorDashboard";
+import ABTesting from "./pages/ABTesting";
 import EnterpriseIntegration from "./pages/EnterpriseIntegration";
 import ISO17065 from "./pages/ISO17065";
 import EUNotifiedBody from "./pages/EUNotifiedBody";
@@ -259,6 +262,9 @@ function App() {
                   <Route path="/payment/success" component={PaymentSuccess} />
                   <Route path="/payment/cancel" component={PaymentCancel} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
+                  <Route path="/settings/student-email-preferences" component={StudentEmailPreferences} />
+                  <Route path="/instructor/dashboard" component={InstructorDashboard} />
+                  <Route path="/ab-testing" component={ABTesting} />
                   <Route path="/settings/payouts" component={PayoutHistory} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
                   <Route path="/regional-analytics" component={RegionalAnalytics} />

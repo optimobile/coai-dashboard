@@ -7698,3 +7698,43 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add completion likelihood indicators
 - [x] Implement early intervention alerts for at-risk students
 - [x] Test prediction accuracy and refine model
+
+
+## Phase 10 - Email Preferences, Instructor Dashboard & A/B Testing
+
+### Email Notification Preferences
+- [x] Design email preferences data model (certificates, progress reports, at-risk alerts)
+- [x] Add email_preferences table to database schema
+- [x] Create email preferences API endpoints (get, update)
+- [x] Build Email Preferences settings page UI
+- [x] Add toggle switches for each notification type
+- [ ] Connect preferences to existing notification system
+- [ ] Update notification sending logic to respect user preferences
+- [ ] Test email preference functionality end-to-end
+
+### Instructor Dashboard
+- [x] Design instructor role and permissions system
+- [x] Add instructor role to user schema
+- [x] Create instructor-student relationship table (cohorts)
+- [x] Build instructor dashboard page with cohort overview
+- [x] Add student list view with prediction scores
+- [x] Create student detail modal with full progress history
+- [x] Add at-risk student filtering and sorting
+- [x] Build intervention action interface (send message, flag for review)
+- [x] Add cohort performance metrics and charts
+- [ ] Create instructor navigation in sidebar
+- [ ] Test instructor dashboard functionality
+
+### A/B Testing Framework
+- [x] Design A/B test data model (experiments, variants, assignments)
+- [x] Add ab_experiments, ab_variants, ab_assignments tables to schema
+- [x] Create A/B testing API endpoints (create experiment, assign variant, record outcome)
+- [x] Build experiment management UI in admin panel
+- [x] Add experiment creation wizard (name, variants, success metrics)
+- [x] Create variant assignment logic (random, stratified)
+- [x] Build intervention recommendation system with variants
+- [x] Add outcome tracking for different intervention strategies
+- [x] Create A/B test results dashboard with statistical analysis
+- [x] Add experiment comparison charts (conversion rates, success rates)
+- [x] Implement experiment activation/deactivation controls
+- [ ] Test A/B testing framework end-to-end

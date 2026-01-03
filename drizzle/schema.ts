@@ -19,6 +19,15 @@ export * from './schema-regional-analytics';
 // Import email notifications tables
 export * from './schema-emails';
 
+// Import email preferences tables
+export * from './schema-email-preferences';
+
+// Import instructor tables
+export * from './schema-instructor';
+
+// Import A/B testing tables
+export * from './schema-ab-testing';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),
