@@ -7782,3 +7782,57 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Design empty states for all pages
 - [ ] Add loading skeletons
 - [x] Implement toast notifications for actions
+
+
+## Phase 12 - Backend Integration & Advanced Features (Current)
+
+### Backend Integration for Email Schedules & Students
+- [x] Design database schema for email schedules table
+- [x] Design database schema for students table
+- [x] Create and run database migrations for new tables
+- [x] Build tRPC router for email schedules (list, create, update, delete)
+- [x] Build tRPC router for students (list, bulk operations, filtering)
+- [x] Connect email schedules page to tRPC backend with real data
+- [x] Connect students page to tRPC backend with real data
+- [x] Add filtering and search for email schedules
+- [x] Add student filtering by cohort
+- [x] Add bulk student operations (assign cohort, export)
+
+### Cohort Management System
+- [x] Design database schema for cohorts table
+- [x] Create database migration for cohorts
+- [x] Build tRPC router for cohort management (CRUD operations)
+- [x] Create cohort management page layout
+- [x] Implement cohort list view with stats
+- [x] Add create cohort functionality
+- [x] Add edit cohort functionality
+- [x] Add delete cohort functionality
+- [x] Implement bulk student assignment to cohorts
+- [x] Add cohort export functionality (CSV/Excel)
+- [x] Add cohort filtering and search
+
+### Email Template Editor
+- [x] Design database schema for email templates table
+- [x] Create database migration for email templates
+- [x] Build tRPC router for email templates (CRUD, preview)
+- [x] Create email template editor page layout
+- [x] Implement rich text editor component
+- [x] Add merge tag insertion functionality
+- [x] Build merge tag selector with available fields
+- [x] Implement live email preview panel
+- [x] Add template save/update functionality
+- [x] Add template list view
+- [ ] Implement template selection in email schedules
+- [x] Add merge tag validation
+- [x] Add template testing with sample data
+
+### Testing & Quality Assurance
+- [x] Write vitest tests for cohort router
+- [x] Write vitest tests for email schedules router
+- [x] Write vitest tests for students router
+- [x] Write vitest tests for email templates router
+- [x] Test all CRUD operations in browser
+- [x] Test bulk operations
+- [x] Test email template editor with various merge tags
+- [x] Verify responsive design on all new pages
+- [x] Create checkpoint after completion

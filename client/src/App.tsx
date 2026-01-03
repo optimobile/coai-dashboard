@@ -189,6 +189,8 @@ import GovernmentCRM from "./pages/GovernmentCRM";
 import EmailAutomation from "./pages/EmailAutomation";
 import EmailSchedules from "./pages/admin/EmailSchedules";
 import StudentsManagement from "./pages/admin/StudentsManagement";
+import CohortsManagement from "./pages/admin/CohortsManagement";
+import EmailTemplateEditor from "./pages/admin/EmailTemplateEditor";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -323,6 +325,8 @@ function App() {
                   <Route path="/admin/predictive-analytics" component={PredictiveAnalytics} />
                   <Route path="/admin/email-schedules" component={EmailSchedules} />
                   <Route path="/admin/students" component={StudentsManagement} />
+                  <Route path="/admin/cohorts" component={CohortsManagement} />
+                  <Route path="/admin/email-templates" component={EmailTemplateEditor} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />
                   <Route path="/admin/promo-codes" component={PromoCodeManagement} />
                   <Route path="/admin/enrollment-test" component={EnrollmentTest} />

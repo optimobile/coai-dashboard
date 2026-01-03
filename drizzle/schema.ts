@@ -31,6 +31,12 @@ export * from './schema-ab-testing';
 // Import email scheduling tables
 export * from './schema-email-scheduling';
 
+// Import cohorts and students tables
+export * from './schema-cohorts';
+
+// Import email templates tables
+export * from './schema-email-templates';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),
