@@ -187,6 +187,8 @@ import GlobalAISafetyInitiative from "./pages/GlobalAISafetyInitiative";
 import BlogIndex from "./pages/BlogIndex";
 import GovernmentCRM from "./pages/GovernmentCRM";
 import EmailAutomation from "./pages/EmailAutomation";
+import EmailSchedules from "./pages/admin/EmailSchedules";
+import StudentsManagement from "./pages/admin/StudentsManagement";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -319,6 +321,8 @@ function App() {
                   <Route path="/admin/student-analytics" component={StudentAnalytics} />
                   <Route path="/admin/cohort-analysis" component={CohortAnalysis} />
                   <Route path="/admin/predictive-analytics" component={PredictiveAnalytics} />
+                  <Route path="/admin/email-schedules" component={EmailSchedules} />
+                  <Route path="/admin/students" component={StudentsManagement} />
                   <Route path="/admin/stripe-setup" component={StripeSetup} />
                   <Route path="/admin/promo-codes" component={PromoCodeManagement} />
                   <Route path="/admin/enrollment-test" component={EnrollmentTest} />

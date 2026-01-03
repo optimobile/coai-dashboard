@@ -7751,3 +7751,34 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Email scheduling - Automated sending of training reminders and compliance alerts based on user activity triggers
 - [x] CSV export functionality - Export cohort student data to CSV for reporting and analysis
 - [x] Bulk actions for students - Select multiple students to send group messages or update statuses in batch
+
+
+## Phase 13 - Admin Email Scheduling & Export Features (Jan 2026)
+
+### Admin Email Scheduling
+- [x] Create email schedules management page
+- [x] Build schedule creation form with cron/interval options
+- [x] Implement scheduled runs viewer with status tracking
+- [x] Add automation rules configuration interface
+- [ ] Create email template preview component
+
+### Export Functionality
+- [x] Add export buttons to student list page
+- [ ] Add export buttons to cohort pages
+- [x] Implement export modal with format options (CSV, Excel, PDF)
+- [x] Add filter options for export (progress, certificates, date ranges)
+- [x] Create download progress indicator
+
+### Bulk Selection & Batch Operations
+- [x] Add checkbox column to student tables
+- [x] Implement select all/none functionality
+- [x] Create bulk actions toolbar (appears when items selected)
+- [x] Add batch operations: send email, assign cohort, update status, export selected
+- [x] Show selection count and clear selection option
+
+### UI Components
+- [x] Build reusable data table component with sorting/filtering
+- [x] Create status badge components
+- [x] Design empty states for all pages
+- [ ] Add loading skeletons
+- [x] Implement toast notifications for actions
