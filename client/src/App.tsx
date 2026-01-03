@@ -51,6 +51,7 @@ import MyCertificates from "./pages/MyCertificates";
 import ExamAnalytics from "./pages/ExamAnalytics";
 import TrainingCourses from "./pages/TrainingCourses";
 import PaidCourses from "./pages/PaidCourses";
+import PaidCoursesDashboard from "./pages/PaidCoursesDashboard";
 import Checkout from "./pages/Checkout";
 import TrainingCourseDetail from "./pages/TrainingCourseDetail";
 import LessonViewer from "./pages/LessonViewer";
@@ -263,6 +264,7 @@ function App() {
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/training-courses" component={TrainingCourses} />
                   <Route path="/paid-courses" component={PaidCourses} />
+                  <Route path="/paid-courses-dashboard" component={PaidCoursesDashboard} />
                   <Route path="/founding-members" component={FoundingMembers} />
                   <Route path="/checkout" component={Checkout} />
                   <Route path="/training-courses/:id" component={TrainingCourseDetail} />

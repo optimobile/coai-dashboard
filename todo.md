@@ -7370,3 +7370,10 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Ensure all branding colors match company theme throughout
 - [ ] Test Stripe webhook handling for enrollment status updates
 - [ ] Verify subscription state changes when payments succeed or are cancelled
+
+## Dashboard Learning Section Reorganization
+
+- [x] Rename "Paid Courses" to "Free Training" in Dashboard sidebar
+- [x] Move existing 6 courses to Free Training section
+- [x] Create new "Paid Courses" tab under Learning in Dashboard
+- [x] Build new Paid Courses page showing Foundation Bundle, Complete Certification Bundle, and 7 individual regional modules

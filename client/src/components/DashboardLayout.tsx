@@ -69,8 +69,8 @@ const navSections = [
   {
     title: "Learning",
     items: [
-      { path: "/training", label: "Free Training", icon: BookMarked },
-      { path: "/training-courses", label: "Paid Courses", icon: BookOpen },
+      { path: "/training-courses", label: "Free Training", icon: BookMarked },
+      { path: "/paid-courses-dashboard", label: "Paid Courses", icon: BookOpen },
       { path: "/my-training-courses", label: "My Courses", icon: GraduationCap },
       { path: "/certificates", label: "Certificates", icon: Award },
     ],

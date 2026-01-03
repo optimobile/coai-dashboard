@@ -40,10 +40,10 @@ export default function TrainingCourses() {
         <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-b">
           <div className="container py-12">
             <div className="max-w-3xl">
-              <h1 className="text-4xl font-bold mb-4">AI Training Courses</h1>
+              <h1 className="text-4xl font-bold mb-4">Free Training Courses</h1>
               <p className="text-lg text-muted-foreground">
-                Master artificial intelligence through comprehensive, hands-on courses designed by industry experts.
-                From fundamentals to advanced topics, build the skills you need for the AI revolution.
+                Start your AI safety journey with our free training courses. Master fundamentals through comprehensive,
+                hands-on content designed by industry experts. Perfect for getting started before advancing to paid certification programs.
               </p>
             </div>
           </div>
