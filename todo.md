@@ -8090,3 +8090,7 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add keyboard shortcut hints (tooltips) on tab buttons for discoverability
 - [x] Extend breadcrumbs to show sub-navigation paths (e.g., "Watchdog → Incidents")
 - [x] Add "Pin Favorites" feature to bookmark frequently accessed tabs
+
+## Phase 20 - Customizable Tab Ordering (Jan 3, 2026)
+
+- [x] Customizable tab ordering with drag-and-drop functionality

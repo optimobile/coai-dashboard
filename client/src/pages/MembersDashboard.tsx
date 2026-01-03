@@ -19,7 +19,26 @@ import {
   Trophy,
   Plus,
   Star,
+  GripVertical,
+  RotateCcw,
 } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 // Custom tabs implementation - Radix UI Tabs has issues with state updates
@@ -32,6 +51,7 @@ import { RecentlyViewedWidget } from '@/components/RecentlyViewedWidget';
 import { useTabNavigationShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { usePinnedTabs } from '@/hooks/usePinnedTabs';
+import { useTabOrdering } from '@/hooks/useTabOrdering';
 import { KeyboardShortcutsIndicator } from '@/components/KeyboardShortcutsIndicator';
 import { PinnedFavoritesWidget } from '@/components/PinnedFavoritesWidget';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -60,7 +80,7 @@ function TabLoadingFallback() {
   );
 }
 
-const tabs = [
+const defaultTabs = [
   {
     id: 'overview',
     label: 'Overview',
@@ -93,14 +113,99 @@ const tabs = [
   },
 ];
 
+// Sortable Tab Button Component
+function SortableTabButton({
+  tab,
+  index,
+  isActive,
+  isPinned,
+  onTabClick,
+  onTogglePin,
+}: {
+  tab: typeof defaultTabs[0];
+  index: number;
+  isActive: boolean;
+  isPinned: boolean;
+  onTabClick: () => void;
+  onTogglePin: (e: React.MouseEvent) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: tab.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  const Icon = tab.icon;
+  const shortcutKey = `Ctrl+${index + 1}`;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div
+          ref={setNodeRef}
+          style={style}
+          className="relative group"
+        >
+          <button
+            onClick={onTabClick}
+            role="tab"
+            aria-selected={isActive}
+            className={`flex items-center gap-2 rounded-none border-b-2 transition-all px-4 py-3 text-sm font-medium ${
+              isActive
+                ? 'border-primary bg-transparent text-foreground'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <div
+              {...attributes}
+              {...listeners}
+              className="cursor-grab active:cursor-grabbing touch-none"
+            >
+              <GripVertical className="h-4 w-4 text-muted-foreground/50 hover:text-muted-foreground" />
+            </div>
+            <Icon className="h-4 w-4" />
+            <span className="hidden sm:inline">{tab.label}</span>
+            {isPinned && (
+              <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
+            )}
+          </button>
+          <button
+            onClick={onTogglePin}
+            className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background border border-border rounded-full p-1 hover:bg-accent"
+            title={isPinned ? 'Unpin tab' : 'Pin tab'}
+          >
+            <Star className={`h-3 w-3 ${isPinned ? 'text-amber-500 fill-amber-500' : 'text-muted-foreground'}`} />
+          </button>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" className="text-xs">
+        <p>{tab.label}</p>
+        <p className="text-muted-foreground mt-0.5">{shortcutKey}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 export default function MembersDashboard() {
   const [location, setLocation] = useLocation();
+  
+  // Tab ordering with drag-and-drop
+  const { orderedTabs, reorderTabs, resetOrder } = useTabOrdering(defaultTabs);
   
   // Get initial tab from URL parameter
   const getInitialTab = () => {
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get('tab');
-    const validTabs = tabs.map(t => t.id);
+    const validTabs = orderedTabs.map(t => t.id);
     return tabParam && validTabs.includes(tabParam) ? tabParam : 'overview';
   };
   
@@ -118,7 +223,7 @@ export default function MembersDashboard() {
   };
   
   // Get current tab label and breadcrumb items
-  const currentTabLabel = tabs.find(t => t.id === activeTab)?.label || 'Overview';
+  const currentTabLabel = orderedTabs.find(t => t.id === activeTab)?.label || 'Overview';
   
   // Build breadcrumb items based on active tab and sub-navigation
   const getBreadcrumbItems = (): BreadcrumbItem[] => {
@@ -146,7 +251,28 @@ export default function MembersDashboard() {
   const { pinnedTabs, isPinned, togglePin, unpinTab } = usePinnedTabs();
   
   // Setup keyboard shortcuts for tab navigation
-  const keyboardShortcuts = useTabNavigationShortcuts(tabs, activeTab, handleTabChange);
+  const keyboardShortcuts = useTabNavigationShortcuts(orderedTabs, activeTab, handleTabChange);
+  
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  
+  // Handle drag end
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (over && active.id !== over.id) {
+      const oldIndex = orderedTabs.findIndex(tab => tab.id === active.id);
+      const newIndex = orderedTabs.findIndex(tab => tab.id === over.id);
+      
+      const newOrder = arrayMove(orderedTabs, oldIndex, newIndex);
+      reorderTabs(newOrder);
+    }
+  };
   
   // Update URL when tab changes
   useEffect(() => {
@@ -234,12 +360,23 @@ export default function MembersDashboard() {
                   Manage your AI safety training, certification, watchdog reports, and regulatory compliance
                 </p>
               </div>
-              <KeyboardShortcutsIndicator
-                shortcuts={keyboardShortcuts.map((s, i) => ({
-                  key: String(i + 1),
-                  description: s.description,
-                }))}
-              />
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={resetOrder}
+                  className="text-xs"
+                >
+                  <RotateCcw className="h-3 w-3 mr-1" />
+                  Reset Tab Order
+                </Button>
+                <KeyboardShortcutsIndicator
+                  shortcuts={keyboardShortcuts.map((s, i) => ({
+                    key: String(i + 1),
+                    description: s.description,
+                  }))}
+                />
+              </div>
             </div>
             {/* Tab Breadcrumbs */}
             <div className="mt-4">
@@ -255,51 +392,33 @@ export default function MembersDashboard() {
           <div className="border-b border-border bg-background/50 flex-shrink-0">
             <div className="px-6">
               <TooltipProvider>
-                <div className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2 bg-transparent border-b border-border rounded-none p-0 h-auto" role="tablist">
-                  {tabs.map((tab, index) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    const shortcutKey = `Ctrl+${index + 1}`;
-                    return (
-                      <Tooltip key={tab.id}>
-                        <TooltipTrigger asChild>
-                          <div className="relative group">
-                            <button
-                              onClick={() => handleTabChange(tab.id)}
-                              role="tab"
-                              aria-selected={isActive}
-                              className={`flex items-center gap-2 rounded-none border-b-2 transition-all px-4 py-3 text-sm font-medium ${
-                                isActive
-                                  ? 'border-primary bg-transparent text-foreground'
-                                  : 'border-transparent text-muted-foreground hover:text-foreground'
-                              }`}
-                            >
-                              <Icon className="h-4 w-4" />
-                              <span className="hidden sm:inline">{tab.label}</span>
-                              {isPinned(tab.id) && (
-                                <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-                              )}
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                togglePin(tab.id, tab.label);
-                              }}
-                              className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background border border-border rounded-full p-1 hover:bg-accent"
-                              title={isPinned(tab.id) ? 'Unpin tab' : 'Pin tab'}
-                            >
-                              <Star className={`h-3 w-3 ${isPinned(tab.id) ? 'text-amber-500 fill-amber-500' : 'text-muted-foreground'}`} />
-                            </button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" className="text-xs">
-                          <p>{tab.label}</p>
-                          <p className="text-muted-foreground mt-0.5">{shortcutKey}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    );
-                  })}
-                </div>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={orderedTabs.map(tab => tab.id)}
+                    strategy={horizontalListSortingStrategy}
+                  >
+                    <div className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2 bg-transparent border-b border-border rounded-none p-0 h-auto" role="tablist">
+                      {orderedTabs.map((tab, index) => (
+                        <SortableTabButton
+                          key={tab.id}
+                          tab={tab}
+                          index={index}
+                          isActive={activeTab === tab.id}
+                          isPinned={isPinned(tab.id)}
+                          onTabClick={() => handleTabChange(tab.id)}
+                          onTogglePin={(e) => {
+                            e.stopPropagation();
+                            togglePin(tab.id, tab.label);
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </SortableContext>
+                </DndContext>
               </TooltipProvider>
             </div>
           </div>
@@ -400,40 +519,34 @@ export default function MembersDashboard() {
                           onClick={() => setWatchdogSubTab('leaderboard')}
                         >
                           <Trophy className="h-5 w-5 mb-2" />
-                          <span className="font-semibold">Leaderboard</span>
-                          <span className="text-xs text-muted-foreground">Top analysts</span>
+                          <span className="font-semibold">Analyst Leaderboard</span>
+                          <span className="text-xs text-muted-foreground">Top contributors</span>
                         </Button>
-                        <Button
-                          variant={watchdogSubTab === 'about' ? 'default' : 'outline'}
-                          className="h-auto flex-col items-start p-4"
-                          onClick={() => setWatchdogSubTab('about')}
-                        >
-                          <Eye className="h-5 w-5 mb-2" />
-                          <span className="font-semibold">About Watchdog</span>
-                          <span className="text-xs text-muted-foreground">Learn more</span>
-                        </Button>
+                        <Link href="/watchdog-signup">
+                          <Button
+                            variant="outline"
+                            className="h-auto flex-col items-start p-4 w-full hover:border-purple-500 hover:bg-purple-50"
+                          >
+                            <AlertTriangle className="h-5 w-5 mb-2 text-purple-600" />
+                            <span className="font-semibold">Become Analyst</span>
+                            <span className="text-xs text-muted-foreground">Join our team</span>
+                          </Button>
+                        </Link>
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Watchdog Sub-content */}
-                  {watchdogSubTab === 'incidents' && (
-                    <WatchdogIncidentsPanel onViewIncident={handleViewIncident} />
-                  )}
-
-                  {watchdogSubTab === 'leaderboard' && (
-                    <WatchdogLeaderboard />
-                  )}
-
-                  {watchdogSubTab === 'about' && (
-                    <Watchdog />
-                  )}
+                  {/* Sub-tab Content */}
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    {watchdogSubTab === 'incidents' && <Watchdog />}
+                    {watchdogSubTab === 'leaderboard' && <WatchdogLeaderboard />}
+                  </Suspense>
                 </motion.div>
               </div>
             </div>
           )}
 
-          {/* Training Tab */}
+          {/* Training Tab - Enhanced with sub-tabs */}
           {activeTab === 'training' && (
             <div className="overflow-y-auto flex-1 relative">
               {isTabLoading && (
@@ -444,7 +557,8 @@ export default function MembersDashboard() {
                   </div>
                 </div>
               )}
-              <div className="p-6">
+
+              <div className="p-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -469,7 +583,8 @@ export default function MembersDashboard() {
                   </div>
                 </div>
               )}
-              <div className="p-6">
+
+              <div className="p-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -494,7 +609,8 @@ export default function MembersDashboard() {
                   </div>
                 </div>
               )}
-              <div className="p-6">
+
+              <div className="p-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -508,14 +624,13 @@ export default function MembersDashboard() {
             </div>
           )}
         </div>
+
+        {/* Onboarding Tour */}
+        <OnboardingTour
+          steps={tourSteps}
+          storageKey="members-dashboard-tour"
+        />
       </div>
-      
-      {/* Onboarding Tour */}
-      <OnboardingTour
-        tourId="members-dashboard"
-        steps={tourSteps}
-        onComplete={() => console.log('Tour completed!')}
-      />
     </DashboardLayout>
   );
 }
