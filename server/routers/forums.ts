@@ -253,7 +253,7 @@ export const forumsRouter = router({
 
       return { 
         success: true, 
-        threadId: Number(result.insertId),
+        threadId: Number((result as any).insertId),
       };
     }),
 
@@ -317,7 +317,7 @@ export const forumsRouter = router({
         await db.insert(forumNotifications).values({
           userId: thread[0].userId,
           threadId: input.threadId,
-          postId: Number(result.insertId),
+          postId: Number((result as any).insertId),
           type: 'reply',
           isRead: false,
           createdAt: now,
@@ -327,7 +327,7 @@ export const forumsRouter = router({
         sendNewReplyEmail({
           recipientId: thread[0].userId,
           threadId: input.threadId,
-          postId: Number(result.insertId),
+          postId: Number((result as any).insertId),
           type: 'new_reply',
           actorName: ctx.user.name || 'A user',
         }).catch(err => console.error('[Forums] Failed to send email:', err));
@@ -345,7 +345,7 @@ export const forumsRouter = router({
           await db.insert(forumNotifications).values({
             userId: parentPost[0].userId,
             threadId: input.threadId,
-            postId: Number(result.insertId),
+            postId: Number((result as any).insertId),
             type: 'reply',
             isRead: false,
             createdAt: now,
@@ -370,7 +370,7 @@ export const forumsRouter = router({
             await db.insert(forumNotifications).values({
               userId: mentionedUser.id,
               threadId: input.threadId,
-              postId: Number(result.insertId),
+              postId: Number((result as any).insertId),
               type: 'mention',
               isRead: false,
               createdAt: now,
@@ -381,7 +381,7 @@ export const forumsRouter = router({
 
       return { 
         success: true, 
-        postId: Number(result.insertId),
+        postId: Number((result as any).insertId),
       };
     }),
 

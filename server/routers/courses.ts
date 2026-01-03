@@ -9,6 +9,7 @@ const router = Router();
 router.get('/courses', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     const allCourses = await db.select().from(courses).where(eq(courses.active, 1));
     res.json(allCourses);
   } catch (error) {
@@ -21,6 +22,7 @@ router.get('/courses', async (req, res) => {
 router.get('/courses/:id', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     const courseId = parseInt(req.params.id);
     const [course] = await db.select().from(courses).where(eq(courses.id, courseId));
     
@@ -39,6 +41,7 @@ router.get('/courses/:id', async (req, res) => {
 router.get('/course-bundles', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     const allBundles = await db.select().from(courseBundles).where(eq(courseBundles.active, 1));
     res.json(allBundles);
   } catch (error) {
@@ -51,6 +54,7 @@ router.get('/course-bundles', async (req, res) => {
 router.get('/course-bundles/:id', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     const bundleId = parseInt(req.params.id);
     const [bundle] = await db.select().from(courseBundles).where(eq(courseBundles.id, bundleId));
     
@@ -69,6 +73,7 @@ router.get('/course-bundles/:id', async (req, res) => {
 router.get('/courses/with-enrollment/:userId', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     const userId = parseInt(req.params.userId);
     
     // Get all active courses
@@ -135,6 +140,7 @@ router.get('/courses/with-enrollment/:userId', async (req, res) => {
 router.get('/course-bundles/with-enrollment/:userId', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     const userId = parseInt(req.params.userId);
     
     // Get all active bundles
@@ -172,6 +178,7 @@ router.get('/course-bundles/with-enrollment/:userId', async (req, res) => {
 router.get('/courses/:id/preview', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     const courseId = parseInt(req.params.id);
     
     // Get first 2 lessons as preview

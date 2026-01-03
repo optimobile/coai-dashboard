@@ -21,6 +21,7 @@ router.post('/enrollment/create', async (req, res) => {
     }
     
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     
     // Get item details
     let item: any;
@@ -185,6 +186,7 @@ router.get('/enrollment/my-courses/:userId', async (req, res) => {
     const { userId } = req.params;
     
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     
     const enrollments = await db
       .select()

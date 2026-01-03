@@ -1287,7 +1287,7 @@ const certificationRouter = router({
         .set({
           score: earnedPoints,
           totalPoints,
-          percentScore: percentScore.toFixed(2),
+          percentScore: percentScore.toFixed(2) as any,
           passed: passed ? 1 : 0,
           answers: input.answers,
           completedAt: new Date().toISOString(),

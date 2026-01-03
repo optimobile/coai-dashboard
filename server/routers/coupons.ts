@@ -15,6 +15,7 @@ router.post('/coupons/validate', async (req, res) => {
     }
     
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     
     // Find coupon by code
     const [coupon] = await db
@@ -80,6 +81,7 @@ router.post('/coupons/apply', async (req, res) => {
     }
     
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     
     // Get coupon
     const [coupon] = await db
@@ -140,6 +142,7 @@ router.get('/coupons/:code/stats', async (req, res) => {
     const { code } = req.params;
     
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     
     const [coupon] = await db
       .select()

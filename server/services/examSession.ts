@@ -136,7 +136,7 @@ export class ExamSessionService {
         .update(userTestAttempts)
         .set({
           completedAt: new Date().toISOString(),
-          score,
+          score: score as any,
           passed: (passed && proctoringStatus !== 'invalid') ? 1 : 0,
         })
         .where(eq(userTestAttempts.id, attemptId));

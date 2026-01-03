@@ -248,7 +248,7 @@ export const lessonProgressRouter = router({
         lessonId: input.lessonId,
         totalQuestions,
         correctAnswers: correctCount,
-        score,
+        score: score.toFixed(2),
         passed,
         attemptNumber,
         completedAt: now,

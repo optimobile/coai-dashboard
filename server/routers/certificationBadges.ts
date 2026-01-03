@@ -37,6 +37,7 @@ export const certificationBadgesRouter = router({
     .mutation(async ({ input }: { input: { userId: number; certificationLevel: string } }) => {
       try {
         const db = await getDb();
+        if (!db) throw new Error('Database not available');
         let userName = `User ${input.userId}`;
         
         if (db) {
@@ -95,6 +96,7 @@ export const certificationBadgesRouter = router({
         }
 
         const db = await getDb();
+        if (!db) throw new Error('Database not available');
         let user: any = null;
         
         if (db) {
@@ -205,6 +207,7 @@ export const certificationBadgesRouter = router({
         }
 
         const db = await getDb();
+        if (!db) throw new Error('Database not available');
         let userName = `User ${badge.userId}`;
         
         if (db) {
