@@ -8084,3 +8084,9 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add local storage persistence for recently viewed tabs
 - [x] Implement quick jump links from recently viewed widget
 - [x] Track tab visit history with timestamps
+
+## Phase 19 - Additional UX Enhancements (Jan 3, 2026)
+
+- [x] Add keyboard shortcut hints (tooltips) on tab buttons for discoverability
+- [x] Extend breadcrumbs to show sub-navigation paths (e.g., "Watchdog → Incidents")
+- [x] Add "Pin Favorites" feature to bookmark frequently accessed tabs

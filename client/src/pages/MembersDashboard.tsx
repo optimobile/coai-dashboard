@@ -18,6 +18,7 @@ import {
   History,
   Trophy,
   Plus,
+  Star,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,10 @@ import { TabBreadcrumbs, type BreadcrumbItem } from '@/components/TabBreadcrumbs
 import { RecentlyViewedWidget } from '@/components/RecentlyViewedWidget';
 import { useTabNavigationShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
+import { usePinnedTabs } from '@/hooks/usePinnedTabs';
 import { KeyboardShortcutsIndicator } from '@/components/KeyboardShortcutsIndicator';
+import { PinnedFavoritesWidget } from '@/components/PinnedFavoritesWidget';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Import feature components
 import Dashboard from './Dashboard';
@@ -102,6 +106,7 @@ export default function MembersDashboard() {
   
   const [activeTab, setActiveTab] = useState(getInitialTab());
   const [watchdogSubTab, setWatchdogSubTab] = useState('incidents');
+  const [trainingSubTab, setTrainingSubTab] = useState('courses');
   const [isTabLoading, setIsTabLoading] = useState(false);
   
   // Handle tab change with loading state
@@ -112,11 +117,33 @@ export default function MembersDashboard() {
     setTimeout(() => setIsTabLoading(false), 150);
   };
   
-  // Get current tab label
+  // Get current tab label and breadcrumb items
   const currentTabLabel = tabs.find(t => t.id === activeTab)?.label || 'Overview';
+  
+  // Build breadcrumb items based on active tab and sub-navigation
+  const getBreadcrumbItems = (): BreadcrumbItem[] => {
+    const items: BreadcrumbItem[] = [{ label: currentTabLabel }];
+    
+    // Add sub-navigation for Watchdog tab
+    if (activeTab === 'watchdog') {
+      const subNavLabel = watchdogSubTab === 'incidents' ? 'Incidents' : 'Leaderboard';
+      items.push({ label: subNavLabel });
+    }
+    
+    // Add sub-navigation for Training tab
+    if (activeTab === 'training') {
+      const subNavLabel = trainingSubTab === 'courses' ? 'Courses' : 'My Progress';
+      items.push({ label: subNavLabel });
+    }
+    
+    return items;
+  };
   
   // Track recently viewed tabs
   const recentlyViewed = useRecentlyViewed(activeTab, currentTabLabel);
+  
+  // Manage pinned tabs
+  const { pinnedTabs, isPinned, togglePin, unpinTab } = usePinnedTabs();
   
   // Setup keyboard shortcuts for tab navigation
   const keyboardShortcuts = useTabNavigationShortcuts(tabs, activeTab, handleTabChange);
@@ -217,9 +244,7 @@ export default function MembersDashboard() {
             {/* Tab Breadcrumbs */}
             <div className="mt-4">
               <TabBreadcrumbs
-                items={[
-                  { label: currentTabLabel }
-                ]}
+                items={getBreadcrumbItems()}
               />
             </div>
           </div>
@@ -229,28 +254,53 @@ export default function MembersDashboard() {
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="border-b border-border bg-background/50 flex-shrink-0">
             <div className="px-6">
-              <div className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2 bg-transparent border-b border-border rounded-none p-0 h-auto" role="tablist">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => handleTabChange(tab.id)}
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`flex items-center gap-2 rounded-none border-b-2 transition-all px-4 py-3 text-sm font-medium ${
-                        isActive
-                          ? 'border-primary bg-transparent text-foreground'
-                          : 'border-transparent text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span className="hidden sm:inline">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              <TooltipProvider>
+                <div className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2 bg-transparent border-b border-border rounded-none p-0 h-auto" role="tablist">
+                  {tabs.map((tab, index) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    const shortcutKey = `Ctrl+${index + 1}`;
+                    return (
+                      <Tooltip key={tab.id}>
+                        <TooltipTrigger asChild>
+                          <div className="relative group">
+                            <button
+                              onClick={() => handleTabChange(tab.id)}
+                              role="tab"
+                              aria-selected={isActive}
+                              className={`flex items-center gap-2 rounded-none border-b-2 transition-all px-4 py-3 text-sm font-medium ${
+                                isActive
+                                  ? 'border-primary bg-transparent text-foreground'
+                                  : 'border-transparent text-muted-foreground hover:text-foreground'
+                              }`}
+                            >
+                              <Icon className="h-4 w-4" />
+                              <span className="hidden sm:inline">{tab.label}</span>
+                              {isPinned(tab.id) && (
+                                <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
+                              )}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                togglePin(tab.id, tab.label);
+                              }}
+                              className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background border border-border rounded-full p-1 hover:bg-accent"
+                              title={isPinned(tab.id) ? 'Unpin tab' : 'Pin tab'}
+                            >
+                              <Star className={`h-3 w-3 ${isPinned(tab.id) ? 'text-amber-500 fill-amber-500' : 'text-muted-foreground'}`} />
+                            </button>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" className="text-xs">
+                          <p>{tab.label}</p>
+                          <p className="text-muted-foreground mt-0.5">{shortcutKey}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
+              </TooltipProvider>
             </div>
           </div>
 
@@ -274,6 +324,13 @@ export default function MembersDashboard() {
                   transition={{ duration: 0.3 }}
                   className="space-y-6"
                 >
+                  {/* Pinned Favorites Widget */}
+                  <PinnedFavoritesWidget
+                    pinnedTabs={pinnedTabs}
+                    onNavigate={handleTabChange}
+                    onUnpin={unpinTab}
+                  />
+                  
                   {/* Recently Viewed Widget */}
                   <RecentlyViewedWidget
                     items={recentlyViewed}
