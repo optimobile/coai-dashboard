@@ -484,6 +484,7 @@ export default function Workbench() {
 
                   {/* Submit */}
                   <Button 
+                    data-testid="workbench-submit-decision-button"
                     className="w-full" 
                     size="lg"
                     onClick={handleSubmitDecision}

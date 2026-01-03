@@ -302,6 +302,7 @@ export default function WatchdogSignup() {
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name *</Label>
                     <Input
+                      data-testid="signup-name-input"
                       id="name"
                       placeholder="John Doe"
                       value={formData.name}
@@ -312,6 +313,7 @@ export default function WatchdogSignup() {
                   <div className="space-y-2">
                     <Label htmlFor="email">Email *</Label>
                     <Input
+                      data-testid="signup-email-input"
                       id="email"
                       type="email"
                       placeholder="john@example.com"
@@ -353,8 +355,9 @@ export default function WatchdogSignup() {
 
                 <div className="space-y-2">
                   <Label htmlFor="motivation">Why do you want to become a Watchdog Analyst? *</Label>
-                  <Textarea
-                    id="motivation"
+                    <Textarea
+                      data-testid="signup-motivation-input"
+                      id="motivation"
                     placeholder="Tell us about your interest in AI safety and why you'd be a good fit..."
                     rows={4}
                     value={formData.motivation}
@@ -366,8 +369,9 @@ export default function WatchdogSignup() {
                   </p>
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  data-testid="signup-submit-button"
+                  type="submit"
                   className="w-full" 
                   size="lg"
                   disabled={submitMutation.isPending}

@@ -355,6 +355,7 @@ export default function CoursePlayer() {
               {/* Module Actions */}
               <div className="flex items-center justify-between">
                 <Button
+                  data-testid="course-previous-button"
                   variant="outline"
                   onClick={goToPreviousModule}
                   disabled={isFirstModule}
@@ -366,6 +367,7 @@ export default function CoursePlayer() {
                 <div className="flex items-center gap-3">
                   {!isModuleComplete && quizPassed && (
                     <Button
+                      data-testid="course-mark-complete-button"
                       variant="default"
                       onClick={handleMarkComplete}
                       disabled={markCompleteMutation.isPending}
@@ -382,7 +384,7 @@ export default function CoursePlayer() {
                   )}
                   
                   {isModuleComplete && !isLastModule && (
-                    <Button onClick={goToNextModule}>
+                    <Button data-testid="course-next-button" onClick={goToNextModule}>
                       Next Module
                       <ChevronRight className="w-4 h-4 ml-2" />
                     </Button>
@@ -401,6 +403,7 @@ export default function CoursePlayer() {
                         <Button 
                           size="lg"
                           className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
+                          data-testid="course-download-certificate-button"
                           onClick={handleDownloadCertificate}
                           disabled={generateCertificateMutation.isPending}
                         >

@@ -485,6 +485,7 @@ export default function CertificationExam() {
               <div className="pt-4 space-y-4">
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button
+                    data-testid="exam-start-real-button"
                     size="lg"
                     onClick={() => handleStartExam(false)}
                     disabled={startTestMutation.isPending}
@@ -503,6 +504,7 @@ export default function CertificationExam() {
                     )}
                   </Button>
                   <Button
+                    data-testid="exam-start-practice-button"
                     size="lg"
                     variant="outline"
                     onClick={() => handleStartExam(true, false)}
@@ -635,6 +637,7 @@ export default function CertificationExam() {
                 </div>
               ) : (
                 <Button
+                  data-testid="exam-submit-button"
                   size="sm"
                   onClick={() => setShowSubmitDialog(true)}
                 >

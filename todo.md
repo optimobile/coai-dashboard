@@ -7416,3 +7416,40 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add composite indexes for common query patterns
 - [x] Run migration to apply indexes
 - [x] Verify query performance improvements
+
+
+## Phase - E2E Testing & Performance Monitoring
+
+### E2E Testing Infrastructure
+- [x] Install and configure Playwright for E2E testing
+- [x] Set up test:e2e:ui script in package.json
+- [x] Configure Playwright for headless and UI modes
+- [x] Set up test fixtures and helpers
+
+### Data-testid Attributes
+- [x] Add data-testid to signup form elements (email input, submit button)
+- [x] Add data-testid to training module navigation and completion buttons
+- [x] Add data-testid to certification exam interface (start, questions, submit)
+- [x] Add data-testid to workbench case assignment elements
+- [ ] Add data-testid to main navigation and dashboard elements
+
+### E2E Test Suites
+- [x] Create signup flow E2E test (LOI submission)
+- [x] Create training flow E2E test (module completion)
+- [x] Create certification flow E2E test (exam taking and results)
+- [ ] Create workbench flow E2E test (case review)
+- [ ] Create end-to-end analyst journey test
+
+### Database Query Performance Monitoring
+- [x] Create query performance monitoring middleware
+- [x] Add execution time logging for slow queries (>500ms)
+- [x] Implement query performance metrics collection
+- [x] Add performance monitoring to critical database operations
+- [x] Create performance monitoring dashboard/logs
+
+### Testing Validation
+- [ ] Run E2E tests in UI mode to validate flows
+- [ ] Verify all critical user journeys work end-to-end
+- [ ] Document any UX issues found during testing
+- [ ] Fix any identified issues
+- [ ] Verify query performance monitoring is working
