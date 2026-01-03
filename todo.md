@@ -8094,3 +8094,4 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 ## Phase 20 - Customizable Tab Ordering (Jan 3, 2026)
 
 - [x] Customizable tab ordering with drag-and-drop functionality
+- [x] **P2.3: Add discount code to checkout flow** - Added FOUNDING10K discount code input to course enrollment cards
