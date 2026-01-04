@@ -22,11 +22,11 @@ describe('Status Notification System', () => {
       notifyOnIncident: true,
       notifyOnResolution: true,
       notifyOnMaintenance: true,
-      isActive: true,
+      isActive: 1,
       verifiedAt: new Date().toISOString(),
     });
 
-    testSubscriptionId = Number((subResult as any).insertId);
+    testSubscriptionId = Number((subResult as any)[0]?.insertId ?? (subResult as any).insertId);
   });
 
   afterAll(async () => {
@@ -55,7 +55,7 @@ describe('Status Notification System', () => {
       startedAt: new Date().toISOString(),
     });
 
-    testIncidentId = Number((result as any).insertId);
+    testIncidentId = Number((result as any)[0]?.insertId ?? (result as any).insertId);
 
     expect(testIncidentId).toBeGreaterThan(0);
 
@@ -79,7 +79,7 @@ describe('Status Notification System', () => {
     const subscriptions = await db
       .select()
       .from(statusSubscriptions)
-      .where(eq(statusSubscriptions.isActive, true));
+      .where(eq(statusSubscriptions.isActive, 1));
 
     expect(subscriptions.length).toBeGreaterThan(0);
     
@@ -136,7 +136,7 @@ describe('Status Notification System', () => {
     const allSubscriptions = await db
       .select()
       .from(statusSubscriptions)
-      .where(eq(statusSubscriptions.isActive, true));
+      .where(eq(statusSubscriptions.isActive, 1));
 
     // Simulate filtering for API service incident
     const affectedServices = ['api'];

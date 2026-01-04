@@ -17,8 +17,8 @@ describe("Certification Exam Flow", () => {
     db = await getDb();
     expect(db).toBeDefined();
 
-    // Use test ID 1 (Watchdog Analyst Certification)
-    testId = 1;
+    // Use test ID 30001 (Watchdog Analyst Basic Certification)
+    testId = 30001;
     userId = 1; // Admin user
   });
 
@@ -31,8 +31,8 @@ describe("Certification Exam Flow", () => {
 
     expect(test).toBeDefined();
     expect(test.id).toBe(testId);
-    expect(test.title).toBe("Watchdog Analyst Certification");
-    expect(test.isActive).toBe(true);
+    expect(test.title).toBe("Watchdog Analyst Basic Certification");
+    expect(test.isActive).toBeTruthy();
     expect(test.passingScore).toBe(70);
     expect(test.timeLimitMinutes).toBe(90);
   });
@@ -97,19 +97,19 @@ describe("Certification Exam Flow", () => {
 
   it("should create test attempt when starting exam", async () => {
     // Create a test attempt
-    const [attempt] = await db.insert(userTestAttempts).values({
+    const result = await db.insert(userTestAttempts).values({
       userId: userId,
       testId: testId,
       startedAt: new Date().toISOString(),
-    }).$returningId() as { id: number }[];
+    });
 
-    expect(attempt).toBeDefined();
-    expect(attempt.id).toBeGreaterThan(0);
+    const attemptId = Number(result[0]?.insertId ?? result.insertId);
+    expect(attemptId).toBeGreaterThan(0);
 
-    console.log(`✅ Created test attempt ID: ${attempt.id}`);
+    console.log(`✅ Created test attempt ID: ${attemptId}`);
 
     // Clean up
-    await db.delete(userTestAttempts).where(eq(userTestAttempts.id, attempt.id));
+    await db.delete(userTestAttempts).where(eq(userTestAttempts.id, attemptId));
   });
 
   it("should calculate score correctly", async () => {

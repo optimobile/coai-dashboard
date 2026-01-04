@@ -8347,3 +8347,16 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Configure DKIM DNS record for email deliverability - Added resend._domainkey TXT record
 - [ ] Test payment flow with real card on production (https://coai-dash-k34vnbtb.manus.space)
 
+
+
+## Launch Readiness Tasks (Jan 2026)
+
+- [x] Fix TypeScript test failures (from 46 to 16 failed)
+- [x] Fix schema mismatches (referral_conversions, email_workflows)
+- [x] Fix boolean/tinyint type issues in tests
+- [x] Fix insertId access patterns in tests
+- [x] Create analytics_events table
+- [x] Seed exam questions for certification tests
+- [ ] Configure SPF/MX DNS records for email (Namecheap)
+- [ ] Test production payment flow
+- [ ] Final production verification

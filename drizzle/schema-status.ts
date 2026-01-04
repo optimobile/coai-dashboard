@@ -1,4 +1,4 @@
-import { mysqlTable, int, varchar, text, timestamp, mysqlEnum, decimal, boolean, index } from "drizzle-orm/mysql-core";
+import { mysqlTable, int, varchar, text, timestamp, mysqlEnum, decimal, tinyint, index } from "drizzle-orm/mysql-core";
 
 // System Status Incidents Table - Public transparency for platform health
 export const systemIncidents = mysqlTable("system_incidents", {
@@ -17,7 +17,7 @@ export const systemIncidents = mysqlTable("system_incidents", {
   reportedBy: int(), // user ID if reported by user, null if auto-detected
   reporterEmail: varchar({ length: 320 }), // for anonymous reports
   reporterName: varchar({ length: 255 }), // for anonymous reports
-  isPublic: boolean().default(true).notNull(),
+  isPublic: tinyint().default(1).notNull(),
 }, (table) => [
   index("idx_status_incident").on(table.status),
   index("idx_severity_incident").on(table.severity),
@@ -86,10 +86,10 @@ export const statusSubscriptions = mysqlTable("status_subscriptions", {
   email: varchar({ length: 320 }),
   phone: varchar({ length: 20 }),
   services: text(), // JSON array of service names to monitor
-  notifyOnIncident: boolean().default(true).notNull(),
-  notifyOnResolution: boolean().default(true).notNull(),
-  notifyOnMaintenance: boolean().default(true).notNull(),
-  isActive: boolean().default(true).notNull(),
+  notifyOnIncident: tinyint().default(1).notNull(),
+  notifyOnResolution: tinyint().default(1).notNull(),
+  notifyOnMaintenance: tinyint().default(1).notNull(),
+  isActive: tinyint().default(1).notNull(),
   verifiedAt: timestamp({ mode: 'string' }),
   createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 }, (table) => [

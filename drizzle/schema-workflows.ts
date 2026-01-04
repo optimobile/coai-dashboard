@@ -3,7 +3,7 @@
  * Visual workflow builder for email automation
  */
 
-import { mysqlTable, int, varchar, text, timestamp, json, boolean, mysqlEnum } from "drizzle-orm/mysql-core";
+import { mysqlTable, int, varchar, text, timestamp, json, tinyint, mysqlEnum } from "drizzle-orm/mysql-core";
 
 // Email automation workflows
 export const emailWorkflows = mysqlTable("email_workflows", {
@@ -14,7 +14,7 @@ export const emailWorkflows = mysqlTable("email_workflows", {
   triggerType: mysqlEnum(['cohort_join', 'date_based', 'manual', 'enrollment', 'completion']).notNull(),
   triggerConfig: json(), // Configuration for the trigger (e.g., cohort ID, date/time, conditions)
   workflowData: json().notNull(), // Complete workflow graph (nodes, edges, positions)
-  isActive: boolean().default(false).notNull(),
+  isActive: tinyint().default(0).notNull(),
   schedule: json().$type<{
     cronExpression: string;
     timezone: string;

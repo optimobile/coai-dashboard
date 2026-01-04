@@ -825,7 +825,7 @@ export const emailSchedules = mysqlTable("email_schedules", {
 // Note: emailTemplates is re-exported from schema-email-templates at the top of this file
 
 export const emailWorkflows = mysqlTable("email_workflows", {
-	id: int().autoincrement().notNull(),
+	id: int().autoincrement().primaryKey().notNull(),
 	userId: int().notNull(),
 	name: varchar({ length: 255 }).notNull(),
 	description: text(),
@@ -833,6 +833,7 @@ export const emailWorkflows = mysqlTable("email_workflows", {
 	triggerConfig: json(),
 	workflowData: json().notNull(),
 	isActive: tinyint().default(0).notNull(),
+	schedule: json(),
 	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
 	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
 });
@@ -1362,14 +1363,28 @@ export const referralCodes = mysqlTable("referral_codes", {
 ]);
 
 export const referralConversions = mysqlTable("referral_conversions", {
-	id: int().autoincrement().notNull(),
+	id: int().primaryKey().autoincrement(),
 	referralCodeId: int().notNull(),
+	referrerId: int().notNull(),
 	referredUserId: int().notNull(),
-	conversionDate: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP'),
-	commissionAmount: decimal({ precision: 10, scale: 2 }).default('0').notNull(),
-	status: varchar({ length: 50 }).default('pending').notNull(),
-	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP'),
-});
+	referredEmail: varchar({ length: 255 }).notNull(),
+	certificationId: int(),
+	certificationName: varchar({ length: 255 }),
+	certificationPrice: decimal({ precision: 10, scale: 2 }).notNull(),
+	commissionRate: int().default(20).notNull(),
+	commissionAmount: decimal({ precision: 10, scale: 2 }).notNull(),
+	status: mysqlEnum(['pending', 'earned', 'processed', 'failed']).default('pending').notNull(),
+	payoutId: varchar({ length: 255 }),
+	payoutDate: timestamp({ mode: 'string' }),
+	clickedAt: timestamp({ mode: 'string' }).notNull(),
+	convertedAt: timestamp({ mode: 'string' }),
+	createdAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
+	updatedAt: timestamp({ mode: 'string' }).defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+	index("referral_conversions_referrerId_idx").on(table.referrerId),
+	index("referral_conversions_referredUserId_idx").on(table.referredUserId),
+	index("referral_conversions_status_idx").on(table.status),
+]);
 
 export const referralPayouts = mysqlTable("referral_payouts", {
 	id: int().autoincrement().notNull(),

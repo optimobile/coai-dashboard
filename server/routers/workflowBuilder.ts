@@ -74,10 +74,10 @@ export const workflowBuilderRouter = router({
         triggerType: input.triggerType,
         triggerConfig: input.triggerConfig || null,
         workflowData: input.workflowData,
-        isActive: input.isActive,
+        isActive: input.isActive ? 1 : 0,
       });
 
-      const id = typeof result.insertId === 'bigint' ? Number(result.insertId) : Number(result.insertId);
+      const id = Number((result as any)[0]?.insertId ?? result.insertId);
       return { id, success: true };
     }),
 
@@ -141,7 +141,7 @@ export const workflowBuilderRouter = router({
 
       await db
         .update(emailWorkflows)
-        .set({ isActive: input.isActive })
+        .set({ isActive: input.isActive ? 1 : 0 })
         .where(
           and(
             eq(emailWorkflows.id, input.id),

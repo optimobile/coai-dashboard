@@ -157,13 +157,13 @@ describe('Workflow Builder Router', () => {
       await caller.workflowBuilder.toggleWorkflow({ id: created.id, isActive: true });
       let workflows = await caller.workflowBuilder.getWorkflows();
       let workflow = workflows.find(w => w.id === created.id);
-      expect(workflow?.isActive).toBe(true);
+      expect(workflow?.isActive).toBeTruthy();
 
       // Deactivate
       await caller.workflowBuilder.toggleWorkflow({ id: created.id, isActive: false });
       workflows = await caller.workflowBuilder.getWorkflows();
       workflow = workflows.find(w => w.id === created.id);
-      expect(workflow?.isActive).toBe(false);
+      expect(workflow?.isActive).toBeFalsy();
     });
   });
 });

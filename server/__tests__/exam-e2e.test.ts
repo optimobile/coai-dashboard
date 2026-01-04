@@ -46,7 +46,7 @@ describe("End-to-End Exam Flow", () => {
     expect(test).toBeDefined();
     expect(test.id).toBe(testId);
     expect(test.code).toBe("WATCHDOG_BASIC");
-    expect(test.isActive).toBe(true);
+    expect(test.isActive).toBeTruthy();
     expect(test.passingScore).toBe(70);
     expect(test.timeLimitMinutes).toBe(90);
 

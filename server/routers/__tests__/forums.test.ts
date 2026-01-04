@@ -24,7 +24,7 @@ describe('Forums Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testUserId = Number((userResult as any).insertId);
+    testUserId = Number((userResult as any)[0]?.insertId ?? (userResult as any).insertId);
 
     // Create test course
     const courseResult = await db.insert(courses).values({
@@ -39,7 +39,7 @@ describe('Forums Router', () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    testCourseId = Number((courseResult as any).insertId);
+    testCourseId = Number((courseResult as any)[0]?.insertId ?? (courseResult as any).insertId);
   });
 
   it('should create a new thread', async () => {
