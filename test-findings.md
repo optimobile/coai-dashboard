@@ -77,3 +77,18 @@ All 7 regional courses successfully seeded in the `courses` table:
    - Training navigation
    - Backend admin panels
 4. Create checkpoint and deliver updates
+
+
+## 🔍 Course Bundles Tab Investigation - Jan 4, 2026
+
+### Issue: Course Bundles Tab Not Switching
+The "Course Bundles" tab on the /courses page is not switching to show bundles. When clicking the tab, the content still shows "Individual Courses" content.
+
+### Database Status
+- 2 bundles exist in the course_bundles table
+- Need to verify bundles have active=1 in the database
+
+### Next Steps
+1. Check the bundles active status in database
+2. Fix the tab switching if needed
+3. Test mobile hamburger menu

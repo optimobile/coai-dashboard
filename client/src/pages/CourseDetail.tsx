@@ -32,7 +32,8 @@ export default function CourseDetail() {
   const { data: enrollments } = trpc.courses.getMyEnrollments.useQuery();
   
   // Check if user is enrolled in this course
-  const enrollment = enrollments?.find(e => e.courseId === parseInt(id || "0"));
+  const enrollmentsList = Array.isArray(enrollments) ? enrollments : [];
+  const enrollment = enrollmentsList.find((e: any) => e.courseId === parseInt(id || "0"));
   const isEnrolled = !!enrollment;
 
   // Enroll mutation

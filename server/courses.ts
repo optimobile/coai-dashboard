@@ -337,28 +337,60 @@ export const coursesRouter = router({
     }),
 
   /**
-   * Get user's enrollments
+   * Get user's enrollments (courses and bundles)
    */
   getMyEnrollments: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
-    if (!db) return [];
+    if (!db) return { courses: [], bundles: [] };
 
     const userId = ctx.user.id;
 
-    const enrollments = await db
+    // Get course enrollments
+    const courseEnrollmentsList = await db
       .select({
         enrollment: courseEnrollments,
         course: courses,
       })
       .from(courseEnrollments)
       .leftJoin(courses, eq(courseEnrollments.courseId, courses.id))
-      .where(eq(courseEnrollments.userId, userId));
+      .where(
+        and(
+          eq(courseEnrollments.userId, userId),
+          sql`${courseEnrollments.courseId} IS NOT NULL`
+        )
+      );
 
-    return enrollments.map((row: any) => ({
+    // Get bundle enrollments
+    const bundleEnrollmentsList = await db
+      .select({
+        enrollment: courseEnrollments,
+        bundle: courseBundles,
+      })
+      .from(courseEnrollments)
+      .leftJoin(courseBundles, eq(courseEnrollments.bundleId, courseBundles.id))
+      .where(
+        and(
+          eq(courseEnrollments.userId, userId),
+          sql`${courseEnrollments.bundleId} IS NOT NULL`
+        )
+      );
+
+    const courseResults = courseEnrollmentsList.map((row: any) => ({
       ...row.enrollment,
       course: row.course,
       isFree: isCourseFreeFn(row.course?.framework),
+      type: 'course' as const,
     }));
+
+    const bundleResults = bundleEnrollmentsList.map((row: any) => ({
+      ...row.enrollment,
+      bundle: row.bundle,
+      type: 'bundle' as const,
+    }));
+
+    // For backward compatibility, also return the flat array
+    // The new format returns { courses, bundles } but we also spread courses for backward compat
+    return [...courseResults, ...bundleResults];
   }),
 
   /**

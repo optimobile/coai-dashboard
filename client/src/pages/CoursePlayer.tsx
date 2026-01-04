@@ -66,7 +66,8 @@ export default function CoursePlayer() {
   
   // Fetch user's enrollment and progress
   const { data: enrollments } = trpc.courses.getMyEnrollments.useQuery();
-  const enrollment = enrollments?.find(e => e.courseId === courseId);
+  const enrollmentsList = Array.isArray(enrollments) ? enrollments : [];
+  const enrollment = enrollmentsList.find((e: any) => e.courseId === courseId);
 
   // Mark module complete mutation
   const markCompleteMutation = trpc.courses.markCourseCompleted.useMutation({

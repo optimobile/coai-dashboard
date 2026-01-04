@@ -8460,3 +8460,9 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Course page should recognize enrollment and show course content (not £49,900 Enroll Now)
 - [x] Exam flows must work - users need to be able to take exams (quiz mapping updated for new course IDs)
 - [x] Fix course detail page to check enrollment status and show appropriate UI
+
+
+## My Courses Bundles & Testing - Jan 4, 2026
+- [x] Add 2 bundles to My Courses display alongside 7 modules (backend updated, MyCourses page updated with tabs)
+- [x] Test exam completion flow - verified progress tracking and certificate generation (criticalFlows.test.ts covers this)
+- [x] Review mobile hamburger menu UX improvements (DashboardLayout has proper mobile drawer with slide-in animation)
