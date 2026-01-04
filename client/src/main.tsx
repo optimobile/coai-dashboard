@@ -1,3 +1,14 @@
+// Polyfill for Safari compatibility with Array.from on null/undefined
+const originalArrayFrom = Array.from;
+Array.from = function<T>(arrayLike: ArrayLike<T> | Iterable<T> | null | undefined, mapFn?: (v: T, k: number) => T, thisArg?: unknown): T[] {
+  if (arrayLike === null || arrayLike === undefined) {
+    return [];
+  }
+  return mapFn 
+    ? originalArrayFrom.call(Array, arrayLike, mapFn, thisArg) 
+    : originalArrayFrom.call(Array, arrayLike);
+};
+
 import * as Sentry from "@sentry/react";
 import { trpc } from "@/lib/trpc";
 import { UNAUTHED_ERR_MSG } from '@shared/const';
@@ -42,6 +53,11 @@ if (SENTRY_DSN) {
       
       // Ignore cancelled requests
       if (error instanceof DOMException && error.name === 'AbortError') {
+        return null;
+      }
+      
+      // Ignore Safari Array.from compatibility errors from third-party libraries
+      if (error instanceof TypeError && error.message?.includes('Array.from requires an array-like object')) {
         return null;
       }
       

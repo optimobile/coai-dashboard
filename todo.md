@@ -49,7 +49,9 @@
 ## Bug Fixes Needed
 
 - [x] Fix broken footer links (nested anchor tags issue)
-- [x] None currently identified
+- [x] Fix forums router empty IN clause SQL bug (Jan 4, 2026)
+- [x] Add Safari Array.from polyfill for streamdown/shiki compatibility (Jan 4, 2026)
+- [x] Filter Safari Array.from errors from Sentry reporting (Jan 4, 2026)
 
 ## Notes
 

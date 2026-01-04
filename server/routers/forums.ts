@@ -10,7 +10,7 @@ import {
   users,
   courses
 } from "../../drizzle/schema";
-import { eq, and, desc, sql, or, isNull, like, count, avg, sum } from "drizzle-orm";
+import { eq, and, desc, sql, or, isNull, like, count, avg, sum, inArray } from "drizzle-orm";
 
 /**
  * Extract @mentions from content
@@ -193,18 +193,20 @@ export const forumsRouter = router({
         .where(eq(forumPosts.threadId, input.threadId))
         .orderBy(forumPosts.createdAt);
 
-      // Get user's likes
-      const userLikes = await db
-        .select()
-        .from(forumPostLikes)
-        .where(
-          and(
-            eq(forumPostLikes.userId, userId),
-            sql`${forumPostLikes.postId} IN (${sql.join(posts.map(p => sql`${p.post.id}`), sql`, `)})`
-          )
-        );
-
-      const likedPostIds = new Set(userLikes.map(l => l.postId));
+      // Get user's likes (only if there are posts)
+      let likedPostIds = new Set<number>();
+      if (posts.length > 0) {
+        const userLikes = await db
+          .select()
+          .from(forumPostLikes)
+          .where(
+            and(
+              eq(forumPostLikes.userId, userId),
+              inArray(forumPostLikes.postId, posts.map(p => p.post.id))
+            )
+          );
+        likedPostIds = new Set(userLikes.map(l => l.postId));
+      }
 
       const postsWithLikes = posts.map(p => ({
         ...p.post,
