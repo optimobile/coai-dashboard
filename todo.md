@@ -8360,3 +8360,21 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Configure SPF/MX DNS records for email (Namecheap)
 - [ ] Test production payment flow
 - [ ] Final production verification
+
+## Critical Bug - Mobile Login Issues (Jan 2026)
+
+- [ ] Fix mobile login issues - users cannot log in on mobile devices
+- [ ] Investigate OAuth/authentication flow on mobile
+- [ ] Test login on various mobile browsers
+
+
+## Launch Readiness Tasks (Jan 4, 2026)
+
+- [x] Fix TypeScript test failures (reduced from 46 to 16 failed)
+- [x] Fix database schema mismatches (referral_conversions, email_workflows)
+- [x] DNS email configuration already complete (SPF, DKIM, DMARC records present)
+- [x] Fix mobile login issues - cookie configuration updated to use sameSite: "lax"
+- [x] Improve mobile login/signup UI responsiveness
+- [x] Add better error handling for login/signup forms
+- [x] Add touch-friendly input sizes for mobile
+- [ ] Test production payment flow

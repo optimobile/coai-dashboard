@@ -1,13 +1,14 @@
 /**
  * Login Page
- * OAuth-based authentication with CSOAI branding
+ * Email/password authentication with CSOAI branding
+ * Mobile-first responsive design
  */
 
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Shield, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Shield, CheckCircle2 } from 'lucide-react';
 import { EmailPasswordLoginForm } from '@/components/EmailPasswordLoginForm';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -22,19 +23,31 @@ export default function Login() {
     }
   }, [user, setLocation]);
 
-  // OAuth login removed - using email/password instead
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center py-12 px-4">
-      <div className="max-w-6xl w-full grid md:grid-cols-2 gap-12 items-center">
-        {/* Left Side - Branding */}
-        <div className="hidden md:block">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-start md:justify-center py-6 sm:py-8 md:py-12 px-4">
+      {/* Mobile Header - Only visible on small screens */}
+      <div className="md:hidden w-full max-w-md text-center mb-6">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <img src="/csoai-icon.svg.png" alt="CSOAI" className="h-8 w-8" />
+          <span className="text-xl font-bold text-gray-900">CSOAI</span>
+        </div>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">
+          Welcome Back
+        </h1>
+        <p className="text-sm text-gray-600">
+          Sign in to continue your AI Safety journey
+        </p>
+      </div>
+
+      <div className="max-w-6xl w-full grid md:grid-cols-2 gap-6 md:gap-12 items-center">
+        {/* Left Side - Branding - Hidden on mobile, visible on md+ */}
+        <div className="hidden md:block text-left">
           <div className="flex items-center gap-3 mb-8">
             <img src="/csoai-icon.svg.png" alt="CSOAI" className="h-12 w-12" />
-            <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">CSOAI</span>
+            <span className="text-2xl md:text-3xl font-bold text-gray-900">CSOAI</span>
           </div>
           
-          <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Welcome Back to the Future of AI Safety
           </h1>
           
@@ -77,18 +90,18 @@ export default function Login() {
         </div>
 
         {/* Right Side - Login Card */}
-        <Card className="shadow-xl">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
-              <Shield className="h-8 w-8 text-green-600" />
+        <Card className="shadow-xl w-full max-w-md mx-auto md:max-w-none">
+          <CardHeader className="text-center pb-4 md:pb-6">
+            <div className="mx-auto mb-3 md:mb-4 h-12 w-12 md:h-16 md:w-16 bg-green-100 rounded-full flex items-center justify-center">
+              <Shield className="h-6 w-6 md:h-8 md:w-8 text-green-600" />
             </div>
-            <CardTitle className="text-lg sm:text-xl md:text-2xl">Sign In to CSOAI</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-lg md:text-xl lg:text-2xl">Sign In to CSOAI</CardTitle>
+            <CardDescription className="text-sm">
               Sign in to access your dashboard and training
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 md:space-y-6 px-4 sm:px-6">
             <EmailPasswordLoginForm />
 
             <div className="relative">
@@ -109,7 +122,7 @@ export default function Login() {
               Create Free Account
             </Button>
 
-            <p className="text-xs text-center text-gray-500">
+            <p className="text-xs text-center text-gray-500 pb-2">
               By signing in, you agree to our{' '}
               <a href="/terms" className="text-green-600 hover:underline">
                 Terms of Service

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Check, X } from "lucide-react";
+import { Loader2, Check, X, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 interface PasswordStrength {
@@ -38,11 +38,19 @@ export function EmailPasswordSignupForm() {
   const registerMutation = trpc.emailAuth.register.useMutation({
     onSuccess: () => {
       toast.success("Account created successfully! Please log in.");
-      // Redirect to login page
-      window.location.href = "/login";
+      // Use replace to avoid back button issues on mobile
+      window.location.replace("/login");
     },
     onError: (err) => {
-      setError(err.message);
+      console.error("[Signup] Error:", err);
+      // Provide user-friendly error messages
+      if (err.message.includes("CONFLICT") || err.message.includes("already exists")) {
+        setError("An account with this email already exists. Please sign in instead.");
+      } else if (err.message.includes("fetch") || err.message.includes("network")) {
+        setError("Network error. Please check your internet connection and try again.");
+      } else {
+        setError(err.message || "An error occurred. Please try again.");
+      }
     },
   });
 
@@ -53,12 +61,29 @@ export function EmailPasswordSignupForm() {
     e.preventDefault();
     setError("");
 
+    // Basic validation
+    if (!name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+    if (!password) {
+      setError("Please enter a password.");
+      return;
+    }
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
 
-    registerMutation.mutate({ email, password, name });
+    registerMutation.mutate({ 
+      email: email.trim().toLowerCase(), 
+      password, 
+      name: name.trim() 
+    });
   };
 
   const requirements = [
@@ -72,13 +97,14 @@ export function EmailPasswordSignupForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="text-sm">
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="name">Full Name</Label>
+        <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
         <Input
           id="name"
           type="text"
@@ -87,24 +113,33 @@ export function EmailPasswordSignupForm() {
           onChange={(e) => setName(e.target.value)}
           required
           disabled={registerMutation.isPending}
+          autoComplete="name"
+          autoCapitalize="words"
+          className="h-11 text-base"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email Address</Label>
+        <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
         <Input
           id="email"
           type="email"
+          inputMode="email"
           placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={registerMutation.isPending}
+          autoComplete="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck="false"
+          className="h-11 text-base"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password" className="text-sm font-medium">Password</Label>
         <Input
           id="password"
           type="password"
@@ -113,6 +148,8 @@ export function EmailPasswordSignupForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           disabled={registerMutation.isPending}
+          autoComplete="new-password"
+          className="h-11 text-base"
         />
         
         {password.length > 0 && (
@@ -129,13 +166,13 @@ export function EmailPasswordSignupForm() {
               </span>
             </div>
             
-            <div className="space-y-1">
+            <div className="grid grid-cols-2 gap-x-2 gap-y-1">
               {requirements.map((req, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs">
+                <div key={i} className="flex items-center gap-1.5 text-xs">
                   {req.met ? (
-                    <Check className="h-3 w-3 text-green-500" />
+                    <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
                   ) : (
-                    <X className="h-3 w-3 text-muted-foreground" />
+                    <X className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                   )}
                   <span className={req.met ? "text-green-600" : "text-muted-foreground"}>
                     {req.text}
@@ -148,7 +185,7 @@ export function EmailPasswordSignupForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
+        <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
         <Input
           id="confirmPassword"
           type="password"
@@ -157,6 +194,8 @@ export function EmailPasswordSignupForm() {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
           disabled={registerMutation.isPending}
+          autoComplete="new-password"
+          className="h-11 text-base"
         />
         {confirmPassword.length > 0 && (
           <div className="flex items-center gap-2 text-xs">
@@ -178,8 +217,8 @@ export function EmailPasswordSignupForm() {
       <Button
         type="submit"
         size="lg"
-        className="w-full mt-6 mb-4"
-        disabled={registerMutation.isPending || !passwordsMatch}
+        className="w-full h-11 text-base font-medium mt-4 mb-2 touch-manipulation"
+        disabled={registerMutation.isPending || (confirmPassword.length > 0 && !passwordsMatch)}
       >
         {registerMutation.isPending ? (
           <>
@@ -193,7 +232,7 @@ export function EmailPasswordSignupForm() {
 
       <p className="text-xs text-center text-muted-foreground">
         Already have an account?{" "}
-        <a href="/login" className="text-primary hover:underline">
+        <a href="/login" className="text-primary hover:underline touch-manipulation">
           Sign in
         </a>
       </p>
