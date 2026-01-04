@@ -21,69 +21,23 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 
-// Placeholder blog posts
-const blogPosts = [
-  {
-    id: 1,
-    title: "EU AI Act: What Enterprises Need to Know for 2025 Compliance",
-    excerpt: "A comprehensive guide to the EU AI Act requirements and how CSOAI helps organizations achieve compliance before the deadline.",
-    category: "Regulatory",
-    author: "CSOAI Team",
-    date: "Dec 20, 2024",
-    readTime: "8 min read",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "Introducing the 33-Agent Council: How AI Governs AI",
-    excerpt: "Learn how our multi-agent council system provides transparent, balanced decisions on AI safety incidents.",
-    category: "Product",
-    author: "CSOAI Team",
-    date: "Dec 15, 2024",
-    readTime: "5 min read",
-    featured: true,
-  },
-  {
-    id: 3,
-    title: "NIST AI RMF vs EU AI Act: A Framework Comparison",
-    excerpt: "Understanding the differences and overlaps between major AI governance frameworks.",
-    category: "Research",
-    author: "CSOAI Team",
-    date: "Dec 10, 2024",
-    readTime: "12 min read",
-    featured: false,
-  },
-  {
-    id: 4,
-    title: "Watchdog Program: Join Our Global Network of AI Safety Analysts",
-    excerpt: "How certified analysts are helping identify and address AI safety concerns worldwide.",
-    category: "Community",
-    author: "CSOAI Team",
-    date: "Dec 5, 2024",
-    readTime: "4 min read",
-    featured: false,
-  },
-  {
-    id: 5,
-    title: "TC260 Standards: China's Approach to AI Governance",
-    excerpt: "An overview of China's TC260 AI safety standards and their global implications.",
-    category: "Regulatory",
-    author: "CSOAI Team",
-    date: "Nov 30, 2024",
-    readTime: "10 min read",
-    featured: false,
-  },
-  {
-    id: 6,
-    title: "PDCA Methodology for Continuous AI Improvement",
-    excerpt: "Implementing the Deming cycle for ongoing AI system governance and compliance.",
-    category: "Best Practices",
-    author: "CSOAI Team",
-    date: "Nov 25, 2024",
-    readTime: "6 min read",
-    featured: false,
-  },
-];
+// Import blog posts from JSON data
+import blogPostsData from "@/data/blogPosts.json";
+
+// Type definition for blog posts
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  content?: string;
+  category: string;
+  author: string;
+  date: string;
+  readTime: string;
+  featured: boolean;
+}
+
+const blogPosts: BlogPost[] = blogPostsData;
 
 const categories = ["All", "Regulatory", "Product", "Research", "Community", "Best Practices"];
 

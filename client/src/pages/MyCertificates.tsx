@@ -84,7 +84,7 @@ export default function MyCertificates() {
 
   const handleShareLinkedIn = (courseName: string, certificateId: string) => {
     const verificationUrl = `${window.location.origin}/verify-certificate/${certificateId}`;
-    const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(courseName)}&organizationName=${encodeURIComponent('COAI Dashboard')}&issueYear=${new Date().getFullYear()}&issueMonth=${new Date().getMonth() + 1}&certUrl=${encodeURIComponent(verificationUrl)}`;
+    const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(courseName)}&organizationName=${encodeURIComponent('CSOAI')}&issueYear=${new Date().getFullYear()}&issueMonth=${new Date().getMonth() + 1}&certUrl=${encodeURIComponent(verificationUrl)}`;
     window.open(linkedInUrl, '_blank');
   };
 

@@ -412,6 +412,10 @@ function App() {
                   <Route path="/council">{() => <Redirect to="/agent-council" />}</Route>
                   <Route path="/loi">{() => <Redirect to="/enterprise" />}</Route>
                   <Route path="/get-started">{() => <Redirect to="/signup" />}</Route>
+                  <Route path="/signin">{() => <Redirect to="/login" />}</Route>
+                  <Route path="/sign-in">{() => <Redirect to="/login" />}</Route>
+                  <Route path="/sign-up">{() => <Redirect to="/signup" />}</Route>
+                  <Route path="/register">{() => <Redirect to="/signup" />}</Route>
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
                   <Route component={NotFound} />
