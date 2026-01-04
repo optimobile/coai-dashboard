@@ -58,6 +58,9 @@ export * from './schema-leaderboard';
 // Import workflow scheduling tables
 export * from './schema-workflow-scheduling';
 
+// Import teams tables
+export * from './schema-teams';
+
 export const agentVotes = mysqlTable("agent_votes", {
 	id: int().autoincrement().notNull(),
 	sessionId: int().notNull(),

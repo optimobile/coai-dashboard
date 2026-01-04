@@ -194,6 +194,7 @@ import WorkflowTemplates from "./pages/WorkflowTemplates";
 import WorkflowAnalytics from "./pages/WorkflowAnalytics";
 import StudentImportExport from "./pages/admin/StudentImportExport";
 import AnalyticsDashboardPage from "./pages/admin/AnalyticsDashboard";
+import Teams from "./pages/Teams";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -286,6 +287,7 @@ function App() {
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/progress" component={ProgressDashboard} />
                   <Route path="/leaderboard" component={Leaderboard} />
+                  <Route path="/teams" component={Teams} />
                   <Route path="/paid-courses" component={PaidCourses} />
                   {/* Redirect old training routes to new unified route */}
                   <Route path="/dashboard/training"><Redirect to="/training" /></Route>

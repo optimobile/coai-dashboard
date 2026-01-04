@@ -8216,3 +8216,29 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add toast notifications for badge milestones
 - [x] Create badge unlock animation
 - [x] Integrate notifications into CoursePlayer
+
+
+## Email Notifications & Team Leaderboards - January 2026
+
+### Achievement Email Notifications
+- [x] Create email template for badge earned notifications with shareable badge card
+- [x] Create email template for streak milestone notifications (7-day, 30-day, etc.)
+- [x] Add badge card image generation for email embedding
+- [x] Integrate achievement emails with existing badge award system
+- [x] Add email preference toggle for achievement notifications
+
+### Team/Cohort Leaderboards
+- [x] Add team/organization table to database schema
+- [x] Add team membership table for user-team relationships
+- [x] Create team leaderboard API endpoints
+- [x] Build team creation and management UI
+- [x] Implement private team invite system with codes
+- [x] Add team leaderboard page with filtering
+
+### Weekly Digest Emails
+- [x] Create weekly digest email template
+- [x] Build digest data aggregation service (progress, rank changes, badges)
+- [x] Add digest scheduling system (send on Sundays)
+- [x] Add email preference toggle for weekly digests
+- [x] Include personalized encouragement messages based on activity
+

@@ -37,6 +37,7 @@ import {
   Lightbulb,
   BookOpen,
   FolderOpen,
+  UsersRound,
   Info,
   Award,
   BookMarked,
@@ -73,6 +74,8 @@ const navSections = [
       { path: "/paid-courses-dashboard", label: "Paid Courses", icon: BookOpen },
       { path: "/my-training-courses", label: "My Courses", icon: GraduationCap },
       { path: "/certificates", label: "Certificates", icon: Award },
+      { path: "/leaderboard", label: "Leaderboard", icon: Trophy },
+      { path: "/teams", label: "Teams", icon: UsersRound },
     ],
   },
   {

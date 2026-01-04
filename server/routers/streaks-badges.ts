@@ -8,6 +8,7 @@ import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { userStreaks, badges, userBadges, dailyActivityLog, courseEnrollments } from "../../drizzle/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
+import { sendBadgeEarnedEmail, checkAndSendStreakMilestoneEmail, type BadgeInfo } from "../services/achievementEmailService";
 
 export const streaksBadgesRouter = router({
   /**
@@ -145,7 +146,19 @@ export const streaksBadgesRouter = router({
         // Check for streak badges and return new badge if awarded
         const newBadge = await checkAndAwardStreakBadges(db, userId, newStreak, newLongestStreak);
         
+        // Send streak milestone email if applicable
+        const previousStreak = streak.currentStreak || 0;
+        if (newStreak > previousStreak) {
+          checkAndSendStreakMilestoneEmail(userId, newStreak, previousStreak).catch(err => {
+            console.error('[Streaks] Error sending streak milestone email:', err);
+          });
+        }
+        
         if (newBadge) {
+          // Send badge earned email
+          sendBadgeEarnedEmail(userId, newBadge as BadgeInfo).catch(err => {
+            console.error('[Streaks] Error sending badge email:', err);
+          });
           return { success: true, newBadge };
         }
       }
