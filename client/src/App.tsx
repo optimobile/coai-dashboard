@@ -154,6 +154,7 @@ import { WebhookManagementPage } from "./pages/WebhookManagementPage";
 import { AlertToastProvider } from "./components/AlertToastProvider";
 import Community from "./pages/Community";
 import HelpCenter from "./pages/HelpCenter";
+import Support from "./pages/Support";
 import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -407,7 +408,7 @@ function App() {
                   <Route path="/regulatory-compliance" component={RegulatoryCompliance} />
                   {/* Redirect routes for common paths */}
                   <Route path="/billing">{() => <Redirect to="/settings/billing" />}</Route>
-                  <Route path="/support">{() => <Redirect to="/help-center" />}</Route>
+                  <Route path="/support" component={Support} />
                   <Route path="/council">{() => <Redirect to="/agent-council" />}</Route>
                   <Route path="/loi">{() => <Redirect to="/enterprise" />}</Route>
                   <Route path="/get-started">{() => <Redirect to="/signup" />}</Route>

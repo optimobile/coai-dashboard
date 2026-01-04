@@ -11,7 +11,7 @@ import { NotificationCenter } from './NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { LanguageSelector } from './LanguageSelector';
+import { Headphones } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -288,7 +288,13 @@ export function Header() {
 
           {/* Right Side Actions */}
           <div className="hidden lg:flex items-center gap-2 ml-auto">
-            <LanguageSelector />
+            {/* Support Link */}
+            <Link href="/support">
+              <Button variant="ghost" size="sm" className="text-gray-700 hover:text-emerald-600">
+                <Headphones className="h-4 w-4 mr-1" />
+                Support
+              </Button>
+            </Link>
             
             {/* Theme Toggle */}
             <Button
@@ -438,6 +444,19 @@ export function Header() {
                     )}
                   </div>
                 ))}
+                
+                {/* Support Link in Mobile */}
+                <Link href="/support">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-gray-700"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Headphones className="h-4 w-4 mr-2" />
+                    Support
+                  </Button>
+                </Link>
                 
                 <div className="pt-4 border-t border-gray-200 space-y-2">
                   {user ? (
