@@ -411,4 +411,52 @@ export const progressRouter = router({
 
       return { success: true };
     }),
+
+  /**
+   * Update time spent on course
+   */
+  updateTimeSpent: protectedProcedure
+    .input(z.object({
+      courseId: z.number(),
+      minutesToAdd: z.number().min(0),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+      const userId = ctx.user.id;
+
+      // Get current enrollment
+      const [enrollment] = await db
+        .select()
+        .from(courseEnrollments)
+        .where(
+          and(
+            eq(courseEnrollments.userId, userId),
+            eq(courseEnrollments.courseId, input.courseId)
+          )
+        );
+
+      if (!enrollment) {
+        throw new Error('Enrollment not found');
+      }
+
+      const currentTime = (enrollment.timeSpentMinutes as number) || 0;
+      const newTime = currentTime + input.minutesToAdd;
+
+      await db
+        .update(courseEnrollments)
+        .set({
+          timeSpentMinutes: newTime,
+          lastAccessedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        })
+        .where(
+          and(
+            eq(courseEnrollments.userId, userId),
+            eq(courseEnrollments.courseId, input.courseId)
+          )
+        );
+
+      return { success: true, timeSpentMinutes: newTime };
+    }),
 });

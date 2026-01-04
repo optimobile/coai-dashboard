@@ -12,6 +12,8 @@ export const courseEnrollments = mysqlTable("course_enrollments", {
   amountPaid: int().default(0).notNull(),
   couponId: int(),
   progress: int().default(0), // Progress percentage 0-100
+  timeSpentMinutes: int().default(0), // Total time spent in minutes
+  lastAccessedAt: timestamp({ mode: 'string' }), // Last time user accessed the course
   status: varchar({ length: 20 }).default('enrolled'), // 'enrolled', 'in_progress', 'completed'
   enrolledAt: timestamp({ mode: 'string' }).default('CURRENT_TIMESTAMP').notNull(),
   completedAt: timestamp({ mode: 'string' }),

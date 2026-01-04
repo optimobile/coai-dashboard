@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Clock, Award, Download, Calendar, Loader2, CheckCircle2 } from "lucide-react";
+import { BookOpen, Clock, Award, Download, Calendar, Loader2, CheckCircle2, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import { TrainingSkeleton } from "@/components/skeletons/TrainingSkeleton";
@@ -146,15 +146,31 @@ export default function MyCourses() {
                       </div>
                     </div>
 
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium">Progress</span>
-                        <span className="text-sm text-muted-foreground">
+                    {/* Progress Bar with Time */}
+                    <div className="mb-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="w-4 h-4 text-primary" />
+                          <span className="text-sm font-medium">Progress</span>
+                        </div>
+                        <span className="text-lg font-bold text-primary">
                           {enrollment.progress || 0}%
                         </span>
                       </div>
                       <Progress value={enrollment.progress || 0} className="h-2" />
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span>
+                            {Math.floor((enrollment.timeSpentMinutes || 0) / 60)}h {(enrollment.timeSpentMinutes || 0) % 60}m spent
+                          </span>
+                        </div>
+                        {enrollment.progress < 100 && (
+                          <span>
+                            {100 - (enrollment.progress || 0)}% remaining
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     {/* Payment Info */}

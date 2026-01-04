@@ -24,6 +24,8 @@ import type { QuizResult } from '@/types/quiz';
 import { CourseDiscussion } from '@/components/CourseDiscussion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ModuleProgressIndicator } from '@/components/ModuleProgressIndicator';
+import { CourseProgressCard } from '@/components/CourseProgressCard';
+import { CircularProgress } from '@/components/CircularProgress';
 
 interface CourseModule {
   title: string;
@@ -40,6 +42,8 @@ export default function CoursePlayer() {
   const [completedModules, setCompletedModules] = useState<Set<number>>(new Set());
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizPassed, setQuizPassed] = useState(false);
+  const [sessionStartTime] = useState(Date.now());
+  const [lastTimeUpdate, setLastTimeUpdate] = useState(Date.now());
 
   // Fetch course details
   const { data: courseData, isLoading } = trpc.courses.getCourseDetails.useQuery({ courseId });
@@ -95,11 +99,45 @@ export default function CoursePlayer() {
     }
   });
 
+  // Time tracking mutation
+  const updateTimeSpentMutation = trpc.progress.updateTimeSpent.useMutation();
+
   // Handle certificate download
   const handleDownloadCertificate = () => {
     if (!courseId) return;
     generateCertificateMutation.mutate({ courseId });
   };
+
+  // Track time spent - update every 5 minutes
+  useEffect(() => {
+    if (!courseId || !enrollment) return;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const minutesElapsed = Math.floor((now - lastTimeUpdate) / 60000);
+      
+      if (minutesElapsed >= 5) {
+        updateTimeSpentMutation.mutate({
+          courseId,
+          minutesToAdd: minutesElapsed,
+        });
+        setLastTimeUpdate(now);
+      }
+    }, 60000); // Check every minute
+
+    // Update time on unmount
+    return () => {
+      clearInterval(interval);
+      const now = Date.now();
+      const minutesElapsed = Math.floor((now - lastTimeUpdate) / 60000);
+      if (minutesElapsed > 0) {
+        updateTimeSpentMutation.mutate({
+          courseId,
+          minutesToAdd: minutesElapsed,
+        });
+      }
+    };
+  }, [courseId, enrollment, lastTimeUpdate]);
 
   // Calculate progress from enrollment
   const progress = enrollment?.progress || 0;
@@ -219,15 +257,28 @@ export default function CoursePlayer() {
             </div>
           </div>
 
-          {/* Progress bar */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">Course Progress</span>
-              <span className="text-muted-foreground">
-                {Math.round((progress / 100) * (course.modules?.length || 0))} of {course.modules?.length || 0} modules completed
-              </span>
+          {/* Progress Card */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium">Course Progress</span>
+                <span className="text-muted-foreground">
+                  {Math.round((progress / 100) * (course.modules?.length || 0))} of {course.modules?.length || 0} modules completed
+                </span>
+              </div>
+              <Progress value={progress} className="h-2" />
             </div>
-            <Progress value={progress} className="h-2" />
+            <div className="flex items-center gap-4">
+              <CircularProgress progress={progress} size={80} strokeWidth={6} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="w-4 h-4" />
+                  <span className="font-medium">
+                    {Math.floor((enrollment?.timeSpentMinutes || 0) / 60)}h {(enrollment?.timeSpentMinutes || 0) % 60}m spent
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
