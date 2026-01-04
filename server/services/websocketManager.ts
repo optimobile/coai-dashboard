@@ -275,7 +275,7 @@ export class WebSocketManager {
       await db.insert(websocketConnections).values({
         userId,
         connectionId,
-        isActive: true,
+        isActive: 1,
       });
     } catch (error) {
       console.error('[WS] Error saving connection:', error);

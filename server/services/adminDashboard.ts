@@ -73,7 +73,7 @@ export class AdminDashboard {
         const connectionsResult = await db
           .select({ count: count() })
           .from(websocketConnections)
-          .where(eq(websocketConnections.isActive, true));
+          .where(eq(websocketConnections.isActive, 1));
         activeConnections = connectionsResult[0]?.count || 0;
       } catch {
         activeConnections = 0;
