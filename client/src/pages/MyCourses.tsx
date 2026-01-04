@@ -23,6 +23,10 @@ export default function MyCourses() {
   const { courseEnrollments, bundleEnrollments } = useMemo(() => {
     const allEnrollments = Array.isArray(rawEnrollments) ? rawEnrollments : [];
     
+    // Debug: log all enrollments to see what's being returned
+    console.log('Raw enrollments:', allEnrollments);
+    console.log('Bundle enrollments before filter:', allEnrollments.filter((e: any) => e.type === 'bundle'));
+    
     // Filter course enrollments (has course data)
     const courses = allEnrollments
       .filter((e: any) => e.type === 'course' && e.course && e.course.title)
@@ -41,7 +45,7 @@ export default function MyCourses() {
     
     // Filter bundle enrollments (has bundle data)
     const bundles = allEnrollments
-      .filter((e: any) => e.type === 'bundle' && e.bundle && e.bundle.name)
+      .filter((e: any) => e.type === 'bundle' && e.bundle)
       .reduce((map: Map<number, any>, enrollment: any) => {
         const bundleId = enrollment.bundleId;
         if (!map.has(bundleId)) {

@@ -360,20 +360,29 @@ export const coursesRouter = router({
         )
       );
 
-    // Get bundle enrollments
-    const bundleEnrollmentsList = await db
-      .select({
-        enrollment: courseEnrollments,
-        bundle: courseBundles,
-      })
+    // Get bundle enrollments - using separate queries to debug the issue
+    const bundleEnrollmentsRaw = await db
+      .select()
       .from(courseEnrollments)
-      .leftJoin(courseBundles, eq(courseEnrollments.bundleId, courseBundles.id))
       .where(
         and(
           eq(courseEnrollments.userId, userId),
           sql`${courseEnrollments.bundleId} IS NOT NULL`
         )
       );
+    
+    // Fetch bundle details separately
+    const bundleEnrollmentsList = await Promise.all(
+      bundleEnrollmentsRaw.map(async (enrollment) => {
+        const bundleData = enrollment.bundleId 
+          ? await db.select().from(courseBundles).where(eq(courseBundles.id, enrollment.bundleId)).limit(1)
+          : [];
+        return {
+          enrollment,
+          bundle: bundleData[0] || null,
+        };
+      })
+    );
 
     const courseResults = courseEnrollmentsList.map((row: any) => ({
       ...row.enrollment,
@@ -382,6 +391,7 @@ export const coursesRouter = router({
       type: 'course' as const,
     }));
 
+    
     const bundleResults = bundleEnrollmentsList.map((row: any) => ({
       ...row.enrollment,
       bundle: row.bundle,

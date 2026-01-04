@@ -30,6 +30,8 @@ export default function Courses() {
   const [selectedLevel, setSelectedLevel] = useState<"fundamentals" | "advanced" | "specialist" | undefined>();
   const [selectedFramework, setSelectedFramework] = useState<string | undefined>();
   const [priceFilter, setPriceFilter] = useState<"all" | "paid">(filterParam === "paid" ? "paid" : "all");
+  const [activeTab, setActiveTab] = useState<"courses" | "bundles">("courses");
+  
   
   // Update filter when URL changes
   useEffect(() => {
@@ -48,9 +50,15 @@ export default function Courses() {
   });
 
   // Fetch bundles
-  const { data: bundles = [] } = trpc.courses.getCourseBundles.useQuery({
+  const { data: bundles = [], isLoading: bundlesLoading } = trpc.courses.getCourseBundles.useQuery({
     regionId: selectedRegion,
   });
+
+  // Debug log
+  useEffect(() => {
+    console.log('[Courses] bundles data:', bundles);
+    console.log('[Courses] bundles length:', bundles.length);
+  }, [bundles]);
 
   return (
     <DashboardLayout>
@@ -165,61 +173,88 @@ export default function Courses() {
           </div>
         </Card>
 
-        {/* Course Tabs */}
-        <Tabs defaultValue="courses" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="courses">Individual Courses</TabsTrigger>
-            <TabsTrigger value="bundles">Course Bundles</TabsTrigger>
-          </TabsList>
+        {/* Course Tabs - Custom Implementation */}
+        <div className="w-full">
+          <div className="inline-flex h-9 w-fit max-w-md items-center justify-center rounded-lg bg-muted p-[3px] text-muted-foreground">
+            <button
+              onClick={() => setActiveTab("courses")}
+              className={`inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-4 py-1 text-sm font-medium whitespace-nowrap transition-all ${
+                activeTab === "courses"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Individual Courses
+            </button>
+            <button
+              onClick={() => setActiveTab("bundles")}
+              className={`inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-4 py-1 text-sm font-medium whitespace-nowrap transition-all ${
+                activeTab === "bundles"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Course Bundles ({bundles.length})
+            </button>
+          </div>
 
           {/* Individual Courses */}
-          <TabsContent value="courses" className="mt-6">
-            {coursesLoading ? (
-              <div className="text-center py-12">
-                <Loader2 className="inline-block h-8 w-8 animate-spin text-emerald-600" />
-                <p className="mt-4 text-gray-600">Loading courses...</p>
-              </div>
-            ) : courses.length === 0 ? (
-              <Card className="p-12 text-center">
-                <BookOpen className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No courses found</h3>
-                <p className="text-gray-600">Try adjusting your filters</p>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {courses
-                  .filter((course: any) => {
-                    if (priceFilter === "paid") return !course.isFree && course.price > 0;
-                    return true;
-                  })
-                  .sort((a: any, b: any) => {
-                    // Show lower priced courses first (fundamentals before advanced)
-                    return (a.price || 0) - (b.price || 0);
-                  })
-                  .map((course: any) => (
-                    <CourseCard key={course.id} course={course} />
-                  ))}
-              </div>
-            )}
-          </TabsContent>
+          {activeTab === "courses" && (
+            <div className="mt-6">
+              {coursesLoading ? (
+                <div className="text-center py-12">
+                  <Loader2 className="inline-block h-8 w-8 animate-spin text-emerald-600" />
+                  <p className="mt-4 text-gray-600">Loading courses...</p>
+                </div>
+              ) : courses.length === 0 ? (
+                <Card className="p-12 text-center">
+                  <BookOpen className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">No courses found</h3>
+                  <p className="text-gray-600">Try adjusting your filters</p>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {courses
+                    .filter((course: any) => {
+                      if (priceFilter === "paid") return !course.isFree && course.price > 0;
+                      return true;
+                    })
+                    .sort((a: any, b: any) => {
+                      // Show lower priced courses first (fundamentals before advanced)
+                      return (a.price || 0) - (b.price || 0);
+                    })
+                    .map((course: any) => (
+                      <CourseCard key={course.id} course={course} />
+                    ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Course Bundles */}
-          <TabsContent value="bundles" className="mt-6">
-            {bundles.length === 0 ? (
-              <Card className="p-12 text-center">
-                <TrendingUp className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No bundles available</h3>
-                <p className="text-gray-600">Check back soon for bundle offers</p>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {bundles.map((bundle: any) => (
-                  <BundleCard key={bundle.id} bundle={bundle} />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+          {activeTab === "bundles" && (
+            <div className="mt-6">
+              {bundlesLoading ? (
+                <div className="text-center py-12">
+                  <Loader2 className="inline-block h-8 w-8 animate-spin text-emerald-600" />
+                  <p className="mt-4 text-gray-600">Loading bundles...</p>
+                </div>
+              ) : bundles.length === 0 ? (
+                <Card className="p-12 text-center">
+                  <TrendingUp className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">No bundles available</h3>
+                  <p className="text-gray-600">Check back soon for bundle offers</p>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {bundles.map((bundle: any) => (
+                    <BundleCard key={bundle.id} bundle={bundle} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </DashboardLayout>
   );
@@ -268,50 +303,33 @@ function CourseCard({ course }: { course: any }) {
 
   // Calculate monthly payment - the total should equal the one-time price
   const calculateMonthlyPayment = (oneTimeCents: number, months: number) => {
-    // Monthly payment = one-time price / number of months
     return `£${((oneTimeCents / months) / 100).toFixed(2)}/mo`;
   };
   
-  // Get the one-time price for calculating monthly payments
-  const oneTimePrice = course.pricing?.oneTime || 0;
-
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case "fundamentals":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "advanced":
-        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-blue-200";
-      case "specialist":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
-    }
-  };
+  const oneTimePrice = course.pricing?.oneTime || course.price || 0;
 
   return (
-    <Card className="p-6 hover:shadow-xl transition-shadow">
+    <Card className="p-6 hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-bold mb-2">{course.title}</h3>
-          <Badge className={getLevelColor(course.level)}>
-            {course.level.charAt(0).toUpperCase() + course.level.slice(1)}
-          </Badge>
+          <h3 className="text-xl font-bold mb-2">{course.name}</h3>
+          <div className="flex gap-2 mb-2">
+            <Badge variant="secondary">{course.level}</Badge>
+            <Badge variant="outline">{course.framework}</Badge>
+          </div>
         </div>
-        <Badge variant="outline" className="text-xs">
-          {course.framework}
-        </Badge>
       </div>
 
       <p className="text-muted-foreground mb-4 line-clamp-2">{course.description}</p>
 
-      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
+      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
         <div className="flex items-center gap-1">
           <Clock className="w-4 h-4" />
-          <span>{course.durationHours}h</span>
+          <span>{course.duration || 10}h</span>
         </div>
         <div className="flex items-center gap-1">
           <BookOpen className="w-4 h-4" />
-          <span>{course.modules?.length || 0} modules</span>
+          <span>{course.moduleCount || 0} modules</span>
         </div>
       </div>
 
@@ -328,13 +346,13 @@ function CourseCard({ course }: { course: any }) {
             }}
             className={`p-3 rounded-lg border-2 transition-all ${
               selectedPlan === "oneTime"
-                ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
-                : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
+                ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
             }`}
           >
             <div className="text-xs text-muted-foreground mb-1">One-Time</div>
-            <div className="font-bold text-lg">{formatPrice(course.pricing.oneTime)}</div>
-            <div className="text-xs text-green-600 font-medium">Best Value</div>
+            <div className="font-bold text-lg">{formatPrice(oneTimePrice)}</div>
+            <div className="text-xs text-emerald-600 font-medium">Best Value</div>
           </button>
 
           {oneTimePrice > 0 && (
@@ -347,8 +365,8 @@ function CourseCard({ course }: { course: any }) {
               }}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "threeMonth"
-                  ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
-                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
               }`}
             >
               <div className="text-xs text-muted-foreground mb-1">3 Months</div>
@@ -371,8 +389,8 @@ function CourseCard({ course }: { course: any }) {
               }}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "sixMonth"
-                  ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
-                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
               }`}
             >
               <div className="text-xs text-muted-foreground mb-1">6 Months</div>
@@ -395,8 +413,8 @@ function CourseCard({ course }: { course: any }) {
               }}
               className={`p-3 rounded-lg border-2 transition-all ${
                 selectedPlan === "twelveMonth"
-                  ? "border-blue-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
-                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300"
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-900 shadow-md"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-emerald-300"
               }`}
             >
               <div className="text-xs text-muted-foreground mb-1">12 Months</div>

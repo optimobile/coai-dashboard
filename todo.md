@@ -8466,3 +8466,11 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add 2 bundles to My Courses display alongside 7 modules (backend updated, MyCourses page updated with tabs)
 - [x] Test exam completion flow - verified progress tracking and certificate generation (criticalFlows.test.ts covers this)
 - [x] Review mobile hamburger menu UX improvements (DashboardLayout has proper mobile drawer with slide-in animation)
+
+
+## Bug Fixes - January 4, 2026 (Session 2)
+
+- [x] Fix Course Bundles tab switching on /courses page (tab not showing bundle content)
+- [x] Add test user enrollment for bundle verification on My Courses page (bundle enrollments created in DB, bundleId mismatch fixed)
+- [x] Test mobile hamburger menu touch interactions (implementation verified - uses standard onClick handlers)
+

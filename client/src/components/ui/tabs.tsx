@@ -50,14 +50,16 @@ function TabsTrigger({
 
 function TabsContent({
   className,
+  forceMount,
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Content>) {
+}: React.ComponentProps<typeof TabsPrimitive.Content> & { forceMount?: true }) {
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
+      forceMount={forceMount}
       className={cn(
-        "outline-none",
-        "data-[state=active]:block",
+        "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        // Override the hidden attribute that Radix sets - use data-state for visibility instead
         "data-[state=inactive]:hidden",
         className
       )}
