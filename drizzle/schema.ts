@@ -49,6 +49,9 @@ export * from './schema-email-events';
 // Import workflow analytics tables
 export * from './schema-workflow-analytics';
 
+// Import streaks and badges tables
+export * from './schema-streaks-badges';
+
 // Import workflow scheduling tables
 export * from './schema-workflow-scheduling';
 

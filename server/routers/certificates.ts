@@ -74,6 +74,10 @@ export const certificatesRouter = router({
         // Generate unique certificate ID
         const certificateId = `COAI-${(course.framework || 'GENERAL').replace(/[^A-Z0-9]/g, '')}-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
+        // Calculate time spent in hours
+        const timeSpentMinutes = (enrollment.timeSpentMinutes as number) || 0;
+        const timeSpentHours = Math.round(timeSpentMinutes / 60 * 10) / 10; // Round to 1 decimal
+
         // Generate PDF certificate (using V2 with modern template)
         const pdfBuffer = await generateCertificatePDFV2({
           certificateId,
@@ -82,6 +86,8 @@ export const certificatesRouter = router({
           framework: course.framework || 'General',
           completionDate: new Date(enrollment.completedAt || new Date()),
           verificationUrl: `${process.env.VITE_FRONTEND_FORGE_API_URL || 'https://coai.manus.space'}/verify-certificate/${certificateId}`,
+          timeSpentHours: timeSpentHours > 0 ? timeSpentHours : undefined,
+          durationHours: course.durationHours,
         });
 
         // Store certificate record in database

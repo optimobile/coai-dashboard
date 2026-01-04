@@ -17,6 +17,8 @@ export interface CertificateDataV2 {
   verificationUrl: string;
   examScore?: number;
   certificationLevel?: 'Foundation' | 'Professional' | 'Expert';
+  timeSpentHours?: number; // Total time spent on course
+  durationHours?: number; // Course duration
 }
 
 // Color definitions (CEASAI brand colors)
@@ -235,12 +237,27 @@ export async function generateCertificatePDFV2(data: CertificateDataV2): Promise
     });
 
     // Exam Score (if provided)
+    let currentY = height - 375;
     if (data.examScore) {
       const scoreText = `Examination Score: ${data.examScore}%`;
       const scoreWidth = helveticaFont.widthOfTextAtSize(scoreText, 10);
       page.drawText(scoreText, {
         x: (width - scoreWidth) / 2,
-        y: height - 375,
+        y: currentY,
+        size: 10,
+        font: helveticaFont,
+        color: COLORS.lightGray,
+      });
+      currentY -= 20;
+    }
+
+    // Time Spent (if provided)
+    if (data.timeSpentHours) {
+      const timeText = `Time Invested: ${data.timeSpentHours} hours`;
+      const timeWidth = helveticaFont.widthOfTextAtSize(timeText, 10);
+      page.drawText(timeText, {
+        x: (width - timeWidth) / 2,
+        y: currentY,
         size: 10,
         font: helveticaFont,
         color: COLORS.lightGray,

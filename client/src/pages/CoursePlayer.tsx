@@ -101,6 +101,7 @@ export default function CoursePlayer() {
 
   // Time tracking mutation
   const updateTimeSpentMutation = trpc.progress.updateTimeSpent.useMutation();
+  const updateActivityMutation = trpc.streaksBadges.updateActivity.useMutation();
 
   // Handle certificate download
   const handleDownloadCertificate = () => {
@@ -120,6 +121,11 @@ export default function CoursePlayer() {
         updateTimeSpentMutation.mutate({
           courseId,
           minutesToAdd: minutesElapsed,
+        });
+        // Update activity for streak tracking
+        updateActivityMutation.mutate({
+          minutesSpent: minutesElapsed,
+          courseId,
         });
         setLastTimeUpdate(now);
       }

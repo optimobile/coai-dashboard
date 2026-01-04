@@ -8161,3 +8161,31 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add progress indicators to My Courses page
 - [x] Create progress tracking components with visual bars/circles
 - [x] Integrate time tracking functionality
+
+
+## Phase 14 - Certificates, Streaks & Analytics Dashboard
+
+### Course Completion Certificates
+- [x] Update certificate generation to include time spent
+- [x] Add completion date to certificates
+- [x] Enhance certificate PDF design with new fields
+- [x] Update certificate download functionality
+
+### Learning Streaks & Badges System
+- [x] Create database schema for user streaks
+- [x] Create database schema for badges and achievements
+- [x] Implement streak calculation logic (daily access tracking)
+- [x] Design and create badge system (completion badges, streak badges, time badges)
+- [x] Build badges display UI component
+- [x] Add streak counter to dashboard/profile
+- [x] Create badge notification system
+
+### Progress Dashboard & Analytics
+- [x] Create ProgressDashboard page component
+- [x] Add overall learning statistics (total courses, completed, in progress)
+- [x] Implement weekly time spent trends chart
+- [x] Add course completion rate visualization
+- [x] Show recent activity timeline
+- [x] Display earned badges and achievements
+- [x] Add learning streak indicator
+- [x] Create analytics API endpoints
