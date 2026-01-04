@@ -26,6 +26,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ModuleProgressIndicator } from '@/components/ModuleProgressIndicator';
 import { CourseProgressCard } from '@/components/CourseProgressCard';
 import { CircularProgress } from '@/components/CircularProgress';
+import { BadgeNotification, useBadgeNotification } from '@/components/BadgeNotification';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CourseModule {
   title: string;
@@ -44,6 +46,14 @@ export default function CoursePlayer() {
   const [quizPassed, setQuizPassed] = useState(false);
   const [sessionStartTime] = useState(Date.now());
   const [lastTimeUpdate, setLastTimeUpdate] = useState(Date.now());
+  
+  // Badge notification hook
+  const { badge: earnedBadge, isOpen: showBadgeModal, showBadge, closeBadge } = useBadgeNotification();
+  const { user } = useAuth();
+  
+  // Fetch streak and badges for notification context
+  const { data: streak } = trpc.streaksBadges.getMyStreak.useQuery();
+  const { data: myBadges } = trpc.streaksBadges.getMyBadges.useQuery();
 
   // Fetch course details
   const { data: courseData, isLoading } = trpc.courses.getCourseDetails.useQuery({ courseId });
@@ -126,6 +136,13 @@ export default function CoursePlayer() {
         updateActivityMutation.mutate({
           minutesSpent: minutesElapsed,
           courseId,
+        }, {
+          onSuccess: (data) => {
+            // Check if a new badge was awarded
+            if (data?.newBadge) {
+              showBadge(data.newBadge);
+            }
+          }
         });
         setLastTimeUpdate(now);
       }
@@ -492,6 +509,16 @@ export default function CoursePlayer() {
           </div>
         </div>
       </div>
+      
+      {/* Badge Notification Modal */}
+      <BadgeNotification
+        badge={earnedBadge}
+        isOpen={showBadgeModal}
+        onClose={closeBadge}
+        userName={user?.name || 'Learner'}
+        streakCount={streak?.currentStreak || 0}
+        totalBadges={(myBadges?.length || 0) + 1}
+      />
     </div>
   );
 }

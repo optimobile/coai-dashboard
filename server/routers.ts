@@ -79,6 +79,7 @@ import { predictiveAnalyticsRouter } from './routers/predictiveAnalytics';
 import { emailSchedulingRouter } from './routers/emailScheduling';
 import { csvExportRouter } from './routers/csvExport';
 import { streaksBadgesRouter } from './routers/streaks-badges';
+import { leaderboardRouter } from './routers/leaderboard';
 import { bulkActionsRouter } from './routers/bulkActions';
 import { cohortsRouter } from './routers/cohorts';
 import { studentsRouter } from './routers/students';
@@ -3055,6 +3056,7 @@ export const appRouter = router({
   workflowAnalytics: workflowAnalyticsRouter,
   workflowScheduling: workflowSchedulingRouter,
   streaksBadges: streaksBadgesRouter,
+  leaderboard: leaderboardRouter,
 });
 
 export type AppRouter = typeof appRouter;

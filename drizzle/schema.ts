@@ -52,6 +52,9 @@ export * from './schema-workflow-analytics';
 // Import streaks and badges tables
 export * from './schema-streaks-badges';
 
+// Import leaderboard tables
+export * from './schema-leaderboard';
+
 // Import workflow scheduling tables
 export * from './schema-workflow-scheduling';
 

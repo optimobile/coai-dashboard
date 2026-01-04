@@ -142,11 +142,15 @@ export const streaksBadgesRouter = router({
           })
           .where(eq(userStreaks.id, streak.id));
 
-        // Check for streak badges
-        await checkAndAwardStreakBadges(db, userId, newStreak, newLongestStreak);
+        // Check for streak badges and return new badge if awarded
+        const newBadge = await checkAndAwardStreakBadges(db, userId, newStreak, newLongestStreak);
+        
+        if (newBadge) {
+          return { success: true, newBadge };
+        }
       }
 
-      return { success: true };
+      return { success: true, newBadge: null };
     }),
 
   /**
@@ -218,13 +222,21 @@ export const streaksBadgesRouter = router({
 
 /**
  * Helper function to check and award streak badges
+ * Returns the newly awarded badge if one was awarded, null otherwise
  */
 async function checkAndAwardStreakBadges(
   db: any,
   userId: number,
   currentStreak: number,
   longestStreak: number
-) {
+): Promise<{
+  id: number;
+  name: string | null;
+  description: string | null;
+  icon: string | null;
+  color: string | null;
+  points: number | null;
+} | null> {
   const streakMilestones = [
     { days: 3, badgeName: '3-Day Streak' },
     { days: 7, badgeName: '7-Day Streak' },
@@ -234,36 +246,52 @@ async function checkAndAwardStreakBadges(
     { days: 100, badgeName: '100-Day Streak' },
   ];
 
+  // Find the highest milestone the user has reached
+  let highestMilestone = null;
   for (const milestone of streakMilestones) {
     if (currentStreak >= milestone.days) {
-      // Check if badge exists
-      const [badge] = await db
-        .select()
-        .from(badges)
-        .where(eq(badges.name, milestone.badgeName));
-
-      if (badge) {
-        // Check if user already has this badge
-        const [existingUserBadge] = await db
-          .select()
-          .from(userBadges)
-          .where(
-            and(
-              eq(userBadges.userId, userId),
-              eq(userBadges.badgeId, badge.id)
-            )
-          );
-
-        if (!existingUserBadge) {
-          // Award badge
-          await db.insert(userBadges).values({
-            userId,
-            badgeId: badge.id,
-            progress: 100,
-            metadata: JSON.stringify({ streakDays: currentStreak }),
-          });
-        }
-      }
+      highestMilestone = milestone;
     }
   }
+
+  if (!highestMilestone) return null;
+
+  // Check if badge exists
+  const [badge] = await db
+    .select()
+    .from(badges)
+    .where(eq(badges.name, highestMilestone.badgeName));
+
+  if (!badge) return null;
+
+  // Check if user already has this badge
+  const [existingUserBadge] = await db
+    .select()
+    .from(userBadges)
+    .where(
+      and(
+        eq(userBadges.userId, userId),
+        eq(userBadges.badgeId, badge.id)
+      )
+    );
+
+  if (existingUserBadge) return null;
+
+  // Award badge
+  await db.insert(userBadges).values({
+    userId,
+    badgeId: badge.id,
+    progress: 100,
+    metadata: JSON.stringify({ streakDays: currentStreak }),
+  });
+
+  // Return the newly awarded badge
+  return {
+    id: badge.id,
+    name: badge.name,
+    description: badge.description,
+    icon: badge.icon,
+    color: badge.color,
+    points: badge.points,
+  };
 }

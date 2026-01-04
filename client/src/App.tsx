@@ -39,6 +39,7 @@ import CourseDetail from "./pages/CourseDetail";
 import MyCourses from "./pages/MyCourses";
 import CoursePlayer from "./pages/CoursePlayer";
 import ProgressDashboard from "./pages/ProgressDashboard";
+import Leaderboard from "./pages/Leaderboard";
 import Certification from "./pages/Certification";
 import CertificationV2 from "./pages/Certification-v2";
 import CertificationExam from "./pages/CertificationExam";
@@ -284,6 +285,7 @@ function App() {
                   <Route path="/courses" component={Courses} />
                   <Route path="/my-courses" component={MyCourses} />
                   <Route path="/progress" component={ProgressDashboard} />
+                  <Route path="/leaderboard" component={Leaderboard} />
                   <Route path="/paid-courses" component={PaidCourses} />
                   {/* Redirect old training routes to new unified route */}
                   <Route path="/dashboard/training"><Redirect to="/training" /></Route>
