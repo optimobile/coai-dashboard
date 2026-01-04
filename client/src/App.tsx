@@ -10,21 +10,13 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { SkipNavigation } from "./components/SkipNavigation";
 
-// Add Plausible analytics script
-declare global {
-  interface Window {
-    plausible?: any;
-  }
-}
+// Consent-aware analytics - only loads when user consents
+import { initializeAnalytics, setupConsentListener } from './lib/analytics';
 
-if (typeof window !== 'undefined' && !window.plausible) {
-  const script = document.createElement('script');
-  script.async = true;
-  script.defer = true;
-  script.src = 'https://plausible.io/js/script.js';
-  script.setAttribute('data-domain', window.location.hostname);
-  document.head.appendChild(script);
-  (window as any).plausible = (window as any).plausible || function() { (window as any).plausible.q = (window as any).plausible.q || []; (window as any).plausible.q.push(arguments); };
+// Initialize analytics based on existing consent
+if (typeof window !== 'undefined') {
+  initializeAnalytics();
+  setupConsentListener();
 }
 import Home from "./pages/Home";
 import Landing from "./pages/Landing";

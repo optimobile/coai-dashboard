@@ -8116,3 +8116,21 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add consent management for analytics cookies
 - [x] Ensure banner meets GDPR requirements
 
+
+## Phase 8.1 - Sentry Testing, Cookie Policy & Consent-Aware Analytics
+
+### Sentry Production Testing
+- [x] Trigger test error on deployed site
+- [x] Verify error appears in Sentry dashboard (Issue ID: 7162744410)
+- [x] Confirm error details are captured correctly
+
+### Cookie Policy Page Enhancement
+- [x] Expand Cookie Policy page with detailed cookie information
+- [x] Document all cookie types used (necessary, analytics, functional, marketing)
+- [x] Add cookie retention periods and purposes
+
+### Consent-Aware Analytics
+- [x] Modify Plausible initialization to check consent
+- [x] Only load analytics when user accepts analytics cookies
+- [x] Respect user cookie preferences throughout the app
+
