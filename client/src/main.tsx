@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { trpc } from "@/lib/trpc";
 import { UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,6 +11,46 @@ import { getLoginUrl } from "./const";
 import "./index.css";
 import './lib/i18n';
 import { createOptimizedQueryClient } from "./lib/trpc-config";
+
+// Initialize Sentry for error tracking
+const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
+
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    environment: import.meta.env.MODE,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+      }),
+    ],
+    // Performance Monitoring
+    tracesSampleRate: import.meta.env.PROD ? 0.1 : 1.0, // 10% in production, 100% in development
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // 10% of sessions
+    replaysOnErrorSampleRate: 1.0, // 100% of sessions with errors
+    // Filter out common non-actionable errors
+    beforeSend(event, hint) {
+      const error = hint.originalException;
+      
+      // Ignore network errors that are likely user connectivity issues
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        return null;
+      }
+      
+      // Ignore cancelled requests
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return null;
+      }
+      
+      return event;
+    },
+  });
+  
+  console.log('[Sentry] Error tracking initialized');
+}
 
 const queryClient = createOptimizedQueryClient();
 
@@ -32,6 +73,15 @@ queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
     redirectToLoginIfUnauthorized(error);
+    
+    // Report API errors to Sentry
+    if (SENTRY_DSN && error) {
+      Sentry.captureException(error, {
+        tags: { type: 'api_query_error' },
+        extra: { queryKey: event.query.queryKey },
+      });
+    }
+    
     if (process.env.NODE_ENV === 'development') {
       console.error("[API Query Error]", error);
     }
@@ -42,6 +92,14 @@ queryClient.getMutationCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.mutation.state.error;
     redirectToLoginIfUnauthorized(error);
+    
+    // Report API errors to Sentry
+    if (SENTRY_DSN && error) {
+      Sentry.captureException(error, {
+        tags: { type: 'api_mutation_error' },
+      });
+    }
+    
     if (process.env.NODE_ENV === 'development') {
       console.error("[API Mutation Error]", error);
     }
@@ -68,11 +126,33 @@ const trpcClient = trpc.createClient({
 });
 
 createRoot(document.getElementById("root")!).render(
-  <trpc.Provider client={trpcClient} queryClient={queryClient}>
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <App />
-      </HelmetProvider>
-    </QueryClientProvider>
-  </trpc.Provider>
+  <Sentry.ErrorBoundary fallback={<ErrorFallback />} showDialog>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
+  </Sentry.ErrorBoundary>
 );
+
+// Error fallback component
+function ErrorFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-center p-8 max-w-md">
+        <h1 className="text-2xl font-bold text-foreground mb-4">Something went wrong</h1>
+        <p className="text-muted-foreground mb-6">
+          We've been notified of this issue and are working to fix it.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+        >
+          Reload Page
+        </button>
+      </div>
+    </div>
+  );
+}

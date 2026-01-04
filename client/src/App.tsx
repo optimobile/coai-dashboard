@@ -98,6 +98,7 @@ import Resources from "./pages/Resources";
 import About from "./pages/About";
 import AboutCEASAI from "./pages/AboutCEASAI";
 import HowItWorks from "./pages/HowItWorks";
+import CookieConsent from "./components/CookieConsent";
 import FAQ from "./pages/FAQ";
 import CEASAITraining from "./pages/CEASAITraining";
 import NewHomeV2 from "./pages/NewHome-v2";
@@ -429,6 +430,7 @@ function App() {
                 },
               }}
             />
+            <CookieConsent />
             </TooltipProvider>
           </AlertToastProvider>
         </AuthProvider>

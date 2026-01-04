@@ -54,6 +54,8 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sendgrid/mail": "^8.1.6",
+    "@sentry/node": "^10.32.1",
+    "@sentry/react": "^10.32.1",
     "@tanstack/react-query": "^5.90.2",
     "@tiptap/extension-code-block-lowlight": "^3.14.0",
     "@tiptap/extension-image": "^3.14.0",

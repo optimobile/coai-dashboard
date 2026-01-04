@@ -1,4 +1,5 @@
 import "dotenv/config";
+import * as Sentry from "@sentry/node";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
@@ -14,6 +15,31 @@ import coursesRouter from "../routers/courses";
 import couponsRouter from "../routers/coupons";
 import enrollmentRouter from "../routers/enrollment";
 import { startHealthMonitoring } from "../services/healthMonitoring";
+
+// Initialize Sentry for backend error tracking
+const SENTRY_DSN = process.env.SENTRY_DSN;
+
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    environment: process.env.NODE_ENV || 'development',
+    // Performance Monitoring
+    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+    // Filter out common non-actionable errors
+    beforeSend(event, hint) {
+      const error = hint.originalException;
+      
+      // Ignore connection reset errors
+      if (error instanceof Error && error.message.includes('ECONNRESET')) {
+        return null;
+      }
+      
+      return event;
+    },
+  });
+  
+  console.log('[Sentry] Backend error tracking initialized');
+}
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -37,6 +63,11 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  
+  // Sentry request handler - must be first middleware
+  if (SENTRY_DSN) {
+    Sentry.setupExpressErrorHandler(app);
+  }
   
   // Stripe webhook needs raw body - MUST be before express.json()
   app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
@@ -90,9 +121,26 @@ async function startServer() {
       createContext,
     })
   );
-  // Error handling middleware
+  
+  // Error handling middleware with Sentry
   app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.error('Server error:', err);
+    
+    // Report to Sentry
+    if (SENTRY_DSN) {
+      Sentry.captureException(err, {
+        tags: {
+          url: req.url,
+          method: req.method,
+        },
+        extra: {
+          body: req.body,
+          query: req.query,
+          params: req.params,
+        },
+      });
+    }
+    
     res.status(err.status || 500).json({
       error: err.message || 'Internal server error',
       status: err.status || 500
@@ -121,4 +169,10 @@ async function startServer() {
   });
 }
 
-startServer().catch(console.error);
+startServer().catch((err) => {
+  console.error('Failed to start server:', err);
+  if (SENTRY_DSN) {
+    Sentry.captureException(err);
+  }
+  process.exit(1);
+});
