@@ -50,6 +50,7 @@ import TrainingCourses from "./pages/TrainingCourses";
 import PaidCourses from "./pages/PaidCourses";
 import PaidCoursesDashboard from "./pages/PaidCoursesDashboard";
 import Checkout from "./pages/Checkout";
+import BundleCheckout from "./pages/BundleCheckout";
 import TrainingCourseDetail from "./pages/TrainingCourseDetail";
 import LessonViewer from "./pages/LessonViewer";
 import MyTrainingCourses from "./pages/MyTrainingCourses";
@@ -302,6 +303,7 @@ function App() {
                   <Route path="/paid-courses-dashboard" component={PaidCoursesDashboard} />
                   <Route path="/founding-members" component={FoundingMembers} />
                   <Route path="/checkout" component={Checkout} />
+                  <Route path="/bundle-checkout/:bundleId" component={BundleCheckout} />
                   <Route path="/forum-analytics" component={ForumAnalytics} />
                   <Route path="/verify-certificate/:id" component={VerifyCertificate} />
                   <Route path="/verify/:certificateNumber" component={VerifyCertificate} />
