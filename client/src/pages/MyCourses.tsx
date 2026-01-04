@@ -13,9 +13,34 @@ import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import { TrainingSkeleton } from "@/components/skeletons/TrainingSkeleton";
 import { formatDistanceToNow } from "date-fns";
+import { useMemo } from "react";
 
 export default function MyCourses() {
-  const { data: enrollments = [], isLoading } = trpc.courses.getMyEnrollments.useQuery();
+  const { data: rawEnrollments = [], isLoading } = trpc.courses.getMyEnrollments.useQuery();
+  
+  // Filter out enrollments with missing courses and deduplicate by courseId
+  // Keep only the most recent enrollment per course
+  const enrollments = useMemo(() => {
+    // First filter out null courses
+    const validEnrollments = rawEnrollments.filter((e: any) => e.course && e.course.title);
+    
+    // Deduplicate by courseId - keep the most recent enrollment
+    const courseMap = new Map<number, any>();
+    validEnrollments.forEach((enrollment: any) => {
+      const courseId = enrollment.courseId;
+      if (!courseMap.has(courseId)) {
+        courseMap.set(courseId, enrollment);
+      } else {
+        // Keep the more recent enrollment
+        const existing = courseMap.get(courseId);
+        if (new Date(enrollment.enrolledAt) > new Date(existing.enrolledAt)) {
+          courseMap.set(courseId, enrollment);
+        }
+      }
+    });
+    
+    return Array.from(courseMap.values());
+  }, [rawEnrollments]);
   const cancelMutation = trpc.courses.cancelEnrollment.useMutation({
     onSuccess: () => {
       toast.success("Enrollment cancelled successfully");
@@ -103,14 +128,7 @@ export default function MyCourses() {
           </Card>
         ) : (
           <div className="grid gap-8">
-            {enrollments.map((enrollment: any) => {
-              // Skip enrollments with missing course data
-              if (!enrollment.course) {
-                console.warn(`Enrollment ${enrollment.id} has no course data`);
-                return null;
-              }
-              
-              return (
+            {enrollments.map((enrollment: any) => (
               <Card key={enrollment.id} className="p-8 hover:shadow-lg transition-shadow">
                 <div className="flex flex-col lg:flex-row gap-8">
                   {/* Course Info */}
@@ -207,7 +225,7 @@ export default function MyCourses() {
 
                   {/* Actions */}
                   <div className="flex flex-col gap-3 lg:w-48">
-                    <Button className="w-full" onClick={() => window.location.href = `/courses/${enrollment.courseId}`}>
+                    <Button className="w-full" onClick={() => window.location.href = `/courses/${enrollment.courseId}/learn`}>
                       Continue Learning
                     </Button>
                     
@@ -231,8 +249,7 @@ export default function MyCourses() {
                   </div>
                 </div>
               </Card>
-              );
-            })}
+            ))}
           </div>
         )}
 

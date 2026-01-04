@@ -26,7 +26,40 @@ import { iso42001Module8Quiz } from './iso-42001-module-8';
 
 // Quiz mapping: courseId -> moduleIndex -> quiz questions
 const quizMap: Record<number, Record<number, QuizQuestion[]>> = {
-  // EU AI Act Fundamentals (courseId: 1)
+  // EU AI Act Fundamentals (courseId: 100001)
+  100001: {
+    0: euAiActModule1Quiz,
+    1: euAiActModule2Quiz,
+    2: euAiActModule3Quiz,
+    3: euAiActModule4Quiz,
+    4: euAiActModule5Quiz,
+    5: euAiActModule6Quiz,
+    6: euAiActModule7Quiz,
+    7: euAiActModule8Quiz,
+  },
+  // NIST AI RMF Fundamentals (courseId: 100002)
+  100002: {
+    0: nistAiRmfModule1Quiz,
+    1: nistAiRmfModule2Quiz,
+    2: nistAiRmfModule3Quiz,
+    3: nistAiRmfModule4Quiz,
+    4: nistAiRmfModule5Quiz,
+    5: nistAiRmfModule6Quiz,
+    6: nistAiRmfModule7Quiz,
+    7: nistAiRmfModule8Quiz,
+  },
+  // ISO 42001 AI Management System Fundamentals (courseId: 100006)
+  100006: {
+    0: iso42001Module1Quiz,
+    1: iso42001Module2Quiz,
+    2: iso42001Module3Quiz,
+    3: iso42001Module4Quiz,
+    4: iso42001Module5Quiz,
+    5: iso42001Module6Quiz,
+    6: iso42001Module7Quiz,
+    7: iso42001Module8Quiz,
+  },
+  // Legacy IDs for backwards compatibility
   1: {
     0: euAiActModule1Quiz,
     1: euAiActModule2Quiz,
@@ -37,7 +70,6 @@ const quizMap: Record<number, Record<number, QuizQuestion[]>> = {
     6: euAiActModule7Quiz,
     7: euAiActModule8Quiz,
   },
-  // NIST AI RMF Fundamentals (courseId: 2)
   2: {
     0: nistAiRmfModule1Quiz,
     1: nistAiRmfModule2Quiz,
@@ -48,7 +80,6 @@ const quizMap: Record<number, Record<number, QuizQuestion[]>> = {
     6: nistAiRmfModule7Quiz,
     7: nistAiRmfModule8Quiz,
   },
-  // ISO 42001 AI Management System Fundamentals (courseId: 3)
   3: {
     0: iso42001Module1Quiz,
     1: iso42001Module2Quiz,

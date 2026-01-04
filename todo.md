@@ -8439,3 +8439,24 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Check AWS/Resend for sent email history (20 emails found, all to nicholastempleman@gmail.com)
 - [x] Export email collection for review
 
+
+- [x] Remove blank courses from My Courses dashboard - only show 7 modules + 2 bundles
+- [x] Fix mobile menu UX - add clear hamburger/close button for better navigation
+
+
+## CRITICAL LAUNCH BLOCKERS - Jan 4, 2026 (684,000 Email Campaign)
+
+- [ ] My Courses page must show ALL 7 paid modules + 2 bundles (not just 1 course)
+- [ ] Fix mobile menu UX - add clear hamburger/close button (DONE - needs testing)
+- [ ] Fix Sign In button routing on homepage (currently broken)
+- [ ] Fix Get Started button routing on homepage (redirects to wrong page)
+- [ ] Ensure dashboard is accessible after login
+- [ ] Test end-to-end user flow: signup -> login -> dashboard -> courses
+
+
+## CRITICAL COURSE & EXAM FIXES - Jan 4, 2026
+
+- [x] Continue Learning button should go to course content/lessons, not course info page
+- [x] Course page should recognize enrollment and show course content (not £49,900 Enroll Now)
+- [x] Exam flows must work - users need to be able to take exams (quiz mapping updated for new course IDs)
+- [x] Fix course detail page to check enrollment status and show appropriate UI

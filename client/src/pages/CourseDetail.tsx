@@ -1,6 +1,7 @@
 /**
  * Course Detail Page
  * Display individual course information and enrollment options
+ * Shows different UI based on enrollment status
  */
 
 import { useParams, useLocation } from "wouter";
@@ -9,10 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Clock, Award, Users, CheckCircle2, Loader2, ArrowLeft } from "lucide-react";
+import { BookOpen, Clock, Award, Users, CheckCircle2, Loader2, ArrowLeft, Play, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useState } from "react";
+import { Progress } from "@/components/ui/progress";
 
 export default function CourseDetail() {
   const { id } = useParams<{ id: string }>();
@@ -25,6 +27,13 @@ export default function CourseDetail() {
     { courseId: parseInt(id || "0") },
     { enabled: !!id }
   );
+
+  // Fetch user's enrollments to check if already enrolled
+  const { data: enrollments } = trpc.courses.getMyEnrollments.useQuery();
+  
+  // Check if user is enrolled in this course
+  const enrollment = enrollments?.find(e => e.courseId === parseInt(id || "0"));
+  const isEnrolled = !!enrollment;
 
   // Enroll mutation
   const enrollMutation = trpc.courses.enrollInCourse.useMutation({
@@ -54,6 +63,10 @@ export default function CourseDetail() {
     } finally {
       setIsEnrolling(false);
     }
+  };
+
+  const handleContinueLearning = () => {
+    setLocation(`/courses/${id}/learn`);
   };
 
   if (isLoading) {
@@ -98,24 +111,32 @@ export default function CourseDetail() {
         {/* Back Button */}
         <Button
           variant="ghost"
-          onClick={() => setLocation("/courses")}
+          onClick={() => setLocation(isEnrolled ? "/my-courses" : "/courses")}
           className="mb-2"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Courses
+          {isEnrolled ? "Back to My Courses" : "Back to Courses"}
         </Button>
 
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white rounded-2xl p-8 shadow-xl">
-          <div className="flex justify-between items-start gap-6">
+        {/* Hero Section - Different UI based on enrollment status */}
+        <div className={`${isEnrolled ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600' : 'bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600'} text-white rounded-2xl p-8 shadow-xl`}>
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
             <div className="flex-1">
-              <Badge className="mb-3 bg-white/20 text-white border-white/30">
-                <Award className="w-4 h-4 mr-2" />
-                {course.level}
-              </Badge>
+              {isEnrolled && (
+                <Badge className="mb-3 bg-white/20 text-white border-white/30">
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Enrolled
+                </Badge>
+              )}
+              {!isEnrolled && (
+                <Badge className="mb-3 bg-white/20 text-white border-white/30">
+                  <Award className="w-4 h-4 mr-2" />
+                  {course.level}
+                </Badge>
+              )}
               <h1 className="text-4xl font-bold mb-2">{course.title}</h1>
               <p className="text-white/90 text-lg mb-4">{course.description}</p>
-              <div className="flex gap-6 text-white/80">
+              <div className="flex flex-wrap gap-6 text-white/80">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5" />
                   <span>{course.durationHours} hours</span>
@@ -124,30 +145,73 @@ export default function CourseDetail() {
                   <Users className="w-5 h-5" />
                   <span>{course.enrollmentCount || 0} enrolled</span>
                 </div>
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-5 h-5" />
+                  <span>{course.modules?.length || 0} modules</span>
+                </div>
               </div>
+              
+              {/* Progress bar for enrolled users */}
+              {isEnrolled && enrollment && (
+                <div className="mt-6 space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-white/80">Your Progress</span>
+                    <span className="font-semibold">{enrollment.progress || 0}%</span>
+                  </div>
+                  <Progress value={enrollment.progress || 0} className="h-2 bg-white/20" />
+                </div>
+              )}
             </div>
-            <div className="text-right">
-              {!course.isFree && (
-                <div className="text-4xl font-bold mb-2">£{course.pricing.oneTime}</div>
+            
+            <div className="text-right w-full lg:w-auto">
+              {isEnrolled ? (
+                /* Enrolled User UI */
+                <div className="space-y-3">
+                  <div className="text-lg font-medium text-white/90 mb-2">
+                    {enrollment?.status === 'completed' ? (
+                      <span className="flex items-center gap-2 justify-end">
+                        <GraduationCap className="w-5 h-5" />
+                        Course Completed!
+                      </span>
+                    ) : (
+                      `${enrollment?.progress || 0}% Complete`
+                    )}
+                  </div>
+                  <Button
+                    size="lg"
+                    className="bg-white text-indigo-600 hover:bg-white/90 w-full lg:w-auto"
+                    onClick={handleContinueLearning}
+                  >
+                    <Play className="w-4 h-4 mr-2" />
+                    {enrollment?.progress === 0 ? "Start Learning" : "Continue Learning"}
+                  </Button>
+                </div>
+              ) : (
+                /* Not Enrolled User UI */
+                <>
+                  {!course.isFree && (
+                    <div className="text-4xl font-bold mb-2">£{course.pricing.oneTime}</div>
+                  )}
+                  {course.isFree && (
+                    <div className="text-2xl font-bold mb-2 text-white/90">FREE</div>
+                  )}
+                  <Button
+                    size="lg"
+                    className="bg-white text-emerald-600 hover:bg-white/90"
+                    onClick={handleEnroll}
+                    disabled={isEnrolling || enrollMutation.isPending}
+                  >
+                    {isEnrolling || enrollMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Enrolling...
+                      </>
+                    ) : (
+                      "Enroll Now"
+                    )}
+                  </Button>
+                </>
               )}
-              {course.isFree && (
-                <div className="text-2xl font-bold mb-2 text-white/90">FREE</div>
-              )}
-              <Button
-                size="lg"
-                className="bg-white text-emerald-600 hover:bg-white/90"
-                onClick={handleEnroll}
-                disabled={isEnrolling || enrollMutation.isPending}
-              >
-                {isEnrolling || enrollMutation.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Enrolling...
-                  </>
-                ) : (
-                  "Enroll Now"
-                )}
-              </Button>
             </div>
           </div>
         </div>
@@ -162,19 +226,32 @@ export default function CourseDetail() {
           <TabsContent value="overview" className="space-y-4">
             <Card className="p-6">
               <h2 className="text-2xl font-bold mb-4">About This Course</h2>
-              <p className="text-gray-700 mb-4">{course.description}</p>
+              <p className="text-gray-700 dark:text-gray-300 mb-4">{course.description}</p>
               
               <h3 className="text-xl font-semibold mt-6 mb-3">Course Information</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-gray-600 text-sm">Framework</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Framework</p>
                   <p className="font-semibold capitalize">{course.framework}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Level</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Level</p>
                   <p className="font-semibold capitalize">{course.level}</p>
                 </div>
               </div>
+              
+              {/* Quick action for enrolled users */}
+              {isEnrolled && (
+                <div className="mt-6 pt-6 border-t">
+                  <Button 
+                    className="w-full" 
+                    onClick={handleContinueLearning}
+                  >
+                    <Play className="w-4 h-4 mr-2" />
+                    {enrollment?.progress === 0 ? "Start Learning" : "Continue Learning"}
+                  </Button>
+                </div>
+              )}
             </Card>
           </TabsContent>
 
@@ -183,22 +260,43 @@ export default function CourseDetail() {
               <h2 className="text-2xl font-bold mb-4">Course Details & Pricing</h2>
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <p className="text-gray-600 text-sm">Duration</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Duration</p>
                   <p className="font-semibold text-lg">{course.durationHours} hours</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Type</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Type</p>
                   <p className="font-semibold text-lg">
                     {course.isFree ? "Free" : "Paid"}
                   </p>
                 </div>
               </div>
 
-              {!course.isFree && (
+              {/* Show enrollment info for enrolled users */}
+              {isEnrolled && enrollment && (
+                <div className="mt-6 pt-6 border-t">
+                  <h3 className="font-semibold mb-4 text-green-600 dark:text-green-400 flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5" />
+                    You're Enrolled!
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400">Status</p>
+                      <p className="font-semibold capitalize">{enrollment.status.replace('_', ' ')}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400">Progress</p>
+                      <p className="font-semibold">{enrollment.progress || 0}%</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Show pricing options only for non-enrolled users */}
+              {!isEnrolled && !course.isFree && (
                 <div className="mt-6 pt-6 border-t">
                   <h3 className="font-semibold mb-4">Payment Plans</h3>
                   <div className="space-y-3">
-                    <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                    <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
                       <input
                         type="radio"
                         value="one_time"
@@ -208,12 +306,12 @@ export default function CourseDetail() {
                       />
                       <div>
                         <p className="font-semibold">One-Time Payment</p>
-                        <p className="text-gray-600 text-sm">£{course.pricing.oneTime}</p>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">£{course.pricing.oneTime}</p>
                       </div>
                     </label>
                     
                     {course.pricing.threeMonth && (
-                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
                         <input
                           type="radio"
                           value="3_month"
@@ -223,13 +321,13 @@ export default function CourseDetail() {
                         />
                         <div>
                           <p className="font-semibold">3-Month Plan</p>
-                          <p className="text-gray-600 text-sm">£{course.pricing.threeMonth}/month</p>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">£{course.pricing.threeMonth}/month</p>
                         </div>
                       </label>
                     )}
                     
                     {course.pricing.sixMonth && (
-                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
                         <input
                           type="radio"
                           value="6_month"
@@ -239,13 +337,13 @@ export default function CourseDetail() {
                         />
                         <div>
                           <p className="font-semibold">6-Month Plan</p>
-                          <p className="text-gray-600 text-sm">£{course.pricing.sixMonth}/month</p>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">£{course.pricing.sixMonth}/month</p>
                         </div>
                       </label>
                     )}
                     
                     {course.pricing.twelveMonth && (
-                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
                         <input
                           type="radio"
                           value="12_month"
@@ -255,7 +353,7 @@ export default function CourseDetail() {
                         />
                         <div>
                           <p className="font-semibold">12-Month Plan</p>
-                          <p className="text-gray-600 text-sm">£{course.pricing.twelveMonth}/month</p>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">£{course.pricing.twelveMonth}/month</p>
                         </div>
                       </label>
                     )}
