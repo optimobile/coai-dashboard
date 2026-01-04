@@ -8416,3 +8416,24 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [ ] Generate test promo code via Settings → Payment
 - [ ] Test complete payment flow with Stripe webhook
 
+
+
+## Payment Flow Testing & Monthly Options (Jan 4, 2026)
+
+- [ ] Test payment flow via Settings → Payment to generate test promo code
+- [ ] Verify complete Stripe checkout process on deployed domain
+- [ ] Implement monthly payment options (installment plans) for £499 modules
+- [ ] Create Stripe recurring prices for monthly installments
+- [ ] Update pricing UI to show monthly payment option
+- [ ] Prepare for publication
+
+
+
+## Bug Fixes & Email Collection (Jan 4, 2026)
+
+- [x] Fix password validation - remove lowercase letter requirement that blocks login
+- [x] Collect all emails from database (240 unique emails found, not 684K)
+- [x] Query sent email records from database (0 records in email_logs)
+- [x] Check AWS/Resend for sent email history (20 emails found, all to nicholastempleman@gmail.com)
+- [x] Export email collection for review
+
