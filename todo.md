@@ -8253,3 +8253,26 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add WatchdogToPDCA component for creating cycles from incidents
 - [x] Add watchdog_incident_id column to pdca_cycles table
 - [x] Write integration tests for PDCA-Watchdog features (7 tests passing)
+
+
+## Phase 9 - Enhanced Features (Jan 2026)
+
+### Resolution Details for Resolved Reports
+- [x] Add resolution_notes, resolution_date, resolved_by fields to watchdog_reports schema
+- [x] Update report resolution API to accept resolution details
+- [x] Add resolution details form in report detail view (ResolveIncidentDialog)
+- [x] Display resolution information in report cards and detail views
+- [x] Write tests for resolution details functionality
+
+### PDCA Cycle Notifications
+- [x] Create email notification for PDCA phase advances
+- [x] Create email notification for linked Watchdog incident updates
+- [x] Add notification preferences to user settings (uses existing notificationPreferences table)
+- [x] Implement notification triggers in PDCA router
+- [x] Write tests for notification system
+
+### Gantt Chart Filtering
+- [x] Add status filter (active/completed/paused) to Gantt chart
+- [x] Add date range filter to Gantt chart
+- [x] Implement filter UI with clear indicators
+- [x] Write tests for Gantt chart filtering
