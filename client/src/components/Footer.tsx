@@ -4,7 +4,7 @@
  */
 
 import { Link } from 'wouter';
-import { Github, Twitter, Linkedin, Mail, CheckCircle } from 'lucide-react';
+import { Github, Twitter, Linkedin, Mail, CheckCircle, Cookie } from 'lucide-react';
 import { NewsletterSignup } from './NewsletterSignup';
 
 export function Footer() {
@@ -162,6 +162,16 @@ export function Footer() {
             <Link href="/cookies" className="text-gray-600 hover:text-green-600 text-sm transition-colors">
               Cookie Policy
             </Link>
+            <button
+              onClick={() => {
+                localStorage.removeItem('csoai_cookie_consent');
+                window.location.reload();
+              }}
+              className="text-gray-600 hover:text-green-600 text-sm transition-colors flex items-center gap-1.5"
+            >
+              <Cookie className="h-3.5 w-3.5" />
+              Cookie Settings
+            </button>
             <Link href="/accessibility" className="text-gray-600 hover:text-green-600 text-sm transition-colors">
               Accessibility
             </Link>
