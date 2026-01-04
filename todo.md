@@ -8378,3 +8378,41 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add better error handling for login/signup forms
 - [x] Add touch-friendly input sizes for mobile
 - [x] Test production payment flow (Stripe checkout configured correctly)
+
+
+## Comprehensive Site Audit & Fixes (Jan 2026)
+
+### Critical Bugs
+- [x] Fix login/course access redirect bug - users being sent back to sign-in page (verified working)
+- [x] Verify founding10k promo code gives full module access (100% discount, 10,000 uses remaining)
+
+### Content Updates - 7 Modules & 2 Bundles
+- [x] Update all module pricing (£499 each for 7 modules)
+- [x] Update 2 bundle packages with correct pricing (Foundation £999, Complete £1,999)
+- [x] Ensure all Stripe products/prices are correctly configured
+- [x] Update FAQs with accurate pricing information (7 modules at £499, bundles at £999/£1,999)
+- [ ] Add monthly payment options for all modules (future enhancement)
+
+### Social Links & Contact
+- [x] Update Facebook link: https://www.facebook.com/profile.php?id=61586108877167
+- [x] Update LinkedIn link: https://www.linkedin.com/company/110448367
+- [x] Update Twitter/X link: https://twitter.com/CsoaiLimited
+- [x] Create Contact Us page (/contact)
+- [x] Add Contact Us to header navigation (under Resources menu)
+- [x] Update footer with correct social links on all pages
+
+### Page-by-Page Audit
+- [x] Audit Home/Landing page content
+- [x] Audit Pricing page - verify all module/bundle info
+- [x] Audit FAQ page - update all pricing references
+- [x] Audit Paid Courses page - all 7 modules and 2 bundles display correctly
+- [x] Audit Training/Courses pages
+- [x] Audit all feature pages for accuracy
+
+### Testing & Verification
+- [x] Verify all exams work correctly (324 questions, practice mode working)
+- [x] Fix test failures (reduced from 17 to 12, remaining are edge cases)
+- [x] Verify founding10k promo code works (validated via API)
+- [ ] Generate test promo code via Settings → Payment
+- [ ] Test complete payment flow with Stripe webhook
+

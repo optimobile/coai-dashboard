@@ -42,22 +42,28 @@ export default function Contact() {
     },
     {
       icon: Phone,
-      title: 'Phone',
-      value: '+1 (555) 123-4567',
-      link: 'tel:+15551234567',
+      title: 'Enterprise Sales',
+      value: 'enterprise@csoai.org',
+      link: 'mailto:enterprise@csoai.org',
     },
     {
       icon: MapPin,
       title: 'Address',
-      value: 'San Francisco, CA, USA',
+      value: '86-90 Paul Street, London, EC2A 4NE, UK',
       link: '#',
     },
     {
       icon: Clock,
       title: 'Hours',
-      value: 'Mon-Fri, 9am-5pm EST',
+      value: 'Mon-Fri, 9am-6pm GMT',
       link: '#',
     },
+  ];
+
+  const socialLinks = [
+    { name: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61586108877167' },
+    { name: 'Twitter', href: 'https://twitter.com/CsoaiLimited' },
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/company/110448367' },
   ];
 
   return (

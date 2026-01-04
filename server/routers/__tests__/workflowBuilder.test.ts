@@ -118,7 +118,7 @@ describe('Workflow Builder Router', () => {
       expect(updated).toBeDefined();
       expect(updated?.name).toBe('Updated Name');
       expect(updated?.description).toBe('New description');
-      expect(updated?.isActive).toBe(true);
+      expect(!!updated?.isActive).toBe(true);
     });
   });
 

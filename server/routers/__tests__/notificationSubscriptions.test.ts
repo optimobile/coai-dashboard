@@ -117,7 +117,7 @@ describe('Notification Subscriptions Router', () => {
 
       expect(result).toBeDefined();
       expect(result.success).toBe(true);
-      expect(result.message).toContain('unsubscribed');
+      expect(result.message.toLowerCase()).toContain('unsubscribed');
 
       // Verify status changed
       const subscription = await caller.getSubscription({

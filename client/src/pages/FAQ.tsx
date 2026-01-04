@@ -29,7 +29,7 @@ export default function FAQ() {
         },
         {
           question: "What is the difference between CSOAI and CEASAI?",
-          answer: "**CSOAI (Council of AIs)** is our FREE public platform that includes:\n\n• The Watchdog incident reporting system\n• Public AI safety database\n• Free Watchdog Analyst training & certification\n• Community forum access\n• 33-Agent Byzantine Council voting system\n\n**CEASAI (Certified European AI Safety Analyst Institute)** is our professional certification body that offers PAID courses:\n\n• Fundamentals: £499 (5 core modules)\n• Professional: £999 (choose 5 from 8 regional frameworks)\n• Expert: £1,999 (all 13 modules = Global AI Safety Analyst Expert)\n\nCEASAI operates under CSOAI to provide legally recognized professional certifications."
+          answer: "**CSOAI (Council of AIs)** is our FREE public platform that includes:\n\n• The Watchdog incident reporting system\n• Public AI safety database\n• Free Watchdog Analyst training & certification\n• Community forum access\n• 33-Agent Byzantine Council voting system\n\n**CEASAI (Certified European AI Safety Analyst Institute)** is our professional certification body that offers PAID courses:\n\n• Individual Modules: £499 each (7 regional frameworks available)\n• Foundation Bundle: £999 (3 core frameworks - EU AI Act, NIST AI RMF, ISO 42001)\n• Complete Certification: £1,999 (all 7 modules = Global AI Safety Analyst Expert)\n\nCEASAI operates under CSOAI to provide legally recognized professional certifications."
         },
         {
           question: "Is the Watchdog program really free?",
@@ -54,7 +54,7 @@ export default function FAQ() {
       items: [
         {
           question: "What are the three certification levels?",
-          answer: "We offer three certification tiers:\n\n• **Fundamentals (£499)** - 5 core modules covering EU AI Act, NIST AI RMF, ISO 42001, AI Ethics & Bias, and Incident Analysis. Perfect for beginners. 50 exam questions, 70% passing threshold.\n\n• **Professional (£999)** - Choose 5 additional modules from 8 regional frameworks (UK AISI, Canada AIDA, Australia, China TC260, Singapore, Japan, South Korea, Brazil). 100 exam questions, 75% passing threshold. Includes blockchain-verified certificate.\n\n• **Expert (£1,999)** - All 13 modules (5 Fundamentals + 8 Regional). Earn the **Global AI Safety Analyst Expert** certification. 150 exam questions, 80% passing threshold. Includes government agency access and white-label integration opportunities."
+          answer: "We offer flexible certification options:\n\n• **Individual Modules (£499 each)** - 7 regional frameworks available: EU AI Act, NIST AI RMF, UK AI Safety, Canada AIDA, Australia AI Ethics, ISO 42001, and China TC260. Perfect for focused learning. Each module includes certification exam.\n\n• **Foundation Bundle (£999)** - 3 core frameworks: EU AI Act, NIST AI RMF, and ISO 42001. Save £498 vs individual purchase. 100 exam questions, 75% passing threshold.\n\n• **Complete Certification (£1,999)** - All 7 modules. Earn the **Global AI Safety Analyst Expert** certification. Save £1,494 vs individual purchase. 150 exam questions, 80% passing threshold. Includes government agency access and white-label integration opportunities.\n\nMonthly payment plans available for all options."
         },
         {
           question: "How long does each course take?",

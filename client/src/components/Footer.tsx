@@ -4,7 +4,7 @@
  */
 
 import { Link } from 'wouter';
-import { Github, Twitter, Linkedin, Mail, CheckCircle, Cookie } from 'lucide-react';
+import { Twitter, Linkedin, Mail, CheckCircle, Cookie, Facebook } from 'lucide-react';
 import { NewsletterSignup } from './NewsletterSignup';
 
 export function Footer() {
@@ -59,9 +59,9 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/csoai' },
-    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/csoai' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
+    { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/profile.php?id=61586108877167' },
+    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/CsoaiLimited' },
+    { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/company/110448367' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];
 

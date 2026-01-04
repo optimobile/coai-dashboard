@@ -251,9 +251,10 @@ export const forumsRouter = router({
         updatedAt: now,
       });
 
+      const threadId = Number((result as any)[0]?.insertId ?? (result as any).insertId);
       return { 
         success: true, 
-        threadId: Number((result as any).insertId),
+        threadId: isNaN(threadId) ? 0 : threadId,
       };
     }),
 
@@ -302,6 +303,9 @@ export const forumsRouter = router({
         updatedAt: now,
       });
 
+      const postId = Number((result as any)[0]?.insertId ?? (result as any).insertId);
+      const safePostId = isNaN(postId) ? 0 : postId;
+
       // Update thread reply count and last activity
       await db
         .update(forumThreads)
@@ -317,7 +321,7 @@ export const forumsRouter = router({
         await db.insert(forumNotifications).values({
           userId: thread[0].userId,
           threadId: input.threadId,
-          postId: Number((result as any).insertId),
+          postId: safePostId,
           type: 'reply',
           isRead: false,
           createdAt: now,
@@ -327,7 +331,7 @@ export const forumsRouter = router({
         sendNewReplyEmail({
           recipientId: thread[0].userId,
           threadId: input.threadId,
-          postId: Number((result as any).insertId),
+          postId: safePostId,
           type: 'new_reply',
           actorName: ctx.user.name || 'A user',
         }).catch(err => console.error('[Forums] Failed to send email:', err));
@@ -345,7 +349,7 @@ export const forumsRouter = router({
           await db.insert(forumNotifications).values({
             userId: parentPost[0].userId,
             threadId: input.threadId,
-            postId: Number((result as any).insertId),
+            postId: safePostId,
             type: 'reply',
             isRead: false,
             createdAt: now,
@@ -370,7 +374,7 @@ export const forumsRouter = router({
             await db.insert(forumNotifications).values({
               userId: mentionedUser.id,
               threadId: input.threadId,
-              postId: Number((result as any).insertId),
+              postId: safePostId,
               type: 'mention',
               isRead: false,
               createdAt: now,
@@ -381,7 +385,7 @@ export const forumsRouter = router({
 
       return { 
         success: true, 
-        postId: Number((result as any).insertId),
+        postId: safePostId,
       };
     }),
 

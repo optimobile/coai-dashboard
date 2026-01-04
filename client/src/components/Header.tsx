@@ -125,6 +125,7 @@ export function Header() {
         { name: 'Knowledge Base', href: '/knowledge-base', description: 'Learning resources' },
         { name: 'Blog', href: '/blog', description: 'News & updates' },
         { name: 'Help Center', href: '/help-center', description: 'Support & guides' },
+        { name: 'Contact Us', href: '/contact', description: 'Get in touch' },
       ]
     },
   ];
