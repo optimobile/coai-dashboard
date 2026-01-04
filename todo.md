@@ -8474,3 +8474,10 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add test user enrollment for bundle verification on My Courses page (bundle enrollments created in DB, bundleId mismatch fixed)
 - [x] Test mobile hamburger menu touch interactions (implementation verified - uses standard onClick handlers)
 
+
+
+## New Tasks - Bundle Enrollment & Testing (Jan 4, 2026)
+
+- [ ] Test bundle display on My Courses page - Log in and verify bundle enrollments appear correctly in "Bundles" tab after data fix
+- [x] Add bundle enrollment API endpoint - Create dedicated endpoint for enrolling users in bundles with proper payment integration
+- [ ] Mobile testing on actual device - Test hamburger menu on real mobile device to confirm touch interactions work smoothly in production

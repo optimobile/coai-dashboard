@@ -92,6 +92,7 @@ import { workflowSchedulingRouter } from './routers/workflowScheduling';
 import { teamsRouter } from './routers/teams';
 import { weeklyDigestRouter } from './routers/weeklyDigest';
 import { supportRouter } from './routers/support';
+import { bundleEnrollmentRouter } from './routers/bundleEnrollment';
 
 // ============================================
 // WATCHDOG ROUTER - Public incident reporting
@@ -3063,6 +3064,7 @@ export const appRouter = router({
   teams: teamsRouter,
   weeklyDigest: weeklyDigestRouter,
   support: supportRouter,
+  bundleEnrollment: bundleEnrollmentRouter,
 });
 
 export type AppRouter = typeof appRouter;
