@@ -7,6 +7,8 @@ export { cohorts, students, cohortCourses, studentCohortHistory } from './schema
 // Re-export from schema-email-templates
 export { emailTemplates, emailTemplateVersions, emailTemplatePreviews } from './schema-email-templates';
 
+
+
 export const abAssignments = mysqlTable("ab_assignments", {
 	id: int().autoincrement().notNull(),
 	experimentId: int().notNull(),
