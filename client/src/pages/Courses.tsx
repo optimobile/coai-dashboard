@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
-import { useLocation, useSearch } from "wouter";
+import { useLocation, useSearch, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -442,13 +442,13 @@ function CourseCard({ course }: { course: any }) {
 
 function BundleCard({ bundle }: { bundle: any }) {
   const [selectedPlan, setSelectedPlan] = useState<"oneTime" | "threeMonth" | "sixMonth" | "twelveMonth">("oneTime");
-  const enrollMutation = trpc.courses.enrollInBundle.useMutation();
+  const enrollMutation = trpc.bundleEnrollment.enrollInBundle.useMutation();
 
   const handleEnroll = async () => {
     try {
       console.log('[Frontend] handleEnroll (bundle) started', { bundleId: bundle.id, selectedPlan });
       
-      const paymentTypeMap = {
+      const durationMap = {
         oneTime: "one_time",
         threeMonth: "3_month",
         sixMonth: "6_month",
@@ -458,7 +458,7 @@ function BundleCard({ bundle }: { bundle: any }) {
       console.log('[Frontend] Calling enrollInBundle mutation...');
       const result = await enrollMutation.mutateAsync({
         bundleId: bundle.id,
-        paymentType: paymentTypeMap[selectedPlan] as any,
+        duration: durationMap[selectedPlan] as any,
       });
 
       console.log('[Frontend] Bundle enrollment result:', result);
@@ -601,20 +601,27 @@ function BundleCard({ bundle }: { bundle: any }) {
         </div>
       </div>
 
-      <Button 
-        onClick={handleEnroll}
-        disabled={enrollMutation.isPending}
-        className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white"
-      >
-        {enrollMutation.isPending ? (
-          <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            Processing...
-          </>
-        ) : (
-          "Enroll Now"
-        )}
-      </Button>
+      <div className="flex gap-2">
+        <Button 
+          onClick={handleEnroll}
+          disabled={enrollMutation.isPending}
+          className="flex-1 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white"
+        >
+          {enrollMutation.isPending ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            "Enroll Now"
+          )}
+        </Button>
+        <Link href={`/bundle-checkout/${bundle.id}`}>
+          <Button variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+            Buy Bundle
+          </Button>
+        </Link>
+      </div>
     </Card>
   );
 }

@@ -8488,3 +8488,17 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Test bundle display on My Courses page Bundles tab
 - [x] Create bundle checkout page with duration selection
 - [x] Test mobile hamburger menu interactions (code review complete)
+
+## Subscription Pricing & Bundle Links (Jan 4, 2026)
+- [x] Add subscription pricing (3-month, 6-month, 12-month) to database and Stripe
+- [x] Add "Buy Bundle" buttons on Courses page linking to bundle checkout
+- [ ] Test full payment flow on production site with test card
+
+
+## Microsoft Clarity Integration (Jan 5, 2026)
+
+- [x] Add Microsoft Clarity tracking script to the application (Project ID: uwiq8ihj5d)
+- [x] Enable click heatmaps for user behavior analysis
+- [x] Enable session recordings for user journey tracking
+- [x] Enable scroll depth tracking
+- [x] Enable rage click detection
