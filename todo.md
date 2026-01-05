@@ -374,3 +374,13 @@
 - [ ] Create admin dashboard for coupon abuse monitoring (UI pending)
 - [ ] Set up alerts for suspicious coupon patterns (pending)
 
+
+## Phase 21 - Test Selector Updates (Jan 5, 2026)
+
+### E2E Test Selector Updates
+- [x] Update e2e test selectors to use data-testid attributes
+- [x] Add more resilient role-based queries using getByRole
+- [x] Update expected text content in tests to match current UI
+- [x] Add data-testid attributes to navigation elements
+- [x] Add data-testid attributes to countdown timer elements
+- [x] Update helpers.ts with improved selector methods

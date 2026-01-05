@@ -41,38 +41,38 @@ export function CountdownTimer() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center gap-2 text-center">
+    <div data-testid="countdown-timer" className="flex items-center justify-center gap-2 text-center">
       <div className="flex gap-3">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center" data-testid="countdown-days">
           <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
-            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums" data-testid="countdown-days-value">
               {String(timeRemaining.days).padStart(2, '0')}
             </div>
           </div>
           <div className="text-xs md:text-sm font-bold text-gray-900 mt-2">Days</div>
         </div>
         <div className="text-3xl md:text-4xl font-bold text-gray-900 self-start mt-2">:</div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center" data-testid="countdown-hours">
           <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
-            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums" data-testid="countdown-hours-value">
               {String(timeRemaining.hours).padStart(2, '0')}
             </div>
           </div>
           <div className="text-xs md:text-sm font-bold text-gray-900 mt-2">Hours</div>
         </div>
         <div className="text-3xl md:text-4xl font-bold text-gray-900 self-start mt-2">:</div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center" data-testid="countdown-minutes">
           <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
-            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums" data-testid="countdown-minutes-value">
               {String(timeRemaining.minutes).padStart(2, '0')}
             </div>
           </div>
           <div className="text-xs md:text-sm font-bold text-gray-900 mt-2">Minutes</div>
         </div>
         <div className="text-3xl md:text-4xl font-bold text-gray-900 self-start mt-2">:</div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center" data-testid="countdown-seconds">
           <div className="bg-white/90 px-3 py-2 rounded-lg shadow-sm">
-            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums">
+            <div className="text-3xl md:text-4xl font-bold text-red-700 tabular-nums" data-testid="countdown-seconds-value">
               {String(timeRemaining.seconds).padStart(2, '0')}
             </div>
           </div>

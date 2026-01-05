@@ -210,9 +210,10 @@ export function Header() {
           </a>
 
           {/* Desktop Navigation with Mega Menu */}
-          <div className="hidden lg:flex items-center gap-1 flex-1 ml-8">
+          <nav data-testid="main-navigation" className="hidden lg:flex items-center gap-1 flex-1 ml-8" role="navigation" aria-label="Main navigation">
             <a
               href="/"
+              data-testid="nav-home"
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
                 location === '/'
                   ? 'text-emerald-600 bg-emerald-50'
@@ -226,6 +227,7 @@ export function Header() {
               <div
                 key={item.name}
                 ref={activeDropdown === item.name ? dropdownRef : null}
+                data-testid={`nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className="relative group"
                 onMouseEnter={() => setActiveDropdown(item.name)}
                 onMouseLeave={() => setActiveDropdown(null)}
@@ -285,7 +287,7 @@ export function Header() {
                 )}
               </div>
             ))}
-          </div>
+          </nav>
 
           {/* Right Side Actions */}
           <div className="hidden lg:flex items-center gap-2 ml-auto">
