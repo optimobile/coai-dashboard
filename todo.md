@@ -8602,3 +8602,31 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Click-to-expand council member details with full voting history and decision rationale
 - [x] Live vote simulation - "Trigger Demo Vote" button with animated 33-agent consensus
 - [x] Human Council registration CTA - "Join the 312+ Watchdog Analysts" button linking to signup flow
+
+
+## Phase 12 - Council Member Details & Vote Simulation (Jan 5, 2026)
+
+### Feature 1: Click-to-Expand Council Member Details
+- [x] Create CouncilMemberDetail modal component
+- [x] Display council member profile information (name, model, specialty)
+- [x] Show voting statistics (total votes, approval rate, confidence levels)
+- [x] Display full voting history with decision rationale
+- [x] Add click handlers to council member cards to open modal
+- [x] Style modal with professional layout
+
+### Feature 2: Live Vote Simulation
+- [x] Create VoteSimulation component with animated voting
+- [x] Implement "Trigger Demo Vote" button
+- [x] Display real-time vote counts for Approve/Reject/Escalate
+- [x] Add progress tracking visualization
+- [x] Implement consensus detection logic
+- [x] Show completion status with results
+- [x] Add animations for vote casting and result display
+
+### Feature 3: Human Council Registration CTA
+- [x] Create RegistrationCTA component
+- [x] Display benefits section (Free Certification, Make an Impact, Earn Rewards)
+- [x] Add signup flow links
+- [x] Fetch dynamic analyst count from database
+- [x] Display "Join the 312+ Watchdog Analysts" text with dynamic count
+- [x] Style CTA section with prominent call-to-action design
