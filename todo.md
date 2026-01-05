@@ -313,3 +313,17 @@
 - [x] Fix PDF template download stream handling
 - [x] Investigate and fix API routes returning HTML instead of JSON
 - [x] Review and fix auth state persistence for protected routes
+
+## Phase 20 - Testing and TypeScript Fixes (Jan 5, 2026)
+
+### Testing
+- [x] Test checkout flow end-to-end with login redirect (verified return_to parameter in URL)
+- [x] Verify return_to parameter works correctly after OAuth login (confirmed in browser test)
+
+### TypeScript Fixes
+- [x] Investigate status_subscriptions TypeScript errors (reduced from 606 to 518)
+- [x] Fix Drizzle schema type mismatch for notifyOnResolution column (use 1/0 instead of true/false)
+- [ ] Fix remaining 518 TypeScript errors (mostly db import issues in legacy routers)
+
+### Security
+- [x] Add rate limiting to coupon validation endpoint (20 attempts per 15 minutes per IP)

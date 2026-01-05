@@ -92,3 +92,33 @@ The "Course Bundles" tab on the /courses page is not switching to show bundles. 
 1. Check the bundles active status in database
 2. Fix the tab switching if needed
 3. Test mobile hamburger menu
+
+
+## ✅ Checkout Flow Login Redirect Test - Jan 5, 2026
+
+### Test: Login Redirect with return_to Parameter
+
+**Status: WORKING**
+
+The checkout flow correctly redirects to the OAuth login page with the `return_to` parameter embedded in the redirect URI:
+
+**URL observed:**
+```
+https://manus.im/app-auth?appId=K34VNBtbDJyjtW8qhrCBdB&redirectUri=https%3A%2F%2F...%2Fapi%2Foauth%2Fcallback%3Freturn_to%3D%252Fcheckout%253Ftype%253Dbundle%2526id%253D200001
+```
+
+**Decoded return_to:**
+```
+/checkout?type=bundle&id=200001
+```
+
+### Verification Points:
+1. ✅ User clicks "Sign In" on checkout page
+2. ✅ Redirected to OAuth login page
+3. ✅ return_to parameter contains the original checkout URL
+4. ✅ After login, user should be redirected back to checkout page
+
+### Notes:
+- The `getLoginUrlWithReturn()` function correctly captures the current path and query parameters
+- The OAuth callback handler validates that return_to is a relative path (starts with / but not //)
+- This prevents open redirect vulnerabilities

@@ -16,12 +16,13 @@ describe('Status Notification System', () => {
     if (!db) throw new Error('Database not available');
 
     // Create test subscription
+    // Note: tinyint columns use 1/0 instead of true/false in MySQL
     const subResult = await db.insert(statusSubscriptions).values({
       email: 'test-subscriber@example.com',
       services: JSON.stringify(['api', 'dashboard']),
-      notifyOnIncident: true,
-      notifyOnResolution: true,
-      notifyOnMaintenance: true,
+      notifyOnIncident: 1,
+      notifyOnResolution: 1,
+      notifyOnMaintenance: 1,
       isActive: 1,
       verifiedAt: new Date().toISOString(),
     });

@@ -12,6 +12,8 @@ import { getDb } from "./db";
 import { courses, courseEnrollments, courseBundles, regions, trainingModules, coupons } from "../drizzle/schema";
 import { eq, and, sql } from "drizzle-orm";
 import Stripe from "stripe";
+import { couponValidationLimiter } from "./utils/rateLimiter";
+import { TRPCError } from "@trpc/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -588,15 +590,30 @@ export const coursesRouter = router({
   /**
    * Validate a coupon code for a course
    * Public endpoint - checks if coupon is valid and returns discount info
+   * Rate limited: 20 attempts per 15 minutes per IP to prevent brute-force guessing
    */
   validateCoupon: publicProcedure
     .input(
       z.object({
         code: z.string(),
         courseId: z.number().optional(),
+        _clientIp: z.string().optional(), // For rate limiting
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      // Rate limiting to prevent coupon code brute-force attacks
+      // Use client IP from context or input for rate limiting key
+      const clientIp = (ctx as any)?.req?.ip || (ctx as any)?.req?.headers?.['x-forwarded-for'] || input._clientIp || 'unknown';
+      const rateLimitKey = `coupon:${clientIp}`;
+      const rateLimitResult = couponValidationLimiter.check(rateLimitKey);
+      
+      if (!rateLimitResult.allowed) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: `Too many coupon validation attempts. Please try again in ${Math.ceil(rateLimitResult.resetIn / 60000)} minutes.`,
+        });
+      }
+
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 

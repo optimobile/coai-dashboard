@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../_core/trpc";
 import { z } from "zod";
-import { db } from "../db";
+import { getDb } from "../db";
 import { emailSchedules, emailScheduleRuns, userActivityTriggers, emailQueue, users, userCohorts, courseEnrollments } from "../../drizzle/schema";
 import { eq, and, gte, lte, inArray, sql } from "drizzle-orm";
 

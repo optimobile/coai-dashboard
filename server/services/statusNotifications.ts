@@ -67,13 +67,14 @@ export async function notifyIncidentCreated(incidentId: number) {
   }
   
   // Get all active subscribers who want incident notifications
+  // Note: tinyint columns use 1/0 instead of true/false in MySQL
   const subscribers = await db
     .select()
     .from(statusSubscriptions)
     .where(
       and(
-        eq(statusSubscriptions.isActive, true),
-        eq(statusSubscriptions.notifyOnIncident, true)
+        eq(statusSubscriptions.isActive, 1),
+        eq(statusSubscriptions.notifyOnIncident, 1)
       )
     );
   
@@ -122,13 +123,14 @@ export async function notifyIncidentUpdated(incidentId: number, updateMessage: s
   }
   
   // Get all active subscribers who want incident notifications
+  // Note: tinyint columns use 1/0 instead of true/false in MySQL
   const subscribers = await db
     .select()
     .from(statusSubscriptions)
     .where(
       and(
-        eq(statusSubscriptions.isActive, true),
-        eq(statusSubscriptions.notifyOnIncident, true)
+        eq(statusSubscriptions.isActive, 1),
+        eq(statusSubscriptions.notifyOnIncident, 1)
       )
     );
   
@@ -177,13 +179,14 @@ export async function notifyIncidentResolved(incidentId: number) {
   }
   
   // Get all active subscribers who want resolution notifications
+  // Note: tinyint columns use 1/0 instead of true/false in MySQL
   const subscribers = await db
     .select()
     .from(statusSubscriptions)
     .where(
       and(
-        eq(statusSubscriptions.isActive, true),
-        eq(statusSubscriptions.notifyOnResolution, true)
+        eq(statusSubscriptions.isActive, 1),
+        eq(statusSubscriptions.notifyOnResolution, 1)
       )
     );
   

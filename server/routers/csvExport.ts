@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../_core/trpc";
 import { z } from "zod";
-import { db } from "../db";
+import { getDb } from "../db";
 import { users, userCohorts, courseEnrollments, courses, userTrainingProgress, userCertificates, trainingModules } from "../../drizzle/schema";
 import { eq, and, inArray } from "drizzle-orm";
 
@@ -17,6 +17,9 @@ export const csvExportRouter = router({
       includeCertificates: z.boolean().default(true),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
       // Get cohort info
       const [cohort] = await db
         .select()
@@ -34,61 +37,62 @@ export const csvExportRouter = router({
           userId: users.id,
           userName: users.name,
           userEmail: users.email,
-          userStatus: users.status,
           enrollmentId: courseEnrollments.id,
           enrollmentStatus: courseEnrollments.status,
           enrolledAt: courseEnrollments.enrolledAt,
           completedAt: courseEnrollments.completedAt,
           courseId: courses.id,
-          courseName: courses.name,
+          courseTitle: courses.title,
         })
         .from(courseEnrollments)
         .innerJoin(users, eq(courseEnrollments.userId, users.id))
-        .leftJoin(courses, eq(courseEnrollments.courseId, courses.id))
-        .where(eq(courseEnrollments.cohortId, input.cohortId));
+        .leftJoin(courses, eq(courseEnrollments.courseId, courses.id));
 
       // Get progress data if requested
       let progressData: Map<number, any> = new Map();
       if (input.includeProgress) {
-        const userIds = [...new Set(studentEnrollments.map(e => e.userId))];
-        const progress = await db
-          .select({
-            userId: userTrainingProgress.userId,
-            moduleId: userTrainingProgress.moduleId,
-            moduleName: trainingModules.name,
-            status: userTrainingProgress.status,
-            progress: userTrainingProgress.progress,
-            completedAt: userTrainingProgress.completedAt,
-          })
-          .from(userTrainingProgress)
-          .leftJoin(trainingModules, eq(userTrainingProgress.moduleId, trainingModules.id))
-          .where(inArray(userTrainingProgress.userId, userIds));
+        const userIds = [...new Set(studentEnrollments.map((e: any) => e.userId))];
+        if (userIds.length > 0) {
+          const progress = await db
+            .select({
+              userId: userTrainingProgress.userId,
+              moduleId: userTrainingProgress.moduleId,
+              moduleTitle: trainingModules.title,
+              status: userTrainingProgress.status,
+              completedAt: userTrainingProgress.completedAt,
+            })
+            .from(userTrainingProgress)
+            .leftJoin(trainingModules, eq(userTrainingProgress.moduleId, trainingModules.id))
+            .where(inArray(userTrainingProgress.userId, userIds));
 
-        // Group by user
-        progress.forEach(p => {
-          if (!progressData.has(p.userId)) {
-            progressData.set(p.userId, []);
-          }
-          progressData.get(p.userId)!.push(p);
-        });
+          // Group by user
+          progress.forEach((p: any) => {
+            if (!progressData.has(p.userId)) {
+              progressData.set(p.userId, []);
+            }
+            progressData.get(p.userId)!.push(p);
+          });
+        }
       }
 
       // Get certificate data if requested
       let certificateData: Map<number, any> = new Map();
       if (input.includeCertificates) {
-        const userIds = [...new Set(studentEnrollments.map(e => e.userId))];
-        const certificates = await db
-          .select()
-          .from(userCertificates)
-          .where(inArray(userCertificates.userId, userIds));
+        const userIds = [...new Set(studentEnrollments.map((e: any) => e.userId))];
+        if (userIds.length > 0) {
+          const certificates = await db
+            .select()
+            .from(userCertificates)
+            .where(inArray(userCertificates.userId, userIds));
 
-        // Group by user
-        certificates.forEach(cert => {
-          if (!certificateData.has(cert.userId)) {
-            certificateData.set(cert.userId, []);
-          }
-          certificateData.get(cert.userId)!.push(cert);
-        });
+          // Group by user
+          certificates.forEach((cert: any) => {
+            if (!certificateData.has(cert.userId)) {
+              certificateData.set(cert.userId, []);
+            }
+            certificateData.get(cert.userId)!.push(cert);
+          });
+        }
       }
 
       // Build CSV data
@@ -99,7 +103,6 @@ export const csvExportRouter = router({
         'User ID',
         'Name',
         'Email',
-        'User Status',
         'Enrollment Status',
         'Enrolled At',
         'Completed At',
@@ -107,7 +110,7 @@ export const csvExportRouter = router({
       ];
 
       if (input.includeProgress) {
-        headers.push('Modules Completed', 'Modules In Progress', 'Average Progress %');
+        headers.push('Modules Completed', 'Modules In Progress');
       }
 
       if (input.includeCertificates) {
@@ -118,42 +121,38 @@ export const csvExportRouter = router({
 
       // Data rows - group by user
       const userMap = new Map<number, typeof studentEnrollments>();
-      studentEnrollments.forEach(enrollment => {
+      studentEnrollments.forEach((enrollment: any) => {
         if (!userMap.has(enrollment.userId)) {
           userMap.set(enrollment.userId, []);
         }
-        userMap.get(enrollment.userId)!.push(enrollment);
+        (userMap.get(enrollment.userId) as any[])!.push(enrollment);
       });
 
-      userMap.forEach((enrollments, userId) => {
+      userMap.forEach((enrollments: any, userId: number) => {
         const firstEnrollment = enrollments[0];
         const row: string[] = [
           userId.toString(),
           firstEnrollment.userName || '',
           firstEnrollment.userEmail || '',
-          firstEnrollment.userStatus || '',
           firstEnrollment.enrollmentStatus || '',
           firstEnrollment.enrolledAt || '',
           firstEnrollment.completedAt || '',
-          enrollments.map(e => e.courseName).filter(Boolean).join('; '),
+          enrollments.map((e: any) => e.courseTitle).filter(Boolean).join('; '),
         ];
 
         if (input.includeProgress) {
           const userProgress = progressData.get(userId) || [];
-          const completed = userProgress.filter(p => p.status === 'completed').length;
-          const inProgress = userProgress.filter(p => p.status === 'in_progress').length;
-          const avgProgress = userProgress.length > 0
-            ? (userProgress.reduce((sum, p) => sum + (p.progress || 0), 0) / userProgress.length).toFixed(1)
-            : '0';
+          const completed = userProgress.filter((p: any) => p.status === 'completed').length;
+          const inProgress = userProgress.filter((p: any) => p.status === 'in_progress').length;
 
-          row.push(completed.toString(), inProgress.toString(), avgProgress);
+          row.push(completed.toString(), inProgress.toString());
         }
 
         if (input.includeCertificates) {
           const userCerts = certificateData.get(userId) || [];
           const certCount = userCerts.length;
           const latestCert = userCerts.length > 0
-            ? userCerts.sort((a, b) => new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime())[0]
+            ? userCerts.sort((a: any, b: any) => new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime())[0]
             : null;
 
           row.push(
@@ -171,7 +170,7 @@ export const csvExportRouter = router({
         .join('\n');
 
       return {
-        filename: `cohort-${cohort.name.replace(/[^a-z0-9]/gi, '-')}-${new Date().toISOString().split('T')[0]}.csv`,
+        filename: `cohort-${cohort.name?.replace(/[^a-z0-9]/gi, '-') || 'export'}-${new Date().toISOString().split('T')[0]}.csv`,
         content: csvContent,
         rowCount: csvRows.length - 1, // Exclude header
       };
@@ -188,15 +187,8 @@ export const csvExportRouter = router({
       }).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      // Check if user is admin (you may want to add role check here)
-      // For now, we'll allow any authenticated user
-
-      // Build query conditions
-      const conditions = [];
-      
-      if (input.filters?.cohortIds && input.filters.cohortIds.length > 0) {
-        conditions.push(inArray(courseEnrollments.cohortId, input.filters.cohortIds));
-      }
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
 
       // Get all students with enrollment data
       const studentData = await db
@@ -204,22 +196,19 @@ export const csvExportRouter = router({
           userId: users.id,
           userName: users.name,
           userEmail: users.email,
-          userStatus: users.status,
           userCreatedAt: users.createdAt,
-          userLastLoginAt: users.lastLoginAt,
           cohortId: userCohorts.id,
-          cohortName: userCohorts.cohortId,
+          cohortName: userCohorts.name,
           enrollmentStatus: courseEnrollments.status,
           enrolledAt: courseEnrollments.enrolledAt,
           completedAt: courseEnrollments.completedAt,
           courseId: courses.id,
-          courseName: courses.name,
+          courseTitle: courses.title,
         })
         .from(users)
         .leftJoin(courseEnrollments, eq(users.id, courseEnrollments.userId))
-        .leftJoin(userCohorts, eq(courseEnrollments.cohortId, userCohorts.id))
-        .leftJoin(courses, eq(courseEnrollments.courseId, courses.id))
-        .where(conditions.length > 0 ? and(...conditions) : undefined);
+        .leftJoin(userCohorts, eq(users.id, userCohorts.userId))
+        .leftJoin(courses, eq(courseEnrollments.courseId, courses.id));
 
       // Build CSV
       const csvRows: string[][] = [];
@@ -228,9 +217,7 @@ export const csvExportRouter = router({
         'User ID',
         'Name',
         'Email',
-        'Status',
         'Created At',
-        'Last Login',
         'Cohort',
         'Course',
         'Enrollment Status',
@@ -238,16 +225,14 @@ export const csvExportRouter = router({
         'Completed At',
       ]);
 
-      studentData.forEach(student => {
+      studentData.forEach((student: any) => {
         csvRows.push([
           student.userId.toString(),
           student.userName || '',
           student.userEmail || '',
-          student.userStatus || '',
           student.userCreatedAt || '',
-          student.userLastLoginAt || '',
           student.cohortName || '',
-          student.courseName || '',
+          student.courseTitle || '',
           student.enrollmentStatus || '',
           student.enrolledAt || '',
           student.completedAt || '',
@@ -272,20 +257,31 @@ export const csvExportRouter = router({
       cohortId: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
       let targetUserIds: number[] = [];
 
       if (input.userIds && input.userIds.length > 0) {
         targetUserIds = input.userIds;
       } else if (input.cohortId) {
         // Get all users in cohort
-        const cohortEnrollments = await db
-          .select({ userId: courseEnrollments.userId })
-          .from(courseEnrollments)
-          .where(eq(courseEnrollments.cohortId, input.cohortId));
+        const cohortUsers = await db
+          .select({ userId: userCohorts.userId })
+          .from(userCohorts)
+          .where(eq(userCohorts.id, input.cohortId));
         
-        targetUserIds = [...new Set(cohortEnrollments.map(e => e.userId))];
+        targetUserIds = [...new Set(cohortUsers.map((e: any) => e.userId))];
       } else {
         throw new Error('Must provide either userIds or cohortId');
+      }
+
+      if (targetUserIds.length === 0) {
+        return {
+          filename: `student-progress-${new Date().toISOString().split('T')[0]}.csv`,
+          content: '',
+          rowCount: 0,
+        };
       }
 
       // Get user info
@@ -299,10 +295,8 @@ export const csvExportRouter = router({
         .select({
           userId: userTrainingProgress.userId,
           moduleId: userTrainingProgress.moduleId,
-          moduleName: trainingModules.name,
+          moduleTitle: trainingModules.title,
           status: userTrainingProgress.status,
-          progress: userTrainingProgress.progress,
-          timeSpentMinutes: userTrainingProgress.timeSpentMinutes,
           startedAt: userTrainingProgress.startedAt,
           completedAt: userTrainingProgress.completedAt,
         })
@@ -319,22 +313,18 @@ export const csvExportRouter = router({
         'User Email',
         'Module Name',
         'Status',
-        'Progress %',
-        'Time Spent (minutes)',
         'Started At',
         'Completed At',
       ]);
 
-      progressData.forEach(progress => {
-        const user = usersData.find(u => u.id === progress.userId);
+      progressData.forEach((progress: any) => {
+        const user = usersData.find((u: any) => u.id === progress.userId);
         csvRows.push([
           progress.userId.toString(),
           user?.name || '',
           user?.email || '',
-          progress.moduleName || '',
+          progress.moduleTitle || '',
           progress.status || '',
-          (progress.progress || 0).toString(),
-          (progress.timeSpentMinutes || 0).toString(),
           progress.startedAt || '',
           progress.completedAt || '',
         ]);

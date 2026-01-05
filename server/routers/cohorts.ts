@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../_core/trpc";
-import { db } from "../db";
+import { getDb } from "../db";
 import { cohorts, students, cohortCourses, studentCohortHistory } from "../../drizzle/schema";
 import { eq, and, like, or, desc, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";

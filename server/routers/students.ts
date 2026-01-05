@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../_core/trpc";
-import { db } from "../db";
+import { getDb } from "../db";
 import { students, cohorts, studentCohortHistory } from "../../drizzle/schema";
 import { eq, and, like, or, desc, sql, isNull } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -16,7 +16,10 @@ export const studentsRouter = router({
       offset: z.number().min(0).default(0),
     }))
     .query(async ({ input }) => {
-      const conditions = [];
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
+      const conditions: any[] = [];
       
       if (input.cohortId) {
         conditions.push(eq(students.cohortId, input.cohortId));
@@ -53,11 +56,11 @@ export const studentsRouter = router({
         db.select({ count: sql<number>`count(*)` })
           .from(students)
           .where(where)
-          .then(result => Number(result[0].count))
+          .then((result: any) => Number(result[0].count))
       ]);
 
       return {
-        items: items.map(row => ({
+        items: items.map((row: any) => ({
           ...row.student,
           cohort: row.cohort,
         })),
@@ -70,6 +73,9 @@ export const studentsRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
       const result = await db.select({
         student: students,
         cohort: cohorts,
@@ -99,7 +105,7 @@ export const studentsRouter = router({
       return {
         ...result[0].student,
         cohort: result[0].cohort,
-        cohortHistory: history.map(h => ({
+        cohortHistory: history.map((h: any) => ({
           ...h.history,
           cohort: h.cohort,
         })),
@@ -121,6 +127,9 @@ export const studentsRouter = router({
       metadata: z.any().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
       // Check if email already exists
       const existing = await db.select()
         .from(students)
@@ -134,12 +143,12 @@ export const studentsRouter = router({
         });
       }
 
-      const result = await db.insert(students).values(input);
+      const result = await db.insert(students).values(input as any);
 
       // If assigned to cohort, record in history
       if (input.cohortId) {
         await db.insert(studentCohortHistory).values({
-          studentId: Number(result[0].insertId),
+          studentId: Number((result as any)[0].insertId),
           cohortId: input.cohortId,
           startDate: new Date().toISOString(),
           status: 'active',
@@ -149,7 +158,7 @@ export const studentsRouter = router({
         const cohortStudentCount = await db.select({ count: sql<number>`count(*)` })
           .from(students)
           .where(eq(students.cohortId, input.cohortId))
-          .then(result => Number(result[0].count));
+          .then((result: any) => Number(result[0].count));
 
         await db.update(cohorts)
           .set({ currentEnrollment: cohortStudentCount })
@@ -157,7 +166,7 @@ export const studentsRouter = router({
       }
 
       return {
-        id: Number(result[0].insertId),
+        id: Number((result as any)[0].insertId),
         success: true,
       };
     }),
@@ -178,6 +187,9 @@ export const studentsRouter = router({
       metadata: z.any().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
       const { id, ...updateData } = input;
 
       // Check if student exists
@@ -230,7 +242,7 @@ export const studentsRouter = router({
           const oldCohortCount = await db.select({ count: sql<number>`count(*)` })
             .from(students)
             .where(eq(students.cohortId, existing[0].cohortId))
-            .then(result => Number(result[0].count));
+            .then((result: any) => Number(result[0].count));
 
           await db.update(cohorts)
             .set({ currentEnrollment: Math.max(0, oldCohortCount - 1) })
@@ -250,7 +262,7 @@ export const studentsRouter = router({
           const newCohortCount = await db.select({ count: sql<number>`count(*)` })
             .from(students)
             .where(eq(students.cohortId, updateData.cohortId))
-            .then(result => Number(result[0].count));
+            .then((result: any) => Number(result[0].count));
 
           await db.update(cohorts)
             .set({ currentEnrollment: newCohortCount + 1 })
@@ -259,7 +271,7 @@ export const studentsRouter = router({
       }
 
       await db.update(students)
-        .set(updateData)
+        .set(updateData as any)
         .where(eq(students.id, id));
 
       return { success: true };
@@ -269,6 +281,9 @@ export const studentsRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
       const student = await db.select()
         .from(students)
         .where(eq(students.id, input.id))
@@ -286,7 +301,7 @@ export const studentsRouter = router({
         const cohortStudentCount = await db.select({ count: sql<number>`count(*)` })
           .from(students)
           .where(eq(students.cohortId, student[0].cohortId))
-          .then(result => Number(result[0].count));
+          .then((result: any) => Number(result[0].count));
 
         await db.update(cohorts)
           .set({ currentEnrollment: Math.max(0, cohortStudentCount - 1) })
@@ -306,6 +321,9 @@ export const studentsRouter = router({
       status: z.enum(['active', 'inactive', 'graduated', 'withdrawn', 'suspended']),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
       for (const studentId of input.studentIds) {
         await db.update(students)
           .set({ status: input.status })
@@ -325,6 +343,9 @@ export const studentsRouter = router({
       offset: z.number().min(0).default(0),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
       const items = await db.select()
         .from(students)
         .where(isNull(students.cohortId))
@@ -335,7 +356,7 @@ export const studentsRouter = router({
       const totalCount = await db.select({ count: sql<number>`count(*)` })
         .from(students)
         .where(isNull(students.cohortId))
-        .then(result => Number(result[0].count));
+        .then((result: any) => Number(result[0].count));
 
       return {
         items,
@@ -351,7 +372,10 @@ export const studentsRouter = router({
       status: z.enum(['active', 'inactive', 'graduated', 'withdrawn', 'suspended']).optional(),
     }))
     .query(async ({ input }) => {
-      const conditions = [];
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
+      const conditions: any[] = [];
       
       if (input.cohortId) {
         conditions.push(eq(students.cohortId, input.cohortId));
@@ -372,7 +396,7 @@ export const studentsRouter = router({
         .where(where)
         .orderBy(desc(students.enrollmentDate));
 
-      return items.map(row => ({
+      return items.map((row: any) => ({
         studentNumber: row.student.studentNumber || '',
         firstName: row.student.firstName,
         lastName: row.student.lastName,
