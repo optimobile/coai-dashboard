@@ -8525,3 +8525,15 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add Sentry error filtering - Added filters for unauthenticated access, permission denied, payment plan errors, and TRPC auth errors in both frontend and backend
 - [x] Test enrollment flow - Code review confirms login dialog appears for unauthenticated users (lines 346-347 and 605-606 in Courses.tsx handle 'login' and '10001' errors by showing showLoginDialog)
 - [ ] Clean up 53 test courses from database (created by automated tests)
+
+## Bug Fixes - Jan 5, 2026
+
+- [ ] Fix TRPCClientError "Please login (10001)" on /dashboard route - handle unauthenticated access gracefully
+- [ ] Add CSOAIByzantineNetworkVisualization component to homepage
+
+
+
+## Bug Fixes - Jan 5, 2026
+
+- [x] Fix TRPCClientError "Please login (10001)" on /dashboard route - improved Sentry error filtering to not report expected authentication errors
+- [x] Add CSOAIByzantineNetworkVisualization component to homepage - animated SVG visualization showing 33 council agents with real-time consensus stats

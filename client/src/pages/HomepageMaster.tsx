@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { IncidentReportForm } from '@/components/IncidentReportForm';
+import { CSOAIByzantineNetworkVisualization } from '@/components/CSOAIByzantineNetworkVisualization';
 import { Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
@@ -365,6 +366,22 @@ export default function HomepageMaster() {
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          SECTION 2.25: BYZANTINE COUNCIL VISUALIZATION
+          ============================================ */}
+      <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-gray-800">
+        <div className="max-w-6xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-white mb-4">See Our Byzantine Council in Action</h2>
+            <p className="text-xl text-gray-300">33 AI agents working together for impartial, vendor-independent safety decisions.</p>
+          </motion.div>
+          
+          <motion.div {...fadeInUp}>
+            <CSOAIByzantineNetworkVisualization />
+          </motion.div>
         </div>
       </section>
 

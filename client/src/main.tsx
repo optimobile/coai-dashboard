@@ -107,13 +107,28 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
   }
 };
 
+// Helper to check if error is an expected user error (auth, permission, etc.)
+const isExpectedUserError = (error: unknown): boolean => {
+  if (!(error instanceof TRPCClientError)) return false;
+  const errorMessage = error.message || '';
+  return (
+    errorMessage.includes('Please login') ||
+    errorMessage.includes('10001') ||
+    errorMessage.includes('do not have required permission') ||
+    errorMessage.includes('10002') ||
+    errorMessage.includes('UNAUTHORIZED') ||
+    errorMessage.includes('FORBIDDEN') ||
+    errorMessage.includes('Payment plan not available')
+  );
+};
+
 queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
     redirectToLoginIfUnauthorized(error);
     
-    // Report API errors to Sentry
-    if (SENTRY_DSN && error) {
+    // Only report non-expected errors to Sentry
+    if (SENTRY_DSN && error && !isExpectedUserError(error)) {
       Sentry.captureException(error, {
         tags: { type: 'api_query_error' },
         extra: { queryKey: event.query.queryKey },
@@ -131,8 +146,8 @@ queryClient.getMutationCache().subscribe(event => {
     const error = event.mutation.state.error;
     redirectToLoginIfUnauthorized(error);
     
-    // Report API errors to Sentry
-    if (SENTRY_DSN && error) {
+    // Only report non-expected errors to Sentry
+    if (SENTRY_DSN && error && !isExpectedUserError(error)) {
       Sentry.captureException(error, {
         tags: { type: 'api_mutation_error' },
       });
