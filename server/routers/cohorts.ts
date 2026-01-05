@@ -15,6 +15,11 @@ export const cohortsRouter = router({
       offset: z.number().min(0).default(0),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const conditions = [];
       
       if (input.status) {
@@ -57,6 +62,11 @@ export const cohortsRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const cohort = await db.select()
         .from(cohorts)
         .where(eq(cohorts.id, input.id))
@@ -104,6 +114,11 @@ export const cohortsRouter = router({
       metadata: z.any().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Check if code already exists
       const existing = await db.select()
         .from(cohorts)
@@ -143,6 +158,11 @@ export const cohortsRouter = router({
       metadata: z.any().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const { id, ...updateData } = input;
 
       // Check if cohort exists
@@ -187,6 +207,11 @@ export const cohortsRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Check if cohort has students
       const studentCount = await db.select({ count: sql<number>`count(*)` })
         .from(students)
@@ -214,6 +239,11 @@ export const cohortsRouter = router({
       offset: z.number().min(0).default(0),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const items = await db.select()
         .from(students)
         .where(eq(students.cohortId, input.cohortId))
@@ -240,6 +270,11 @@ export const cohortsRouter = router({
       studentIds: z.array(z.number()),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Verify cohort exists
       const cohort = await db.select()
         .from(cohorts)
@@ -287,6 +322,11 @@ export const cohortsRouter = router({
   // Get cohort statistics
   getStats: protectedProcedure
     .query(async () => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const totalCohorts = await db.select({ count: sql<number>`count(*)` })
         .from(cohorts)
         .then(result => Number(result[0].count));

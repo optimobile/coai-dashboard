@@ -2,7 +2,8 @@ import { router, protectedProcedure } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
 import { emailSchedules, emailScheduleRuns, userActivityTriggers, emailQueue, users, userCohorts, courseEnrollments } from "../../drizzle/schema";
-import { eq, and, gte, lte, inArray, sql } from "drizzle-orm";
+import { eq, and, lte, inArray, sql } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
 // ============================================
 // INPUT SCHEMAS
@@ -62,6 +63,11 @@ export const emailSchedulingRouter = router({
       triggerType: z.enum(['user_activity', 'time_based', 'manual']).optional(),
     }).optional())
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const conditions = [];
       
       if (input?.isActive !== undefined) {
@@ -85,6 +91,11 @@ export const emailSchedulingRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const [schedule] = await db
         .select()
         .from(emailSchedules)
@@ -92,7 +103,7 @@ export const emailSchedulingRouter = router({
         .limit(1);
 
       if (!schedule) {
-        throw new Error('Schedule not found');
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Schedule not found' });
       }
 
       return schedule;
@@ -102,6 +113,11 @@ export const emailSchedulingRouter = router({
   create: protectedProcedure
     .input(createScheduleSchema)
     .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const [newSchedule] = await db
         .insert(emailSchedules)
         .values({
@@ -119,6 +135,11 @@ export const emailSchedulingRouter = router({
   update: protectedProcedure
     .input(updateScheduleSchema)
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const { id, ...updates } = input;
 
       await db
@@ -137,6 +158,11 @@ export const emailSchedulingRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       await db
         .delete(emailSchedules)
         .where(eq(emailSchedules.id, input.id));
@@ -148,6 +174,11 @@ export const emailSchedulingRouter = router({
   toggleActive: protectedProcedure
     .input(z.object({ id: z.number(), isActive: z.boolean() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       await db
         .update(emailSchedules)
         .set({ isActive: input.isActive })
@@ -164,6 +195,11 @@ export const emailSchedulingRouter = router({
       testEmail: z.string().email().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const [schedule] = await db
         .select()
         .from(emailSchedules)
@@ -171,7 +207,7 @@ export const emailSchedulingRouter = router({
         .limit(1);
 
       if (!schedule) {
-        throw new Error('Schedule not found');
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Schedule not found' });
       }
 
       // Create schedule run record
@@ -193,7 +229,7 @@ export const emailSchedulingRouter = router({
         targetUsers = [{ id: 0, email: input.testEmail, name: 'Test User' }];
       } else {
         // Real mode: get users based on filter
-        targetUsers = await getTargetUsers(schedule);
+        targetUsers = await getTargetUsers(db, schedule);
       }
 
       // Update run with target count
@@ -263,6 +299,11 @@ export const emailSchedulingRouter = router({
       limit: z.number().default(20),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const runs = await db
         .select()
         .from(emailScheduleRuns)
@@ -280,6 +321,11 @@ export const emailSchedulingRouter = router({
       limit: z.number().default(50),
     }).optional())
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const conditions = [eq(userActivityTriggers.status, 'pending')];
       
       if (input?.scheduleId) {
@@ -301,7 +347,7 @@ export const emailSchedulingRouter = router({
 // HELPER FUNCTIONS
 // ============================================
 
-async function getTargetUsers(schedule: any): Promise<any[]> {
+async function getTargetUsers(db: NonNullable<Awaited<ReturnType<typeof getDb>>>, schedule: any): Promise<any[]> {
   const audienceFilter = schedule.audienceFilter || {};
   
   // Base query

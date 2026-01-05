@@ -2,7 +2,9 @@ import { router, protectedProcedure } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
 import { users, courseEnrollments, emailQueue, userTrainingProgress } from "../../drizzle/schema";
-import { eq, and, inArray, sql } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
+import { bulkOperationLimiter, emailSendLimiter } from "../utils/rateLimiter";
 
 // ============================================
 // BULK ACTIONS ROUTER
@@ -19,6 +21,21 @@ export const bulkActionsRouter = router({
       templateKey: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
+      // Rate limit bulk email operations
+      const rateLimitKey = `bulk-email:${ctx.user.id}`;
+      const rateLimitResult = emailSendLimiter.check(rateLimitKey);
+      if (!rateLimitResult.allowed) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: `Too many email operations. Please try again in ${Math.ceil(rateLimitResult.resetIn / 60000)} minutes.`,
+        });
+      }
+
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Get user emails
       const targetUsers = await db
         .select({
@@ -30,14 +47,14 @@ export const bulkActionsRouter = router({
         .where(inArray(users.id, input.userIds));
 
       if (targetUsers.length === 0) {
-        throw new Error('No valid users found');
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'No valid users found' });
       }
 
       // Queue emails for all users
       const emailPromises = targetUsers.map(user => 
         db.insert(emailQueue).values({
           userId: user.id,
-          toEmail: user.email,
+          toEmail: user.email || '',
           subject: input.subject,
           htmlContent: `<p>Hello ${user.name},</p>\n${input.message.replace(/\n/g, '<br>')}`,
           textContent: `Hello ${user.name},\n\n${input.message}`,
@@ -66,6 +83,11 @@ export const bulkActionsRouter = router({
       reason: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Build conditions
       const conditions = [inArray(courseEnrollments.userId, input.userIds)];
       
@@ -84,7 +106,7 @@ export const bulkActionsRouter = router({
 
       return {
         success: true,
-        updatedCount: result.rowsAffected || 0,
+        updatedCount: (result as any).rowsAffected || 0,
         status: input.status,
       };
     }),
@@ -97,6 +119,11 @@ export const bulkActionsRouter = router({
       reason: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const result = await db
         .update(users)
         .set({ 
@@ -107,7 +134,7 @@ export const bulkActionsRouter = router({
 
       return {
         success: true,
-        updatedCount: result.rowsAffected || 0,
+        updatedCount: (result as any).rowsAffected || 0,
         status: input.status,
       };
     }),
@@ -119,6 +146,11 @@ export const bulkActionsRouter = router({
       moduleIds: z.array(z.number()).optional(), // If empty, reset all modules
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const conditions = [inArray(userTrainingProgress.userId, input.userIds)];
       
       if (input.moduleIds && input.moduleIds.length > 0) {
@@ -139,7 +171,7 @@ export const bulkActionsRouter = router({
 
       return {
         success: true,
-        resetCount: result.rowsAffected || 0,
+        resetCount: (result as any).rowsAffected || 0,
       };
     }),
 
@@ -151,7 +183,22 @@ export const bulkActionsRouter = router({
       cohortId: z.number().optional(),
       paymentStatus: z.enum(['pending', 'completed', 'failed', 'free']).default('free'),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      // Rate limit bulk enrollment operations
+      const rateLimitKey = `bulk-enroll:${ctx.user.id}`;
+      const rateLimitResult = bulkOperationLimiter.check(rateLimitKey);
+      if (!rateLimitResult.allowed) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: `Too many bulk operations. Please try again in ${Math.ceil(rateLimitResult.resetIn / 60000)} minutes.`,
+        });
+      }
+
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Check for existing enrollments
       const existingEnrollments = await db
         .select({ userId: courseEnrollments.userId })
@@ -204,6 +251,11 @@ export const bulkActionsRouter = router({
       reason: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const result = await db
         .delete(courseEnrollments)
         .where(
@@ -215,7 +267,7 @@ export const bulkActionsRouter = router({
 
       return {
         success: true,
-        unenrolledCount: result.rowsAffected || 0,
+        unenrolledCount: (result as any).rowsAffected || 0,
       };
     }),
 
@@ -227,6 +279,11 @@ export const bulkActionsRouter = router({
       customMessage: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Get user details
       const targetUsers = await db
         .select({
@@ -264,7 +321,7 @@ export const bulkActionsRouter = router({
       const emailPromises = targetUsers.map(user =>
         db.insert(emailQueue).values({
           userId: user.id,
-          toEmail: user.email,
+          toEmail: user.email || '',
           subject,
           htmlContent: `<p>Hello ${user.name},</p>\n<p>${message}</p>`,
           textContent: `Hello ${user.name},\n\n${message}`,
@@ -289,7 +346,7 @@ export const bulkActionsRouter = router({
       limit: z.number().default(50),
       actionType: z.enum(['email', 'status_update', 'enrollment', 'progress_reset']).optional(),
     }).optional())
-    .query(async ({ input }) => {
+    .query(async () => {
       // This would query a bulk_actions_log table if it existed
       // For now, return empty array as placeholder
       return [];
@@ -303,6 +360,11 @@ export const bulkActionsRouter = router({
       actionParams: z.any(),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Get affected users
       const affectedUsers = await db
         .select({

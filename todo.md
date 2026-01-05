@@ -327,3 +327,50 @@
 
 ### Security
 - [x] Add rate limiting to coupon validation endpoint (20 attempts per 15 minutes per IP)
+
+
+## Phase 18 - E2E Testing & Critical Fixes (Jan 5, 2026)
+
+### E2E Testing Infrastructure
+- [x] Install Playwright for E2E testing
+- [x] Configure Playwright with TypeScript support
+- [x] Create E2E test configuration file (playwright.config.ts)
+- [x] Set up test fixtures for authentication
+- [x] Create E2E tests for user registration flow (e2e/08-authentication.spec.ts)
+- [x] Create E2E tests for login flow (e2e/08-authentication.spec.ts)
+- [x] Create E2E tests for training/course access (e2e/05-training-flow.spec.ts)
+- [x] Create E2E tests for certification process (e2e/06-certification-flow.spec.ts)
+- [x] Create E2E tests for coupon validation (e2e/07-coupon-validation.spec.ts)
+- [x] Create E2E tests for API health (e2e/09-api-health.spec.ts)
+
+### TypeScript Error Fixes (372 errors remaining - reduced from 518)
+- [x] Fix cohorts.ts - convert db imports to getDb() pattern
+- [x] Fix emailTemplates.ts - convert db imports to getDb() pattern
+- [x] Fix cohortAnalysis.ts - convert db imports to getDb() pattern
+- [x] Fix emailScheduling.ts - convert db imports to getDb() pattern
+- [x] Fix bulkActions.ts - convert db imports to getDb() pattern
+- [x] Fix instructorDashboard.ts - convert db imports to getDb() pattern
+- [x] Fix abTesting.ts - convert db imports to getDb() pattern
+- [ ] Fix remaining type mismatches in routers (boolean vs number for MySQL)
+- [ ] Fix test files with outdated mocks
+- [ ] Add explicit type annotations for implicit 'any' parameters
+
+### Rate Limiting for Sensitive Endpoints
+- [x] Add rate limiting to enrollment endpoints (10 req/5 min)
+- [x] Add rate limiting to password reset endpoints (3 req/15 min)
+- [x] Add rate limiting to API key generation endpoints (5 req/hour)
+- [x] Add rate limiting to giveaway applications (3 req/10 min)
+- [x] Add rate limiting to bulk operations (5 req/10 min)
+- [x] Add rate limiting to email sending (50 req/hour)
+- [x] Create rate limiter utility (server/utils/rateLimiter.ts)
+
+### Coupon Validation Logging
+- [x] Create coupon validation logging service (server/services/couponValidationLogger.ts)
+- [x] Add logging for successful coupon validations
+- [x] Add logging for failed coupon validation attempts (with reasons)
+- [x] Add logging for rate-limited coupon attempts
+- [x] Implement abuse pattern detection (brute force, code enumeration)
+- [x] Add validation statistics for monitoring
+- [ ] Create admin dashboard for coupon abuse monitoring (UI pending)
+- [ ] Set up alerts for suspicious coupon patterns (pending)
+

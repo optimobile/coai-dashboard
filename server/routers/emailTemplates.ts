@@ -47,6 +47,11 @@ export const emailTemplatesRouter = router({
       offset: z.number().min(0).default(0),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const conditions = [];
       
       if (input.category) {
@@ -93,6 +98,11 @@ export const emailTemplatesRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const template = await db.select()
         .from(emailTemplates)
         .where(eq(emailTemplates.id, input.id))
@@ -121,6 +131,11 @@ export const emailTemplatesRouter = router({
   getByKey: protectedProcedure
     .input(z.object({ key: z.string() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const template = await db.select()
         .from(emailTemplates)
         .where(eq(emailTemplates.key, input.key))
@@ -157,6 +172,11 @@ export const emailTemplatesRouter = router({
       metadata: z.any().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Check if key already exists
       const existing = await db.select()
         .from(emailTemplates)
@@ -217,6 +237,11 @@ export const emailTemplatesRouter = router({
       changeDescription: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const { id, changeDescription, ...updateData } = input;
 
       // Check if template exists
@@ -234,7 +259,7 @@ export const emailTemplatesRouter = router({
 
       // If subject or body changed, create new version
       if (updateData.subject || updateData.htmlBody) {
-        const newVersion = existing[0].version + 1;
+        const newVersion = (existing[0].version || 1) + 1;
         
         await db.insert(emailTemplateVersions).values({
           templateId: id,
@@ -246,7 +271,7 @@ export const emailTemplatesRouter = router({
           createdBy: ctx.user.id,
         });
 
-        updateData.version = newVersion;
+        (updateData as any).version = newVersion;
       }
 
       await db.update(emailTemplates)
@@ -260,6 +285,11 @@ export const emailTemplatesRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       await db.delete(emailTemplates)
         .where(eq(emailTemplates.id, input.id));
 
@@ -273,6 +303,11 @@ export const emailTemplatesRouter = router({
       sampleData: z.record(z.any()),
     }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const template = await db.select()
         .from(emailTemplates)
         .where(eq(emailTemplates.id, input.id))
@@ -285,7 +320,7 @@ export const emailTemplatesRouter = router({
         });
       }
 
-      const availableTags = template[0].availableMergeTags.map((t: any) => t.tag);
+      const availableTags = ((template[0].availableMergeTags as any[]) || []).map((t: any) => t.tag);
       const validation = validateMergeTags(template[0].htmlBody, availableTags);
 
       if (!validation.valid) {
@@ -316,6 +351,11 @@ export const emailTemplatesRouter = router({
       sampleData: z.record(z.any()),
     }))
     .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       // Render the template with sample data
       const template = await db.select()
         .from(emailTemplates)
@@ -349,6 +389,11 @@ export const emailTemplatesRouter = router({
   getPreviews: protectedProcedure
     .input(z.object({ templateId: z.number() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const previews = await db.select()
         .from(emailTemplatePreviews)
         .where(eq(emailTemplatePreviews.templateId, input.templateId))
@@ -379,6 +424,11 @@ export const emailTemplatesRouter = router({
   incrementUsage: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       await db.update(emailTemplates)
         .set({
           usageCount: sql`${emailTemplates.usageCount} + 1`,

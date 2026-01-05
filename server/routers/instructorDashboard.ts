@@ -3,11 +3,15 @@ import { router, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
 import { instructorCohorts, cohortStudents, users } from "../../drizzle/schema";
 import { eq, and, sql, desc, inArray } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
 export const instructorDashboardRouter = router({
   // Get all cohorts for an instructor
   getCohorts: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
+    if (!db) {
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+    }
     const instructorId = ctx.user.id;
 
     const cohorts = await db
@@ -33,6 +37,9 @@ export const instructorDashboardRouter = router({
     .input(z.object({ cohortId: z.number() }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       // First verify the cohort belongs to this instructor
       const cohort = await db
@@ -47,7 +54,7 @@ export const instructorDashboardRouter = router({
         .limit(1);
 
       if (cohort.length === 0) {
-        throw new Error("Cohort not found or access denied");
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Cohort not found or access denied' });
       }
 
       // Get students in the cohort
@@ -130,6 +137,9 @@ export const instructorDashboardRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
       const instructorId = ctx.user.id;
 
       const result = await db.insert(instructorCohorts).values({
@@ -154,6 +164,9 @@ export const instructorDashboardRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       // Verify cohort belongs to instructor
       const cohort = await db
@@ -168,7 +181,7 @@ export const instructorDashboardRouter = router({
         .limit(1);
 
       if (cohort.length === 0) {
-        throw new Error("Cohort not found or access denied");
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Cohort not found or access denied' });
       }
 
       // Add students (ignore duplicates)
@@ -204,6 +217,9 @@ export const instructorDashboardRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       // Verify cohort belongs to instructor
       const cohort = await db
@@ -218,7 +234,7 @@ export const instructorDashboardRouter = router({
         .limit(1);
 
       if (cohort.length === 0) {
-        throw new Error("Cohort not found or access denied");
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Cohort not found or access denied' });
       }
 
       const results = {
@@ -289,6 +305,9 @@ export const instructorDashboardRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       // Verify instructor has access to this student via cohort
       const cohort = await db
@@ -303,7 +322,7 @@ export const instructorDashboardRouter = router({
         .limit(1);
 
       if (cohort.length === 0) {
-        throw new Error("Access denied");
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Access denied' });
       }
 
       const studentInCohort = await db
@@ -318,7 +337,7 @@ export const instructorDashboardRouter = router({
         .limit(1);
 
       if (studentInCohort.length === 0) {
-        throw new Error("Student not in cohort");
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Student not in cohort' });
       }
 
       // TODO: Integrate with notification system to send actual message
@@ -333,6 +352,9 @@ export const instructorDashboardRouter = router({
     .input(z.object({ cohortId: z.number() }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       // Verify cohort belongs to instructor
       const cohort = await db
@@ -347,7 +369,7 @@ export const instructorDashboardRouter = router({
         .limit(1);
 
       if (cohort.length === 0) {
-        throw new Error("Cohort not found or access denied");
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Cohort not found or access denied' });
       }
 
       // Get cohort students

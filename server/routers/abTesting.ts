@@ -3,11 +3,15 @@ import { router, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
 import { abExperiments, abVariants, abAssignments } from "../../drizzle/schema-ab-testing";
 import { eq, and, sql, desc } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
 export const abTestingRouter = router({
   // Get all experiments
-  getExperiments: protectedProcedure.query(async ({ ctx }) => {
-    const db = getDb();
+  getExperiments: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) {
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+    }
 
     const experiments = await db
       .select({
@@ -33,8 +37,11 @@ export const abTestingRouter = router({
   // Get experiment details with variants
   getExperimentDetails: protectedProcedure
     .input(z.object({ experimentId: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const db = getDb();
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       const experiment = await db
         .select()
@@ -43,7 +50,7 @@ export const abTestingRouter = router({
         .limit(1);
 
       if (experiment.length === 0) {
-        throw new Error("Experiment not found");
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Experiment not found' });
       }
 
       const variants = await db
@@ -102,7 +109,10 @@ export const abTestingRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       // Create experiment
       const experimentResult = await db.insert(abExperiments).values({
@@ -142,8 +152,11 @@ export const abTestingRouter = router({
         studentId: z.number(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       // Check if student already assigned
       const existing = await db
@@ -168,7 +181,7 @@ export const abTestingRouter = router({
         .where(eq(abVariants.experimentId, input.experimentId));
 
       if (variants.length === 0) {
-        throw new Error("No variants found for experiment");
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'No variants found for experiment' });
       }
 
       // Weighted random selection
@@ -204,8 +217,11 @@ export const abTestingRouter = router({
         metrics: z.record(z.any()).optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       await db
         .update(abAssignments)
@@ -232,8 +248,11 @@ export const abTestingRouter = router({
         status: z.enum(["draft", "active", "paused", "completed"]),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       await db
         .update(abExperiments)
@@ -246,8 +265,11 @@ export const abTestingRouter = router({
   // Get experiment results with statistical analysis
   getExperimentResults: protectedProcedure
     .input(z.object({ experimentId: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const db = getDb();
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
 
       const variants = await db
         .select({

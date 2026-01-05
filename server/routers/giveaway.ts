@@ -9,6 +9,8 @@ import { getDb } from "../db";
 import { giveawayApplications } from "../../drizzle/schema";
 import { eq, desc, sql, and } from "drizzle-orm";
 import { Resend } from "resend";
+import { giveawayApplicationLimiter } from "../utils/rateLimiter";
+import { TRPCError } from "@trpc/server";
 
 // Initialize Resend for email sending
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -31,9 +33,19 @@ export const giveawayRouter = router({
         courseLevel: z.enum(["fundamentals", "advanced", "specialist"]).default("fundamentals"),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      // Rate limit giveaway applications by email (since it's a public endpoint)
+      const rateLimitKey = `giveaway:${input.email.toLowerCase()}`;
+      const rateLimitResult = giveawayApplicationLimiter.check(rateLimitKey);
+      if (!rateLimitResult.allowed) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: `Too many application attempts. Please try again in ${Math.ceil(rateLimitResult.resetIn / 1000)} seconds.`,
+        });
+      }
+
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
       // Check if email already applied
       const [existing] = await db

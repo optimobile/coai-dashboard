@@ -1,8 +1,9 @@
 import { router, publicProcedure } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
-import { courseEnrollments, userTrainingProgress, userTestAttempts, users } from "../../drizzle/schema";
-import { eq, and, gte, lte, sql, desc, asc } from "drizzle-orm";
+import { courseEnrollments, userTestAttempts, users } from "../../drizzle/schema";
+import { eq, and, sql } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
 export const cohortAnalysisRouter = router({
   // Get cohort groups based on enrollment date
@@ -15,6 +16,11 @@ export const cohortAnalysisRouter = router({
       })
     )
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const { groupBy, startDate, endDate } = input;
 
       // Build date format based on grouping
@@ -76,6 +82,11 @@ export const cohortAnalysisRouter = router({
       })
     )
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const { cohortPeriods, groupBy } = input;
 
       // Build date format based on grouping
@@ -119,7 +130,7 @@ export const cohortAnalysisRouter = router({
                   completedAt: userTestAttempts.completedAt,
                 })
                 .from(userTestAttempts)
-                .where(sql`${userTestAttempts.userId} IN (${sql.join(userIds, sql`, `)})`)
+                .where(sql`${userTestAttempts.userId} IN (${sql.join(userIds.map(id => sql`${id}`), sql`, `)})`)
             : [];
 
           // Calculate metrics
@@ -167,6 +178,11 @@ export const cohortAnalysisRouter = router({
       })
     )
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const { groupBy, startDate, endDate } = input;
 
       // Build date format based on grouping
@@ -246,6 +262,11 @@ export const cohortAnalysisRouter = router({
       })
     )
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+      }
+
       const { cohortPeriod, groupBy, limit, offset } = input;
 
       // Build date format based on grouping

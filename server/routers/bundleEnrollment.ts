@@ -11,6 +11,8 @@ import { eq, and, inArray } from "drizzle-orm";
 import { createCourseCheckoutSession } from "../stripe/stripeService";
 import { sendEnrollmentConfirmationEmail } from "../services/courseEmailService";
 import { TRPCError } from "@trpc/server";
+import { enrollmentLimiter, couponValidationLimiter } from "../utils/rateLimiter";
+import { logCouponValidation, checkForAbusePatterns } from "../services/couponValidationLogger";
 
 // Duration type for bundle pricing
 const durationSchema = z.enum(["one_time", "3_month", "6_month", "12_month"]);
@@ -116,6 +118,16 @@ export const bundleEnrollmentRouter = router({
       couponCode: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
+      // Rate limit enrollment attempts
+      const rateLimitKey = `enrollment:${ctx.user.id}`;
+      const rateLimitResult = enrollmentLimiter.check(rateLimitKey);
+      if (!rateLimitResult.allowed) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: `Too many enrollment attempts. Please try again in ${Math.ceil(rateLimitResult.resetIn / 1000)} seconds.`,
+        });
+      }
+
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
@@ -432,7 +444,41 @@ export const bundleEnrollmentRouter = router({
       couponCode: z.string(),
       duration: durationSchema.default("one_time"),
     }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      // Rate limit coupon validation attempts
+      const rateLimitKey = `coupon:${input.couponCode.toUpperCase()}`;
+      const rateLimitResult = couponValidationLimiter.check(rateLimitKey);
+      if (!rateLimitResult.allowed) {
+        // Log the rate-limited attempt
+        await logCouponValidation({
+          couponCode: input.couponCode,
+          bundleId: input.bundleId,
+          success: false,
+          failureReason: 'rate_limited',
+          timestamp: new Date().toISOString(),
+        });
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: `Too many validation attempts. Please try again in ${Math.ceil(rateLimitResult.resetIn / 1000)} seconds.`,
+        });
+      }
+
+      // Check for abuse patterns
+      const abuseCheck = checkForAbusePatterns(rateLimitKey);
+      if (abuseCheck.isAbusive) {
+        await logCouponValidation({
+          couponCode: input.couponCode,
+          bundleId: input.bundleId,
+          success: false,
+          failureReason: 'abuse_detected',
+          timestamp: new Date().toISOString(),
+        });
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Suspicious activity detected. Please try again later.",
+        });
+      }
+
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
 
@@ -443,20 +489,48 @@ export const bundleEnrollmentRouter = router({
         .limit(1);
 
       if (!coupon) {
+        await logCouponValidation({
+          couponCode: input.couponCode,
+          bundleId: input.bundleId,
+          success: false,
+          failureReason: 'invalid_code',
+          timestamp: new Date().toISOString(),
+        });
         return { valid: false, message: "Invalid coupon code" };
       }
 
       if (coupon.active !== 1) {
+        await logCouponValidation({
+          couponCode: input.couponCode,
+          bundleId: input.bundleId,
+          success: false,
+          failureReason: 'inactive_coupon',
+          timestamp: new Date().toISOString(),
+        });
         return { valid: false, message: "This coupon is no longer active" };
       }
 
       // Check expiry
       if (coupon.expiresAt && new Date(coupon.expiresAt) < new Date()) {
+        await logCouponValidation({
+          couponCode: input.couponCode,
+          bundleId: input.bundleId,
+          success: false,
+          failureReason: 'expired',
+          timestamp: new Date().toISOString(),
+        });
         return { valid: false, message: "This coupon has expired" };
       }
 
       // Check usage limits
       if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) {
+        await logCouponValidation({
+          couponCode: input.couponCode,
+          bundleId: input.bundleId,
+          success: false,
+          failureReason: 'usage_limit_reached',
+          timestamp: new Date().toISOString(),
+        });
         return { valid: false, message: "This coupon has reached its usage limit" };
       }
 
@@ -507,6 +581,15 @@ export const bundleEnrollmentRouter = router({
         discountAmount = coupon.discountValue * 100; // Convert to cents
         finalPrice = Math.max(0, originalPrice - discountAmount);
       }
+
+      // Log successful validation
+      await logCouponValidation({
+        couponCode: input.couponCode,
+        bundleId: input.bundleId,
+        success: true,
+        discountAmount,
+        timestamp: new Date().toISOString(),
+      });
 
       return {
         valid: true,
