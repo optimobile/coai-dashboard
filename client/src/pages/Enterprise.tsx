@@ -507,7 +507,7 @@ export default function Enterprise() {
           {/* Starter Tier */}
           <Card className="p-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50">
             <h3 className="text-2xl font-bold mb-2 text-emerald-900">Starter</h3>
-            <div className="text-4xl font-bold mb-4 text-emerald-600">$3,500<span className="text-lg text-gray-500">/system/year</span></div>
+            <div className="text-4xl font-bold mb-4 text-emerald-600">$2,200<span className="text-lg text-gray-500">/system/year</span></div>
             <p className="text-gray-600 mb-6">Perfect for startups and small teams</p>
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-2">
@@ -574,7 +574,7 @@ export default function Enterprise() {
           {/* Enterprise Tier */}
           <Card className="p-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50">
             <h3 className="text-2xl font-bold mb-2 text-emerald-900">Enterprise</h3>
-            <div className="text-4xl font-bold mb-4 text-emerald-600">$2,200<span className="text-lg text-gray-500">/system/year</span></div>
+            <div className="text-4xl font-bold mb-4 text-emerald-600">$3,500<span className="text-lg text-gray-500">/system/year</span></div>
             <p className="text-gray-600 mb-6">For large organizations</p>
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-2">

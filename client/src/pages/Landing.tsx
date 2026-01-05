@@ -333,6 +333,107 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Real-Time Capabilities Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-emerald-500/5 via-blue-500/5 to-purple-500/5">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 text-sm font-medium mb-4">
+              <Zap className="h-4 w-4" />
+              Real-Time Architecture
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Low-Latency AI Governance
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Like Tesla's real-time models, our Byzantine Council operates with millisecond-level latency for instant compliance decisions.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0 }}
+            >
+              <Card className="bg-card border-border h-full hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4">
+                    <Zap className="h-6 w-6 text-emerald-600" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Real-Time Data Streaming</h3>
+                  <p className="text-sm text-muted-foreground">
+                    WebSocket connections deliver live voting updates and compliance alerts with sub-100ms latency.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
+              <Card className="bg-card border-border h-full hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4">
+                    <TrendingUp className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Live AI Inference</h3>
+                  <p className="text-sm text-muted-foreground">
+                    33 AI agents vote simultaneously with integrated LLM reasoning for Byzantine fault-tolerant consensus.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="bg-card border-border h-full hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4">
+                    <AlertTriangle className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Low-Latency Alerts</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Critical compliance violations trigger instant notifications to stakeholders with full decision context.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 p-6 rounded-lg bg-emerald-500/5 border border-emerald-500/20"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                <Zap className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Byzantine Fault Tolerance</h3>
+                <p className="text-sm text-muted-foreground">
+                  Our 33-Agent Council uses Byzantine fault-tolerant consensus to ensure unbiased decisions even if 1/3 of agents are compromised. Real-time voting ensures decisions are made in seconds, not hours.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Frameworks Section */}
       <section className="py-20 px-4 bg-secondary/30">
         <div className="container mx-auto max-w-6xl">
