@@ -8568,3 +8568,31 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Add "Learn More" button linking to the page
 - [x] Detailed explanation of how 33-agent voting works
 
+
+## Council Visualization Enhancements (Phase 2)
+### Animated Data Flow
+- [ ] Animated data flow particles between council members and CSO AI
+- [ ] Real-time voting communication visualization
+### Interactive Tooltips
+- [ ] Hover tooltips showing council member specialty
+- [ ] Hover tooltips showing current vote status
+### Filtering Controls
+- [ ] Filter by Ethics category
+- [ ] Filter by Regulatory category
+- [ ] Filter by Technical category
+- [ ] Filter by Domain category
+### 300+ Human Council
+- [ ] Add 300+ Human Council visualization
+- [ ] Public watchdog section display
+### Government & Legislation
+- [ ] Government entities in ecosystem
+- [ ] Legislation bodies in ecosystem
+
+
+## Council Visualization Enhancements (Jan 5, 2026)
+
+- [x] Animated data flow particles between council members and CSO AI
+- [x] Hover tooltips for council members showing specialty and vote status
+- [x] Filtering controls by council member category (Ethics, Regulatory, Technical, Domain)
+- [x] 300+ Human Council visualization with public watchdog section
+- [x] Government and legislation entities in the ecosystem

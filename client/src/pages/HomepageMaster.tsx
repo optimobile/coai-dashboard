@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { IncidentReportForm } from '@/components/IncidentReportForm';
-import { MasterByzantineVisualization } from '@/components/MasterByzantineVisualization';
+import { CouncilEcosystemVisualization } from '@/components/CouncilEcosystemVisualization';
 import { Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
@@ -375,7 +375,7 @@ export default function HomepageMaster() {
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div {...fadeInUp}>
-            <MasterByzantineVisualization showLearnMore={true} />
+            <CouncilEcosystemVisualization showLearnMore={true} />
           </motion.div>
         </div>
       </section>

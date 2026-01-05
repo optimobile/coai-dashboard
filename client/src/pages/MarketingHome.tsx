@@ -26,7 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { toast } from "sonner";
-import CouncilVisualization from "@/components/CouncilVisualization";
+import { CouncilEcosystemVisualization } from "@/components/CouncilEcosystemVisualization";
 
 export default function MarketingHome() {
   const [email, setEmail] = useState("");
@@ -169,7 +169,7 @@ export default function MarketingHome() {
                 </Badge>
               </div>
               <div className="aspect-video bg-gradient-to-br from-primary/5 via-background/50 to-accent/5">
-                <CouncilVisualization autoAnimate={true} showLabels={true} />
+                <CouncilEcosystemVisualization compact={true} showLearnMore={false} />
               </div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent p-6">
                 <p className="text-center text-sm text-muted-foreground">
