@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Stripe from 'stripe';
+import rateLimit from 'express-rate-limit';
 import { getDb } from '../db';
 import { courseEnrollments, courses, courseBundles, coupons, couponUsage, users } from '../../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
@@ -11,8 +12,29 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover',
 });
 
+// Rate limiter for enrollment endpoint - prevent abuse
+// Allows 10 enrollment attempts per IP per 15 minutes
+const enrollmentRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: {
+    error: 'Too many enrollment attempts. Please try again in 15 minutes.',
+    retryAfter: 15 * 60, // seconds
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  // Use default IP-based key generator for security
+  handler: (req, res) => {
+    console.warn(`[Rate Limit] Enrollment rate limit exceeded for ${req.ip}`);
+    res.status(429).json({
+      error: 'Too many enrollment attempts. Please try again in 15 minutes.',
+      retryAfter: 15 * 60,
+    });
+  },
+});
+
 // Create payment intent or enroll for free
-router.post('/enrollment/create', async (req, res) => {
+router.post('/enrollment/create', enrollmentRateLimiter, async (req, res) => {
   try {
     const { type, itemId, userId, couponId } = req.body;
     

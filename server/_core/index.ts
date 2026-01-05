@@ -19,45 +19,137 @@ import { startHealthMonitoring } from "../services/healthMonitoring";
 // Initialize Sentry for backend error tracking
 const SENTRY_DSN = process.env.SENTRY_DSN;
 
+// Error categories for Sentry alerting
+const ERROR_CATEGORIES = {
+  // Critical errors that should trigger immediate alerts
+  CRITICAL: ['database', 'stripe', 'payment', 'authentication_system'],
+  // High priority errors that need attention within hours
+  HIGH: ['api_error', 'validation', 'rate_limit'],
+  // Medium priority - review daily
+  MEDIUM: ['user_error', 'configuration'],
+  // Low priority - expected behavior, filtered but logged
+  LOW: ['user_action', 'network', 'expected'],
+};
+
+// Helper to categorize errors for alerting
+function categorizeError(error: Error | unknown, errorMessage: string): { 
+  category: string; 
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  shouldAlert: boolean;
+} {
+  // Database errors - CRITICAL
+  if (errorMessage.includes('Database') || errorMessage.includes('ECONNREFUSED') && errorMessage.includes('3306')) {
+    return { category: 'database', priority: 'critical', shouldAlert: true };
+  }
+  
+  // Stripe/Payment errors - CRITICAL
+  if (errorMessage.includes('Stripe') || errorMessage.includes('payment') || errorMessage.includes('checkout')) {
+    // Exclude expected payment errors
+    if (!errorMessage.includes('Payment plan not available')) {
+      return { category: 'payment', priority: 'critical', shouldAlert: true };
+    }
+  }
+  
+  // Rate limiting triggered - HIGH (potential abuse)
+  if (errorMessage.includes('rate limit') || errorMessage.includes('Too many')) {
+    return { category: 'rate_limit', priority: 'high', shouldAlert: true };
+  }
+  
+  // API errors - HIGH
+  if (errorMessage.includes('API') || errorMessage.includes('Internal server error')) {
+    return { category: 'api_error', priority: 'high', shouldAlert: true };
+  }
+  
+  // Validation errors - MEDIUM
+  if (errorMessage.includes('validation') || errorMessage.includes('invalid')) {
+    return { category: 'validation', priority: 'medium', shouldAlert: false };
+  }
+  
+  // Expected user errors - LOW (filtered)
+  if (errorMessage.includes('Please login') || 
+      errorMessage.includes('UNAUTHORIZED') || 
+      errorMessage.includes('FORBIDDEN') ||
+      errorMessage.includes('do not have required permission')) {
+    return { category: 'user_action', priority: 'low', shouldAlert: false };
+  }
+  
+  // Network errors - LOW (filtered)
+  if (errorMessage.includes('ECONNRESET') || 
+      errorMessage.includes('ETIMEDOUT') || 
+      errorMessage.includes('ECONNREFUSED')) {
+    return { category: 'network', priority: 'low', shouldAlert: false };
+  }
+  
+  // Default - MEDIUM priority for unknown errors
+  return { category: 'unknown', priority: 'medium', shouldAlert: true };
+}
+
 if (SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,
     environment: process.env.NODE_ENV || 'development',
+    release: process.env.npm_package_version || '1.0.0',
     // Performance Monitoring
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-    // Filter out common non-actionable errors
+    // Filter and categorize errors before sending
     beforeSend(event, hint) {
       const error = hint.originalException;
       const errorMessage = error instanceof Error ? error.message : String(error);
       
-      // Ignore connection reset errors
+      // Categorize the error
+      const { category, priority, shouldAlert } = categorizeError(error, errorMessage);
+      
+      // Add category and priority as tags for Sentry alerting rules
+      event.tags = {
+        ...event.tags,
+        error_category: category,
+        error_priority: priority,
+        should_alert: shouldAlert ? 'true' : 'false',
+      };
+      
+      // Add fingerprint for better grouping
+      event.fingerprint = [category, errorMessage.slice(0, 100)];
+      
+      // Filter out low priority errors in production to reduce noise
+      if (priority === 'low' && process.env.NODE_ENV === 'production') {
+        // Still log locally but don't send to Sentry
+        console.log(`[Sentry Filtered] ${category}: ${errorMessage}`);
+        return null;
+      }
+      
+      // Ignore specific expected errors
+      // Connection reset errors - network issues, not bugs
       if (error instanceof Error && error.message.includes('ECONNRESET')) {
         return null;
       }
       
-      // Ignore expected user errors - unauthenticated access attempts
-      // These are normal user behavior, not bugs
+      // Expected user errors - unauthenticated access attempts
       if (errorMessage.includes('Please login') || errorMessage.includes('10001')) {
         return null;
       }
       
-      // Ignore permission denied errors - expected for non-admin users
+      // Permission denied errors - expected for non-admin users
       if (errorMessage.includes('do not have required permission') || errorMessage.includes('10002')) {
         return null;
       }
       
-      // Ignore payment plan not available errors - expected for misconfigured courses
+      // Payment plan not available errors - expected for misconfigured courses
       if (errorMessage.includes('Payment plan not available')) {
         return null;
       }
       
-      // Ignore TRPC unauthorized/forbidden errors - expected for unauthenticated users
+      // TRPC unauthorized/forbidden errors - expected for unauthenticated users
       if (errorMessage.includes('UNAUTHORIZED') || errorMessage.includes('FORBIDDEN')) {
         return null;
       }
       
-      // Ignore network timeout errors
+      // Network timeout errors
       if (errorMessage.includes('ETIMEDOUT') || errorMessage.includes('ECONNREFUSED')) {
+        return null;
+      }
+      
+      // Safari Array.from polyfill errors - already handled client-side
+      if (errorMessage.includes('Array.from') || errorMessage.includes('streamdown') || errorMessage.includes('shiki')) {
         return null;
       }
       
@@ -66,6 +158,7 @@ if (SENTRY_DSN) {
   });
   
   console.log('[Sentry] Backend error tracking initialized');
+  console.log('[Sentry] Alert categories configured: CRITICAL (database, payment), HIGH (api, rate_limit), MEDIUM (validation, unknown)');
 }
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -153,17 +246,24 @@ async function startServer() {
   app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.error('Server error:', err);
     
-    // Report to Sentry
+    // Report to Sentry with additional context
     if (SENTRY_DSN) {
+      const errorMessage = err.message || String(err);
+      const { category, priority } = categorizeError(err, errorMessage);
+      
       Sentry.captureException(err, {
         tags: {
           url: req.url,
           method: req.method,
+          error_category: category,
+          error_priority: priority,
         },
         extra: {
           body: req.body,
           query: req.query,
           params: req.params,
+          userAgent: req.get('user-agent'),
+          ip: req.ip,
         },
       });
     }
