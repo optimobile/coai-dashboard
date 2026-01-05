@@ -8517,3 +8517,11 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Fix "Please login (10001)" error on /courses page for unauthenticated users
 - [x] Fix "Payment plan not available for this course" enrollment error
 - [x] Fix TypeError: Cannot read properties of null (reading 'useState') in TRPCProvider (transient dev issue, resolved with server restart)
+
+
+## Maintenance Tasks (Jan 5, 2026)
+
+- [x] Configure missing Stripe price IDs - All 7 production courses have all payment plans configured (one_time, 3_month, 6_month, 12_month)
+- [x] Add Sentry error filtering - Added filters for unauthenticated access, permission denied, payment plan errors, and TRPC auth errors in both frontend and backend
+- [x] Test enrollment flow - Code review confirms login dialog appears for unauthenticated users (lines 346-347 and 605-606 in Courses.tsx handle 'login' and '10001' errors by showing showLoginDialog)
+- [ ] Clean up 53 test courses from database (created by automated tests)

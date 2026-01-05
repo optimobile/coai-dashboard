@@ -45,6 +45,7 @@ if (SENTRY_DSN) {
     // Filter out common non-actionable errors
     beforeSend(event, hint) {
       const error = hint.originalException;
+      const errorMessage = error instanceof Error ? error.message : String(error);
       
       // Ignore network errors that are likely user connectivity issues
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
@@ -58,6 +59,27 @@ if (SENTRY_DSN) {
       
       // Ignore Safari Array.from compatibility errors from third-party libraries
       if (error instanceof TypeError && error.message?.includes('Array.from requires an array-like object')) {
+        return null;
+      }
+      
+      // Ignore expected user errors - unauthenticated access attempts
+      // These are normal user behavior, not bugs
+      if (errorMessage.includes('Please login') || errorMessage.includes('10001')) {
+        return null;
+      }
+      
+      // Ignore permission denied errors - expected for non-admin users
+      if (errorMessage.includes('do not have required permission') || errorMessage.includes('10002')) {
+        return null;
+      }
+      
+      // Ignore payment plan not available errors - expected for misconfigured courses
+      if (errorMessage.includes('Payment plan not available')) {
+        return null;
+      }
+      
+      // Ignore TRPC unauthorized errors
+      if (errorMessage.includes('UNAUTHORIZED') || errorMessage.includes('FORBIDDEN')) {
         return null;
       }
       

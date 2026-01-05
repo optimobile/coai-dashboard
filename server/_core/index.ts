@@ -28,9 +28,36 @@ if (SENTRY_DSN) {
     // Filter out common non-actionable errors
     beforeSend(event, hint) {
       const error = hint.originalException;
+      const errorMessage = error instanceof Error ? error.message : String(error);
       
       // Ignore connection reset errors
       if (error instanceof Error && error.message.includes('ECONNRESET')) {
+        return null;
+      }
+      
+      // Ignore expected user errors - unauthenticated access attempts
+      // These are normal user behavior, not bugs
+      if (errorMessage.includes('Please login') || errorMessage.includes('10001')) {
+        return null;
+      }
+      
+      // Ignore permission denied errors - expected for non-admin users
+      if (errorMessage.includes('do not have required permission') || errorMessage.includes('10002')) {
+        return null;
+      }
+      
+      // Ignore payment plan not available errors - expected for misconfigured courses
+      if (errorMessage.includes('Payment plan not available')) {
+        return null;
+      }
+      
+      // Ignore TRPC unauthorized/forbidden errors - expected for unauthenticated users
+      if (errorMessage.includes('UNAUTHORIZED') || errorMessage.includes('FORBIDDEN')) {
+        return null;
+      }
+      
+      // Ignore network timeout errors
+      if (errorMessage.includes('ETIMEDOUT') || errorMessage.includes('ECONNREFUSED')) {
         return null;
       }
       
