@@ -67,6 +67,7 @@ import { stripeSetupRouter } from "./routers/stripeSetup";
 import { statusRouter } from "./routers/status";
 import { adminIncidentsRouter } from "./routers/adminIncidents";
 import { notificationSubscriptionsRouter } from "./routers/notificationSubscriptions";
+import { notificationAnalyticsRouter } from "./routers/notificationAnalytics";
 import { lessonProgressRouter } from "./routers/lessonProgress";
 import { forumsRouter } from "./routers/forums";
 import { forumModerationRouter } from "./routers/forumModeration";
@@ -3036,6 +3037,7 @@ export const appRouter = router({
   status: statusRouter,
   adminIncidents: adminIncidentsRouter,
   notificationSubscriptions: notificationSubscriptionsRouter,
+  notificationAnalytics: notificationAnalyticsRouter,
   lessonProgress: lessonProgressRouter,
   forums: forumsRouter,
   emailPreferences: emailPreferencesRouter,
