@@ -6,9 +6,17 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLocation, useSearch, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -262,9 +270,43 @@ export default function Courses() {
 
 function CourseCard({ course }: { course: any }) {
   const [selectedPlan, setSelectedPlan] = useState<"oneTime" | "threeMonth" | "sixMonth" | "twelveMonth">("oneTime");
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [, setLocation] = useLocation();
+  const { user } = useAuth();
   const enrollMutation = trpc.courses.enrollInCourse.useMutation();
 
+  // Check which payment plans are available based on Stripe price IDs
+  const availablePlans = useMemo(() => {
+    const plans: ("oneTime" | "threeMonth" | "sixMonth" | "twelveMonth")[] = [];
+    if (course.stripePriceIds?.oneTime || course.stripePriceId) plans.push("oneTime");
+    if (course.stripePriceIds?.threeMonth || course.stripePriceId3Month) plans.push("threeMonth");
+    if (course.stripePriceIds?.sixMonth || course.stripePriceId6Month) plans.push("sixMonth");
+    if (course.stripePriceIds?.twelveMonth || course.stripePriceId12Month) plans.push("twelveMonth");
+    // If no Stripe prices configured, default to oneTime (for free courses)
+    if (plans.length === 0) plans.push("oneTime");
+    return plans;
+  }, [course]);
+
+  // Set default plan to first available
+  useEffect(() => {
+    if (availablePlans.length > 0 && !availablePlans.includes(selectedPlan)) {
+      setSelectedPlan(availablePlans[0]);
+    }
+  }, [availablePlans, selectedPlan]);
+
   const handleEnroll = async () => {
+    // Check if user is logged in first
+    if (!user) {
+      setShowLoginDialog(true);
+      return;
+    }
+
+    // Check if selected plan is available
+    if (!availablePlans.includes(selectedPlan)) {
+      toast.error("This payment plan is not available for this course. Please select another plan.");
+      return;
+    }
+
     try {
       console.log('[Frontend] handleEnroll started', { courseId: course.id, selectedPlan });
       
@@ -283,16 +325,31 @@ function CourseCard({ course }: { course: any }) {
 
       console.log('[Frontend] Enrollment result:', result);
 
+      // Handle free course enrollment
+      if (result.isFree) {
+        toast.success("Successfully enrolled in free course!");
+        setLocation("/my-courses");
+        return;
+      }
+
       // Redirect to Stripe checkout
       if (result.checkoutUrl) {
         console.log('[Frontend] Redirecting to Stripe:', result.checkoutUrl);
         window.location.href = result.checkoutUrl;
       } else {
         console.warn('[Frontend] No checkoutUrl in result');
+        toast.success("Enrollment successful!");
       }
     } catch (error: any) {
       console.error('[Frontend] Enrollment error:', error);
-      toast.error(error.message || "Failed to enroll in course");
+      // Don't show login errors to Sentry - they're expected for unauthenticated users
+      if (error.message?.includes('login') || error.message?.includes('10001')) {
+        setShowLoginDialog(true);
+      } else if (error.message?.includes('Payment plan not available')) {
+        toast.error("This payment plan is not currently available. Please select a different plan or contact support.");
+      } else {
+        toast.error(error.message || "Failed to enroll in course");
+      }
     }
   };
 
@@ -436,15 +493,79 @@ function CourseCard({ course }: { course: any }) {
       >
         {enrollMutation.isPending ? "Processing..." : "Enroll Now"}
       </Button>
+
+      {/* Login Required Dialog */}
+      <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Login Required</DialogTitle>
+            <DialogDescription>
+              Please log in to enroll in this course. If you don't have an account, you can create one for free.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 mt-4">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setShowLoginDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+              onClick={() => {
+                setShowLoginDialog(false);
+                setLocation("/login?redirect=/courses");
+              }}
+            >
+              Log In
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
 
 function BundleCard({ bundle }: { bundle: any }) {
   const [selectedPlan, setSelectedPlan] = useState<"oneTime" | "threeMonth" | "sixMonth" | "twelveMonth">("oneTime");
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [, setLocation] = useLocation();
+  const { user } = useAuth();
   const enrollMutation = trpc.bundleEnrollment.enrollInBundle.useMutation();
 
+  // Check which payment plans are available based on Stripe price IDs
+  const availablePlans = useMemo(() => {
+    const plans: ("oneTime" | "threeMonth" | "sixMonth" | "twelveMonth")[] = [];
+    if (bundle.stripePriceIds?.oneTime || bundle.stripePriceId) plans.push("oneTime");
+    if (bundle.stripePriceIds?.threeMonth || bundle.stripePriceId3Month) plans.push("threeMonth");
+    if (bundle.stripePriceIds?.sixMonth || bundle.stripePriceId6Month) plans.push("sixMonth");
+    if (bundle.stripePriceIds?.twelveMonth || bundle.stripePriceId12Month) plans.push("twelveMonth");
+    // If no Stripe prices configured, default to oneTime
+    if (plans.length === 0) plans.push("oneTime");
+    return plans;
+  }, [bundle]);
+
+  // Set default plan to first available
+  useEffect(() => {
+    if (availablePlans.length > 0 && !availablePlans.includes(selectedPlan)) {
+      setSelectedPlan(availablePlans[0]);
+    }
+  }, [availablePlans, selectedPlan]);
+
   const handleEnroll = async () => {
+    // Check if user is logged in first
+    if (!user) {
+      setShowLoginDialog(true);
+      return;
+    }
+
+    // Check if selected plan is available
+    if (!availablePlans.includes(selectedPlan)) {
+      toast.error("This payment plan is not available for this bundle. Please select another plan.");
+      return;
+    }
+
     try {
       console.log('[Frontend] handleEnroll (bundle) started', { bundleId: bundle.id, selectedPlan });
       
@@ -463,16 +584,31 @@ function BundleCard({ bundle }: { bundle: any }) {
 
       console.log('[Frontend] Bundle enrollment result:', result);
 
+      // Handle free bundle enrollment
+      if (!result.paymentRequired) {
+        toast.success("Successfully enrolled in bundle!");
+        setLocation("/my-courses");
+        return;
+      }
+
       // Redirect to Stripe checkout
       if (result.checkoutUrl) {
         console.log('[Frontend] Redirecting to Stripe:', result.checkoutUrl);
         window.location.href = result.checkoutUrl;
       } else {
         console.warn('[Frontend] No checkoutUrl in result');
+        toast.success("Enrollment successful!");
       }
     } catch (error: any) {
       console.error('[Frontend] Bundle enrollment error:', error);
-      toast.error(error.message || "Failed to enroll in bundle");
+      // Don't show login errors to Sentry - they're expected for unauthenticated users
+      if (error.message?.includes('login') || error.message?.includes('10001')) {
+        setShowLoginDialog(true);
+      } else if (error.message?.includes('Payment plan not available')) {
+        toast.error("This payment plan is not currently available. Please select a different plan or contact support.");
+      } else {
+        toast.error(error.message || "Failed to enroll in bundle");
+      }
     }
   };
 
@@ -622,6 +758,36 @@ function BundleCard({ bundle }: { bundle: any }) {
           </Button>
         </Link>
       </div>
+
+      {/* Login Required Dialog */}
+      <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Login Required</DialogTitle>
+            <DialogDescription>
+              Please log in to enroll in this bundle. If you don't have an account, you can create one for free.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 mt-4">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setShowLoginDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+              onClick={() => {
+                setShowLoginDialog(false);
+                setLocation("/login?redirect=/courses");
+              }}
+            >
+              Log In
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

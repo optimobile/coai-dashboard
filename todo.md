@@ -8502,3 +8502,18 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Enable session recordings for user journey tracking
 - [x] Enable scroll depth tracking
 - [x] Enable rage click detection
+
+
+## Microsoft Clarity Analytics Integration
+
+- [ ] Set up Microsoft Clarity tracking code in the application
+- [ ] Implement custom tags for user segmentation (logged-in vs visitors)
+- [ ] Configure rage click and dead click alerts in Clarity dashboard
+- [ ] Document Clarity setup and alert configuration for the team
+
+
+## Sentry Error Fixes (Jan 5, 2026)
+
+- [x] Fix "Please login (10001)" error on /courses page for unauthenticated users
+- [x] Fix "Payment plan not available for this course" enrollment error
+- [x] Fix TypeError: Cannot read properties of null (reading 'useState') in TRPCProvider (transient dev issue, resolved with server restart)
