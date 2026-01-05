@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { RLMAINetworkVisualization } from "@/components/RLMAINetworkVisualization";
 import { CEASAIPricing } from "@/components/CEASAIPricing";
 import { MillionPoundGiveaway } from "@/components/MillionPoundGiveaway";
+import { GovernanceEcosystemVisualization } from "@/components/GovernanceEcosystemVisualization";
+import { GovernanceSection } from "@/components/GovernanceSection";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { 
@@ -42,6 +44,7 @@ export default function PublicHome() {
           </Link>
           
           <div className="hidden md:flex items-center gap-8">
+            <Link href="#governance" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Governance</Link>
             <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</Link>
             <Link href="#frameworks" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Frameworks</Link>
             <Link href="#watchdog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Watchdog Program</Link>
@@ -153,6 +156,9 @@ export default function PublicHome() {
           </div>
         </div>
       </section>
+
+      {/* Governance Ecosystem Section */}
+      <GovernanceSection />
 
       {/* How It Works - SOAI-PDCA */}
       <section className="py-20 px-4" id="how-it-works">
