@@ -1,6 +1,7 @@
 // Polyfill for Safari compatibility with Array.from on null/undefined
+// Polyfill Array.from to handle null/undefined safely
 const originalArrayFrom = Array.from;
-Array.from = function<T>(arrayLike: ArrayLike<T> | Iterable<T> | null | undefined, mapFn?: (v: T, k: number) => T, thisArg?: unknown): T[] {
+(Array as any).from = function(arrayLike: any, mapFn?: any, thisArg?: any): any[] {
   if (arrayLike === null || arrayLike === undefined) {
     return [];
   }
@@ -172,8 +173,6 @@ const trpcClient = trpc.createClient({
         });
       },
       maxURLLength: 2083,
-      // Batch requests for 50ms to combine multiple queries
-      maxDelay: 50,
     }),
   ],
 });

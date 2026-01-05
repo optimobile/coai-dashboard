@@ -300,6 +300,14 @@ function App() {
                   <Route path="/training-courses/:id"><Redirect to="/courses/:id" /></Route>
                   <Route path="/training-courses/:id/learn"><Redirect to="/courses/:id/learn" /></Route>
                   <Route path="/my-training-courses"><Redirect to="/my-courses" /></Route>
+                  <Route path="/dashboard/progress"><Redirect to="/progress" /></Route>
+                  <Route path="/home"><Redirect to="/" /></Route>
+                  <Route path="/apply"><Redirect to="/jobs" /></Route>
+                  <Route path="/report"><Redirect to="/watchdog/report" /></Route>
+                  <Route path="/pdca-cycles"><Redirect to="/pdca" /></Route>
+                  <Route path="/public-dashboard"><Redirect to="/dashboard" /></Route>
+                  <Route path="/training/catalog"><Redirect to="/courses" /></Route>
+                  <Route path="/regulatory/roadmap"><Redirect to="/dashboard/roadmap" /></Route>
                   <Route path="/courses/:id" component={CourseDetail} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/paid-courses-dashboard" component={PaidCoursesDashboard} />

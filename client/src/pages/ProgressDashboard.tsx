@@ -29,19 +29,20 @@ export default function ProgressDashboard() {
   });
   const { data: enrollments } = trpc.courses.getMyEnrollments.useQuery();
 
-  // Calculate statistics
-  const totalCourses = enrollments?.length || 0;
-  const completedCourses = enrollments?.filter(e => e.status === 'completed').length || 0;
-  const inProgressCourses = enrollments?.filter(e => e.status === 'in_progress').length || 0;
+  // Calculate statistics - cast enrollments to array for type safety
+  const enrollmentsList = Array.isArray(enrollments) ? enrollments : [];
+  const totalCourses = enrollmentsList.length;
+  const completedCourses = enrollmentsList.filter((e: any) => e.status === 'completed').length;
+  const inProgressCourses = enrollmentsList.filter((e: any) => e.status === 'in_progress').length;
   const completionRate = totalCourses > 0 ? Math.round((completedCourses / totalCourses) * 100) : 0;
 
   // Calculate total time spent
-  const totalMinutes = enrollments?.reduce((sum, e) => sum + ((e.timeSpentMinutes as number) || 0), 0) || 0;
+  const totalMinutes = enrollmentsList.reduce((sum: number, e: any) => sum + ((e.timeSpentMinutes as number) || 0), 0);
   const totalHours = Math.floor(totalMinutes / 60);
 
   // Calculate weekly trend
   const weeklyData = activityHistory?.slice(0, 7).reverse() || [];
-  const weeklyMinutes = weeklyData.reduce((sum, day) => sum + (day.minutesSpent || 0), 0);
+  const weeklyMinutes = weeklyData.reduce((sum: number, day: any) => sum + (day.minutesSpent || 0), 0);
   const weeklyHours = Math.round(weeklyMinutes / 60 * 10) / 10;
 
   // Badge statistics
@@ -210,7 +211,7 @@ export default function ProgressDashboard() {
               </Link>
             </div>
             <div className="space-y-3">
-              {enrollments?.slice(0, 5).map((enrollment) => (
+              {enrollmentsList.slice(0, 5).map((enrollment: any) => (
                 <Link key={enrollment.id} href={`/courses/${enrollment.courseId}`}>
                   <div className="flex items-center justify-between p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer">
                     <div className="flex-1">

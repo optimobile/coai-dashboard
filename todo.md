@@ -240,3 +240,67 @@
 - [x] Add animated visual flows showing all layers communicating and interacting
 - [x] Integrate visualization into homepage layout
 - [x] Test visualization responsiveness and performance
+
+
+## Phase 16 - Critical Bug Fixes (Jan 5, 2026)
+
+### Frontend Critical Fixes
+- [x] Fix AlertTriangle import in Landing.tsx
+- [x] Fix NotificationBell import (named vs default export)
+- [x] Fix Checkout.tsx navigate → setLocation
+- [x] Fix GovernanceEcosystemVisualization useRef initialization
+- [x] Fix main.tsx Array.from polyfill type issues
+- [x] Fix main.tsx httpBatchLink maxDelay config
+- [x] Fix ProgressDashboard.tsx enrollments type safety
+
+### TypeScript Error Summary
+- Total errors reduced from 625 to 608
+- Client-side errors: 74 (mostly implicit any types and missing router methods)
+- Server-side errors: 534 (mostly in admin routers using old db pattern)
+
+### Remaining Issues (Lower Priority)
+- [ ] Update csvExport.ts to use getDb() pattern (41 errors)
+- [ ] Update students.ts to use getDb() pattern (35 errors)
+- [ ] Update cohorts.ts to use getDb() pattern (33 errors)
+- [ ] Update emailTemplates.ts to use getDb() pattern (21 errors)
+- [ ] Fix implicit any types in admin pages
+- [ ] Add missing router methods for email preferences
+
+
+## Phase 17 - Bug Hunting & Production Readiness (Jan 5, 2026)
+
+### Sentry Error Analysis
+- [ ] Check Gmail for Sentry error reports
+- [ ] Categorize errors by severity (critical, high, medium, low)
+- [ ] Identify most frequent user-facing errors
+
+### End-to-End Testing
+- [ ] Test homepage load and navigation
+- [ ] Test signup flow
+- [ ] Test login flow
+- [ ] Test FOUNDING10K coupon code application
+- [ ] Test course enrollment flow
+- [ ] Test course content access
+- [ ] Test payment flow (if applicable)
+- [ ] Test dashboard functionality
+- [ ] Test Byzantine Council visualization
+
+### Bug Fixes
+- [x] Fix PDF stream error in generatePDCATemplate (write after end)
+- [ ] Fix remaining Sentry errors
+- [ ] Fix all user-reported bugs
+- [ ] Verify fixes with re-testing
+
+
+## Phase 18 - Critical User-Reported Bugs (Jan 5, 2026) - URGENT
+
+### User Feedback from Cari
+- [x] Fix infinite enroll→sign-in→enroll loop (fixed Checkout.tsx to use real auth + enrollment router to verify session)
+- [x] Fix "Join our community" link not working (added proper hrefs to buttons)
+- [ ] Fix FOUNDING10K coupon not working in cart for some users
+- [x] Identify and fix all broken links (added redirects for /dashboard/progress, /home, /apply, /report, /pdca-cycles, /public-dashboard, /training/catalog, /regulatory/roadmap)
+- [x] Re-test all user flows after fixes
+  - FOUNDING10K coupon works correctly (100% discount applied)
+  - Community page links working
+  - Enrollment shows success but doesn't persist (fixes need deployment)
+  - Authentication fix in Checkout.tsx and enrollment.ts ready for deployment

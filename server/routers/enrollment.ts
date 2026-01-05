@@ -6,6 +6,7 @@ import { courseEnrollments, courses, courseBundles, coupons, couponUsage, users 
 import { eq, and } from 'drizzle-orm';
 import { createCourseCheckoutSession } from '../stripe/stripeService';
 import { sendEnrollmentConfirmationEmail } from '../services/courseEmailService';
+import { sdk } from '../_core/sdk';
 
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -36,9 +37,20 @@ const enrollmentRateLimiter = rateLimit({
 // Create payment intent or enroll for free
 router.post('/enrollment/create', enrollmentRateLimiter, async (req, res) => {
   try {
-    const { type, itemId, userId, couponId } = req.body;
+    const { type, itemId, couponId } = req.body;
     
-    if (!type || !itemId || !userId) {
+    // Authenticate user from session - this ensures the user is actually logged in
+    let authenticatedUser;
+    try {
+      authenticatedUser = await sdk.authenticateRequest(req);
+    } catch (authError) {
+      console.error('[Enrollment] Authentication failed:', authError);
+      return res.status(401).json({ error: 'Please sign in to enroll in courses' });
+    }
+    
+    const userId = authenticatedUser.id;
+    
+    if (!type || !itemId) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
@@ -213,10 +225,7 @@ router.get('/enrollment/my-courses/:userId', async (req, res) => {
     const enrollments = await db
       .select()
       .from(courseEnrollments)
-      .where(and(
-        eq(courseEnrollments.userId, parseInt(userId)),
-        eq(courseEnrollments.paymentStatus, 'completed')
-      ));
+      .where(eq(courseEnrollments.userId, parseInt(userId)));
     
     // Fetch course/bundle details for each enrollment
     const enrichedEnrollments = await Promise.all(

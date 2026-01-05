@@ -4,11 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Loader2, Check, Tag } from 'lucide-react';
+import { Loader2, Check, Tag, LogIn } from 'lucide-react';
+import { useAuth } from '@/_core/hooks/useAuth';
+import { getLoginUrl } from '@/const';
 
 export default function Checkout() {
   const [, setLocation] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
+  
+  // Use real authentication
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   
   const itemType = searchParams.get('type'); // 'course' or 'bundle'
   const itemId = searchParams.get('id');
@@ -118,15 +123,30 @@ export default function Checkout() {
     return Math.max(0, (originalPrice - appliedCoupon.discountValue * 100) / 100);
   };
   
+  // Handle login redirect
+  const handleLoginRedirect = () => {
+    // Store the current checkout URL to redirect back after login
+    const currentUrl = window.location.href;
+    localStorage.setItem('checkout_redirect', currentUrl);
+    window.location.href = getLoginUrl();
+  };
+  
   // Handle checkout
   const handleCheckout = async () => {
+    // Check if user is authenticated
+    if (!isAuthenticated || !user) {
+      toast.error('Please sign in to complete your purchase');
+      handleLoginRedirect();
+      return;
+    }
+    
     setProcessing(true);
     
     try {
       const finalPrice = calculateFinalPrice();
       
-      // Get current user ID (TODO: Replace with actual auth)
-      const userId = 1; // Mock user ID
+      // Use the actual authenticated user ID
+      const userId = user.id;
       
       // Call enrollment API
       const response = await fetch('/api/enrollment/create', {
@@ -169,7 +189,8 @@ export default function Checkout() {
     }
   };
   
-  if (loading) {
+  // Show loading while checking auth
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -182,7 +203,7 @@ export default function Checkout() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Item not found</h1>
-          <Button onClick={() => navigate('/paid-courses')}>
+          <Button onClick={() => setLocation('/paid-courses')}>
             Back to Courses
           </Button>
         </div>
@@ -201,6 +222,36 @@ export default function Checkout() {
           <h1 className="text-3xl font-bold mb-2">Checkout</h1>
           <p className="text-muted-foreground">Complete your purchase to start learning</p>
         </div>
+        
+        {/* Authentication Warning */}
+        {!isAuthenticated && (
+          <Card className="p-6 mb-6 border-amber-500 bg-amber-50 dark:bg-amber-950/20">
+            <div className="flex items-center gap-4">
+              <LogIn className="h-8 w-8 text-amber-600" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-amber-800 dark:text-amber-200">Sign in required</h3>
+                <p className="text-sm text-amber-700 dark:text-amber-300">
+                  Please sign in to complete your purchase and access your courses.
+                </p>
+              </div>
+              <Button onClick={handleLoginRedirect} variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-100">
+                Sign In
+              </Button>
+            </div>
+          </Card>
+        )}
+        
+        {/* Logged in user info */}
+        {isAuthenticated && user && (
+          <Card className="p-4 mb-6 border-green-500 bg-green-50 dark:bg-green-950/20">
+            <div className="flex items-center gap-3">
+              <Check className="h-5 w-5 text-green-600" />
+              <span className="text-sm text-green-800 dark:text-green-200">
+                Signed in as <strong>{user.email}</strong>
+              </span>
+            </div>
+          </Card>
+        )}
         
         <div className="grid md:grid-cols-2 gap-8">
           {/* Order Summary */}
@@ -302,7 +353,7 @@ export default function Checkout() {
                   
                   <Button
                     onClick={handleCheckout}
-                    disabled={processing}
+                    disabled={processing || !isAuthenticated}
                     size="lg"
                     className="w-full"
                   >
@@ -310,6 +361,11 @@ export default function Checkout() {
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Enrolling...
+                      </>
+                    ) : !isAuthenticated ? (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4" />
+                        Sign In to Enroll
                       </>
                     ) : (
                       'Enroll Now - FREE'
@@ -320,13 +376,13 @@ export default function Checkout() {
                 <div className="space-y-4">
                   <div className="p-4 bg-muted rounded-md">
                     <p className="text-sm text-muted-foreground">
-                      Stripe payment integration will be added here
+                      You will be redirected to Stripe to complete your payment securely.
                     </p>
                   </div>
                   
                   <Button
                     onClick={handleCheckout}
-                    disabled={processing}
+                    disabled={processing || !isAuthenticated}
                     size="lg"
                     className="w-full"
                   >
@@ -334,6 +390,11 @@ export default function Checkout() {
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Processing...
+                      </>
+                    ) : !isAuthenticated ? (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4" />
+                        Sign In to Pay
                       </>
                     ) : (
                       `Pay £${finalPrice.toFixed(2)}`

@@ -403,14 +403,37 @@ export function generatePDCATemplate(templateName: string, res: Response) {
     return;
   }
 
+  // Track if client disconnected
+  let clientDisconnected = false;
+  
+  // Handle client disconnect
+  res.on('close', () => {
+    clientDisconnected = true;
+  });
+  
+  res.on('error', (err) => {
+    console.error('Response stream error:', err);
+    clientDisconnected = true;
+  });
+
   const doc = new PDFDocument({ margin: 50, size: 'LETTER' });
+
+  // Handle PDF document errors
+  doc.on('error', (err) => {
+    console.error('PDF generation error:', err);
+    if (!clientDisconnected && !res.headersSent) {
+      res.status(500).json({ error: 'PDF generation failed' });
+    }
+  });
 
   // Set response headers
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename="${templateName}.pdf"`);
 
-  // Pipe PDF to response
-  doc.pipe(res);
+  // Pipe PDF to response with error handling
+  doc.pipe(res).on('error', (err) => {
+    console.error('Pipe error:', err);
+  });
 
   // Header
   doc.fontSize(20).font('Helvetica-Bold').text('CSOAI', 50, 50);

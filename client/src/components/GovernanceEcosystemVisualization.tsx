@@ -25,7 +25,7 @@ interface AnimatedParticle {
 export const GovernanceEcosystemVisualization: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const timeRef = useRef<number>(0);
   const particlesRef = useRef<AnimatedParticle[]>([]);
 

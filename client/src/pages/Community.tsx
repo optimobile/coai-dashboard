@@ -69,11 +69,11 @@ export default function Community() {
               Share knowledge, collaborate on solutions, and shape the future of AI safety together.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button size="lg" className="bg-green-600 hover:bg-green-700">
-                Join Slack
+              <Button size="lg" className="bg-green-600 hover:bg-green-700" asChild>
+                <a href="https://csoai.slack.com" target="_blank" rel="noopener noreferrer">Join Slack</a>
               </Button>
-              <Button size="lg" variant="outline">
-                GitHub Discussions
+              <Button size="lg" variant="outline" asChild>
+                <a href="https://github.com/csoai/csoai/discussions" target="_blank" rel="noopener noreferrer">GitHub Discussions</a>
               </Button>
             </div>
           </motion.div>
@@ -188,8 +188,8 @@ export default function Community() {
             <p className="text-xl text-green-100 mb-8">
               Start connecting with the global AI safety community today.
             </p>
-            <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
-              Join Our Community
+            <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100" asChild>
+              <a href="https://csoai.slack.com" target="_blank" rel="noopener noreferrer">Join Our Community</a>
             </Button>
           </motion.div>
         </div>
