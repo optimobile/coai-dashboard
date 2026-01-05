@@ -197,6 +197,7 @@ import WorkflowAnalytics from "./pages/WorkflowAnalytics";
 import StudentImportExport from "./pages/admin/StudentImportExport";
 import AnalyticsDashboardPage from "./pages/admin/AnalyticsDashboard";
 import Teams from "./pages/Teams";
+import ByzantineConsensus from "./pages/ByzantineConsensus";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -265,6 +266,7 @@ function App() {
                   <Route path="/compliance" component={Compliance} />
                   <Route path="/agent-council" component={AgentCouncil} />
                   <Route path="/council-detail" component={CouncilDetail} />
+                  <Route path="/byzantine-consensus" component={ByzantineConsensus} />
                   <Route path="/watchdog" component={Watchdog} />
                   <Route path="/public-watchdog" component={PublicWatchdogHub} />
                   <Route path="/reports" component={Reports} />
