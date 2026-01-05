@@ -24,6 +24,12 @@ export async function setupVite(app: Express, server: Server) {
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 
+    // Don't serve HTML for API routes - return 404 JSON instead
+    if (url.startsWith('/api/')) {
+      res.status(404).json({ error: 'API endpoint not found', path: url });
+      return;
+    }
+
     try {
       const clientTemplate = path.resolve(
         import.meta.dirname,
@@ -61,7 +67,15 @@ export function serveStatic(app: Express) {
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  app.use("*", (req, res) => {
+    const url = req.originalUrl;
+    
+    // Don't serve HTML for API routes - return 404 JSON instead
+    if (url.startsWith('/api/')) {
+      res.status(404).json({ error: 'API endpoint not found', path: url });
+      return;
+    }
+    
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }

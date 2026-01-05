@@ -9,7 +9,7 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { sendCompletionCertificateEmail } from './services/courseEmailService';
 import { getDb } from "./db";
-import { courses, courseEnrollments, courseBundles, regions, trainingModules } from "../drizzle/schema";
+import { courses, courseEnrollments, courseBundles, regions, trainingModules, coupons } from "../drizzle/schema";
 import { eq, and, sql } from "drizzle-orm";
 import Stripe from "stripe";
 
@@ -583,5 +583,80 @@ export const coursesRouter = router({
         .where(eq(courseEnrollments.id, input.enrollmentId));
 
       return { success: true, message: "Enrollment cancelled" };
+    }),
+
+  /**
+   * Validate a coupon code for a course
+   * Public endpoint - checks if coupon is valid and returns discount info
+   */
+  validateCoupon: publicProcedure
+    .input(
+      z.object({
+        code: z.string(),
+        courseId: z.number().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Find the coupon by code
+      const [coupon] = await db
+        .select()
+        .from(coupons)
+        .where(
+          and(
+            eq(coupons.code, input.code.toUpperCase()),
+            eq(coupons.active, 1)
+          )
+        );
+
+      if (!coupon) {
+        return {
+          valid: false,
+          message: "Invalid coupon code",
+        };
+      }
+
+      // Check if coupon has expired
+      if (coupon.expiresAt) {
+        const expiryDate = new Date(coupon.expiresAt);
+        if (expiryDate < new Date()) {
+          return {
+            valid: false,
+            message: "This coupon has expired",
+          };
+        }
+      }
+
+      // Check if coupon has reached max uses
+      if (coupon.usedCount >= coupon.maxUses) {
+        return {
+          valid: false,
+          message: "This coupon has reached its usage limit",
+        };
+      }
+
+      // Calculate discount percentage
+      let discountPercent = 0;
+      if (coupon.discountType === "percentage") {
+        discountPercent = parseFloat(String(coupon.discountValue));
+      } else {
+        // For fixed amount, we'll return the value and let frontend calculate
+        discountPercent = 0; // Will be handled differently
+      }
+
+      return {
+        valid: true,
+        couponId: coupon.id,
+        code: coupon.code,
+        discountType: coupon.discountType,
+        discountValue: parseFloat(String(coupon.discountValue)),
+        discountPercent: coupon.discountType === "percentage" ? discountPercent : null,
+        message: coupon.discountType === "percentage"
+          ? `${discountPercent}% discount applied`
+          : `£${coupon.discountValue} discount applied`,
+        remainingUses: coupon.maxUses - coupon.usedCount,
+      };
     }),
 });

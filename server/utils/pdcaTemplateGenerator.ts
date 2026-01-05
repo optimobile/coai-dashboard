@@ -403,12 +403,17 @@ export function generatePDCATemplate(templateName: string, res: Response) {
     return;
   }
 
-  // Track if client disconnected
+  // Track if client disconnected or response ended
   let clientDisconnected = false;
+  let responseEnded = false;
   
   // Handle client disconnect
   res.on('close', () => {
     clientDisconnected = true;
+  });
+  
+  res.on('finish', () => {
+    responseEnded = true;
   });
   
   res.on('error', (err) => {
@@ -416,23 +421,29 @@ export function generatePDCATemplate(templateName: string, res: Response) {
     clientDisconnected = true;
   });
 
-  const doc = new PDFDocument({ margin: 50, size: 'LETTER' });
+  // Create PDF document with autoFirstPage to control page creation
+  const doc = new PDFDocument({ margin: 50, size: 'LETTER', autoFirstPage: true, bufferPages: true });
 
   // Handle PDF document errors
   doc.on('error', (err) => {
     console.error('PDF generation error:', err);
-    if (!clientDisconnected && !res.headersSent) {
+    if (!clientDisconnected && !responseEnded && !res.headersSent) {
       res.status(500).json({ error: 'PDF generation failed' });
     }
   });
 
-  // Set response headers
+  // Set response headers before piping
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename="${templateName}.pdf"`);
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 
   // Pipe PDF to response with error handling
-  doc.pipe(res).on('error', (err) => {
+  const stream = doc.pipe(res);
+  stream.on('error', (err) => {
     console.error('Pipe error:', err);
+  });
+  stream.on('finish', () => {
+    responseEnded = true;
   });
 
   // Header
@@ -507,22 +518,31 @@ export function generatePDCATemplate(templateName: string, res: Response) {
     doc.moveDown(1);
   });
 
-  // Footer
-  const pageCount = doc.bufferedPageRange().count;
-  for (let i = 0; i < pageCount; i++) {
-    doc.switchToPage(i);
-    doc
-      .fontSize(8)
-      .fillColor('#999999')
-      .text(
-        `CSOAI SOAI-PDCA Framework | ${template.phase} Phase | Page ${i + 1} of ${pageCount}`,
-        50,
-        doc.page.height - 50,
-        { align: 'center' }
-      );
+  // Footer - wrap in try-catch to handle any page switching errors
+  try {
+    const pageCount = doc.bufferedPageRange().count;
+    for (let i = 0; i < pageCount; i++) {
+      doc.switchToPage(i);
+      doc
+        .fontSize(8)
+        .fillColor('#999999')
+        .text(
+          `CSOAI SOAI-PDCA Framework | ${template.phase} Phase | Page ${i + 1} of ${pageCount}`,
+          50,
+          doc.page.height - 50,
+          { align: 'center' }
+        );
+    }
+  } catch (err) {
+    console.error('Error adding footer:', err);
   }
 
-  doc.end();
+  // Finalize the PDF - only call end() once and handle errors
+  try {
+    doc.end();
+  } catch (err) {
+    console.error('Error ending PDF document:', err);
+  }
 }
 
 export function listAvailableTemplates() {

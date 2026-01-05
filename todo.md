@@ -304,3 +304,12 @@
   - Community page links working
   - Enrollment shows success but doesn't persist (fixes need deployment)
   - Authentication fix in Checkout.tsx and enrollment.ts ready for deployment
+
+
+## Phase 19 - Critical Backend Fixes (Jan 5, 2026)
+
+### TRPC & API Fixes
+- [x] Add missing courses.validateCoupon TRPC procedure
+- [x] Fix PDF template download stream handling
+- [x] Investigate and fix API routes returning HTML instead of JSON
+- [x] Review and fix auth state persistence for protected routes

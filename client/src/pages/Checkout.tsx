@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Loader2, Check, Tag, LogIn } from 'lucide-react';
 import { useAuth } from '@/_core/hooks/useAuth';
-import { getLoginUrl } from '@/const';
+import { getLoginUrlWithReturn } from '@/const';
 
 export default function Checkout() {
   const [, setLocation] = useLocation();
@@ -123,12 +123,9 @@ export default function Checkout() {
     return Math.max(0, (originalPrice - appliedCoupon.discountValue * 100) / 100);
   };
   
-  // Handle login redirect
+  // Handle login redirect - uses return_to parameter to redirect back after login
   const handleLoginRedirect = () => {
-    // Store the current checkout URL to redirect back after login
-    const currentUrl = window.location.href;
-    localStorage.setItem('checkout_redirect', currentUrl);
-    window.location.href = getLoginUrl();
+    window.location.href = getLoginUrlWithReturn();
   };
   
   // Handle checkout
