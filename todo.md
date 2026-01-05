@@ -8596,3 +8596,9 @@ All tRPC endpoints implemented and tested. Dashboard pages connected to live dat
 - [x] Filtering controls by council member category (Ethics, Regulatory, Technical, Domain)
 - [x] 300+ Human Council visualization with public watchdog section
 - [x] Government and legislation entities in the ecosystem
+
+## Phase 12 - Interactive Council Features (Jan 5, 2026)
+
+- [x] Click-to-expand council member details with full voting history and decision rationale
+- [x] Live vote simulation - "Trigger Demo Vote" button with animated 33-agent consensus
+- [x] Human Council registration CTA - "Join the 312+ Watchdog Analysts" button linking to signup flow

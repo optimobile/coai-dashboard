@@ -18,6 +18,9 @@ import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { CouncilSkeleton } from "@/components/skeletons/CouncilSkeleton";
+import { CouncilMemberCard, generateCouncilMembers } from "@/components/CouncilMemberCard";
+import { LiveVoteSimulation } from "@/components/LiveVoteSimulation";
+import { HumanCouncilCTA } from "@/components/HumanCouncilCTA";
 
 const agentGroups = [
   {
@@ -96,6 +99,8 @@ const formatTimeAgo = (date: Date | string) => {
 export default function AgentCouncil() {
   const [isVoteDialogOpen, setIsVoteDialogOpen] = useState(false);
   const [voteSubject, setVoteSubject] = useState({ title: "", description: "" });
+  const [showCouncilMembers, setShowCouncilMembers] = useState(false);
+  const [councilMembers] = useState(() => generateCouncilMembers());
 
   // Real API data
   const { data: sessions, isLoading, refetch } = trpc.council.list.useQuery();
@@ -266,6 +271,45 @@ export default function AgentCouncil() {
             );
           })}
         </div>
+
+        {/* Live Vote Simulation */}
+        <LiveVoteSimulation 
+          subject="AI Safety Compliance Assessment Demo"
+          autoStart={false}
+        />
+
+        {/* Council Members */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Council Members</h2>
+              <p className="text-sm text-muted-foreground">
+                Click any member to view their voting history and decision rationale
+              </p>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowCouncilMembers(!showCouncilMembers)}
+            >
+              {showCouncilMembers ? "Hide" : "Show"} Members
+            </Button>
+          </div>
+          
+          {showCouncilMembers && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {councilMembers.map((member) => (
+                <CouncilMemberCard 
+                  key={member.id} 
+                  member={member}
+                  isAnimating={false}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Human Council CTA */}
+        <HumanCouncilCTA variant="default" />
 
         {/* Recent Votes */}
         <Card className="bg-card border-border">
