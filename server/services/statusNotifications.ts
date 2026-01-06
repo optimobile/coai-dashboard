@@ -8,11 +8,22 @@ import { statusSubscriptions, systemIncidents, incidentUpdates, serviceStatus } 
 import { eq, and } from "drizzle-orm";
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendInstance: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resendInstance) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY is not configured');
+    }
+    resendInstance = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendInstance;
+}
+
 const FROM_EMAIL = 'CSOAI Status <status@csoai.org>';
 
 async function sendEmail(params: { to: string; subject: string; html: string }) {
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await getResend().emails.send({
     from: FROM_EMAIL,
     to: params.to,
     subject: params.subject,
