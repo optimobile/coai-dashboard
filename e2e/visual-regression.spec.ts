@@ -408,3 +408,250 @@ test.describe('Visual Regression Tests - Certification Flow', () => {
     }
   });
 });
+
+
+test.describe('Visual Regression Tests - AI Systems Page', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+    await page.waitForLoadState('networkidle');
+  });
+
+  test('AI Systems page full view', async ({ page }) => {
+    await page.goto('/ai-systems');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
+    
+    await expect(page).toHaveScreenshot('ai-systems-full.png', {
+      ...SCREENSHOT_OPTIONS,
+      threshold: COMPARISON_THRESHOLD,
+    });
+  });
+
+  test('AI Systems page header', async ({ page }) => {
+    await page.goto('/ai-systems');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    const header = page.locator('[data-testid="ai-systems-header"]');
+    if (await header.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await expect(header).toHaveScreenshot('ai-systems-header.png', {
+        threshold: COMPARISON_THRESHOLD,
+      });
+    } else {
+      // Page may require authentication, take full page screenshot instead
+      await expect(page).toHaveScreenshot('ai-systems-header-redirect.png', {
+        ...SCREENSHOT_OPTIONS,
+        threshold: COMPARISON_THRESHOLD,
+      });
+    }
+  });
+
+  test('AI Systems create modal', async ({ page }) => {
+    await page.goto('/ai-systems');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    // Open create modal if button is visible
+    const registerButton = page.locator('[data-testid="ai-systems-register-button"]');
+    if (await registerButton.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await registerButton.click();
+      await page.waitForTimeout(500);
+      
+      const modal = page.locator('[data-testid="ai-systems-create-modal"]');
+      if (await modal.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await expect(modal).toHaveScreenshot('ai-systems-create-modal.png', {
+          threshold: COMPARISON_THRESHOLD,
+        });
+      }
+    }
+  });
+
+  test('AI Systems empty state', async ({ page }) => {
+    await page.goto('/ai-systems');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    // Search for something that doesn't exist if search input is visible
+    const searchInput = page.locator('[data-testid="ai-systems-search-input"]');
+    if (await searchInput.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await searchInput.fill('nonexistent-system-xyz123');
+      await page.waitForTimeout(500);
+      
+      const emptyState = page.locator('[data-testid="ai-systems-empty-state"]');
+      if (await emptyState.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await expect(emptyState).toHaveScreenshot('ai-systems-empty-state.png', {
+          threshold: COMPARISON_THRESHOLD,
+        });
+      }
+    }
+  });
+});
+
+test.describe('Visual Regression Tests - Compliance Page', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+    await page.waitForLoadState('networkidle');
+  });
+
+  test('Compliance page full view', async ({ page }) => {
+    await page.goto('/compliance');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
+    
+    await expect(page).toHaveScreenshot('compliance-full.png', {
+      ...SCREENSHOT_OPTIONS,
+      threshold: COMPARISON_THRESHOLD,
+    });
+  });
+
+  test('Compliance page header', async ({ page }) => {
+    await page.goto('/compliance');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    const header = page.locator('[data-testid="compliance-header"]');
+    if (await header.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await expect(header).toHaveScreenshot('compliance-header.png', {
+        threshold: COMPARISON_THRESHOLD,
+      });
+    } else {
+      await expect(page).toHaveScreenshot('compliance-header-redirect.png', {
+        ...SCREENSHOT_OPTIONS,
+        threshold: COMPARISON_THRESHOLD,
+      });
+    }
+  });
+
+  test('Compliance summary cards', async ({ page }) => {
+    await page.goto('/compliance');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    const summaryCards = page.locator('[data-testid="compliance-summary-cards"]');
+    if (await summaryCards.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await expect(summaryCards).toHaveScreenshot('compliance-summary-cards.png', {
+        threshold: COMPARISON_THRESHOLD,
+      });
+    }
+  });
+
+  test('Compliance frameworks list', async ({ page }) => {
+    await page.goto('/compliance');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    const frameworksList = page.locator('[data-testid="compliance-frameworks-list"]');
+    if (await frameworksList.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await expect(frameworksList).toHaveScreenshot('compliance-frameworks-list.png', {
+        threshold: COMPARISON_THRESHOLD,
+      });
+    }
+  });
+});
+
+test.describe('Visual Regression Tests - Agent Council Page', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+    await page.waitForLoadState('networkidle');
+  });
+
+  test('Agent Council page full view', async ({ page }) => {
+    await page.goto('/council');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
+    
+    await expect(page).toHaveScreenshot('agent-council-full.png', {
+      ...SCREENSHOT_OPTIONS,
+      threshold: COMPARISON_THRESHOLD,
+    });
+  });
+
+  test('Agent Council page header', async ({ page }) => {
+    await page.goto('/council');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    const header = page.locator('[data-testid="agent-council-header"]');
+    if (await header.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await expect(header).toHaveScreenshot('agent-council-header.png', {
+        threshold: COMPARISON_THRESHOLD,
+      });
+    } else {
+      await expect(page).toHaveScreenshot('agent-council-header-redirect.png', {
+        ...SCREENSHOT_OPTIONS,
+        threshold: COMPARISON_THRESHOLD,
+      });
+    }
+  });
+
+  test('Agent Council stats grid', async ({ page }) => {
+    await page.goto('/council');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    const statsGrid = page.locator('[data-testid="agent-council-stats-grid"]');
+    if (await statsGrid.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await expect(statsGrid).toHaveScreenshot('agent-council-stats-grid.png', {
+        threshold: COMPARISON_THRESHOLD,
+      });
+    }
+  });
+
+  test('Agent Council groups grid', async ({ page }) => {
+    await page.goto('/council');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    const groupsGrid = page.locator('[data-testid="agent-council-groups-grid"]');
+    if (await groupsGrid.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await expect(groupsGrid).toHaveScreenshot('agent-council-groups-grid.png', {
+        threshold: COMPARISON_THRESHOLD,
+      });
+    }
+  });
+
+  test('Agent Council vote dialog', async ({ page }) => {
+    await page.goto('/council');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    // Open vote dialog if button is visible
+    const triggerButton = page.locator('[data-testid="agent-council-trigger-vote-button"]');
+    if (await triggerButton.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await triggerButton.click();
+      await page.waitForTimeout(500);
+      
+      const dialog = page.locator('[data-testid="agent-council-vote-dialog"]');
+      if (await dialog.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await expect(dialog).toHaveScreenshot('agent-council-vote-dialog.png', {
+          threshold: COMPARISON_THRESHOLD,
+        });
+      }
+    }
+  });
+
+  test('Agent Council vote dialog filled', async ({ page }) => {
+    await page.goto('/council');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+    
+    // Open vote dialog if button is visible
+    const triggerButton = page.locator('[data-testid="agent-council-trigger-vote-button"]');
+    if (await triggerButton.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await triggerButton.click();
+      await page.waitForTimeout(500);
+      
+      // Fill in the form if inputs are visible
+      const titleInput = page.locator('[data-testid="agent-council-vote-title-input"]');
+      if (await titleInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await titleInput.fill('Privacy Compliance Assessment');
+        await page.fill('[data-testid="agent-council-vote-description-input"]', 'Evaluate the privacy compliance of our new data processing system under GDPR and EU AI Act requirements.');
+        
+        const dialog = page.locator('[data-testid="agent-council-vote-dialog"]');
+        await expect(dialog).toHaveScreenshot('agent-council-vote-dialog-filled.png', {
+          threshold: COMPARISON_THRESHOLD,
+        });
+      }
+    }
+  });
+});

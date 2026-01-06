@@ -210,21 +210,21 @@ export default function Compliance() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6" data-testid="compliance-page">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" data-testid="compliance-header">
           <div>
-            <h1 className="text-3xl font-bold font-display tracking-tight">Compliance</h1>
+            <h1 className="text-3xl font-bold font-display tracking-tight" data-testid="compliance-title">Compliance</h1>
             <p className="text-muted-foreground text-sm mt-1">
               Track compliance across multiple AI safety frameworks
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setReportDialogOpen(true)} className="gap-2">
+            <Button variant="outline" onClick={() => setReportDialogOpen(true)} className="gap-2" data-testid="compliance-generate-report-button">
               <FileDown className="h-4 w-4" />
               Generate Report
             </Button>
-            <Button onClick={() => setAssessmentDialogOpen(true)} className="gap-2">
+            <Button onClick={() => setAssessmentDialogOpen(true)} className="gap-2" data-testid="compliance-run-assessment-button">
               <PlayCircle className="h-4 w-4" />
               Run Assessment
             </Button>
@@ -233,7 +233,7 @@ export default function Compliance() {
 
         {/* Summary Cards */}
         {summary && (
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-4" data-testid="compliance-summary-cards">
             <Card>
               <CardContent className="p-4">
                 <div className="text-2xl font-bold">{summary.totalSystems}</div>
@@ -262,7 +262,7 @@ export default function Compliance() {
         )}
 
         {/* Frameworks */}
-        <div className="space-y-4">
+        <div className="space-y-4" data-testid="compliance-frameworks-list">
           {frameworks.map((fw, idx) => (
             <motion.div
               key={fw.id || fw.name}
@@ -270,7 +270,7 @@ export default function Compliance() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: idx * 0.05 }}
             >
-              <Card className="bg-card border-border card-elevated">
+              <Card className="bg-card border-border card-elevated" data-testid={`compliance-framework-card-${fw.id || idx}`}>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">

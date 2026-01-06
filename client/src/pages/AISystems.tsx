@@ -271,16 +271,16 @@ export default function AISystems() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6" data-testid="ai-systems-page">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" data-testid="ai-systems-header">
           <div>
-            <h1 className="text-3xl font-bold font-display tracking-tight">AI Systems</h1>
+            <h1 className="text-3xl font-bold font-display tracking-tight" data-testid="ai-systems-title">AI Systems</h1>
             <p className="text-muted-foreground text-sm mt-1">
               Manage and monitor your registered AI systems
             </p>
           </div>
-          <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
+          <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2" data-testid="ai-systems-register-button">
             <Plus className="h-4 w-4" />
             Register System
           </Button>
@@ -295,9 +295,10 @@ export default function AISystems() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
+              data-testid="ai-systems-search-input"
             />
           </div>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" data-testid="ai-systems-filter-button">
             <Filter className="h-4 w-4" />
           </Button>
         </div>
@@ -311,7 +312,7 @@ export default function AISystems() {
 
         {/* Systems List */}
         {!isLoading && (
-          <div className="space-y-3">
+          <div className="space-y-3" data-testid="ai-systems-list">
             <AnimatePresence>
               {filteredSystems.map((system, idx) => (
                 <motion.div
@@ -321,7 +322,7 @@ export default function AISystems() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.15, delay: idx * 0.03 }}
                 >
-                  <Card className="bg-card border-border card-elevated transition-smooth hover:scale-[1.01]">
+                  <Card className="bg-card border-border card-elevated transition-smooth hover:scale-[1.01]" data-testid={`ai-system-card-${system.id}`}>
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4">
                         {/* Icon */}
@@ -364,7 +365,7 @@ export default function AISystems() {
                         {/* Actions */}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="shrink-0">
+                            <Button variant="ghost" size="icon" className="shrink-0" data-testid={`ai-system-menu-${system.id}`}>
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -406,7 +407,7 @@ export default function AISystems() {
 
         {/* Empty State */}
         {!isLoading && filteredSystems.length === 0 && (
-          <div className="text-center py-12">
+          <div className="text-center py-12" data-testid="ai-systems-empty-state">
             <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-medium">No AI systems found</h3>
             <p className="text-sm text-muted-foreground mb-4">
@@ -424,7 +425,7 @@ export default function AISystems() {
 
       {/* Create Modal */}
       <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px]" data-testid="ai-systems-create-modal">
           <DialogHeader>
             <DialogTitle>Register AI System</DialogTitle>
             <DialogDescription>
@@ -439,6 +440,7 @@ export default function AISystems() {
                 placeholder="e.g., Customer Service Chatbot"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                data-testid="ai-system-name-input"
               />
             </div>
             <div className="space-y-2">
@@ -449,6 +451,7 @@ export default function AISystems() {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
+                data-testid="ai-system-description-input"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -491,10 +494,10 @@ export default function AISystems() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
+            <Button variant="outline" onClick={() => setIsCreateModalOpen(false)} data-testid="ai-system-cancel-button">
               Cancel
             </Button>
-            <Button onClick={handleCreate} disabled={createMutation.isPending}>
+            <Button onClick={handleCreate} disabled={createMutation.isPending} data-testid="ai-system-submit-button">
               {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Register System
             </Button>

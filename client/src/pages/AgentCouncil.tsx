@@ -147,22 +147,22 @@ export default function AgentCouncil() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="p-6 space-y-6" data-testid="agent-council-page">
+        <div className="flex items-center justify-between" data-testid="agent-council-header">
           <div>
-            <h1 className="text-2xl font-semibold font-primary">33-Agent Council</h1>
+            <h1 className="text-2xl font-semibold font-primary" data-testid="agent-council-title">33-Agent Council</h1>
             <p className="text-muted-foreground text-sm">
               Byzantine fault-tolerant voting system (22/33 consensus required)
             </p>
           </div>
           <Dialog open={isVoteDialogOpen} onOpenChange={setIsVoteDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2">
+              <Button className="gap-2" data-testid="agent-council-trigger-vote-button">
                 <Zap className="h-4 w-4" />
                 Trigger Council Vote
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent data-testid="agent-council-vote-dialog">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5" />
@@ -181,6 +181,7 @@ export default function AgentCouncil() {
                     placeholder="e.g., Privacy compliance for user data processing"
                     value={voteSubject.title}
                     onChange={(e) => setVoteSubject({ ...voteSubject, title: e.target.value })}
+                    data-testid="agent-council-vote-title-input"
                   />
                 </div>
 
@@ -191,6 +192,7 @@ export default function AgentCouncil() {
                     rows={4}
                     value={voteSubject.description}
                     onChange={(e) => setVoteSubject({ ...voteSubject, description: e.target.value })}
+                    data-testid="agent-council-vote-description-input"
                   />
                 </div>
 
@@ -198,6 +200,7 @@ export default function AgentCouncil() {
                   onClick={handleTriggerVote} 
                   className="w-full gap-2"
                   disabled={isSubmitting}
+                  data-testid="agent-council-start-vote-button"
                 >
                   {isSubmitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -212,7 +215,7 @@ export default function AgentCouncil() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4" data-testid="agent-council-stats-grid">
           {[
             { label: "Total Sessions", value: stats?.totalSessions || 0, color: "text-emerald-600" },
             { label: "Consensus Reached", value: stats?.consensusReached || 0, color: "text-emerald-600" },
@@ -236,7 +239,7 @@ export default function AgentCouncil() {
         </div>
 
         {/* Agent Groups */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4" data-testid="agent-council-groups-grid">
           {agentGroups.map((group, idx) => {
             const Icon = group.icon;
             return (
