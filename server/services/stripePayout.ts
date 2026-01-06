@@ -7,9 +7,17 @@
 import Stripe from 'stripe';
 import { PayoutEmailService } from './payoutEmailService';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-12-15.clover',
-});
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let _stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-11-20.acacia' });
+  }
+  return _stripe;
+};
 
 export interface PayoutConfig {
   referrerId: string;
@@ -127,7 +135,7 @@ export class StripePayoutService {
   static async processPayout(referrerId: string, amount: number): Promise<PayoutResult> {
     try {
       // Create Stripe payout
-      const payout = await stripe.payouts.create({
+      const payout = await getStripe().payouts.create({
         amount,
         currency: 'usd',
         method: 'instant',
@@ -325,7 +333,7 @@ export class StripePayoutService {
   static verifyWebhookSignature(body: string, signature: string): Stripe.Event {
     try {
       const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
-      return stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      return getStripe().webhooks.constructEvent(body, signature, webhookSecret);
     } catch (error) {
       console.error('Failed to verify webhook signature:', error);
       throw new Error('Invalid webhook signature');

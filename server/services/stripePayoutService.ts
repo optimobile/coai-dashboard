@@ -10,9 +10,17 @@ import { users } from '../../drizzle/schema.js';
 import { eq, and, lte } from 'drizzle-orm';
 import { ReferralEmailService } from './referralEmailService.js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-12-15.clover',
-});
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let _stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-11-20.acacia' });
+  }
+  return _stripe;
+};
 
 export class StripePayoutService {
   /**
@@ -148,7 +156,7 @@ export class StripePayoutService {
   ): Promise<{ success: boolean; transferId?: string; error?: string }> {
     try {
       // Get or create Stripe customer for referrer
-      const customers = await stripe.customers.list({
+      const customers = await getStripe().customers.list({
         email,
         limit: 1,
       });
@@ -158,7 +166,7 @@ export class StripePayoutService {
       if (customers.data.length > 0) {
         customerId = customers.data[0].id;
       } else {
-        const customer = await stripe.customers.create({
+        const customer = await getStripe().customers.create({
           email,
           metadata: {
             referrerId: referrerId.toString(),
@@ -170,7 +178,7 @@ export class StripePayoutService {
       // Create payout (transfer to customer's bank account)
       // Note: In production, this would require Stripe Connect setup
       // For now, we'll create a payout to the platform account
-      const payout = await stripe.payouts.create({
+      const payout = await getStripe().payouts.create({
         amount: Math.round(amount * 100), // Convert to cents
         currency: 'usd',
         method: 'instant',

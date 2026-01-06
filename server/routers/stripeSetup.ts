@@ -10,7 +10,17 @@ import { courses } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let _stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-11-20.acacia' });
+  }
+  return _stripe;
+};
 
 export const stripeSetupRouter = router({
   /**
@@ -35,7 +45,7 @@ export const stripeSetupRouter = router({
           console.log(`Processing course ${course.id}: ${course.title}`);
 
           // Create Stripe product
-          const product = await stripe.products.create({
+          const product = await getStripe().products.create({
             name: course.title,
             description: course.description || `Professional AI Safety & Compliance Training: ${course.title}`,
             metadata: {
@@ -48,7 +58,7 @@ export const stripeSetupRouter = router({
 
           // Create 4 price points
           // 1. One-time payment
-          const priceOneTime = await stripe.prices.create({
+          const priceOneTime = await getStripe().prices.create({
             product: product.id,
             unit_amount: oneTimePrice,
             currency: 'gbp',
@@ -61,7 +71,7 @@ export const stripeSetupRouter = router({
 
           // 2. 3-month subscription
           const monthlyAmount3 = Math.round(oneTimePrice / 3);
-          const price3Month = await stripe.prices.create({
+          const price3Month = await getStripe().prices.create({
             product: product.id,
             unit_amount: monthlyAmount3,
             currency: 'gbp',
@@ -79,7 +89,7 @@ export const stripeSetupRouter = router({
 
           // 3. 6-month subscription
           const monthlyAmount6 = Math.round(oneTimePrice / 6);
-          const price6Month = await stripe.prices.create({
+          const price6Month = await getStripe().prices.create({
             product: product.id,
             unit_amount: monthlyAmount6,
             currency: 'gbp',
@@ -97,7 +107,7 @@ export const stripeSetupRouter = router({
 
           // 4. 12-month subscription
           const monthlyAmount12 = Math.round(oneTimePrice / 12);
-          const price12Month = await stripe.prices.create({
+          const price12Month = await getStripe().prices.create({
             product: product.id,
             unit_amount: monthlyAmount12,
             currency: 'gbp',
@@ -177,7 +187,7 @@ export const stripeSetupRouter = router({
     .mutation(async ({ input }) => {
       try {
         // Update account business profile
-        await stripe.accounts.update('acct_self', {
+        await getStripe().accounts.update('acct_self', {
           business_profile: {
             name: input.displayName
           }

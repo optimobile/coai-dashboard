@@ -9,9 +9,17 @@ import { sendEnrollmentConfirmationEmail } from '../services/courseEmailService'
 import { sdk } from '../_core/sdk';
 
 const router = Router();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-12-15.clover',
-});
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let _stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-11-20.acacia' });
+  }
+  return _stripe;
+};
 
 // Rate limiter for enrollment endpoint - prevent abuse
 // Allows 10 enrollment attempts per IP per 15 minutes

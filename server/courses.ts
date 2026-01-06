@@ -15,7 +15,17 @@ import Stripe from "stripe";
 import { couponValidationLimiter } from "./utils/rateLimiter";
 import { TRPCError } from "@trpc/server";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+  return stripe;
+};
 
 // Helper function to determine if course is free
 const isCourseFreeFn = (framework: string | null) => framework === "watchdog";
@@ -283,7 +293,7 @@ export const coursesRouter = router({
         console.log('[enrollInCourse] Creating Stripe checkout session...');
         
         // Create Stripe checkout session
-        const session = await (stripe.checkout.sessions.create as any)({
+        const session = await (getStripe().checkout.sessions.create as any)({
           payment_method_types: ["card"],
           line_items: [
             {
@@ -524,7 +534,7 @@ export const coursesRouter = router({
       }
 
       // Get Stripe session
-      const session = await stripe.checkout.sessions.retrieve(input.sessionId);
+      const session = await getStripe().checkout.sessions.retrieve(input.sessionId);
 
       if (!session.metadata) {
         throw new Error("Invalid session metadata");

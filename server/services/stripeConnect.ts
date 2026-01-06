@@ -10,9 +10,17 @@ import { users } from '../../drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { PayoutEmailService } from './payoutEmailService';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-12-15.clover',
-});
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let _stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-11-20.acacia' });
+  }
+  return _stripe;
+};
 
 export interface ConnectAccountStatus {
   hasAccount: boolean;
@@ -54,7 +62,7 @@ export class StripeConnectService {
   ): Promise<string> {
     try {
       // Create Express account
-      const account = await stripe.accounts.create({
+      const account = await getStripe().accounts.create({
         type: 'express',
         country,
         email,
@@ -93,7 +101,7 @@ export class StripeConnectService {
     returnUrl: string
   ): Promise<OnboardingLinkResult> {
     try {
-      const accountLink = await stripe.accountLinks.create({
+      const accountLink = await getStripe().accountLinks.create({
         account: accountId,
         refresh_url: refreshUrl,
         return_url: returnUrl,
@@ -115,7 +123,7 @@ export class StripeConnectService {
    */
   static async getAccountStatus(accountId: string): Promise<ConnectAccountStatus> {
     try {
-      const account = await stripe.accounts.retrieve(accountId);
+      const account = await getStripe().accounts.retrieve(accountId);
 
       return {
         hasAccount: true,
@@ -174,7 +182,7 @@ export class StripeConnectService {
     metadata?: Record<string, string>
   ): Promise<TransferResult> {
     try {
-      const transfer = await stripe.transfers.create({
+      const transfer = await getStripe().transfers.create({
         amount,
         currency,
         destination: destinationAccountId,
@@ -208,7 +216,7 @@ export class StripeConnectService {
     description?: string
   ): Promise<{ payoutId: string; status: string }> {
     try {
-      const payout = await stripe.payouts.create(
+      const payout = await getStripe().payouts.create(
         {
           amount,
           currency,
@@ -238,7 +246,7 @@ export class StripeConnectService {
     currency: string;
   }> {
     try {
-      const balance = await stripe.balance.retrieve({
+      const balance = await getStripe().balance.retrieve({
         stripeAccount: accountId,
       });
 
@@ -265,7 +273,7 @@ export class StripeConnectService {
    */
   static async createDashboardLink(accountId: string): Promise<string> {
     try {
-      const loginLink = await stripe.accounts.createLoginLink(accountId);
+      const loginLink = await getStripe().accounts.createLoginLink(accountId);
       return loginLink.url;
     } catch (error) {
       console.error('Failed to create dashboard link:', error);

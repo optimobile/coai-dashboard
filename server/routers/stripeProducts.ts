@@ -19,9 +19,17 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-12-15.clover",
-});
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let _stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-11-20.acacia' });
+  }
+  return _stripe;
+};
 
 // Framework definitions
 const FRAMEWORKS = [
@@ -128,7 +136,7 @@ export const stripeProductsRouter = router({
       if (!framework || !tier) throw new Error("Invalid framework or tier");
 
       // Create Stripe checkout session
-      const session = await stripe.checkout.sessions.create({
+      const session = await getStripe().checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: [
           {
@@ -185,7 +193,7 @@ export const stripeProductsRouter = router({
       if (!ctx.user?.id) throw new Error("User not authenticated");
 
       try {
-        const session = await stripe.checkout.sessions.retrieve(input.sessionId);
+        const session = await getStripe().checkout.sessions.retrieve(input.sessionId);
 
         if (session.payment_status !== "paid") {
           throw new Error("Payment not completed");
@@ -243,7 +251,7 @@ export const stripeProductsRouter = router({
       if (!framework || !tier) throw new Error("Invalid framework or tier");
 
       // Create product in Stripe
-      const product = await stripe.products.create({
+      const product = await getStripe().products.create({
         name: `${framework.name} - ${tier.name}`,
         description: `${framework.description}\n${tier.description}`,
         metadata: {
@@ -254,7 +262,7 @@ export const stripeProductsRouter = router({
       });
 
       // Create price
-      const price = await stripe.prices.create({
+      const price = await getStripe().prices.create({
         product: product.id,
         unit_amount: tier.price,
         currency: "gbp",
@@ -279,7 +287,7 @@ export const stripeProductsRouter = router({
     .input(z.object({ productId: z.string() }))
     .query(async ({ input }) => {
       try {
-        const product = await stripe.products.retrieve(input.productId);
+        const product = await getStripe().products.retrieve(input.productId);
         return product;
       } catch (error) {
         throw new Error("Product not found");
@@ -291,7 +299,7 @@ export const stripeProductsRouter = router({
    */
   listProducts: publicProcedure.query(async () => {
     try {
-      const products = await stripe.products.list({ limit: 100 });
+      const products = await getStripe().products.list({ limit: 100 });
       return products.data;
     } catch (error) {
       throw new Error("Failed to list products");

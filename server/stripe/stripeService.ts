@@ -7,9 +7,17 @@ import Stripe from "stripe";
 import { SUBSCRIPTION_TIERS, SubscriptionTier } from "./products";
 
 // Initialize Stripe with the secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-12-15.clover",
-});
+// Lazy initialization of Stripe to avoid errors when API key is not available (e.g., in tests)
+let _stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-11-20.acacia' });
+  }
+  return _stripe;
+};
 
 export { stripe };
 
@@ -22,7 +30,7 @@ export async function getOrCreateCustomer(
   name?: string
 ): Promise<string> {
   // Search for existing customer by email
-  const existingCustomers = await stripe.customers.list({
+  const existingCustomers = await getStripe().customers.list({
     email,
     limit: 1,
   });
@@ -32,7 +40,7 @@ export async function getOrCreateCustomer(
   }
 
   // Create new customer
-  const customer = await stripe.customers.create({
+  const customer = await getStripe().customers.create({
     email,
     name: name || undefined,
     metadata: {
@@ -67,7 +75,7 @@ export async function createCheckoutSession(params: {
     : tierConfig.stripePriceIdYearly;
 
   // Create checkout session
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     customer: customerId,
     client_reference_id: userId.toString(),
     mode: "subscription",
@@ -110,7 +118,7 @@ export async function createPortalSession(
   customerId: string,
   returnUrl: string
 ): Promise<string> {
-  const session = await stripe.billingPortal.sessions.create({
+  const session = await getStripe().billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
   });
@@ -123,7 +131,7 @@ export async function createPortalSession(
  */
 export async function getSubscription(subscriptionId: string): Promise<Stripe.Subscription | null> {
   try {
-    return await stripe.subscriptions.retrieve(subscriptionId);
+    return await getStripe().subscriptions.retrieve(subscriptionId);
   } catch {
     return null;
   }
@@ -133,7 +141,7 @@ export async function getSubscription(subscriptionId: string): Promise<Stripe.Su
  * Cancel a subscription
  */
 export async function cancelSubscription(subscriptionId: string): Promise<Stripe.Subscription> {
-  return await stripe.subscriptions.cancel(subscriptionId);
+  return await getStripe().subscriptions.cancel(subscriptionId);
 }
 
 /**
@@ -187,7 +195,7 @@ export async function createCourseCheckoutSession(params: {
   const customerId = await getOrCreateCustomer(userId, email, name);
 
   // Create checkout session
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     customer: customerId,
     client_reference_id: userId.toString(),
     mode: paymentType === 'one_time' ? 'payment' : 'subscription',
