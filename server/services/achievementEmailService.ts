@@ -9,7 +9,17 @@ import { getDb } from '../db';
 import { users, emailPreferences } from '../../drizzle/schema';
 import { eq } from 'drizzle-orm';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendInstance: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resendInstance) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    resendInstance = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendInstance;
+}
 const FROM_EMAIL = 'CSOAI <noreply@csoai.org>';
 const FRONTEND_URL = process.env.VITE_FRONTEND_URL || 'https://coai.manus.space';
 
@@ -211,7 +221,7 @@ export async function sendBadgeEarnedEmail(
     
     const badgeCardHtml = generateBadgeCardHtml(badge, userInfo.name || 'Learner');
     
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to: userInfo.email,
       subject: `🎉 You've earned a new badge: ${badge.name}!`,
@@ -389,7 +399,7 @@ export async function sendStreakMilestoneEmail(
     
     const message = motivationalMessages[milestone.days] || `${milestone.days} days of learning! Amazing!`;
     
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to: userInfo.email,
       subject: `🔥 ${milestone.days}-Day Streak! You're on fire!`,
