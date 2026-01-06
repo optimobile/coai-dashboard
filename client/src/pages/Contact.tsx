@@ -109,7 +109,7 @@ export default function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <motion.div {...fadeInUp}>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-gray-900">Send us a Message</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6" data-testid="contact-form">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Name
@@ -121,6 +121,7 @@ export default function Contact() {
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
+                    data-testid="contact-name-input"
                   />
                 </div>
                 <div>
@@ -134,6 +135,7 @@ export default function Contact() {
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
+                    data-testid="contact-email-input"
                   />
                 </div>
                 <div>
@@ -147,6 +149,7 @@ export default function Contact() {
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
+                    data-testid="contact-subject-input"
                   />
                 </div>
                 <div>
@@ -160,9 +163,10 @@ export default function Contact() {
                     rows={6}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
+                    data-testid="contact-message-input"
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-green-600 hover:bg-green-700">
+                <Button type="submit" size="lg" className="w-full bg-green-600 hover:bg-green-700" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
                   Send Message
                 </Button>

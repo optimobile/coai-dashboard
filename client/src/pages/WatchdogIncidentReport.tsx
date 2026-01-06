@@ -103,7 +103,7 @@ export default function WatchdogIncidentReportPage() {
                   </Alert>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6" data-testid="watchdog-incident-form">
                   {/* System Name */}
                   <div>
                     <label className="block text-sm font-semibold mb-2">AI System Name or Company</label>
@@ -113,6 +113,7 @@ export default function WatchdogIncidentReportPage() {
                       onChange={handleChange}
                       placeholder="e.g., ChatBot Pro v2.1 or Company Name"
                       required
+                      data-testid="watchdog-system-name-input"
                     />
                     <p className="text-xs text-gray-500 mt-1">What AI system or company is involved?</p>
                   </div>
@@ -127,6 +128,7 @@ export default function WatchdogIncidentReportPage() {
                       placeholder="Describe what happened. Include: what the AI system did, what went wrong, who was affected, and any evidence or links."
                       rows={6}
                       required
+                      data-testid="watchdog-description-input"
                     />
                     <p className="text-xs text-gray-500 mt-1">Be as specific as possible. Include dates, times, and any evidence.</p>
                   </div>
@@ -139,6 +141,7 @@ export default function WatchdogIncidentReportPage() {
                       value={formData.riskLevel}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      data-testid="watchdog-risk-level-select"
                     >
                       <option value="low">Low Risk - Minor issue, limited impact</option>
                       <option value="medium">Medium Risk - Moderate impact, affects multiple users</option>
@@ -154,6 +157,7 @@ export default function WatchdogIncidentReportPage() {
                       value={formData.framework}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      data-testid="watchdog-framework-select"
                     >
                       <option value="eu-ai-act">EU AI Act</option>
                       <option value="nist-ai-rmf">NIST AI RMF</option>
@@ -173,6 +177,7 @@ export default function WatchdogIncidentReportPage() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="your@email.com (optional - for follow-up questions)"
+                      data-testid="watchdog-email-input"
                     />
                     <p className="text-xs text-gray-500 mt-1">Leave blank to remain completely anonymous</p>
                   </div>
@@ -191,6 +196,7 @@ export default function WatchdogIncidentReportPage() {
                     size="lg"
                     className="w-full bg-orange-600 hover:bg-orange-700"
                     disabled={isLoading}
+                    data-testid="watchdog-submit-button"
                   >
                     {isLoading ? 'Submitting...' : 'Submit Incident Report'}
                   </Button>

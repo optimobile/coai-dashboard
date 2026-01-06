@@ -95,11 +95,11 @@ export function EmailPasswordSignupForm() {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
+    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col" data-testid="signup-form">
       {error && (
-        <Alert variant="destructive" className="text-sm">
+        <Alert variant="destructive" className="text-sm" data-testid="signup-error-alert">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription data-testid="signup-error-message">{error}</AlertDescription>
         </Alert>
       )}
 
@@ -116,6 +116,7 @@ export function EmailPasswordSignupForm() {
           autoComplete="name"
           autoCapitalize="words"
           className="h-11 text-base"
+          data-testid="signup-name-input"
         />
       </div>
 
@@ -135,6 +136,7 @@ export function EmailPasswordSignupForm() {
           autoCorrect="off"
           spellCheck="false"
           className="h-11 text-base"
+          data-testid="signup-email-input"
         />
       </div>
 
@@ -150,6 +152,7 @@ export function EmailPasswordSignupForm() {
           disabled={registerMutation.isPending}
           autoComplete="new-password"
           className="h-11 text-base"
+          data-testid="signup-password-input"
         />
         
         {password.length > 0 && (
@@ -196,6 +199,7 @@ export function EmailPasswordSignupForm() {
           disabled={registerMutation.isPending}
           autoComplete="new-password"
           className="h-11 text-base"
+          data-testid="signup-confirm-password-input"
         />
         {confirmPassword.length > 0 && (
           <div className="flex items-center gap-2 text-xs">
@@ -219,6 +223,7 @@ export function EmailPasswordSignupForm() {
         size="lg"
         className="w-full h-11 text-base font-medium mt-4 mb-2 touch-manipulation"
         disabled={registerMutation.isPending || (confirmPassword.length > 0 && !passwordsMatch)}
+        data-testid="signup-submit-button"
       >
         {registerMutation.isPending ? (
           <>
@@ -232,7 +237,7 @@ export function EmailPasswordSignupForm() {
 
       <p className="text-xs text-center text-muted-foreground">
         Already have an account?{" "}
-        <a href="/login" className="text-primary hover:underline touch-manipulation">
+        <a href="/login" className="text-primary hover:underline touch-manipulation" data-testid="signup-login-link">
           Sign in
         </a>
       </p>

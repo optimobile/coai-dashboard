@@ -277,6 +277,7 @@ export default function Pricing() {
             <Switch
               checked={isYearly}
               onCheckedChange={setIsYearly}
+              data-testid="pricing-billing-toggle"
             />
             <span className={`text-sm ${isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
               Yearly <Badge className="ml-2 bg-green-500/20 text-green-400 border-green-500/30">Save 20%</Badge>
@@ -285,7 +286,7 @@ export default function Pricing() {
         </div>
         
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16" data-testid="pricing-cards-grid">
           {PRICING_TIERS.map((tier) => {
             const Icon = tier.icon;
             const price = isYearly ? tier.yearlyPrice : tier.monthlyPrice;
@@ -293,6 +294,7 @@ export default function Pricing() {
             return (
               <Card 
                 key={tier.id}
+                data-testid={`pricing-card-${tier.id}`}
                 className={`relative bg-white dark:bg-gray-900 border-2 ${tier.borderColor} ${
                   tier.popular ? 'scale-105 shadow-xl shadow-emerald-500/20' : ''
                 }`}
@@ -322,6 +324,7 @@ export default function Pricing() {
                   
                   <Button 
                     onClick={() => handleSubscribe(tier.id)}
+                    data-testid={`pricing-subscribe-${tier.id}`}
                     className={`w-full mb-6 ${
                       tier.popular 
                         ? 'bg-cyan-600 hover:bg-cyan-700' 

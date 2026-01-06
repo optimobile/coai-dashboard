@@ -384,3 +384,57 @@
 - [x] Add data-testid attributes to navigation elements
 - [x] Add data-testid attributes to countdown timer elements
 - [x] Update helpers.ts with improved selector methods
+
+
+## Phase 17 - Testing Improvements (Jan 6, 2026)
+
+### Data-TestID Attributes
+- [ ] Add data-testid to forms across all pages
+- [ ] Add data-testid to buttons across all pages
+- [ ] Add data-testid to cards and interactive elements
+- [ ] Add data-testid to navigation components
+- [ ] Add data-testid to modals and dialogs
+
+### Test Data Seeding Script
+- [ ] Create test data seeding script for enrollment flows
+- [ ] Add seed data for certification test scenarios
+- [ ] Implement database cleanup utilities for test isolation
+
+### Visual Regression Tests
+- [ ] Set up Playwright visual regression testing
+- [ ] Add screenshot comparison tests for key pages
+- [ ] Configure baseline screenshots for visual comparison
+- [ ] Add visual regression tests for responsive layouts
+
+
+## Phase 21 - Testing Improvements (Jan 6, 2026)
+
+### Data-testid Attributes Added
+- [x] Add data-testid to EmailPasswordLoginForm (login-email-input, login-password-input, login-submit-button)
+- [x] Add data-testid to EmailPasswordSignupForm (signup-name-input, signup-email-input, signup-password-input, signup-submit-button)
+- [x] Add data-testid to CertificationExam page (exam-start-real-button, exam-start-practice-button, exam-start-timed-practice-button, exam-prev-question-button, exam-next-question-button)
+- [x] Add data-testid to Dashboard page (dashboard-header, dashboard-title, dashboard-refresh-button, dashboard-metrics-grid)
+- [x] Add data-testid to Contact page form (contact-form, contact-name-input, contact-email-input, contact-subject-input, contact-message-input, contact-submit-button)
+- [x] Add data-testid to Pricing page (pricing-billing-toggle, pricing-cards-grid, pricing-card-{tier}, pricing-subscribe-{tier})
+- [x] Add data-testid to DashboardLayout navigation (main-navigation, nav-{item-name})
+- [x] Add data-testid to WatchdogIncidentReport form (watchdog-incident-form, watchdog-system-name-input, watchdog-description-input, watchdog-risk-level-select, watchdog-framework-select, watchdog-email-input, watchdog-submit-button)
+
+### Test Data Seeding Script
+- [x] Create seed-test-data.ts for consistent test data
+- [x] Add test users (newUser, enrolledUser, certifiedUser, adminUser)
+- [x] Add test courses and training modules
+- [x] Add test certification test configuration
+- [x] Add test enrollments and training progress
+- [x] Add test certificates for certified user
+- [x] Add cleanup function for test data
+
+### Visual Regression Tests
+- [x] Create visual-regression.spec.ts with Playwright screenshot comparison
+- [x] Add public page visual tests (homepage, login, signup, pricing, contact, about, watchdog report)
+- [x] Add authenticated page visual tests (dashboard, ai-systems, training-courses, certificates, leaderboard, settings)
+- [x] Add component state tests (login error, contact form filled, pricing toggle)
+- [x] Add responsive design tests (mobile, tablet, desktop, wide viewports)
+- [x] Add dark/light theme tests
+- [x] Add navigation state tests (sidebar, hover states)
+- [x] Add certification flow visual tests
+- [x] Update Playwright config with snapshot settings

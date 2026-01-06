@@ -41,6 +41,21 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
+  // Snapshot settings for visual regression tests
+  snapshotDir: './e2e/screenshots',
+  snapshotPathTemplate: '{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}{ext}',
+  
+  // Expect settings for visual comparisons
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixels: 100,
+      threshold: 0.1,
+    },
+    toMatchSnapshot: {
+      maxDiffPixelRatio: 0.1,
+    },
+  },
+
   // Configure projects for major browsers
   projects: [
     {

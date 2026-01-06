@@ -132,9 +132,9 @@ export default function Dashboard() {
     <>
       <div className="p-6 space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" data-testid="dashboard-header">
           <div>
-            <h1 className="text-3xl font-bold font-display tracking-tight">Dashboard</h1>
+            <h1 className="text-3xl font-bold font-display tracking-tight" data-testid="dashboard-title">Dashboard</h1>
             <p className="text-muted-foreground text-sm mt-1">
               Western TC260 - AI Safety Governance for Humanity
             </p>
@@ -145,6 +145,7 @@ export default function Dashboard() {
               size="sm"
               onClick={() => refetch()}
               disabled={isLoading}
+              data-testid="dashboard-refresh-button"
             >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -171,7 +172,7 @@ export default function Dashboard() {
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" data-testid="dashboard-metrics-grid">
           {metrics.map((metric, idx) => {
             const Icon = metric.icon;
             return (

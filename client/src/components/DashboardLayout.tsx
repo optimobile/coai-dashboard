@@ -169,7 +169,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
 
         {/* Navigation Items - Organized by Sections */}
-        <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-4">
+        <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-4" data-testid="main-navigation">
           {navSections.map((section) => (
             <div key={section.title}>
               <div className="px-3 mb-2">
@@ -186,6 +186,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     <Link key={item.path} href={item.path}>
                       <motion.div
                         whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                        data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                         className={cn(
                           "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                           isActive

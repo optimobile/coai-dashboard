@@ -516,6 +516,7 @@ export default function CertificationExam() {
                     Practice Mode
                   </Button>
                   <Button
+                    data-testid="exam-start-timed-practice-button"
                     size="lg"
                     variant="outline"
                     onClick={() => handleStartExam(true, true)}
@@ -778,6 +779,7 @@ export default function CertificationExam() {
                     {/* Navigation buttons */}
                     <div className="flex justify-between mt-6">
                       <Button
+                        data-testid="exam-prev-question-button"
                         variant="outline"
                         onClick={handlePrevQuestion}
                         disabled={examState.currentQuestionIndex === 0}
@@ -786,6 +788,7 @@ export default function CertificationExam() {
                         Previous
                       </Button>
                       <Button
+                        data-testid="exam-next-question-button"
                         onClick={handleNextQuestion}
                         disabled={examState.currentQuestionIndex === questions.length - 1}
                       >

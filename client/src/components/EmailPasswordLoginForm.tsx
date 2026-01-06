@@ -51,11 +51,11 @@ export function EmailPasswordLoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" data-testid="login-form">
       {error && (
-        <Alert variant="destructive" className="text-sm">
+        <Alert variant="destructive" className="text-sm" data-testid="login-error-alert">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription data-testid="login-error-message">{error}</AlertDescription>
         </Alert>
       )}
 
@@ -74,7 +74,8 @@ export function EmailPasswordLoginForm() {
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck="false"
-          className="h-11 text-base" // Larger touch target for mobile
+          className="h-11 text-base"
+          data-testid="login-email-input"
         />
       </div>
 
@@ -84,6 +85,7 @@ export function EmailPasswordLoginForm() {
           <a
             href="/forgot-password"
             className="text-xs text-primary hover:underline touch-manipulation"
+            data-testid="login-forgot-password-link"
           >
             Forgot password?
           </a>
@@ -97,7 +99,8 @@ export function EmailPasswordLoginForm() {
           required
           disabled={loginMutation.isPending}
           autoComplete="current-password"
-          className="h-11 text-base" // Larger touch target for mobile
+          className="h-11 text-base"
+          data-testid="login-password-input"
         />
       </div>
 
@@ -105,6 +108,7 @@ export function EmailPasswordLoginForm() {
         type="submit"
         className="w-full h-11 text-base font-medium touch-manipulation"
         disabled={loginMutation.isPending}
+        data-testid="login-submit-button"
       >
         {loginMutation.isPending ? (
           <>
@@ -118,7 +122,7 @@ export function EmailPasswordLoginForm() {
 
       <p className="text-xs text-center text-muted-foreground">
         Don't have an account?{" "}
-        <a href="/signup" className="text-primary hover:underline touch-manipulation">
+        <a href="/signup" className="text-primary hover:underline touch-manipulation" data-testid="login-signup-link">
           Create one
         </a>
       </p>
