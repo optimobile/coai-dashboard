@@ -319,8 +319,8 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
           {/* Moderation tools */}
           <ForumModerationTools
             threadId={threadDetails.id}
-            isPinned={threadDetails.isPinned}
-            isLocked={threadDetails.isLocked}
+            isPinned={Boolean(threadDetails.isPinned)}
+            isLocked={Boolean(threadDetails.isLocked)}
             onUpdate={() => {
               utils.forums.getThread.invalidate();
               utils.forums.getCourseThreads.invalidate();
@@ -365,9 +365,9 @@ export function CourseDiscussion({ courseId, lessonId }: CourseDiscussionProps) 
                   <ForumModerationTools
                     threadId={threadDetails.id}
                     postId={post.id}
-                    isPinned={threadDetails.isPinned}
-                    isLocked={threadDetails.isLocked}
-                    isInstructorPost={post.isInstructorPost}
+                    isPinned={Boolean(threadDetails.isPinned)}
+                    isLocked={Boolean(threadDetails.isLocked)}
+                    isInstructorPost={Boolean(post.isInstructorPost)}
                     onUpdate={() => {
                       utils.forums.getThread.invalidate();
                       utils.forums.getCourseThreads.invalidate();

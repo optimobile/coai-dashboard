@@ -99,7 +99,7 @@ export default function Analytics() {
     endDate,
     groupBy,
     aiSystemId: selectedAISystem !== 'all' ? parseInt(selectedAISystem) : undefined,
-    incidentType: selectedIncidentType !== 'all' ? selectedIncidentType : undefined,
+    incidentType: selectedIncidentType !== 'all' ? selectedIncidentType as 'bias' | 'privacy' | 'safety' | 'misinformation' | 'manipulation' | 'other' : undefined,
     severity: selectedSeverity !== 'all' ? selectedSeverity : undefined,
   });
 

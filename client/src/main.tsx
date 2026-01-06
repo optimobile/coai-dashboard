@@ -7,7 +7,7 @@ const originalArrayFrom = Array.from;
   }
   return mapFn 
     ? originalArrayFrom.call(Array, arrayLike, mapFn, thisArg) 
-    : originalArrayFrom.call(Array, arrayLike);
+    : originalArrayFrom.call(Array, arrayLike, undefined, undefined);
 };
 
 import * as Sentry from "@sentry/react";

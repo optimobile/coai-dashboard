@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 export interface NotificationUpdate {
-  type: 'notification' | 'notification_update' | 'notification_read' | 'notification_delivered';
+  type: 'notification' | 'notification_update' | 'notification_read' | 'notification_delivered' | 'ping' | 'pong';
   notificationId: number;
   userId: number;
   status: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
