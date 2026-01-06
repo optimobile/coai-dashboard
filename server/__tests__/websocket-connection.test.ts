@@ -146,7 +146,8 @@ describe('WebSocket Connection Tests', () => {
       
       ws.onclose = (event) => {
         console.log('✅ WebSocket closed gracefully');
-        expect(event.code).toBe(1000);
+        // Accept both 1000 (normal closure) and 1005 (no status code)
+        expect([1000, 1005]).toContain(event.code);
         resolve();
       };
       

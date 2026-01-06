@@ -17,7 +17,13 @@ import {
 } from '../../drizzle/schema';
 import { eq, and, gte, desc, sql } from 'drizzle-orm';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend | null = null;
+function getResend(): Resend | null {
+  if (!resend && process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 const FROM_EMAIL = 'CSOAI <noreply@csoai.org>';
 const FRONTEND_URL = process.env.VITE_FRONTEND_URL || 'https://coai.manus.space';
 
@@ -347,7 +353,12 @@ export async function sendWeeklyDigestEmail(userId: number): Promise<EmailResult
     const badgesSection = generateBadgesSection(data.badgesEarnedThisWeek);
     const rankSection = generateRankSection(data);
 
-    const { data: emailData, error } = await resend.emails.send({
+    const resendClient = getResend();
+    if (!resendClient) {
+      return { success: false, error: 'Resend API key not configured' };
+    }
+
+    const { data: emailData, error } = await resendClient.emails.send({
       from: FROM_EMAIL,
       to: data.email,
       subject: `📊 Your Weekly AI Safety Learning Summary`,
