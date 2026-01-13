@@ -1,0 +1,73 @@
+name: Visual Regression Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  CI: true
+  NODE_VERSION: '22'
+  PNPM_VERSION: '9'
+
+jobs:
+  visual-regression:
+    name: Visual Regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run visual regression tests
+        run: pnpm exec playwright test visual-regression.spec.ts
+        continue-on-error: true
+        id: visual-test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-results
+          path: |
+            playwright-report/
+            test-results/
+            e2e/screenshots/
+          retention-days: 30
+
+      - name: Upload baseline screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-screenshots
+          path: e2e/screenshots/
+          retention-days: 90
+
+      - name: Comment on PR (on failure)
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## Visual Regression Test Results\n\nSome visual regression tests failed. Please review the [test artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for screenshot comparisons.\n\nIf these changes are intentional, update the baselines with:\n```bash\npnpm exec playwright test visual-regression.spec.ts --update-snapshots\n```'
+            })

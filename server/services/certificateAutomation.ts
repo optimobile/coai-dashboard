@@ -10,7 +10,15 @@ import { eq } from "drizzle-orm";
 import { generateCertificatePDFV2 } from "../utils/certificateGeneratorV2";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization of Resend to avoid API key errors during testing/CI
+let resendInstance: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resendInstance) {
+    resendInstance = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendInstance;
+}
 
 export interface CertificateGenerationData {
   userId: number;
@@ -208,7 +216,7 @@ async function sendCertificateEmail(params: {
     `.trim();
 
     // Send email with attachment
-    const result = await resend.emails.send({
+    const result = await getResend().emails.send({
       from: 'CEASAI Certification <noreply@coai.manus.space>',
       to,
       subject: `🎓 Your CEASAI Certificate - ${certificateNumber}`,

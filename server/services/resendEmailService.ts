@@ -5,8 +5,15 @@
 
 import { Resend } from 'resend';
 
-// Initialize Resend with API key from environment
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization of Resend to avoid API key errors during testing/CI
+let resendInstance: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resendInstance) {
+    resendInstance = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendInstance;
+}
 
 const FROM_EMAIL = 'CSOAI <noreply@csoai.org>';
 const FRONTEND_URL = process.env.VITE_FRONTEND_URL || 'https://coai.manus.space';
@@ -25,7 +32,7 @@ export async function sendWelcomeEmail(
   userName: string
 ): Promise<EmailResult> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: 'Welcome to CSOAI - Start Your AI Safety Journey',
@@ -214,7 +221,7 @@ export async function sendCertificationEmail(
       content: certificatePdf,
     }] : [];
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: `🎉 Congratulations! You're Now a Certified AI Safety Analyst`,
@@ -464,7 +471,7 @@ export async function sendPaymentConfirmationEmail(
       currency: currency.toUpperCase(),
     }).format(amount / 100);
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: `Payment Confirmed - ${plan} Plan Subscription`,
@@ -696,7 +703,7 @@ export async function sendPasswordResetEmail(
   try {
     const resetUrl = `${FRONTEND_URL}/reset-password?token=${resetToken}`;
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: 'Reset Your CSOAI Password',

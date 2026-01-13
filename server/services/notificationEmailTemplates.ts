@@ -6,7 +6,15 @@
 
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization of Resend to avoid API key errors during testing/CI
+let resendInstance: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resendInstance) {
+    resendInstance = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendInstance;
+}
 const FROM_EMAIL = 'CSOAI <noreply@csoai.org>';
 const FRONTEND_URL = process.env.VITE_FRONTEND_URL || 'https://coai.manus.space';
 
@@ -43,7 +51,7 @@ export async function sendComplianceAlertEmail(
       critical: '🔴'
     };
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: `${severityEmojis[severity]} Compliance Alert: ${alertTitle}`,
@@ -177,7 +185,7 @@ export async function sendSystemUpdateEmail(
       announcement: '📢'
     };
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: `${typeEmojis[updateType]} CSOAI Update: ${updateTitle}`,
@@ -293,7 +301,7 @@ export async function sendPDCACycleUpdateEmail(
       Act: '✅'
     };
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: `${phaseEmojis[phase]} PDCA Update: ${cycleName} - ${phase} Phase`,
@@ -417,7 +425,7 @@ export async function sendTrainingReminderEmail(
   courseUrl: string
 ): Promise<EmailResult> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: `📚 Training Reminder: Continue ${courseName}`,
@@ -563,7 +571,7 @@ export async function sendCaseAssignmentEmail(
       urgent: '🔴'
     };
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: `${priorityEmojis[priority]} New Case Assignment: ${caseTitle}`,
@@ -687,7 +695,7 @@ export async function sendPreferenceUpdateConfirmationEmail(
   updatedPreferences: string[]
 ): Promise<EmailResult> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: '✅ Notification Preferences Updated',
