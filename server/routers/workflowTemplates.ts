@@ -25,7 +25,7 @@ export const workflowTemplatesRouter = router({
       let query = db
         .select()
         .from(workflowTemplates)
-        .where(eq(workflowTemplates.isPublic, true))
+        .where(eq(workflowTemplates.isPublic, 1))
         .orderBy(desc(workflowTemplates.usageCount));
 
       const templates = await query;
@@ -125,7 +125,7 @@ export const workflowTemplatesRouter = router({
     const templates = await db
       .select()
       .from(workflowTemplates)
-      .where(eq(workflowTemplates.isPublic, true));
+      .where(eq(workflowTemplates.isPublic, 1));
 
     const stats = {
       total: templates.length,

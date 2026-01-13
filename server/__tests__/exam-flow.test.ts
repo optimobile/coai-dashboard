@@ -52,7 +52,7 @@ describe("Certification Exam Flow", () => {
       .from(testQuestions)
       .where(and(
         eq(testQuestions.testId, testId),
-        eq(testQuestions.isActive, true)
+        eq(testQuestions.isActive, 1)
       ));
 
     expect(questions.length).toBeGreaterThan(0);
@@ -96,7 +96,7 @@ describe("Certification Exam Flow", () => {
       .from(testQuestions)
       .where(and(
         eq(testQuestions.testId, testId),
-        eq(testQuestions.isActive, true)
+        eq(testQuestions.isActive, 1)
       ));
 
     expect(test).toBeDefined();

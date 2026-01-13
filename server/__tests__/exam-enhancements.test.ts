@@ -34,7 +34,7 @@ describe("Exam System Enhancements", () => {
       const questions = await db
         .select()
         .from(testQuestions)
-        .where(eq(testQuestions.isActive, true));
+        .where(eq(testQuestions.isActive, 1));
 
       expect(questions.length).toBeGreaterThanOrEqual(200);
       console.log(`✅ Total questions: ${questions.length}`);
@@ -49,7 +49,7 @@ describe("Exam System Enhancements", () => {
       const questions = await db
         .select()
         .from(testQuestions)
-        .where(eq(testQuestions.isActive, true));
+        .where(eq(testQuestions.isActive, 1));
 
       const types = new Set(questions.map((q) => q.questionType));
       
@@ -69,7 +69,7 @@ describe("Exam System Enhancements", () => {
       const questions = await db
         .select()
         .from(testQuestions)
-        .where(eq(testQuestions.isActive, true));
+        .where(eq(testQuestions.isActive, 1));
 
       const difficulties = new Set(questions.map((q) => q.difficulty));
       
@@ -93,7 +93,7 @@ describe("Exam System Enhancements", () => {
       const questions = await db
         .select()
         .from(testQuestions)
-        .where(eq(testQuestions.isActive, true))
+        .where(eq(testQuestions.isActive, 1))
         .limit(10);
 
       for (const q of questions) {
@@ -144,7 +144,7 @@ describe("Exam System Enhancements", () => {
         .from(testQuestions)
         .where(and(
           eq(testQuestions.testId, 30001),
-          eq(testQuestions.isActive, true)
+          eq(testQuestions.isActive, 1)
         ));
 
       expect(questions.length).toBeGreaterThan(0);
@@ -680,7 +680,7 @@ describe("Phase 12 - Question Randomization & Timed Practice", () => {
         .from(testQuestions)
         .where(and(
           eq(testQuestions.testId, 30001),
-          eq(testQuestions.isActive, true)
+          eq(testQuestions.isActive, 1)
         ))
         .limit(20);
 

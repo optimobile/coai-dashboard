@@ -70,7 +70,7 @@ describe("End-to-End Exam Flow", () => {
       .from(testQuestions)
       .where(and(
         eq(testQuestions.testId, testId),
-        eq(testQuestions.isActive, true)
+        eq(testQuestions.isActive, 1)
       ));
 
     expect(questions.length).toBeGreaterThan(0);

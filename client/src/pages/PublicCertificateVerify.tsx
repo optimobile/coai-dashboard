@@ -17,7 +17,7 @@ export default function PublicCertificateVerify() {
   const [certificateNumber, setCertificateNumber] = useState('');
   const [searchTriggered, setSearchTriggered] = useState(false);
 
-  const { data: certificate, isLoading, error } = trpc.certification.verifyCertificate.useQuery(
+  const { data: certificate, isLoading, error } = trpc.certificates.verifyCertificate.useQuery(
     { certificateNumber },
     { 
       enabled: searchTriggered && certificateNumber.length > 0,

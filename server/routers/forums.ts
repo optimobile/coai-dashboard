@@ -758,7 +758,7 @@ export const forumsRouter = router({
         .select({ count: sql`COUNT(DISTINCT ${forumThreads.id})` })
         .from(forumThreads)
         .leftJoin(forumPosts, eq(forumPosts.threadId, forumThreads.id))
-        .where(and(dateFilter, eq(forumPosts.isSolution, true)))
+        .where(and(dateFilter, eq(forumPosts.isSolution, 1)))
         .$dynamic();
 
       if (input.courseId) {

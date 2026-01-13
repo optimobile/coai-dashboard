@@ -25,7 +25,7 @@ export const statusRouter = router({
       let query = db
         .select()
         .from(systemIncidents)
-        .where(eq(systemIncidents.isPublic, true))
+        .where(eq(systemIncidents.isPublic, 1))
         .orderBy(desc(systemIncidents.startedAt))
         .limit(input.limit);
 
@@ -35,7 +35,7 @@ export const statusRouter = router({
           .from(systemIncidents)
           .where(
             and(
-              eq(systemIncidents.isPublic, true),
+              eq(systemIncidents.isPublic, 1),
               sql`${systemIncidents.status} != 'resolved'`
             )
           )

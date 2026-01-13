@@ -61,7 +61,7 @@ export default function EmailSchedulesIntegrated() {
     isActive: filterStatus === "all" ? undefined : filterStatus === "active",
   });
 
-  const { data: runs } = trpc.emailScheduling.getRuns.useQuery(
+  const { data: runs } = trpc.emailScheduling.getRunHistory.useQuery(
     { scheduleId: selectedScheduleId! },
     { enabled: !!selectedScheduleId && viewRunsDialogOpen }
   );
@@ -87,12 +87,12 @@ export default function EmailSchedulesIntegrated() {
     },
   });
 
-  const runSchedule = trpc.emailScheduling.runNow.useMutation({
+  const runSchedule = trpc.emailScheduling.triggerManual.useMutation({
     onSuccess: () => {
       toast.success("Schedule triggered successfully");
       refetch();
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast.error(`Failed to trigger schedule: ${error.message}`);
     },
   });

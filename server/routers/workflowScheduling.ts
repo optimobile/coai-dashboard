@@ -368,7 +368,7 @@ export const workflowSchedulingRouter = router({
         .where(
           and(
             eq(workflowSchedules.userId, ctx.user.id),
-            eq(workflowSchedules.isActive, true),
+            eq(workflowSchedules.isActive, 1),
             or(
               isNull(workflowSchedules.nextExecutionAt),
               lte(workflowSchedules.nextExecutionAt, now)

@@ -52,9 +52,12 @@ export default function StudentImportExport() {
   const [selectedCohort, setSelectedCohort] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: cohorts } = trpc.cohorts.getCohorts.useQuery();
-  const { data: students } = trpc.students.getStudents.useQuery();
-  const bulkCreateStudents = trpc.students.bulkCreate.useMutation();
+  const { data: cohortsData } = trpc.cohorts.list.useQuery({});
+  const cohorts = cohortsData?.items;
+  const { data: studentsData } = trpc.students.list.useQuery({});
+  const students = studentsData?.items;
+  // Note: bulkCreate is not implemented yet - this will need a backend route
+  const bulkCreateStudents = trpc.students.create.useMutation();
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

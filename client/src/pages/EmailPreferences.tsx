@@ -36,8 +36,8 @@ export default function EmailPreferences() {
   const updateMutation = trpc.emailOnboarding.updateEmailPreferences.useMutation();
 
   // Also fetch from emailPreferences router for achievement settings
-  const { data: achievementPrefs } = trpc.emailPreferences.get.useQuery();
-  const updateAchievementMutation = trpc.emailPreferences.update.useMutation();
+  const { data: achievementPrefs } = trpc.emailPreferences.getPreferences.useQuery();
+  const updateAchievementMutation = trpc.emailPreferences.updatePreferences.useMutation();
 
   useEffect(() => {
     if (userPrefs) {
